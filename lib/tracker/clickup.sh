@@ -1,13 +1,13 @@
 # shellcheck shell=bash
-# lib/trackers/clickup.sh — ClickUp adapter for bin/gsd-tracker.
+# lib/tracker/clickup.sh — ClickUp adapter for bin/gsd-tracker.
 #
 # Auth: a personal API token (pk_…), first match wins:
 #   1. $CLICKUP_API_TOKEN in the environment
-#   2. the token file (sourced; must set CLICKUP_API_TOKEN=…), from gsd_clickup_env:
-#      $GSD_CLICKUP_CONFIG, else ~/.config/gsd/clickup-<profile>.env when
-#      .gsd.conf sets tracker_profile = <profile>, else ~/.config/gsd/clickup.env
+#   2. the token file (sourced; must set CLICKUP_API_TOKEN=…), from trk_clickup_env:
+#      $GSD_CLICKUP_CONFIG, else ~/.config/gsd/clickup-<profile>.env when a
+#      profile is set (lib/tracker/config.sh), else ~/.config/gsd/clickup.env
 # Create one in ClickUp: avatar → Settings → Apps → API Token.
-# `gsd-tracker login` saves one for this repo in a single step (clickup_login).
+# `gsd-tracker login` saves one and picks it for this repo in one step (clickup_login).
 #
 # start/finish resolve the status against the task's own list: names match
 # ignoring case, spaces, hyphens and underscores ("in testing" finds
@@ -26,18 +26,18 @@
 
 # shellcheck disable=SC2034  # read by bin/gsd-tracker
 TRACKER_EXTRA="lists members api login"  # this tracker's own commands, beyond the shared verbs
-PROFILE=$(gsd_tracker_profile "$REPO")
-CONFIG=$(gsd_clickup_env "$REPO")
+trk_get profile; PROFILE=$TRK_VAL
+CONFIG=$(trk_clickup_env)
 
 load_token() {
-  [ -z "$PROFILE" ] || gsd_tracker_profile_ok "$PROFILE" \
-    || die "tracker_profile '$PROFILE' is not a name (letters, digits, . _ -)"
+  [ -z "$PROFILE" ] || trk_profile_ok "$PROFILE" \
+    || die "profile '$PROFILE' is not a name (letters, digits, . _ -)"
   if [ -z "${CLICKUP_API_TOKEN:-}" ] && [ -f "$CONFIG" ]; then
     # shellcheck disable=SC1090
     . "$CONFIG"
   fi
   [ -n "${CLICKUP_API_TOKEN:-}" ] \
-    || die "no CLICKUP_API_TOKEN${PROFILE:+ for profile '$PROFILE'} — export it or put CLICKUP_API_TOKEN=pk_… in $CONFIG"
+    || die "no CLICKUP_API_TOKEN${PROFILE:+ for profile '$PROFILE'} — run gsd-tracker login${PROFILE:+ $PROFILE}, or put CLICKUP_API_TOKEN=pk_… in $CONFIG"
 }
 
 api() {  # api <method> <path> [json-body]; prints response body, fails on HTTP >= 400
@@ -60,7 +60,7 @@ api() {  # api <method> <path> [json-body]; prints response body, fails on HTTP 
 
 json_escape() {  # minimal JSON string escaper for comment/status payloads
   local py
-  py=$(gsd_python) || die "no python 3.7+ found (tried python3, then python) — needed to build the request body"
+  py=$(trk_python) || die "no python 3.7+ found (tried python3, then python) — needed to build the request body"
   printf '%s' "$1" | "$py" -c 'import json,sys; print(json.dumps(sys.stdin.read()))'
 }
 
@@ -207,7 +207,7 @@ clickup_create() {  # <list-id> <name> [options] → prints the new id and url
       --status)   body=$(jq -c --arg v "$2" '.status = $v' <<< "$body") ;;
       --priority) prio_ok "$2"; body=$(jq -c --argjson v "$2" '.priority = $v' <<< "$body") ;;
       --tag)      body=$(jq -c --arg v "$2" '.tags += [$v]' <<< "$body") ;;
-      --parent)   v=$(gsd_ticket_norm "$2" clickup) || die "not a ticket id: $2"
+      --parent)   v=$(trk_id_norm "$2" clickup) || die "not a ticket id: $2"
                   body=$(jq -c --arg v "$v" '.parent = $v' <<< "$body") ;;
       *) die "unknown option for create: $1" ;;
     esac
@@ -220,7 +220,7 @@ clickup_create() {  # <list-id> <name> [options] → prints the new id and url
 clickup_update() {  # <id> [options]
   [ $# -ge 3 ] || die "usage: gsd-clickup update <id> [--name <n>] [--desc <md>|-] [--assign <who>]… [--unassign <who>]… [--status <s>] [--priority 1-4] [--parent <id>]"
   local id body='{}' v
-  id=$(gsd_ticket_norm "$1" clickup) || die "not a ticket id: $1"
+  id=$(trk_id_norm "$1" clickup) || die "not a ticket id: $1"
   shift
   while [ $# -gt 0 ]; do
     [ $# -ge 2 ] || die "$1 needs a value"
@@ -231,7 +231,7 @@ clickup_update() {  # <id> [options]
       --unassign) v=$(clickup_user "$2"); body=$(jq -c --argjson v "$v" '.assignees.rem += [$v]' <<< "$body") ;;
       --status)   body=$(jq -c --arg v "$2" '.status = $v' <<< "$body") ;;
       --priority) prio_ok "$2"; body=$(jq -c --argjson v "$2" '.priority = $v' <<< "$body") ;;
-      --parent)   v=$(gsd_ticket_norm "$2" clickup) || die "not a ticket id: $2"
+      --parent)   v=$(trk_id_norm "$2" clickup) || die "not a ticket id: $2"
                   body=$(jq -c --arg v "$v" '.parent = $v' <<< "$body") ;;
       *) die "unknown option for update: $1" ;;
     esac
@@ -300,116 +300,102 @@ clickup_raw() {  # <METHOD> </path> [json] → the response body
   api "$1" "$2" "${3:-}" || exit 2
 }
 
-# login [<profile>]: one step for a per-repo token. Reads the token (hidden on a
-# terminal, else one line of stdin), tests it, saves it to
-# ~/.config/gsd/clickup-<profile>.env (mode 600, other lines kept) and sets
-# tracker_profile in .gsd.conf. The profile: the argument, else the current
-# one, else the repo folder's name. A token ClickUp refuses is never saved.
-# When the token was typed, it offers to commit .gsd.conf (that file only, no push).
-# Runs in the main checkout only, and edits .gsd.conf under the checkout lock.
-clickup_conf_clean() {  # → true when .gsd.conf is committed, unedited, on the base branch
-  git -C "$REPO" ls-files --error-unmatch .gsd.conf >/dev/null 2>&1 \
-    && git -C "$REPO" diff --quiet HEAD -- .gsd.conf 2>/dev/null \
-    && [ "$(git -C "$REPO" branch --show-current 2>/dev/null)" = "$(gsd_base "$REPO")" ]
-}
-
+# login [<name>]: one step for a token, in any folder. The profile: the
+# argument, else the profile in use, else the repo folder's name. When
+# ~/.config/gsd/clickup-<name>.env already holds a token, it asks first (on a
+# terminal, before anything is typed): use it, or replace it. A new token is
+# read hidden on a terminal, else as one line of stdin, and tested: a token
+# ClickUp refuses is never saved. The file is mode 600 and keeps its other
+# lines. In a git repo, git config gsd-tracker.profile <name> then picks it for
+# this clone and all its worktrees. .gsd.conf is never edited.
 clickup_login() {
-  local p="${1:-}" conf="$REPO/.gsd.conf" token file tmp cur main d top
-  local ans="" verb=saved typed=0 want_commit=0 clean=0
+  local p="${1:-}" token="" file tmp verb=saved in_repo=0 reuse=0 ans="" cur conf
   [ $# -le 1 ] || die "usage: gsd-tracker login [<profile>]"
-  # Main checkout only: login edits and commits ITS .gsd.conf, so running it
-  # from a phase worktree would change another folder. Checked before the
-  # token is read, so nothing is typed for nothing.
-  main=$(gsd_main "$REPO")
-  for d in "$REPO" "$PWD"; do
-    [ -n "$main" ] && [ "$(gsd_main "$d")" = "$main" ] || continue   # $PWD outside this repo
-    top=$(git -C "$d" rev-parse --show-toplevel 2>/dev/null) || continue
-    [ "$(cd "$top" && pwd -P)" = "$(cd "$main" && pwd -P)" ] \
-      || die "$top is a worktree — run login from the main checkout: cd $main && gsd-tracker login"
-  done
-  [ -f "$conf" ] || die "no .gsd.conf in $REPO — run gsd-init first"
+  if git -C "$REPO" rev-parse --git-dir >/dev/null 2>&1; then in_repo=1; fi
   [ -n "$p" ] || p=$PROFILE
   if [ -z "$p" ]; then
+    [ "$in_repo" = 1 ] || die "not in a git repo — name the profile: gsd-tracker login <name>"
     p=$(basename "$REPO" | tr '[:upper:]' '[:lower:]' \
           | sed -e 's/[^a-z0-9._-]/-/g' -e 's/^[^a-z0-9]*//' | cut -c1-64)
   fi
-  gsd_tracker_profile_ok "$p" \
+  trk_profile_ok "$p" \
     || die "'$p' is not a profile name (letters, digits, . _ -) — use gsd-tracker login <name>"
-  if [ -t 0 ]; then
-    # Echo goes off BEFORE the prompt shows: bash 3.2's read -s -p prints the
-    # prompt first, and a fast paste in that gap was echoed.
-    tty_was=$(stty -g 2>/dev/null) || tty_was=
-    stty -echo 2>/dev/null || true
-    trap '[ -z "$tty_was" ] || stty "$tty_was" 2>/dev/null; printf "\n" >&2; exit 130' INT TERM
-    printf 'ClickUp API token for profile %s (ClickUp → Settings → Apps; typing is hidden): ' "$p" >&2
-    IFS= read -rs token || true
-    [ -z "$tty_was" ] || stty "$tty_was" 2>/dev/null || true
-    trap - INT TERM
-    printf '\n' >&2
-    typed=1
-  else
-    IFS= read -r token || true
-  fi
-  token=$(printf '%s' "$token" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-  [ -n "$token" ] || die "no token given — nothing saved"
-  # The file is sourced: only token characters may go in it.
-  printf '%s' "$token" | grep -qE '^[A-Za-z0-9_-]+$' \
-    || die "that does not look like a ClickUp token (pk_…) — nothing saved"
-  CLICKUP_API_TOKEN=$token api GET /user >/dev/null \
-    || { printf 'gsd-tracker: ClickUp did not accept that token — nothing saved\n' >&2; exit 2; }
-
   file="$HOME/.config/gsd/clickup-$p.env"
-  [ ! -f "$file" ] || verb=replaced
-  tmp="$file.tmp.$$"
-  ( umask 077
-    mkdir -p "${file%/*}"
-    { [ ! -f "$file" ] || grep -vE '^[[:space:]]*(export[[:space:]]+)?CLICKUP_API_TOKEN=' "$file" || true
-      printf 'CLICKUP_API_TOKEN=%s\n' "$token"; } > "$tmp" )
-  chmod 600 "$tmp"; mv "$tmp" "$file"
-  echo "✔ token $verb → $file (only you can read it)"
 
-  cur=$(gsd_conf_get "$REPO" tracker_profile)
-  if [ "$cur" = "$p" ]; then
-    echo "✔ .gsd.conf already has tracker_profile = $p"
-  else
-    # Offer the commit only when it holds nothing but this line (clickup_conf_clean).
-    # Asked before the lock is taken, so no other gsd command waits on an answer.
-    if [ "$typed" = 1 ] && clickup_conf_clean; then
-      printf 'Commit .gsd.conf after the change (this file only, not pushed)? [Y/n] ' >&2
-      IFS= read -r ans || ans=n
-      case "$ans" in ''|[Yy]*) want_commit=1 ;; esac
-    fi
-    # The same lock as gsd-start/gsd-finish: they pull, merge and commit in
-    # this checkout, and .gsd.conf must not change under them.
-    gsd_acquire_lock "$REPO" || exit 1
-    if clickup_conf_clean; then clean=1; fi   # again: it may have changed while we asked
-    if [ -n "$cur" ]; then
-      tmp="$conf.tmp.$$"
-      sed "s/^\([[:space:]]*tracker_profile[[:space:]]*=[[:space:]]*\).*/\1$p/" "$conf" > "$tmp"
-      cat "$tmp" > "$conf"; rm -f "$tmp"
-    else
-      [ -z "$(tail -c1 "$conf")" ] || printf '\n' >> "$conf"
-      printf 'tracker_profile = %s\n' "$p" >> "$conf"
-    fi
-    echo "✔ .gsd.conf: tracker_profile = $p"
-    if [ "$want_commit" = 1 ] && [ "$clean" = 1 ]; then
-      if git -C "$REPO" commit -q -m "Set tracker_profile = $p" -- .gsd.conf; then
-        echo "✔ committed .gsd.conf — push it when ready: git -C $REPO push"
-      else
-        echo "• the commit failed — .gsd.conf is changed but not committed"
-      fi
-    elif [ "$want_commit" = 1 ]; then
-      echo "• .gsd.conf changed while you answered — not committed; check it, then: git -C $REPO commit -- .gsd.conf"
-    elif [ "$typed" = 1 ] && [ -n "$ans" ]; then
-      echo "• not committed — later: git -C $REPO commit -m 'Set tracker_profile = $p' -- .gsd.conf"
-    else
-      echo "• commit it: git -C $REPO commit -m 'Set tracker_profile = $p' -- .gsd.conf"
-    fi
-    gsd_release_lock; GSD_LOCKDIR=""   # cleared: the EXIT trap must not remove a later owner's lock
+  # A token already saved for this profile: offer it before anything is typed.
+  # With no terminal (a piped token) there is no one to ask: the new one wins.
+  if trk_has_token "$file" && [ -t 0 ]; then
+    while :; do
+      printf 'A token for profile %s is already saved. Use it, or replace it? [U/r] ' "$p" >&2
+      IFS= read -r ans || ans=u
+      case "$ans" in
+        ''|[Uu]*) reuse=1; break ;;
+        [Rr]*)    break ;;
+        *)        echo "  type u (use it) or r (replace it)" >&2 ;;
+      esac
+    done
   fi
-  echo "✔ ClickUp token OK (profile $p)"
-  [ "$(gsd_conf_get "$REPO" tracker)" = clickup ] || [ "${GSD_TRACKER:-}" = clickup ] \
-    || echo "• .gsd.conf does not say tracker = clickup yet — add it so start/finish use ClickUp"
+  if [ "$reuse" = 1 ]; then
+    # shellcheck disable=SC1090  # the profile's token file
+    token=$(unset CLICKUP_API_TOKEN; . "$file" >/dev/null 2>&1; printf '%s' "${CLICKUP_API_TOKEN:-}")
+    if CLICKUP_API_TOKEN=$token api GET /user >/dev/null; then
+      verb=kept
+    else
+      echo "• ClickUp did not accept the saved token — type a new one" >&2
+      reuse=0
+    fi
+  fi
+
+  if [ "$reuse" = 0 ]; then
+    if [ -t 0 ]; then
+      # Echo goes off BEFORE the prompt shows: bash 3.2's read -s -p prints the
+      # prompt first, and a fast paste in that gap was echoed.
+      tty_was=$(stty -g 2>/dev/null) || tty_was=
+      stty -echo 2>/dev/null || true
+      trap '[ -z "$tty_was" ] || stty "$tty_was" 2>/dev/null; printf "\n" >&2; exit 130' INT TERM
+      printf 'ClickUp API token for profile %s (ClickUp → Settings → Apps; typing is hidden): ' "$p" >&2
+      IFS= read -rs token || true
+      [ -z "$tty_was" ] || stty "$tty_was" 2>/dev/null || true
+      trap - INT TERM
+      printf '\n' >&2
+    else
+      IFS= read -r token || true
+    fi
+    token=$(printf '%s' "$token" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+    [ -n "$token" ] || die "no token given — nothing saved"
+    # The file is sourced: only token characters may go in it.
+    printf '%s' "$token" | grep -qE '^[A-Za-z0-9_-]+$' \
+      || die "that does not look like a ClickUp token (pk_…) — nothing saved"
+    CLICKUP_API_TOKEN=$token api GET /user >/dev/null \
+      || { printf 'gsd-tracker: ClickUp did not accept that token — nothing saved\n' >&2; exit 2; }
+    [ ! -f "$file" ] || verb=replaced
+    tmp="$file.tmp.$$"
+    ( umask 077
+      mkdir -p "${file%/*}"
+      { [ ! -f "$file" ] || grep -vE '^[[:space:]]*(export[[:space:]]+)?CLICKUP_API_TOKEN=' "$file" || true
+        printf 'CLICKUP_API_TOKEN=%s\n' "$token"; } > "$tmp" )
+    chmod 600 "$tmp"; mv "$tmp" "$file"
+  fi
+  echo "✔ ClickUp token OK — ${verb} → ${file} (only you can read it)"
+
+  if [ "$in_repo" = 1 ]; then
+    cur=$(trk_git_get "$REPO" profile)
+    if [ "$cur" = "$p" ]; then
+      echo "✔ this repo already uses profile $p (git config gsd-tracker.profile)"
+    elif git -C "$REPO" config --local gsd-tracker.profile "$p"; then
+      echo "✔ this repo now uses profile $p (git config gsd-tracker.profile: this clone and its worktrees, never committed)"
+    else
+      echo "• could not write git config — set it by hand: git -C $REPO config gsd-tracker.profile $p"
+    fi
+    conf=$(trk_conf_get "$REPO" tracker_profile)
+    [ -z "$conf" ] || [ "$conf" = "$p" ] \
+      || echo "• .gsd.conf says tracker_profile = $conf; in this clone git config wins, so $p is used"
+    trk_get tracker
+    [ "$TRK_VAL" = clickup ] \
+      || echo "• the tracker here is $TRK_VAL, so start/finish/comment don't use ClickUp yet — set it: git config gsd-tracker.tracker clickup (this clone), or tracker = clickup in .gsd.conf (the team)"
+  else
+    echo "• not in a git repo, so no repo uses it yet — in the repo, run: gsd-tracker login $p (it offers this saved token)"
+  fi
   [ -z "${GSD_TRACKER_PROFILE:-}" ] || [ "$GSD_TRACKER_PROFILE" = "$p" ] \
     || echo "• GSD_TRACKER_PROFILE=$GSD_TRACKER_PROFILE is set in this shell and picks another profile"
   [ -z "${GSD_CLICKUP_CONFIG:-}" ] \

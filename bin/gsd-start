@@ -57,8 +57,8 @@ GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 . "$GSD_PKG/lib/common.sh"
 # shellcheck source=../lib/provider.sh
 . "$GSD_PKG/lib/provider.sh"
-# shellcheck source=../lib/tracker.sh
-. "$GSD_PKG/lib/tracker.sh"
+# shellcheck source=../lib/ticket.sh
+. "$GSD_PKG/lib/ticket.sh"
 # shellcheck source=../lib/version.sh
 . "$GSD_PKG/lib/version.sh"
 
@@ -308,7 +308,7 @@ gsd_compact_resolve "$MAIN" || exit $?
 
 # ── --ticket: normalize the id and tag the phase title/slug with tk-<id> ─────
 # The ROADMAP title is what gsd-finish and /gsdw-flow read the id back from.
-TRACKER=$(gsd_tracker "$MAIN")
+TRACKER=$(gsd_tracker_which "$MAIN")
 if [ -n "$TICKET" ]; then
   norm_as=$TRACKER; [ "$TICKET_CU" = 0 ] || norm_as=clickup
   TICKET=$(gsd_ticket_norm "$TICKET" "$norm_as") \

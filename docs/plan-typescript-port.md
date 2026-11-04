@@ -39,7 +39,7 @@ A TypeScript port runs the same on all three systems.
 | `bin/gsd-worktree-guard` + `lib/gsd_hook_payload.py` | 209 + 131 | `src/guard.ts` (hook JSON parsed natively — no NUL protocol) |
 | `bin/gsd-flow-next` | 194 | `src/commands/flow-next.ts` |
 | `bin/gsd-sync` | 162 | dropped for users (npm); kept as a dev script if useful |
-| `lib/tracker.sh` + `lib/trackers/*.sh` + `bin/gsd-tracker` | 54 + 182 + 126 | `src/tracker/*.ts` (ClickUp via `fetch`, no `jq`/`curl`) |
+| `lib/ticket.sh` + `lib/tracker/*.sh` + `bin/gsd-tracker` | 54 + 182 + 126 | `src/tracker/*.ts` (ClickUp via `fetch`, no `jq`/`curl`) |
 | `bin/gsd-planning-repair`, `bin/gsd-planning-merge` | 115 + 57 | thin entries over `planning.ts` |
 | `lib/roadmap-audit.pl`, `lib/roadmap-rows.pl` | 98 + 88 | `src/roadmap.ts` |
 | `lib/version.sh`, `bin/gsd-update`, `get.sh` | 112 + 77 + 90 | update notice checks the npm registry; the rest is removed |

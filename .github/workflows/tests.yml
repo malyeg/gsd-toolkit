@@ -25,7 +25,7 @@ jobs:
           python3 --version
       - name: syntax
         run: |
-          for f in bin/* lib/*.sh lib/trackers/*.sh install.sh shims/scripts/*.sh shims/scripts/hooks/*.sh tests/*.sh; do
+          for f in bin/* lib/*.sh lib/tracker/*.sh install.sh shims/scripts/*.sh shims/scripts/hooks/*.sh tests/*.sh; do
             bash -n "$f" || exit 1
           done
           python3 -c "import ast, pathlib; ast.parse(pathlib.Path('lib/gsd_planning.py').read_text())"
@@ -38,7 +38,7 @@ jobs:
         # BSD-vs-GNU RUNTIME differences the suite exercises.
         if: matrix.os == 'ubuntu-latest'
         # Policy (intentional-pattern exclusions, with reasons): .shellcheckrc
-        run: shellcheck -x bin/* lib/*.sh lib/trackers/*.sh tools/*.sh shims/scripts/*.sh shims/scripts/hooks/*.sh install.sh tests/*.sh
+        run: shellcheck -x bin/* lib/*.sh lib/tracker/*.sh tools/*.sh shims/scripts/*.sh shims/scripts/hooks/*.sh install.sh tests/*.sh
       - name: planning reconcile suite
         run: tests/test-planning-reconcile.sh
       - name: worktree guard suite

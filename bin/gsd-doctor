@@ -59,7 +59,7 @@
 #                  installer for that agent; doctor never edits it.
 #                  T016 = the generated GSD instructions are older than this
 #                  toolkit (gsd-init refreshes them; --fix runs it).
-#                  T070–T073 = ticket tracker config (`tracker =` in .gsd.conf).
+#                  T070–T073 = ticket tracker config (read from `gsd-tracker config`).
 #                  T080 = phases have screens but DESIGN.md is missing or a
 #                  stub (only with `ui_gates = strict`; a note otherwise).
 #                  T081 = pictures in a <P>-SHOTS/ folder are committed (the
@@ -90,8 +90,8 @@ GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 # shellcheck source=../lib/common.sh
 . "$GSD_PKG/lib/common.sh"
 . "$GSD_PKG/lib/provider.sh"
-# shellcheck source=../lib/tracker.sh
-. "$GSD_PKG/lib/tracker.sh"
+# shellcheck source=../lib/ticket.sh
+. "$GSD_PKG/lib/ticket.sh"
 # shellcheck source=../lib/version.sh
 . "$GSD_PKG/lib/version.sh"
 # shellcheck source=../lib/ui.sh
@@ -537,25 +537,38 @@ if [ "$pm" != none ]; then
 fi
 
 # ── ticket tracker ───────────────────────────────────────────────────────────
-TRACKER=$(gsd_tracker "$MAIN")
-if ! gsd_tracker_known "$TRACKER"; then
-  fail "unknown tracker '$TRACKER'" "set tracker = none, clickup, or custom in .gsd.conf" "T071"
+# gsd-tracker is standalone: doctor reads its resolved settings (offline,
+# key=value) instead of using its code.
+TRK_CONF=$("$GSD_PKG/bin/gsd-tracker" --repo "$MAIN" config 2>/dev/null || true)
+tk_conf() { printf '%s\n' "$TRK_CONF" | sed -n "s/^$1=//p" | head -1; }
+tk_where() {  # $1=setting source $2=git key $3=.gsd.conf key → where to change it
+  case "$1" in
+    env) echo "your environment" ;;
+    git) echo "git config gsd-tracker.$2" ;;
+    *)   echo "$3 = in .gsd.conf" ;;
+  esac
+}
+TRACKER=$(tk_conf tracker); TRACKER=${TRACKER:-none}
+# As in gsd_tracker_which: gsd-tracker's own default is not a setting.
+[ "$(tk_conf tracker_from)" != default ] || TRACKER=none
+if [ "$(tk_conf tracker_ok)" = no ]; then
+  fail "unknown tracker '$TRACKER'" "set none, clickup, or custom: $(tk_where "$(tk_conf tracker_from)" tracker tracker)" "T071"
 elif [ "$TRACKER" = custom ]; then
-  tc=$(gsd_tracker_command "$MAIN")
+  tc=$(tk_conf command)
   if [ -n "$tc" ] && [ -x "$tc" ]; then pass "tracker: custom ($tc)"
-  else fail "tracker = custom but tracker_command '${tc:-<unset>}' is not an executable file" "set tracker_command = <script> in .gsd.conf and chmod +x it (see docs/trackers.md)" "T072"; fi
+  else fail "tracker = custom but its command '${tc:-<unset>}' is not an executable file" "set $(tk_where "$(tk_conf command_from)" command tracker_command) to the script and chmod +x it (see docs/trackers.md)" "T072"; fi
 elif [ "$TRACKER" = clickup ]; then
-  cu_prof=$(gsd_tracker_profile "$MAIN")
-  cu_cfg=$(gsd_clickup_env "$MAIN")
-  if [ -n "$cu_prof" ] && ! gsd_tracker_profile_ok "$cu_prof"; then
-    fail "tracker_profile = '$cu_prof' is not a name (letters, digits, . _ -)" "edit .gsd.conf (e.g. tracker_profile = acme)" "T018"
-  elif [ -n "${CLICKUP_API_TOKEN:-}" ]; then
+  cu_prof=$(tk_conf profile)
+  cu_cfg=$(tk_conf token_file)
+  if [ "$(tk_conf profile_ok)" = no ]; then
+    fail "tracker profile '$cu_prof' is not a name (letters, digits, . _ -)" "fix $(tk_where "$(tk_conf profile_from)" profile tracker_profile) (e.g. acme)" "T018"
+  elif [ "$(tk_conf token)" = env ]; then
     pass "tracker: clickup, token from \$CLICKUP_API_TOKEN (test it: gsd-tracker check)"
     [ -z "$cu_prof" ] || note "CLICKUP_API_TOKEN is set in your environment, so profile '$cu_prof' ($cu_cfg) is not used"
-  elif grep -qE '^[[:space:]]*(export[[:space:]]+)?CLICKUP_API_TOKEN=.' "$cu_cfg" 2>/dev/null; then
+  elif [ "$(tk_conf token)" = file ]; then
     pass "tracker: clickup${cu_prof:+ (profile $cu_prof)}, token found (test it: gsd-tracker check)"
   else
-    fail "tracker = clickup but no ClickUp token${cu_prof:+ for profile '$cu_prof'} on this machine — tickets will not move" "gsd-tracker login (or put CLICKUP_API_TOKEN=pk_… in $cu_cfg; ClickUp → Settings → Apps)" "T073"
+    fail "tracker = clickup but no ClickUp token${cu_prof:+ for profile '$cu_prof'} on this machine — tickets will not move" "gsd-tracker login${cu_prof:+ $cu_prof} (or put CLICKUP_API_TOKEN=pk_… in $cu_cfg; ClickUp → Settings → Apps)" "T073"
   fi
   command -v jq >/dev/null 2>&1 || note "tracker = clickup needs jq for start/finish/snapshot — brew install jq"
 else

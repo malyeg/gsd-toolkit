@@ -359,7 +359,7 @@ section "lint — bash 3.2 traps"
 # EXIT trap installed the script then exits 0, so the crash looks like success.
 # Always brace a variable that touches a non-ASCII character: ${VAR}…
 risky=$(cd "$PKG" && LC_ALL=C grep -nE '\$[A-Za-z_][A-Za-z0-9_]*[^ -~[:space:]]' \
-          bin/* lib/*.sh lib/trackers/*.sh install.sh tools/*.sh shims/scripts/*.sh shims/scripts/hooks/*.sh || true)
+          bin/* lib/*.sh lib/tracker/*.sh install.sh tools/*.sh shims/scripts/*.sh shims/scripts/hooks/*.sh || true)
 is "no \$VAR directly followed by a non-ASCII character" "$risky" ""
 
 printf '\n%d passed, %d failed\n' "$PASS" "$FAIL"

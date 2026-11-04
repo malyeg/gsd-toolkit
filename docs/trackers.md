@@ -27,7 +27,7 @@ The tag is read back from the ROADMAP title (exact case), then the branch name
 ## Commands
 
 `gsd-tracker` is the one layer sessions and scripts call; each tracker is a
-connector under it (`lib/trackers/<name>.sh`). Shared verbs, the same for
+connector under it (`lib/tracker/<name>.sh`). Shared verbs, the same for
 every tracker:
 
 | Verb | Does |
@@ -39,6 +39,7 @@ every tracker:
 | `update <id> <option>…` | change fields |
 | `tasks [option…]` | find tickets |
 | `check` · `which` | login works · which tracker |
+| `config` | the settings in use and where each came from (offline; never prints a token) |
 
 Options for `create` / `update` / `tasks` go to the connector as written; what
 `<where>` is and which options work are the connector's. A connector may add
@@ -50,7 +51,24 @@ skill: it checks `gsd-tracker which` first.
 
 ## Pick a tracker
 
-In `.gsd.conf`:
+`gsd-tracker` is standalone: it works in any folder, GSD repo or not, and GSD
+runs it as a command. Each setting, first match wins:
+
+| Setting | Environment | git config (this clone) | `.gsd.conf` (the team) |
+|---|---|---|---|
+| tracker | `GSD_TRACKER` (`--tracker` wins) | `gsd-tracker.tracker` | `tracker` |
+| login profile | `GSD_TRACKER_PROFILE` | `gsd-tracker.profile` | `tracker_profile` |
+| custom script | – | `gsd-tracker.command` | `tracker_command` |
+| start status | `GSD_TRACKER_STATUS_START` | `gsd-tracker.statusStart` | `tracker_status_start` |
+| finish status | `GSD_TRACKER_STATUS_FINISH` | `gsd-tracker.statusFinish` | `tracker_status_finish` |
+
+git config lives in `.git/config`: never committed, shared by every worktree of
+the clone. With nothing set, the tracker is `none` in a repo with a
+`.gsd.conf`, and ClickUp anywhere else. GSD (`gsd-start`, `gsd-finish`, the
+flow, `gsd-doctor`) counts only a tracker that is set: that ClickUp default
+never makes it move tickets. `gsd-tracker config` shows what is in use.
+
+A GSD repo picks its tracker for the whole team in `.gsd.conf`:
 
 ```ini
 tracker = none        # default: tags only, nothing is updated
@@ -59,10 +77,8 @@ tracker = custom      # your own script
 tracker_command = scripts/tracker.sh     # custom only; relative to the repo root
 tracker_status_start = In Progress       # optional
 tracker_status_finish = In QA            # optional
-tracker_profile = acme                   # optional: this project's own login (below)
+tracker_profile = acme                   # optional; gsd-tracker login sets git config instead (below)
 ```
-
-`GSD_TRACKER=<name>` overrides `tracker =` for one command.
 
 With a tracker set:
 
@@ -92,48 +108,40 @@ Token, first match wins: `$CLICKUP_API_TOKEN`, or `CLICKUP_API_TOKEN=pk_…` in
 the token file. Check it: `gsd-tracker check`. Needs `jq`.
 
 The token file is `~/.config/gsd/clickup.env`, shared by every project. To use
-a different ClickUp user in one project (other workspace, split rate limits),
-run this in the repo's main checkout (not a phase worktree):
+a different ClickUp user in one repo (other workspace, split rate limits), run
+this anywhere in the repo (main checkout or a phase worktree, GSD repo or not):
 
 ```sh
 gsd-tracker login            # or: gsd-tracker login acme
 ```
 
-It asks for the token (typing is hidden), tests it with ClickUp, saves it to
-`~/.config/gsd/clickup-<profile>.env` (only you can read it) and adds
-`tracker_profile = <profile>` to `.gsd.conf`. The profile is the name you
-give, else the one already set, else the repo folder's name. A token ClickUp
-refuses is never saved. Run it again to replace the token; other lines in the
-file (e.g. `CLICKUP_TEAM_ID`) are kept. When you typed the token, it then offers
-to commit `.gsd.conf` (`[Y/n]`; that file only, never pushed) — only if the
-file had no edits of its own and the checkout is on the base branch; otherwise
-it prints the commit command. On another machine, run `gsd-tracker login` once
-more. `echo pk_… | gsd-tracker login` works too (no question then).
+The profile is the name you give, else the one in use, else the repo folder's
+name. If `~/.config/gsd/clickup-<profile>.env` already holds a token, it asks
+first: `Use it, or replace it? [U/r]`. Otherwise it asks for the token (typing
+is hidden), tests it with ClickUp, and saves it there (only you can read it;
+other lines such as `CLICKUP_TEAM_ID` are kept). A token ClickUp refuses is
+never saved; a saved one it refuses makes login ask for a new one. Then it sets
+`git config gsd-tracker.profile <profile>`, which picks the profile for this
+clone and all its worktrees. It never edits `.gsd.conf`. On another machine or
+clone, run `gsd-tracker login` once more. `echo pk_… | gsd-tracker login` works
+too (no question then; the piped token replaces a saved one).
 
-In a phase worktree it refuses before asking for the token and names the main
-checkout: it would edit and commit that checkout's `.gsd.conf`, not the folder
-you are in. Existing worktrees need nothing: every gsd command reads
-`.gsd.conf` from the main checkout, and the token file is in your home folder.
-It edits `.gsd.conf` under the same lock as `gsd-start` and `gsd-finish`, so it
-waits for one that is running (the question is asked before, so they never
-wait on your answer).
+Outside any repo (e.g. in `~`), `gsd-tracker login <name>` only saves the token.
+In the repo, `gsd-tracker login <name>` then offers that saved token.
 
 By hand, the same thing is:
 
-```ini
-tracker_profile = acme     # in .gsd.conf — a name only, safe to commit
-```
-
 ```sh
-# on each machine, outside the repo
-echo 'CLICKUP_API_TOKEN=pk_…' > ~/.config/gsd/clickup-acme.env
+git config gsd-tracker.profile acme                          # in the repo
+echo 'CLICKUP_API_TOKEN=pk_…' > ~/.config/gsd/clickup-acme.env   # on each machine
 ```
 
 With a profile set, only `clickup-acme.env` is read. There is no fallback to
 `clickup.env`: a missing file is an error, not the wrong user. The file sits
 outside every checkout, so all phase worktrees see it. An exported
 `$CLICKUP_API_TOKEN` still wins (`gsd-doctor` notes it), and
-`GSD_TRACKER_PROFILE=<name>` overrides the profile for one command.
+`GSD_TRACKER_PROFILE=<name>` overrides the profile for one command. A
+`tracker_profile` already in `.gsd.conf` still works; git config wins over it.
 
 Status names match the task's own list, ignoring case, spaces, `-` and `_`
 ("in testing" finds "In-Testing"). Tried in order: the configured status, then
@@ -162,7 +170,7 @@ username. `--desc -` reads the markdown from stdin. Priority: 1 urgent,
 2 high, 3 normal, 4 low. `tasks`, `lists` and `members` need the workspace:
 `CLICKUP_TEAM_ID` (env or the token file), else the only workspace the token
 sees. They use the same token and profile as above. `gsd-clickup <command>`
-is the same with the tracker fixed to ClickUp, for use outside a fitted repo.
+is the same with the tracker fixed to ClickUp, whatever the repo sets.
 See `gsd-clickup --help`.
 
 ## Custom
@@ -184,8 +192,9 @@ Any tracker, through a script you keep in the repo:
 A script that can't do a verb exits nonzero (reported as "tracker call
 failed"). Connector-only commands (`lists`, …) are not passed to it.
 
-`GSD_TRACKER_PROFILE` holds `tracker_profile` (or is empty), so the script can
-pick its own login.
+`GSD_TRACKER_PROFILE` holds the profile setting (or is empty), so the script
+can pick its own login. The script can come from `gsd-tracker.command` in git
+config instead of `tracker_command`.
 
 Exit 0 on success. Any other exit is reported as "tracker call failed".
 A call that runs longer than 60 seconds (`GSD_TRACKER_TIMEOUT` to change it)
@@ -212,11 +221,13 @@ Still read, never written:
 - `<P>-STORY.md` counts as the ticket snapshot. A `cu_` phase folder counts too.
 - `GSD_CLICKUP_STATUS_START` / `_FINISH` still work (`GSD_TRACKER_STATUS_*` win).
 
-`gsd-doctor` findings:
+`gsd-doctor` findings (it reads `gsd-tracker config`):
 
 | Code | Meaning | Fix |
 |---|---|---|
 | T070 | ROADMAP has `cu_` tags but `tracker = none` | add `tracker = clickup` |
-| T071 | unknown `tracker =` value | use none, clickup, or custom |
-| T072 | `tracker = custom` without an executable `tracker_command` | set it, `chmod +x` |
+| T071 | unknown tracker value | use none, clickup, or custom (doctor names where it is set) |
+| T072 | `tracker = custom` without an executable script | set it, `chmod +x` |
+| T018 | the profile is not a name | fix it where it is set |
+| T073 | `tracker = clickup` but no token on this machine | `gsd-tracker login` |
 | T040 | (with `flow = strict`) a merged phase has no ticket snapshot | the `gsd-tracker snapshot` command it prints |

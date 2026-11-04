@@ -69,8 +69,8 @@ while [ -L "$SELF" ]; do t=$(readlink "$SELF"); case "$t" in /*) SELF=$t ;; *) S
 GSD_PKG=$(cd "$(dirname "$SELF")/.." && pwd)
 . "$GSD_PKG/lib/common.sh"
 . "$GSD_PKG/lib/provider.sh"
-# shellcheck source=../lib/tracker.sh
-. "$GSD_PKG/lib/tracker.sh"
+# shellcheck source=../lib/ticket.sh
+. "$GSD_PKG/lib/ticket.sh"
 # shellcheck source=../lib/ui.sh
 . "$GSD_PKG/lib/ui.sh"
 
@@ -135,7 +135,7 @@ GATES=$(gsd_ui_gates "$REPO")
 
 # 1 ticket — the tracker's issue/task, saved in the phase folder. The tag
 # tk-<id> in the ROADMAP title (or dir name) says which one.
-TRACKER=$(gsd_tracker "$REPO")
+TRACKER=$(gsd_tracker_which "$REPO")
 if [ "$TRACKER" != none ] && ! has TICKET.md && ! has STORY.md; then
   case "$pd" in *cu_*) ;; *)
     rel="${pd#"$REPO"/}/$P-TICKET.md"

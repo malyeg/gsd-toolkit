@@ -4,6 +4,23 @@ Each release is a GitHub release `vX.Y.Z` with `gsd-worktrees-X.Y.Z.tar.gz`
 and `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## 0.7.0
+
+- **`gsd-tracker` is standalone and works in any folder.** It no longer uses
+  GSD's code; GSD runs it as a command. In a repo with no `.gsd.conf` it uses
+  ClickUp instead of `none` (`GSD_TRACKER=none` turns it off); GSD itself still
+  counts only a tracker that is set, so nothing changes for GSD repos.
+- **Its settings can live in git config.** `gsd-tracker.tracker`, `.profile`,
+  `.command`, `.statusStart`, `.statusFinish` in `.git/config` (per clone,
+  never committed) sit between the environment and `.gsd.conf`, which still
+  works. `gsd-tracker config` shows the settings in use and where each came from.
+- **`gsd-tracker login` works anywhere** — plain repos, phase worktrees, or no
+  repo at all (`login <name>` then only saves the token). It sets
+  `git config gsd-tracker.profile` and no longer edits or commits `.gsd.conf`.
+  When the profile already has a saved token, it asks: use it, or replace it.
+- `gsd-tracker <unknown command>` with the tracker `none` now says so, and how
+  to set one.
+
 ## 0.6.3
 
 - **A real review is no longer rejected as empty.** A review counted as empty

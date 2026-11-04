@@ -162,17 +162,18 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | Feature | Where |
 |---|---|
 | `start` / `finish` / `comment` / `status` / `snapshot [--out]` / `extract` / `check` / `which` | `gsd-tracker` |
-| `tracker = none` (default) / `clickup` / `custom`; `GSD_TRACKER` override | `gsd-tracker`, `lib/tracker.sh` |
-| Id parsing: bare, `tk-<id>`, `#<id>`, URL; tags read back from title, then branch | `lib/tracker.sh` |
+| `tracker = none` (default in a GSD repo) / `clickup` / `custom`; settings from env > git config `gsd-tracker.*` > `.gsd.conf`; `gsd-tracker config` shows them | `gsd-tracker`, `lib/tracker/config.sh` |
+| Standalone: `gsd-tracker` works in any folder and uses no GSD code; GSD runs it as a command | `bin/gsd-tracker`, `lib/tracker/` |
+| Id parsing: bare, `tk-<id>`, `#<id>`, URL; tags read back from title, then branch | `lib/ticket.sh`, `lib/tracker/ids.sh` |
 | Status names from `tracker_status_start` / `_finish` (env `GSD_TRACKER_STATUS_*` wins) | `gsd-tracker` |
-| ClickUp: status matched per list, subtask cascade, idempotent, markdown snapshot; token from `CLICKUP_API_TOKEN`, else `~/.config/gsd/clickup-<profile>.env` with `tracker_profile`, else `~/.config/gsd/clickup.env`; `gsd-tracker login` saves a per-repo token and sets the profile in one step | `lib/trackers/clickup.sh` |
-| Custom: `tracker_command` gets `start` / `finish` / `comment` / `status` / `snapshot` / `check` + `<id> [text]` | `lib/trackers/custom.sh` |
+| ClickUp: status matched per list, subtask cascade, idempotent, markdown snapshot; token from `CLICKUP_API_TOKEN`, else `~/.config/gsd/clickup-<profile>.env` with `tracker_profile`, else `~/.config/gsd/clickup.env`; `gsd-tracker login` (any folder) saves a token — or reuses the saved one — and sets `git config gsd-tracker.profile` in one step | `lib/tracker/clickup.sh` |
+| Custom: `tracker_command` gets `start` / `finish` / `comment` / `status` / `snapshot` / `check` + `<id> [text]` | `lib/tracker/custom.sh` |
 | Snapshot `--out` writes only on success (the file marks the flow step done) | `gsd-tracker` |
 | Shared verbs `create` / `update` / `tasks` for every tracker (options passed to the connector; `none` fails them); a connector's own commands via `TRACKER_EXTRA` | `gsd-tracker` |
-| ClickUp connector: `create` / `update` (name, markdown description, assignees by me/id/email/username, status, priority, tags, parent) / `tasks` (filters, `--match` name search); own commands `lists` / `members` / `api` (any v2 call); workspace from `CLICKUP_TEAM_ID` or the token's only one | `lib/trackers/clickup.sh`, `gsd-clickup` |
+| ClickUp connector: `create` / `update` (name, markdown description, assignees by me/id/email/username, status, priority, tags, parent) / `tasks` (filters, `--match` name search); own commands `lists` / `members` / `api` (any v2 call); workspace from `CLICKUP_TEAM_ID` or the token's only one | `lib/tracker/clickup.sh`, `gsd-clickup` |
 | Agent skill: read and write the repo's tickets through `gsd-tracker` (checks `which` first) | `skills/gsdw-tracker` |
 | Install removes a toolkit skill no longer shipped (renamed or retired) | `lib/install.sh` |
-| Legacy read-only: `--cu`, `cu_<id>` tags, `STORY.md` | `lib/tracker.sh` |
+| Legacy read-only: `--cu`, `cu_<id>` tags, `STORY.md` | `lib/ticket.sh` |
 
 ## 11. Shared library (`lib/`)
 
@@ -186,6 +187,7 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | `lib/roadmap-audit.pl` | read-only ROADMAP bookkeeping audit |
 | `lib/roadmap-rows.pl` | adds a claimed phase's missing checklist + Progress rows (the ones gsd-core leaves out) |
 | `lib/version.sh` | this package's version, version compare, the cached latest-release check and notice |
-| `lib/tracker.sh` | tracker choice, ticket id parsing, tag extraction and matching |
-| `lib/trackers/*.sh` | one adapter per tracker (`clickup`, `custom`), sourced by `gsd-tracker` |
+| `lib/ticket.sh` | GSD side of tickets: `tk-<id>` tags (parse, extract, match), `gsd_tracker_which` |
+| `lib/tracker/config.sh`, `lib/tracker/ids.sh` | gsd-tracker's own settings and id parsing (standalone) |
+| `lib/tracker/clickup.sh`, `lib/tracker/custom.sh` | one adapter per tracker, sourced by `gsd-tracker` |
 | `lib/ui.sh` | UI gates: `ui_gates`, DESIGN.md / LAYOUT / SHOTS state, sketch winner, Playwright lookup, the DESIGN and LAYOUT templates |

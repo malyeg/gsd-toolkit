@@ -5,10 +5,12 @@ description: "Read and write the repo's tickets (ClickUp tasks, or whatever trac
 
 # gsd-tracker — the repo's tickets from the shell
 
-`gsd-tracker` is one command for every tracker. The repo's `.gsd.conf` picks
-the tracker (`tracker = clickup | custom | none`) and the login
-(`tracker_profile`), so the same calls work in every repo and act as the
-right user. Use it instead of a tracker chat connector.
+`gsd-tracker` is one command for every tracker, in any repo (GSD or not). The
+repo's settings pick the tracker (`clickup | custom | none`) and the login
+profile — from git config (`gsd-tracker.*`) or `.gsd.conf` — so the same calls
+work in every repo and act as the right user. A repo with no `.gsd.conf` uses
+ClickUp. `gsd-tracker config` shows the settings in use. Use it instead of a
+tracker chat connector.
 
 ## First: which tracker?
 
@@ -16,13 +18,14 @@ Run `gsd-tracker which` once per repo, before any ticket work.
 
 - `none` — no tracker is connected. **Stop and tell the user**; don't call
   `comment`/`status` (with `none` they do nothing yet still succeed). The fix
-  is `tracker = clickup` (or `custom`) in `.gsd.conf`.
+  is `tracker = clickup` (or `custom`) in `.gsd.conf` for the team, or
+  `git config gsd-tracker.tracker clickup` for this clone only.
 - anything else — go on. `gsd-tracker check` confirms the login. On a token
-  error, tell the user to run `gsd-tracker login` themselves in a terminal, in
-  the repo's main checkout, not a phase worktree (it asks for the token
-  hidden, tests it, and saves it for this repo) or to fix the token file the
-  error names; never ask them to paste a token into the chat, and never run
-  `login` for them.
+  error, tell the user to run `gsd-tracker login` themselves in a terminal,
+  anywhere in the repo (it offers a token already saved for the profile, or
+  asks for one hidden, tests it, and picks it for this repo) or to fix the
+  token file the error names; never ask them to paste a token into the chat,
+  and never run `login` for them.
 
 ## Shared commands (every tracker)
 
