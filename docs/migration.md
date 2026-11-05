@@ -86,8 +86,8 @@ preserves an existing configured provider set. To add a new provider, pass the
 complete set with `gsd-init --providers ...`.
 
 To remove one integration, remove its name from `providers =`, then delete only
-the text between `gsd-worktrees:provider:start` and
-`gsd-worktrees:provider:end` in its instruction file. Remove the matching hook
+the text between `gsd-toolkit:provider:start` and
+`gsd-toolkit:provider:end` in its instruction file. Remove the matching hook
 entry only if it calls `gsd-worktree-guard`; do not delete unrelated settings.
 For Codex/custom, which share `AGENTS.md`, re-run `gsd-init --no-launch` after
 editing the set; do not delete the shared block while either provider remains.

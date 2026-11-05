@@ -39,7 +39,7 @@ def main():
         plugin, sep, rest = command.partition(":")
         if sep and rest.startswith("gsd-"):
             command = rest
-        if command == "gsdw-flow":  # this toolkit's flow skill; the guard knows it as gsd-flow
+        if command in ("gsdt-flow", "gsdw-flow"):  # this toolkit's flow skill (gsdw-: before 0.8.0); the guard knows it as gsd-flow
             command = "gsd-flow"
         cwd = payload.get("cwd")
         emit("guard" if command.startswith("gsd-") else "allow", command, args,

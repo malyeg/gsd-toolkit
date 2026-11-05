@@ -1,4 +1,8 @@
-# gsd-worktrees
+# gsd-toolkit
+
+> Formerly **gsd-worktrees** (`arconme/gsd-worktrees`). Already installed it?
+> Run `gsd-update` twice, then `gsd-init --no-launch` in each project — see
+> [docs/releases.md](docs/releases.md#moving-from-gsd-worktrees).
 
 Provider-neutral, parallel-session worktree orchestration for **GSD** (Get Shit
 Done). The shared shell engine supports Claude Code and OpenAI Codex (plus a `custom` command);
@@ -83,7 +87,7 @@ singular `provider` key is still read when `providers` is absent, but new and
 migrated configuration does not write it.
 
 `gsd-start` starts or resumes the complete artifact-driven workflow
-(`/gsdw-flow`) by default. Pass `--no-flow` to open discuss-phase only for one
+(`/gsdt-flow`) by default. Pass `--no-flow` to open discuss-phase only for one
 invocation, or set `start_mode = discuss` to make that the repo's default
 (`--flow` overrides it).
 
@@ -151,7 +155,7 @@ are marked and repeated bootstrap updates only those blocks. See
 | `gsd-wt-new` | `gsd-start` — the worktree-creating half |
 | `gsd-wt-finish` | `gsd-finish` — the merge-and-cleanup half |
 | `gsd-worktree-guard` | Provider-neutral validator; also callable from optional native hooks |
-| `gsd-flow-next` | Which phase-flow step is next, read from the phase folder. Engine behind the `/gsdw-flow` skill |
+| `gsd-flow-next` | Which phase-flow step is next, read from the phase folder. Engine behind the `/gsdt-flow` skill |
 | `gsd-planning-merge` | git, as the merge driver for `.planning/` files |
 | `gsd-derive-port` | your app's `dev` script, to pick a per-worktree port |
 
@@ -169,7 +173,7 @@ The one-line version: `gsd-init` once → `gsd-start` → work → `gsd-finish`.
 | `gsd-list` | Read-only table of all phases: number, description, plan progress, lifecycle stage (live from the phase's worktree), worktree state. |
 | `gsd-init` | Take a repo with no GSD to "ready for gsd-start": bootstrap one or more providers, then open the planning session (`/gsd-new-project` or `/gsd-ingest-docs`) and, when it closes, say whether the ROADMAP is ready (`gsd-start -p <first phase>` next). With `--no-launch` or no terminal it prints the command. |
 | `gsd-bootstrap-repo` | Fit a repo with shared workflow files and explicitly selected provider adapters. Marked blocks preserve unrelated instructions. |
-| `gsd-tracker` | Tickets, one layer for every tracker: `start` / `finish` / `comment` / `status` / `snapshot` / `create` / `update` / `tasks` / `extract` / `check`, plus a tracker's own commands (ClickUp: `lists` / `members` / `api`). Tracker from `tracker =` in `.gsd.conf`: `none` (default), `clickup`, or `custom` (your script). The `gsdw-tracker` skill teaches agents to use it. See [docs/trackers.md](docs/trackers.md). `gsd-clickup` is the same, fixed to ClickUp. |
+| `gsd-tracker` | Tickets, one layer for every tracker: `start` / `finish` / `comment` / `status` / `snapshot` / `create` / `update` / `tasks` / `extract` / `check`, plus a tracker's own commands (ClickUp: `lists` / `members` / `api`). Tracker from `tracker =` in `.gsd.conf`: `none` (default), `clickup`, or `custom` (your script). The `gsdt-tracker` skill teaches agents to use it. See [docs/trackers.md](docs/trackers.md). `gsd-clickup` is the same, fixed to ClickUp. |
 | `gsd-update` | Update a release install: `--check`, the latest, or `--version X.Y.Z`. Checksum-verified; keeps the previous release. Then gsd-core to its latest for each installed agent (`--no-core` skips it). |
 | `gsd-wt-new` / `gsd-wt-finish` | The worktree workers behind `gsd-start`/`gsd-finish` (create with config-copy + background install; merge back locked and conflict-safe). Callable standalone. |
 | `gsd-planning-repair` | Reconcile `.planning/ROADMAP.md` + `STATE.md` after a union merge and recompute their progress counters from the roadmap and the plan files on disk. `--check` is the CI guard (exit 1 on union-merge damage); `--commit` lands the repair. Run automatically by `gsd-finish` and the `post-merge` hook. |
@@ -181,7 +185,7 @@ The one-line version: `gsd-init` once → `gsd-start` → work → `gsd-finish`.
 
 **`skills/` — canonical agent-facing skills** (installed per selected provider):
 
-`gsdw-worktrees/SKILL.md` teaches any supported agent, in any project, what
+`gsdt-worktrees/SKILL.md` teaches any supported agent, in any project, what
 these commands are and the order to use them in — `gsd-list` before claiming,
 `-p <N>` to attach, `-n` only for genuinely new work. Only its description line
 sits in context permanently; the body loads when a session is actually about
@@ -233,20 +237,20 @@ command-level guards do not require it.
 **Use it (a release):**
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/arconme/gsd-worktrees/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash
 # pick the agents that get the skills (default: claude):
-curl -fsSL https://raw.githubusercontent.com/arconme/gsd-worktrees/main/install.sh | bash -s -- --agent claude --agent codex
+curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash -s -- --agent claude --agent codex
 ```
 
 Careful? Download the installer, read it, then run it:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/arconme/gsd-worktrees/main/install.sh -o install.sh
+curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh -o install.sh
 less install.sh && bash install.sh
 ```
 
 This downloads the latest GitHub release, checks its SHA256, and installs it to
-`~/.local/share/gsd-worktrees/releases/<version>/` with the commands linked in
+`~/.local/share/gsd-toolkit/releases/<version>/` with the commands linked in
 `~/.local/bin`. `--version X.Y.Z` installs a given release. It also installs
 gsd-core (`--profile=full`) for each chosen agent that has none; an agent that
 has it is left alone (`gsd-update` updates it). `--no-core` skips this. Without Node.js (`npx`) it prints the command to run
@@ -261,7 +265,7 @@ CI tests on every push:
 wsl --install                     # in PowerShell (admin), once; installs Ubuntu, then reboot
 # then, in the Ubuntu terminal:
 sudo apt update && sudo apt install -y git curl perl python3 jq
-curl -fsSL https://raw.githubusercontent.com/arconme/gsd-worktrees/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash
 ```
 
 - Keep your projects on the Linux side (`~/projects`), not under `/mnt/c/…`:
@@ -289,8 +293,8 @@ in each release: [CHANGELOG.md](CHANGELOG.md). More: [docs/releases.md](docs/rel
 **Work on the toolkit itself (a git checkout):**
 
 ```sh
-git clone git@github.com:arconme/gsd-worktrees.git
-cd gsd-worktrees
+git clone git@github.com:malyeg/gsd-toolkit.git
+cd gsd-toolkit
 ./install.sh --agent claude      # or --agent codex / --all-agents
 ```
 
@@ -397,7 +401,7 @@ The fix is three layers, because the damage has three entry points:
    ```yaml
    - uses: actions/checkout@v4
    - run: |
-       git clone --depth 1 https://github.com/arconme/gsd-worktrees.git /tmp/gsd
+       git clone --depth 1 https://github.com/malyeg/gsd-toolkit.git /tmp/gsd
        /tmp/gsd/bin/gsd-planning-repair --check
    ```
 

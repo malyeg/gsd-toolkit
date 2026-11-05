@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# install.sh — install (or update) gsd-worktrees from a GitHub release.
+# install.sh — install (or update) gsd-toolkit from a GitHub release.
 #
-#   curl -fsSL https://raw.githubusercontent.com/arconme/gsd-worktrees/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash
 #   curl -fsSL …/install.sh | bash -s -- --agent claude --agent codex
 #
 # The one way to install. Run as ./install.sh in a checkout it does the same:
@@ -21,19 +21,24 @@
 #
 # Each release is unpacked to its own folder, checked against the release's
 # SHA256SUMS, and installed by its own lib/install.sh:
-#   ~/.local/share/gsd-worktrees/releases/<X.Y.Z>/   the runtime
-#   ~/.local/bin/gsd-*                              links into it
+#   ~/.local/share/gsd-toolkit/releases/<X.Y.Z>/   the runtime
+#   ~/.local/bin/gsd-*                            links into it
 # The release you had before stays (for going back: --version <old>); older
 # ones are removed. No git checkout is needed.
 #
+# Before 0.8.0 the package was gsd-worktrees (arconme/gsd-worktrees): its
+# releases are gsd-worktrees-X.Y.Z.tar.gz and its runtime was
+# ~/.local/share/gsd-worktrees/. Both tarball names are read; that old
+# runtime folder is removed once no command links into it.
+#
 # Env: GSD_BIN_DIR (default ~/.local/bin), GSD_RELEASES_DIR (default
-#      GSD_BIN_DIR/../share/gsd-worktrees/releases), GSD_UPDATE_REPO
-#      (owner/name, default arconme/gsd-worktrees).
+#      GSD_BIN_DIR/../share/gsd-toolkit/releases), GSD_UPDATE_REPO
+#      (owner/name, default malyeg/gsd-toolkit).
 # Needs: bash, curl, tar, git, perl, python 3.7+; Node.js (npx) for gsd-core.
 set -euo pipefail
 
-SLUG=${GSD_UPDATE_REPO:-arconme/gsd-worktrees}
-die() { printf 'gsd-worktrees install: %s\n' "$*" >&2; exit 1; }
+SLUG=${GSD_UPDATE_REPO:-malyeg/gsd-toolkit}
+die() { printf 'gsd-toolkit install: %s\n' "$*" >&2; exit 1; }
 # --copy installs this unpacked package (what older releases' get.sh ask of
 # the release they downloaded)
 for a in "$@"; do
@@ -72,22 +77,33 @@ printf '%s' "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$' || die "not a versi
 
 BIN=${GSD_BIN_DIR:-$HOME/.local/bin}
 mkdir -p "$BIN"; BIN=$(cd "$BIN" && pwd -P)
-RELEASES=${GSD_RELEASES_DIR:-$BIN/../share/gsd-worktrees/releases}
+RELEASES=${GSD_RELEASES_DIR:-$BIN/../share/gsd-toolkit/releases}
+# gsd-update passes the releases dir it runs from: the old name moves here.
+case "$RELEASES" in */gsd-worktrees/releases|*/gsd-worktrees/releases/) RELEASES="${RELEASES%/gsd-worktrees/releases*}/gsd-toolkit/releases" ;; esac
 mkdir -p "$RELEASES"; RELEASES=$(cd "$RELEASES" && pwd -P)
+# The runtime of a release before 0.8.0, beside ours: only the standard
+# layout (…/share/gsd-toolkit/releases) has one.
+OLD_SHARE=""
+case "$RELEASES" in */share/gsd-toolkit/releases) OLD_SHARE="${RELEASES%/gsd-toolkit/releases}/gsd-worktrees" ;; esac
 
 # ── download + verify ────────────────────────────────────────────────────────
 TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
-NAME="gsd-worktrees-$VERSION.tar.gz"
 URL="https://github.com/$SLUG/releases/download/v$VERSION"
-echo "▶ downloading gsd-worktrees ${VERSION}…"
-curl -fsSL --max-time 120 "$URL/$NAME" -o "$TMP/$NAME" || die "download failed: $URL/$NAME"
+echo "▶ downloading gsd-toolkit ${VERSION}…"
 curl -fsSL --max-time 30 "$URL/SHA256SUMS" -o "$TMP/SHA256SUMS" || die "download failed: $URL/SHA256SUMS"
+# The package's name: gsd-toolkit, or gsd-worktrees for a release before 0.8.0.
+PKGNAME=gsd-toolkit
+for n in gsd-toolkit gsd-worktrees; do
+  if awk -v f="$n-$VERSION.tar.gz" '$2 == f || $2 == "*" f {found=1} END {exit !found}' "$TMP/SHA256SUMS"; then PKGNAME=$n; break; fi
+done
+NAME="$PKGNAME-$VERSION.tar.gz"
+curl -fsSL --max-time 120 "$URL/$NAME" -o "$TMP/$NAME" || die "download failed: $URL/$NAME"
 want=$(awk -v f="$NAME" '$2 == f || $2 == "*" f {print $1}' "$TMP/SHA256SUMS")
 if command -v sha256sum >/dev/null 2>&1; then have=$(sha256sum "$TMP/$NAME" | awk '{print $1}')
 else have=$(shasum -a 256 "$TMP/$NAME" | awk '{print $1}'); fi
 [ -n "$want" ] && [ "$want" = "$have" ] || die "checksum mismatch for $NAME — not installed"
 tar -xzf "$TMP/$NAME" -C "$TMP"
-SRC="$TMP/gsd-worktrees-$VERSION"
+SRC="$TMP/$PKGNAME-$VERSION"
 [ "$(head -1 "$SRC/VERSION" 2>/dev/null | tr -d '[:space:]')" = "$VERSION" ] \
   || die "the $NAME package does not say it is version $VERSION"
 
@@ -114,4 +130,27 @@ for d in "$RELEASES"/*; do
   printf '%s' "$v" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$' || continue
   [ "$v" = "$VERSION" ] || [ "$v" = "$PREV" ] || { rm -rf "$d"; echo "  ✂ removed old release $v"; }
 done
-echo "✔ gsd-worktrees $VERSION installed${PREV:+ (was $PREV)}"
+# The runtime of a release before 0.8.0 (~/.local/share/gsd-worktrees): gone
+# once no command links into it. A link still there (a failed install, a
+# second bin dir we do not know), or anything in it but release folders,
+# keeps it.
+old_runtime_only() {  # $1=dir → 0 when it holds releases/<X.Y.Z>/ and nothing else
+  local e
+  for e in "$1"/* "$1"/.[!.]*; do
+    [ -e "$e" ] || [ -L "$e" ] || continue
+    [ "$e" = "$1/releases" ] && [ -d "$e" ] && [ ! -L "$e" ] || return 1
+  done
+  for e in "$1"/releases/* "$1"/releases/.[!.]*; do
+    [ -e "$e" ] || [ -L "$e" ] || continue
+    [ -d "$e" ] && [ ! -L "$e" ] && printf '%s' "$(basename "$e")" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$' || return 1
+  done
+}
+if [ -n "$OLD_SHARE" ] && [ -d "$OLD_SHARE/releases" ] && [ ! -L "$OLD_SHARE" ] && old_runtime_only "$OLD_SHARE"; then
+  used=""
+  for l in "$BIN"/gsd-*; do
+    [ -L "$l" ] || continue
+    case "$(readlink "$l")" in "$OLD_SHARE"/*) used=1; break ;; esac
+  done
+  if [ -z "$used" ]; then rm -rf "$OLD_SHARE"; echo "  ✂ removed the old gsd-worktrees runtime ($OLD_SHARE)"; fi
+fi
+echo "✔ gsd-toolkit $VERSION installed${PREV:+ (was $PREV)}"

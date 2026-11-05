@@ -2,15 +2,15 @@
 # lib/version.sh — the toolkit's version, and the "a newer release is out" check.
 #
 # Two things are checked:
-#   gsd-worktrees  GitHub releases of $GSD_UPDATE_REPO (default below), vX.Y.Z
+#   gsd-toolkit  GitHub releases of $GSD_UPDATE_REPO (default below), vX.Y.Z
 #   GSD itself     @opengsd/gsd-core on npm (installed: read beside its gsd_run)
 # Each latest version is cached for a day in ${XDG_CACHE_HOME:-~/.cache}/
-# gsd-worktrees/ (latest-version, latest-gsd-core-version), so commands never wait
+# gsd-toolkit/ (latest-version, latest-gsd-core-version), so commands never wait
 # on the network: gsd_update_notice reads the caches and refreshes stale ones
 # in the background. GSD_NO_UPDATE_CHECK=1 turns every check off.
 # Sourced after lib/common.sh; needs GSD_PKG.
 
-GSD_UPDATE_REPO_DEFAULT=arconme/gsd-worktrees
+GSD_UPDATE_REPO_DEFAULT=malyeg/gsd-toolkit
 
 gsd_version() {  # → X.Y.Z of this package ('unknown' without a VERSION file)
   local v; v=$(head -1 "$GSD_PKG/VERSION" 2>/dev/null | tr -d '[:space:]')
@@ -31,7 +31,7 @@ gsd_version_gt() {  # $1 > $2 ? (X.Y.Z, a leading v is fine; anything else → f
   return 1
 }
 
-gsd_update_cache() { printf '%s\n' "${XDG_CACHE_HOME:-$HOME/.cache}/gsd-worktrees/latest-version"; }
+gsd_update_cache() { printf '%s\n' "${XDG_CACHE_HOME:-$HOME/.cache}/gsd-toolkit/latest-version"; }
 
 gsd_latest_fetch() {  # → latest release version from GitHub ('' when unreachable)
   curl -fsSL --max-time 5 -H 'Accept: application/vnd.github+json' \
@@ -57,7 +57,7 @@ gsd_latest_cached() { head -1 "$(gsd_update_cache)" 2>/dev/null | tr -d '[:space
 # ── GSD itself (npm) ─────────────────────────────────────────────────────────
 # A new file name: an older cache file (latest-gsd-version) held another
 # package's numbers.
-gsd_gsd_cache() { printf '%s\n' "${XDG_CACHE_HOME:-$HOME/.cache}/gsd-worktrees/latest-gsd-core-version"; }
+gsd_gsd_cache() { printf '%s\n' "${XDG_CACHE_HOME:-$HOME/.cache}/gsd-toolkit/latest-gsd-core-version"; }
 
 # The places gsd_cli (lib/common.sh) looks, for code that must not start node.
 gsd_gsd_candidates() {
@@ -123,7 +123,7 @@ gsd_update_notice() {
   if [ -n "$(gsd_gsd_installed)" ] && gsd_gsd_stale; then ( gsd_gsd_refresh ) >/dev/null 2>&1 </dev/null & fi
   local new cur; new=$(gsd_latest_cached); cur=$(gsd_version)
   if [ -n "$new" ] && gsd_version_gt "$new" "$cur"; then
-    printf '• gsd-worktrees %s is out (you have %s) — update: %s\n' "$new" "$cur" "$(gsd_update_how)" >&2
+    printf '• gsd-toolkit %s is out (you have %s) — update: %s\n' "$new" "$cur" "$(gsd_update_how)" >&2
   fi
   new=$(gsd_gsd_cached)
   if [ -n "$new" ]; then

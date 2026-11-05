@@ -1,8 +1,31 @@
 # Changelog
 
-Each release is a GitHub release `vX.Y.Z` with `gsd-worktrees-X.Y.Z.tar.gz`
-and `SHA256SUMS`. Install or update: see the README. The section for a version
+Each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
+(`gsd-worktrees-X.Y.Z.tar.gz` before 0.8.0, in `arconme/gsd-worktrees`) and
+`SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
+
+## 0.8.0
+
+- **gsd-worktrees is now gsd-toolkit**, at
+  [malyeg/gsd-toolkit](https://github.com/malyeg/gsd-toolkit). The old repo is
+  archived; its releases stay downloadable.
+- **The skills are renamed**: `gsdw-flow` → `gsdt-flow`, `gsdw-worktrees` →
+  `gsdt-worktrees`, `gsdw-tracker` → `gsdt-tracker`. `gsd-start` opens
+  `/gsdt-flow`. The guard still knows `/gsdw-flow`, for a session started
+  before the update.
+- **Nothing else you type changes**: the `gsd-*` commands, `.gsd.conf`,
+  `.gsd/`, `GSD_*` variables and `git config gsd-tracker.*` stay.
+- **How to move** (from 0.7.0 or older):
+  1. `gsd-update` — gets 0.7.1, the bridge release of gsd-worktrees.
+  2. `gsd-update` again — gets 0.8.0 from the new repo. It removes the
+     `gsdw-*` skills and `~/.local/share/gsd-worktrees/` (the runtime is now
+     `~/.local/share/gsd-toolkit/`).
+  3. In each project: `gsd-init --no-launch`, then commit. It rewrites the
+     marked blocks in `.gsd/INSTRUCTIONS.md`, `CLAUDE.md` and `AGENTS.md` in
+     place; `gsd-doctor` reports them as out of date (T016) until then.
+- `install.sh` reads both tarball names, so `--version` can still install a
+  gsd-worktrees release (with `GSD_UPDATE_REPO=arconme/gsd-worktrees`).
 
 ## 0.7.0
 

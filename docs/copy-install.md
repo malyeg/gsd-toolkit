@@ -15,7 +15,7 @@ so they continue to work after the checkout is removed. The selected agent's
 skills are also copied into its skill directory.
 
 By default, `GSD_BIN_DIR` is `~/.local/bin` and the runtime directory is
-`~/.local/share/gsd-worktrees` (`install.sh` sets it to
+`~/.local/share/gsd-toolkit` (`install.sh` sets it to
 `…/releases/X.Y.Z`). `GSD_COPY_DIR` chooses another runtime directory. Both paths are resolved to absolute paths before installation.
 
 Installing again into the same runtime directory preserves unrelated paths. If a package path has local changes, its old version

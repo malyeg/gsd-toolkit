@@ -109,13 +109,13 @@ section "skills (T007)"
 doc "$R"
 has "no skills → a note with the reinstall command" 'claude skills not installed' "$OUT"
 mkdir -p "$WORK/skills"; cp -R "$PKG/skills/." "$WORK/skills/"
-printf '<!-- gsd-worktrees-skill 0.0.0 -->\n' >> "$WORK/skills/gsdw-flow/SKILL.md"
+printf '<!-- gsd-toolkit-skill 0.0.0 -->\n' >> "$WORK/skills/gsdt-flow/SKILL.md"
 json "$R"
 hasnt "skills same as the toolkit → no T007" '"T007"' "$OUT"
-echo "old step" >> "$WORK/skills/gsdw-flow/SKILL.md"
+echo "old step" >> "$WORK/skills/gsdt-flow/SKILL.md"
 json "$R"
 has "an edited skill → T007" '"T007"' "$OUT"
-has "T007 names the stale skill" 'differ from this toolkit.*gsdw-flow' "$OUT"
+has "T007 names the stale skill" 'differ from this toolkit.*gsdt-flow' "$OUT"
 has "a checkout reinstalls with its install.sh" 'install.sh --reuse-install-config --agent claude' "$OUT"
 
 # A release runtime has no .git: it re-runs its own install.sh for its version.
@@ -274,6 +274,26 @@ PATH="$BASEPATH" gsd-doctor --fix --yes --repo "$I" > "$OUT" 2>&1
 json "$I"
 hasnt "--fix refreshes them" '"T016"' "$OUT"
 has "…and keeps the user's own text" "My own project notes." "$I/CLAUDE.md"
+# A project set up before 0.8.0 (package gsd-worktrees, skill gsdw-flow):
+# its blocks still count as installed, but are out of date; gsd-init
+# --no-launch rewrites them in place.
+for f in .gsd/INSTRUCTIONS.md CLAUDE.md AGENTS.md; do
+  sed -i.bak 's/<!-- gsd-toolkit:/<!-- gsd-worktrees:/; s/gsdt-flow/gsdw-flow/' "$I/$f"
+done
+printf 'Top note of mine.\n\n' | cat - "$I/CLAUDE.md" > "$I/CLAUDE.tmp" && mv "$I/CLAUDE.tmp" "$I/CLAUDE.md"
+json "$I"
+has "pre-0.8.0 marker blocks → T016 for every file" 'older than this toolkit.*INSTRUCTIONS.md CLAUDE.md AGENTS.md' "$OUT"
+hasnt "…but they still count as installed (no T052)" '"T052"' "$OUT"
+hasnt "…(no T058)" '"T058"' "$OUT"
+(cd "$I" && PATH="$BASEPATH" gsd-bootstrap-repo --agents claude,codex) >/dev/null 2>&1
+json "$I"
+hasnt "gsd-init rewrites them → no T016" '"T016"' "$OUT"
+for f in .gsd/INSTRUCTIONS.md CLAUDE.md AGENTS.md; do
+  hasnt "…no old marker left in $f" 'gsd-worktrees:\|gsdw-flow' "$I/$f"
+done
+is "…one provider block in CLAUDE.md" "$(grep -c '^<!-- gsd-toolkit:provider:start -->$' "$I/CLAUDE.md")" 1
+is "…in the same place, the user's text around it kept" "$(head -1 "$I/CLAUDE.md"):$(tail -1 "$I/CLAUDE.md")" "Top note of mine.:My own project notes."
+rm -f "$I"/*.bak "$I"/.gsd/*.bak
 printf 'base = develop\nproviders = claude,codex\nui_gates = off\n' > "$I/.gsd.conf"
 json "$I"
 has "ui_gates changed since the last gsd-init → T016" '"T016"' "$OUT"
@@ -436,7 +456,7 @@ export GSD_CLAUDE_SKILL_DIR="$WORK/claude-skills"
 prov=$(awk -F'\t' '$1 == "providers" { print $2 }' "$GSD_BIN_DIR/.gsd-install-manifest")
 case ",$prov," in *,claude,*) ok "claude is kept" ;; *) bad "claude is kept" "providers: $prov" ;; esac
 case ",$prov," in *,codex,*) ok "codex is added" ;; *) bad "codex is added" "providers: $prov" ;; esac
-[ -f "$GSD_CODEX_SKILL_DIR/gsdw-flow/SKILL.md" ] && ok "codex skills installed" || bad "codex skills installed"
+[ -f "$GSD_CODEX_SKILL_DIR/gsdt-flow/SKILL.md" ] && ok "codex skills installed" || bad "codex skills installed"
 
 printf '\n%d passed, %d failed\n' "$PASS" "$FAIL"
 [ "$FAIL" = 0 ]

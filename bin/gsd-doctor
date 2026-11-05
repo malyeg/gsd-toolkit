@@ -14,7 +14,7 @@
 # Comparisons against origin therefore use the refs from your last fetch and are
 # marked as such. The one exception is the version check, which may ask GitHub
 # and npm for the latest versions (at most once a day) and caches the answers
-# in ~/.cache/gsd-worktrees/ (GSD_NO_UPDATE_CHECK=1 turns it off).
+# in ~/.cache/gsd-toolkit/ (GSD_NO_UPDATE_CHECK=1 turns it off).
 #
 # Usage:
 #   gsd-doctor [--repo <path>] [--quiet] [--json]
@@ -39,7 +39,7 @@
 #                  (provider list), provider {name, command, available,
 #                  instruction_file, instruction_integrated, skill_installed,
 #                  command_guard, native_hook}, count, findings [{code,message,fix}],
-#                  updates [{name,installed,latest,fix}] (newer gsd-worktrees /
+#                  updates [{name,installed,latest,fix}] (newer gsd-toolkit /
 #                  GSD; shown with --quiet too, never a finding),
 #                  notes [text] (what the text report shows as • lines)
 #                  Codes shared with gsd-core's /gsd-health where they mean the
@@ -279,11 +279,11 @@ if [ -z "${GSD_NO_UPDATE_CHECK:-}" ]; then
   gsd_latest_stale && gsd_latest_refresh
   tk_new=$(gsd_latest_cached); tk_cur=$(gsd_version)
   if [ -n "$tk_new" ] && gsd_version_gt "$tk_new" "$tk_cur"; then
-    update gsd-worktrees "$tk_cur" "$tk_new" "$(gsd_update_how)"
+    update gsd-toolkit "$tk_cur" "$tk_new" "$(gsd_update_how)"
   elif [ -n "$tk_new" ]; then
-    pass "gsd-worktrees $tk_cur (latest release: $tk_new)"
+    pass "gsd-toolkit $tk_cur (latest release: $tk_new)"
   else
-    note "gsd-worktrees $tk_cur (latest release unknown — GitHub not reachable)"
+    note "gsd-toolkit $tk_cur (latest release unknown — GitHub not reachable)"
   fi
 fi
 
@@ -330,7 +330,7 @@ fi
 TOOLKIT_MAIN=$(gsd_main "$GSD_PKG")
 if [ -f "$GSD_PKG/install.sh" ] && [ -d "$GSD_PKG/shims" ] && [ "$MAIN" = "$TOOLKIT_MAIN" ]; then
   section "repo setup"
-  note "this is the gsd-worktrees toolkit itself, not a GSD project — setup checks skipped"
+  note "this is the gsd-toolkit toolkit itself, not a GSD project — setup checks skipped"
   IS_GSD_REPO=0
 elif [ -d "$MAIN/.planning" ] || [ -f "$MAIN/.gsd.conf" ] \
      || [ -f "$MAIN/scripts/gsd-finish-worktree-feature.sh" ]; then
@@ -361,7 +361,7 @@ case ",$RAW_PROVIDERS,$RAW_LEGACY_PROVIDER," in *,gemini,*) gemini_left="$gemini
 [ -L "$MAIN/GEMINI.md" ] || [ -z "$(gsd_owned_block_get "$MAIN/GEMINI.md" provider)" ] || gemini_left="$gemini_left GEMINI.md"   # a link shows another file's block
 # a hook command naming the guard: what bootstrap's clean-up removes
 ! grep -qsE '"command"[[:space:]]*:[[:space:]]*"[^"]*gsd-worktree-guard' "$MAIN/.gemini/settings.json" || gemini_left="$gemini_left .gemini/settings.json"
-[ -z "$gemini_left" ] || fail "Gemini setup from an older gsd-worktrees:$gemini_left — $GSD_GEMINI_GONE" "gsd-init --no-launch" "T061"
+[ -z "$gemini_left" ] || fail "Gemini setup from an older gsd-toolkit:$gemini_left — $GSD_GEMINI_GONE" "gsd-init --no-launch" "T061"
 
 if [ "$MODEL_VALID" = 0 ]; then
   fail "invalid model configuration for $DOCTOR_PROVIDER" "check ${DOCTOR_PROVIDER}_model in .gsd.conf and GSD model environment overrides" "T059"
@@ -414,7 +414,7 @@ for configured_provider in $configured_list; do
   skillroot=$(gsd_provider_skill_root "$configured_provider" 2>/dev/null || true)
   if [ -z "$skillroot" ]; then
     note "$configured_provider has no installable native skill format; follow .gsd/INSTRUCTIONS.md and gsd-flow-next"
-  elif [ ! -f "$skillroot/gsdw-flow/SKILL.md" ]; then
+  elif [ ! -f "$skillroot/gsdt-flow/SKILL.md" ]; then
     note "$configured_provider skills not installed — $REINSTALL --agent $configured_provider"
   else
     stale_skills=""
@@ -684,7 +684,7 @@ fi
 # T026 — gsd-core's opt-in bracket phase ids (PROJ.01-14): the ROADMAP
 # parsing, folder matching and phase-<N>-<slug> branches read numbers only.
 if grep -qsE '"phase_id_convention"[[:space:]]*:[[:space:]]*"bracket"' "$HERE/.planning/config.json"; then
-  fail "phase_id_convention is \"bracket\" in .planning/config.json — gsd-worktrees reads numbered phases only" "set phase_id_convention to null in .planning/config.json" "T026"
+  fail "phase_id_convention is \"bracket\" in .planning/config.json — gsd-toolkit reads numbered phases only" "set phase_id_convention to null in .planning/config.json" "T026"
 fi
 
 if [ -f "$ROADMAP" ] && ! command -v perl >/dev/null 2>&1; then
@@ -946,7 +946,7 @@ fi
 if [ "$JSON" = 1 ]; then
   instruction_file=$(gsd_provider_instruction_file "$DOCTOR_PROVIDER" 2>/dev/null || echo '')
   instruction_integrated=false; gsd_provider_instruction_integrated "$MAIN" "$DOCTOR_PROVIDER" && instruction_integrated=true
-  skill_installed=false; doctor_skillroot=$(gsd_provider_skill_root "$DOCTOR_PROVIDER" 2>/dev/null || true); [ -n "$doctor_skillroot" ] && [ -f "$doctor_skillroot/gsdw-flow/SKILL.md" ] && skill_installed=true
+  skill_installed=false; doctor_skillroot=$(gsd_provider_skill_root "$DOCTOR_PROVIDER" 2>/dev/null || true); [ -n "$doctor_skillroot" ] && [ -f "$doctor_skillroot/gsdt-flow/SKILL.md" ] && skill_installed=true
   native_hook=$(gsd_provider_hook_state "$MAIN" "$DOCTOR_PROVIDER")
   command_guard=false; gsd_command_guards_active "$GSD_PKG" && command_guard=true
   configured_json=""; doctor_configured=$(gsd_conf_get "$MAIN" providers); doctor_configured=${doctor_configured:-$DOCTOR_PROVIDER}; oldifs=$IFS; IFS=,; for p in $doctor_configured; do configured_json="${configured_json:+$configured_json,}\"$(jstr "$p")\""; done; IFS=$oldifs

@@ -29,9 +29,9 @@ gsd_start_mode_resolve "$R" discuss; assert 'CLI start mode overrides repository
 printf 'start_mode = invalid\n' > "$R/.gsd.conf"; gsd_start_mode_resolve "$R" "" >/dev/null 2>&1; assert 'invalid start mode rejected' '[ $? -eq 64 ]'
 for p in claude codex; do prompt=$(gsd_provider_prompt "$p" discuss 7); gsd_provider_argv "$p" "$p" "$prompt"; "$WORK/fakebin/$p" "${GSD_LAUNCH_ARGV[@]:1}" > "$WORK/$p-discuss.args"; prompt=$(gsd_provider_prompt "$p" flow 7); gsd_provider_argv "$p" "$p" "$prompt"; "$WORK/fakebin/$p" "${GSD_LAUNCH_ARGV[@]:1}" > "$WORK/$p-flow.args"; done
 assert 'Claude discuss prompt remains backward compatible' "grep -q '^/gsd-discuss-phase 7$' '$WORK/claude-discuss.args'"
-assert 'Claude flow prompt is explicit' "grep -q '^/gsdw-flow 7$' '$WORK/claude-flow.args'"
+assert 'Claude flow prompt is explicit' "grep -q '^/gsdt-flow 7$' '$WORK/claude-flow.args'"
 assert 'Codex discuss prompt is natural language' "grep -q 'Discuss GSD phase 7' '$WORK/codex-discuss.args'"
-assert 'Codex flow prompt is natural language' "grep -q 'gsdw-flow skill' '$WORK/codex-flow.args'"
+assert 'Codex flow prompt is natural language' "grep -q 'gsdt-flow skill' '$WORK/codex-flow.args'"
 render=$(gsd_provider_render '/tmp/a b' fake 'quote " and $ safe'); assert 'rendering shell-quotes cwd and prompt' "printf '%s' \"\$render\" | grep -q '/tmp/a\\\\ b'"
 assert 'missing executable still renders in print-only mode' "! command -v provider-does-not-exist >/dev/null && [ -n \"\$(gsd_provider_render /tmp provider-does-not-exist prompt)\" ]"
 printf 'providers = claude,codex\nagent_command = default-claude\nclaude_command = custom-claude\ncodex_command = custom-codex\n' > "$R/.gsd.conf"
@@ -178,7 +178,7 @@ done
 for p in claude codex; do
   R=$WORK/$p; repo "$R"; printf 'user content %s\n' "$p" > "$R/$(gsd_provider_instruction_file "$p")"
   (cd "$R" && gsd-bootstrap-repo --agent "$p") >/dev/null
-  assert "$p canonical instructions" "grep -q 'gsd-worktrees:canonical' '$R/.gsd/INSTRUCTIONS.md'"
+  assert "$p canonical instructions" "grep -q 'gsd-toolkit:canonical' '$R/.gsd/INSTRUCTIONS.md'"
   assert "$p preserves unrelated instructions" "grep -q 'user content $p' '$R/$(gsd_provider_instruction_file "$p")'"
   assert "$p owns one marked block" "[ \"\$(grep -c 'provider:start' '$R/$(gsd_provider_instruction_file "$p")')\" -eq 1 ]"
   before=$(cksum "$R/.gsd/INSTRUCTIONS.md" "$R/$(gsd_provider_instruction_file "$p")"); (cd "$R" && gsd-bootstrap-repo --agent "$p") >/dev/null; after=$(cksum "$R/.gsd/INSTRUCTIONS.md" "$R/$(gsd_provider_instruction_file "$p")")
@@ -196,7 +196,7 @@ for p in claude codex; do gsd_provider_resolve "$R" "$p" ""; prompt=$(gsd_provid
 R=$WORK/legacy; repo "$R"; printf 'before\n## GSD planning system\nlegacy toolkit scripts/hooks/gsd-worktree-guard.sh\nrepo-specific policy\n## User section\nkeep me\n' > "$R/CLAUDE.md"; cp "$R/CLAUDE.md" "$R/CLAUDE.before"; (cd "$R" && gsd-bootstrap-repo --agent claude) >/dev/null
 assert 'legacy Claude instructions preserved byte-for-byte' "head -n 6 '$R/CLAUDE.md' | cmp -s - '$R/CLAUDE.before'"
 assert 'legacy Claude repository policy remains active' "grep -q 'repo-specific policy' '$R/CLAUDE.md' && grep -q 'keep me' '$R/CLAUDE.md'"
-assert 'legacy Claude gets one marked canonical adapter' "[ \"\$(grep -c 'gsd-worktrees:provider:start' '$R/CLAUDE.md')\" -eq 1 ] && grep -q 'supersede older unmarked GSD text' '$R/CLAUDE.md'"
+assert 'legacy Claude gets one marked canonical adapter' "[ \"\$(grep -c 'gsd-toolkit:provider:start' '$R/CLAUDE.md')\" -eq 1 ] && grep -q 'supersede older unmarked GSD text' '$R/CLAUDE.md'"
 assert 'legacy Claude migration creates no backup debris' "[ ! -e '$R/CLAUDE.md.gsd-legacy.bak' ]"
 R=$WORK/legacy-config; repo "$R"; printf 'base = develop\nprovider = codex\ncustom_setting = keep\n' > "$R/.gsd.conf"; (cd "$R" && gsd-bootstrap-repo) >/dev/null
 assert 'legacy provider migrates to providers' "grep -q '^providers = codex$' '$R/.gsd.conf' && ! grep -q '^provider =' '$R/.gsd.conf'"
@@ -245,7 +245,7 @@ for p in claude codex; do
   for shape in unmatched reversed duplicate nested inline; do
     R=$WORK/markers-$p-$shape; repo "$R"
     instruction_file="$R/$(gsd_provider_instruction_file "$p")"
-    start='<!-- gsd-worktrees:provider:start -->'; end='<!-- gsd-worktrees:provider:end -->'
+    start='<!-- gsd-toolkit:provider:start -->'; end='<!-- gsd-toolkit:provider:end -->'
     case "$shape" in
       unmatched) printf '%s\n' "$start" 'user policy' > "$instruction_file" ;;
       reversed) printf '%s\n' "$end" 'user policy' "$start" > "$instruction_file" ;;
@@ -259,27 +259,27 @@ for p in claude codex; do
   done
 done
 R=$WORK/owned-block-bytes; repo "$R"
-printf 'user prefix\n<!-- gsd-worktrees:provider:start -->\nold owned block\n<!-- gsd-worktrees:provider:end -->\nuser tail' > "$R/AGENTS.md"
+printf 'user prefix\n<!-- gsd-toolkit:provider:start -->\nold owned block\n<!-- gsd-toolkit:provider:end -->\nuser tail' > "$R/AGENTS.md"
 (cd "$R" && gsd-bootstrap-repo --agent codex) >/dev/null
 assert 'owned-block update preserves user suffix without newline' '[ "$(tail -c 9 "$R/AGENTS.md")" = "user tail" ]'
 before=$(cksum "$R/AGENTS.md"); (cd "$R" && gsd-bootstrap-repo --agent codex) >/dev/null
 assert 'byte-preserving owned update is idempotent' '[ "$before" = "$(cksum "$R/AGENTS.md")" ]'
 mv "$R/AGENTS.md" "$R/AGENTS-real.md"; ln -s AGENTS-real.md "$R/AGENTS.md"; rm -rf "$R/.gsd"
 (cd "$R" && gsd-bootstrap-repo --agent codex) >/dev/null
-assert 'a symlinked AGENTS.md stays a link' '[ -L "$R/AGENTS.md" ] && grep -q "gsd-worktrees:provider:start" "$R/AGENTS-real.md"'
+assert 'a symlinked AGENTS.md stays a link' '[ -L "$R/AGENTS.md" ] && grep -q "gsd-toolkit:provider:start" "$R/AGENTS-real.md"'
 rm -f "$R/AGENTS.md"; mv "$R/AGENTS-real.md" "$R/AGENTS.md"
 R=$WORK/gitignore-nl; repo "$R"; printf 'node_modules' > "$R/.gitignore"
 (cd "$R" && gsd-bootstrap-repo --agent codex) >/dev/null 2>&1
 assert 'a .gitignore with no final newline keeps its last line' 'grep -qx node_modules "$R/.gitignore" && grep -qx .gsd-install.status "$R/.gitignore"'
-mkdir -p "$WORK/skills/claude/gsdw-flow"; echo mine > "$WORK/skills/claude/gsdw-flow/user.txt"
+mkdir -p "$WORK/skills/claude/gsdt-flow"; echo mine > "$WORK/skills/claude/gsdt-flow/user.txt"
 GSD_BIN_DIR=$WORK/bin GSD_CLAUDE_SKILL_DIR=$WORK/skills/claude GSD_CODEX_SKILL_DIR=$WORK/skills/codex "$PKG/lib/install.sh" --all-agents >/dev/null
-for p in claude codex; do assert "$p skills installed" "[ -e '$WORK/skills/$p/gsdw-flow/SKILL.md' ]"; done
-assert 'real skill directory preserved as backup' "[ -f '$WORK/skills/claude/gsdw-flow.bak/user.txt' ]"
+for p in claude codex; do assert "$p skills installed" "[ -e '$WORK/skills/$p/gsdt-flow/SKILL.md' ]"; done
+assert 'real skill directory preserved as backup' "[ -f '$WORK/skills/claude/gsdt-flow.bak/user.txt' ]"
 GSD_BIN_DIR=$WORK/bin GSD_CLAUDE_SKILL_DIR=$WORK/skills/claude "$PKG/lib/install.sh" --agent claude >/dev/null
-assert 'repeated skill install stays usable' "[ -e '$WORK/skills/claude/gsdw-flow/SKILL.md' ]"
-mkdir -p "$WORK/skills-link/codex"; ln -s /tmp/unrelated-skill "$WORK/skills-link/codex/gsdw-flow"
+assert 'repeated skill install stays usable' "[ -e '$WORK/skills/claude/gsdt-flow/SKILL.md' ]"
+mkdir -p "$WORK/skills-link/codex"; ln -s /tmp/unrelated-skill "$WORK/skills-link/codex/gsdt-flow"
 GSD_BIN_DIR=$WORK/bin2 GSD_CODEX_SKILL_DIR=$WORK/skills-link/codex "$PKG/lib/install.sh" --agent codex >/dev/null
-assert 'unrelated existing symlink preserved as backup' "[ -L '$WORK/skills-link/codex/gsdw-flow.bak' ]"
+assert 'unrelated existing symlink preserved as backup' "[ -L '$WORK/skills-link/codex/gsdt-flow.bak' ]"
 
 echo 'install.sh user-level hook (/gsd-new-project only after gsd-init)'
 UH=$WORK/uh; mkdir -p "$UH/claude"
@@ -356,7 +356,7 @@ out=$(gsd-start -p 7 --repo "$R" --no-launch 2>&1); rc=$?
 assert 'gsd-start in that repo → refused, says gsd-init --no-launch' '[ "$rc" -ne 0 ] && [[ "$out" == *"gsd-init --no-launch"* ]]'
 out=$(cd "$R" && gsd-init --no-launch --no-commit 2>&1); rc=$?
 assert 'gsd-init cleans it up' '[ "$rc" -eq 0 ] && grep -q "^providers = claude$" "$R/.gsd.conf" && ! grep -qE "gemini_|,gemini" "$R/.gsd.conf"'
-assert '…GEMINI.md keeps the user text, loses our block' 'grep -q "my gemini notes" "$R/GEMINI.md" && ! grep -q "gsd-worktrees" "$R/GEMINI.md"'
+assert '…GEMINI.md keeps the user text, loses our block' 'grep -q "my gemini notes" "$R/GEMINI.md" && ! grep -qE "gsd-(toolkit|worktrees)" "$R/GEMINI.md"'
 assert '….gemini/settings.json keeps the user key, loses our hook' 'jq -e ".theme == 1 and (has(\"hooks\") | not)" "$R/.gemini/settings.json" >/dev/null'
 out=$(gsd-doctor --repo "$R" --json 2>/dev/null || true)
 assert '…then doctor: no T061' '! printf "%s" "$out" | jq -e '\''any(.findings[]; .code == "T061")'\'' >/dev/null'
@@ -369,7 +369,7 @@ assert 'bootstrap --commit commits the clean-up' '[ -z "$(git -C "$R" status --p
 # GEMINI.md as a link to AGENTS.md shows the Codex block: never cleaned, never T061
 R=$WORK/gemini-link; repo "$R"; (cd "$R" && gsd-bootstrap-repo --agent claude --agent codex) >/dev/null; ln -s AGENTS.md "$R/GEMINI.md"
 (cd "$R" && gsd-bootstrap-repo --agent claude --agent codex) >/dev/null 2>&1
-assert 'GEMINI.md → AGENTS.md link: AGENTS.md keeps the codex block, the link stays' 'grep -q "gsd-worktrees:provider:start" "$R/AGENTS.md" && [ -L "$R/GEMINI.md" ]'
+assert 'GEMINI.md → AGENTS.md link: AGENTS.md keeps the codex block, the link stays' 'grep -q "gsd-toolkit:provider:start" "$R/AGENTS.md" && [ -L "$R/GEMINI.md" ]'
 out=$(gsd-doctor --repo "$R" --json 2>/dev/null || true)
 assert '…and doctor: no T061' '! printf "%s" "$out" | jq -e '\''any(.findings[]; .code == "T061")'\'' >/dev/null'
 # legacy provider = gemini with agent_command: that command ran Gemini, so it
@@ -399,7 +399,7 @@ assert '…and doctor: no T061' '! printf "%s" "$out" | jq -e '\''any(.findings[
 # skills and user hook there; the user's own skill and hook stay
 GI=$WORK/gi; mkdir -p "$GI/bin" "$GI/gemini/skills/gsdw-flow" "$GI/gemini/skills/mine"
 printf 'x\n<!-- gsd-worktrees-skill 0.4.12 -->\n' > "$GI/gemini/skills/gsdw-flow/SKILL.md"; printf 'mine\n' > "$GI/gemini/skills/mine/SKILL.md"
-ln -s "$PKG/skills/gsdw-tracker" "$GI/gemini/skills/gsdw-tracker"
+ln -s "$PKG/skills/gsdt-tracker" "$GI/gemini/skills/gsdw-tracker"
 printf '{"hooks":{"BeforeTool":[{"matcher":"activate_skill","hooks":[{"type":"command","command":"[ ! -x x ] || exec x/gsd-worktree-guard --global"}]},{"matcher":"x","hooks":[{"type":"command","command":"echo mine"}]}]}}\n' > "$GI/gemini/settings.json"
 printf 'providers\tclaude,gemini\nclaude_skills\t%s\ngemini_skills\t%s\n' "$GI/claude/skills" "$GI/gemini/skills" > "$GI/bin/.gsd-install-manifest"
 GSD_BIN_DIR=$GI/bin GSD_CLAUDE_SKILL_DIR=$GI/claude/skills "$PKG/lib/install.sh" --reuse-install-config > "$WORK/gi.out" 2>&1; rc=$?

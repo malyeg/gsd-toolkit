@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# gsd-update — update gsd-worktrees to the latest GitHub release, and GSD
+# gsd-update — update gsd-toolkit to the latest GitHub release, and GSD
 # itself (gsd-core) to its latest version.
 #
 # Usage:
@@ -97,9 +97,9 @@ TOOLKIT_NEW=0
 }
 if [ -z "$WANT" ]; then
   if [ "$TOOLKIT_NEW" = 1 ]; then WANT=$LATEST
-  elif [ -n "$LATEST" ]; then echo "✔ gsd-worktrees is up to date"
+  elif [ -n "$LATEST" ]; then echo "✔ gsd-toolkit is up to date"
   elif [ "$CORE" = 0 ]; then die "cannot find the latest release — try again online, or pass --version X.Y.Z"
-  else echo "• gsd-worktrees not checked (GitHub not reachable)"
+  else echo "• gsd-toolkit not checked (GitHub not reachable)"
   fi
 fi
 if [ -n "$WANT" ]; then

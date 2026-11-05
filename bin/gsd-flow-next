@@ -2,7 +2,7 @@
 #
 # gsd-flow-next — which phase-flow step comes next, read from the phase folder.
 #
-# The step engine behind the /gsdw-flow skill. Looks at .planning/phases/<P>-*/
+# The step engine behind the /gsdt-flow skill. Looks at .planning/phases/<P>-*/
 # in the checkout you are standing in (a phase worktree) and prints the FIRST
 # step whose artifact is missing, in the agreed order. It runs nothing: the
 # skill (or you) runs the printed command, then calls this again. Because it
@@ -98,7 +98,7 @@ if [ -z "$N" ]; then
 fi
 printf '%s' "$N" | grep -qE '^[0-9]+(\.[0-9]+)?$' || { echo "invalid phase number: $N" >&2; exit 64; }
 case "$N" in *.*) P="$N" ;; *) P=$(printf '%02d' "$((10#$N))") ;; esac
-"$GSD_PKG/bin/gsd-worktree-guard" --command gsdw-flow --phase "$N" --repo "$REPO" || exit $?
+"$GSD_PKG/bin/gsd-worktree-guard" --command gsdt-flow --phase "$N" --repo "$REPO" || exit $?
 pd=""; for d in "$REPO/.planning/phases/$P"-*; do [ -d "$d" ] && { pd="$d"; break; }; done
 [ -n "$pd" ] || { echo "no .planning/phases/$P-* directory in $REPO" >&2; exit 1; }
 

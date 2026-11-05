@@ -101,7 +101,7 @@ has   "…with the install command"       "npx @opengsd/gsd-core@latest --claude
 section "gsd-start — claim, attach, insert, flow mode"
 (cd "$R" && gsd-start -n "shopping cart" --no-launch) > "$WORK/out" 2>&1
 is  "-n claims phase 2"          "$?" 0
-has "…prints the flow launch (the default)" "gsdw-flow" "$WORK/out"
+has "…prints the flow launch (the default)" "gsdt-flow" "$WORK/out"
 check_wt() { git -C "$R" worktree list | grep -q "phase-$1-"; }
 if check_wt 2; then ok "…and creates the phase-2 worktree"; else bad "…and creates the phase-2 worktree"; fi
 is  "…and pushes the claim"      "$(git --git-dir="$R.git" show main:.planning/ROADMAP.md | grep -c '^### Phase 2: shopping cart')" 1
@@ -112,7 +112,7 @@ is  "…without a second worktree"  "$(git -C "$R" worktree list | grep -c 'phas
 is  "--insert claims a padded decimal phase" "$?" 0
 if check_wt 01.1; then ok "…on a phase-01.1 worktree (guard accepts it)"; else bad "…on a phase-01.1 worktree (guard accepts it)" "$(tail -3 "$WORK/out")"; fi
 (cd "$R" && gsd-start -p 2 --flow --no-launch) > "$WORK/out" 2>&1
-has "--flow prints the gsdw-flow launch" "gsdw-flow" "$WORK/out"
+has "--flow prints the gsdt-flow launch" "gsdt-flow" "$WORK/out"
 
 section "gsd-start — opens the session by default (in a terminal)"
 # a fake agent CLI records that it was launched, and where

@@ -5,7 +5,7 @@
 Install the latest release (no git checkout needed):
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/arconme/gsd-worktrees/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash
 curl -fsSL …/install.sh | bash -s -- --agent claude --agent codex    # choose agents
 curl -fsSL …/install.sh | bash -s -- --version 0.2.0                  # a given release
 ```
@@ -13,7 +13,7 @@ curl -fsSL …/install.sh | bash -s -- --version 0.2.0                  # a give
 Read it before running:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/arconme/gsd-worktrees/main/install.sh -o install.sh
+curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh -o install.sh
 less install.sh && bash install.sh
 ```
 
@@ -24,10 +24,10 @@ still run a release.
 `install.sh`:
 
 1. asks GitHub for the latest release (or takes `--version`);
-2. downloads `gsd-worktrees-X.Y.Z.tar.gz` and `SHA256SUMS` from that release,
+2. downloads `gsd-toolkit-X.Y.Z.tar.gz` and `SHA256SUMS` from that release,
    and refuses to install when the checksum does not match;
 3. runs the package's `lib/install.sh` (an older release: its `install.sh --copy`) into
-   `~/.local/share/gsd-worktrees/releases/X.Y.Z/`, linking the commands in
+   `~/.local/share/gsd-toolkit/releases/X.Y.Z/`, linking the commands in
    `~/.local/bin` and copying the skills into each agent's skill folder;
 4. keeps the release you had before, removes older ones.
 
@@ -35,7 +35,7 @@ still run a release.
 has none: `npx -y --package=@opengsd/gsd-core@latest -- gsd-core --<agent>
 --global --profile=full` (`--config-dir` added when `CLAUDE_CONFIG_DIR` /
 `CODEX_HOME` moves the agent's dir). It runs after our skills, which are
-`gsdw-*`, so gsd-core's installer keeps them. It is skipped when the agent
+`gsdt-*`, so gsd-core's installer keeps them. It is skipped when the agent
 already has gsd-core (`gsd-update` updates it), on an update
 (`--reuse-install-config`, which `gsd-update` uses), and with `--no-core`. A failed or
 impossible install (no `npx`) prints the command and never fails the
@@ -46,7 +46,7 @@ and `GSD_UPDATE_REPO=owner/name` (a fork).
 
 ### Knowing about updates
 
-Two versions are watched: gsd-worktrees (GitHub releases) and GSD itself
+Two versions are watched: gsd-toolkit (GitHub releases) and GSD itself
 (`@opengsd/gsd-core` on npm, compared with the installed gsd-core version;
 the update command is `npx @opengsd/gsd-core@latest --claude --global`).
 
@@ -56,10 +56,37 @@ the update command is `npx @opengsd/gsd-core@latest --claude --global`).
 - `gsd-doctor` always shows them (`↑` lines, also with `--quiet`, and an
   `updates` list in `--json`). They are not findings: the exit status is 0.
 - The latest versions are cached for a day in
-  `${XDG_CACHE_HOME:-~/.cache}/gsd-worktrees/` (`latest-version`,
+  `${XDG_CACHE_HOME:-~/.cache}/gsd-toolkit/` (`latest-version`,
   `latest-gsd-core-version`). Commands read the cache and refresh it in the
   background, so they never wait on the network.
 - `GSD_NO_UPDATE_CHECK=1` turns all of this off.
+
+### Moving from gsd-worktrees
+
+Before 0.8.0 the toolkit was called gsd-worktrees and lived in
+`arconme/gsd-worktrees` (now archived; its releases stay downloadable). The
+shell commands, `.gsd.conf`, `.gsd/` and `GSD_*` variables did not change. The
+skills are now `gsdt-flow`, `gsdt-worktrees` and `gsdt-tracker`.
+
+An install of 0.7.0 or older moves over by itself:
+
+1. `gsd-update` — installs 0.7.1, the last gsd-worktrees release. It only
+   points the updater at the new repo.
+2. `gsd-update` again — installs gsd-toolkit 0.8.0 from `malyeg/gsd-toolkit`
+   into `~/.local/share/gsd-toolkit/`. The `gsdw-*` skills are removed and the
+   `gsdt-*` ones installed; `~/.local/share/gsd-worktrees/` is removed once no
+   command links into it.
+3. In each project: `gsd-doctor` reports the instruction files as out of date
+   (T016). `gsd-init --no-launch` rewrites the marked blocks in place
+   (`gsd-worktrees:` markers become `gsd-toolkit:`, `/gsdw-flow` becomes
+   `/gsdt-flow`); nothing outside them changes. Commit that.
+
+A session still open from before the move may call `/gsdw-flow`: the guard
+still knows it. Going back to a gsd-worktrees release:
+
+```sh
+GSD_UPDATE_REPO=arconme/gsd-worktrees gsd-update --version 0.7.1
+```
 
 ### Updating
 

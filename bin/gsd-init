@@ -175,7 +175,7 @@ if [ -n "$AGENT_COMMAND_CLI" ]; then
   fi
 fi
 
-gsd_update_notice   # a newer gsd-worktrees / GSD? one stderr line each, terminal only
+gsd_update_notice   # a newer gsd-toolkit / GSD? one stderr line each, terminal only
 
 # ── already initialized? (still repair/sync the workflow files below) ────────
 # Validate the prospective session model before bootstrap writes files.

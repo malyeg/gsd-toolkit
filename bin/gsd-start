@@ -36,7 +36,7 @@
 #   --slug <slug>  worktree/branch slug (default: slugified description)
 #   --repo <path>  main checkout of the target repo (default: derived from cwd)
 #   --provider <p> provider identity; --agent-command overrides its executable
-#   --flow         launch/resume the full gsdw-flow workflow (the default)
+#   --flow         launch/resume the full gsdt-flow workflow (the default)
 #   --no-flow      launch discuss-phase only (start_mode = discuss in .gsd.conf)
 #   --launch       open the session in the worktree (the default; kept for scripts)
 #   --no-launch    print the session command instead of opening it
@@ -52,7 +52,7 @@ while [ -L "$SELF" ]; do
   case "$tgt" in /*) SELF="$tgt" ;; *) SELF="$(dirname "$SELF")/$tgt" ;; esac
 done
 GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
-[ -f "$GSD_PKG/lib/common.sh" ] || die "gsd-worktrees toolkit lib not found (looked in $GSD_PKG/lib) — reinstall with install.sh"
+[ -f "$GSD_PKG/lib/common.sh" ] || die "gsd-toolkit toolkit lib not found (looked in $GSD_PKG/lib) — reinstall with install.sh"
 # shellcheck source=../lib/common.sh
 . "$GSD_PKG/lib/common.sh"
 # shellcheck source=../lib/provider.sh
@@ -116,7 +116,7 @@ OPTIONS
   --model <id>    session model override; 'default' uses the CLI's own default
   --agent-command <path> executable override (add --no-launch to print)
   --agent <value> compatibility alias: known provider or custom executable
-  --flow          start/resume the complete gsdw-flow workflow (the default).
+  --flow          start/resume the complete gsdt-flow workflow (the default).
                   The flow reads existing phase artifacts and continues at
                   the next step. Overrides start_mode = discuss.
   --no-flow       start with discuss-phase only, for this run (for every run:
@@ -307,7 +307,7 @@ gsd_start_mode_resolve "$MAIN" "$START_MODE_CLI" || exit $?
 gsd_compact_resolve "$MAIN" || exit $?
 
 # ── --ticket: normalize the id and tag the phase title/slug with tk-<id> ─────
-# The ROADMAP title is what gsd-finish and /gsdw-flow read the id back from.
+# The ROADMAP title is what gsd-finish and /gsdt-flow read the id back from.
 TRACKER=$(gsd_tracker_which "$MAIN")
 if [ -n "$TICKET" ]; then
   norm_as=$TRACKER; [ "$TICKET_CU" = 0 ] || norm_as=clickup

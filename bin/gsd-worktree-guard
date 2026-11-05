@@ -11,7 +11,7 @@
 #   0b. GSD skills that clash with the worktree model → never in a set-up
 #                              repo; the block names the toolkit command:
 #                                /gsd-autonomous, /gsd-manager   (many phases in
-#                                               one checkout)  → gsd-start + /gsdw-flow
+#                                               one checkout)  → gsd-start + /gsdt-flow
 #                                /gsd-workspace, /gsd-workstreams (GSD's own
 #                                               isolation)     → gsd-start
 #                                /gsd-phase, --insert, --remove (unpushed claim;
@@ -130,7 +130,7 @@ cmd="${cmd:-}"; args="${args:-}"
 cmd=${cmd#/}
 case "$cmd" in gsd:*) cmd="gsd-${cmd#gsd:}" ;; esac   # namespaced form of a GSD skill
 case "$cmd" in *:gsd-*) cmd=${cmd#*:} ;; esac          # a plugin's form: gsd-core:gsd-plan-phase
-[ "$cmd" != gsdw-flow ] || cmd=gsd-flow                # this toolkit's flow skill
+case "$cmd" in gsdt-flow|gsdw-flow) cmd=gsd-flow ;; esac   # this toolkit's flow skill (gsdw-: before 0.8.0)
 case "$cmd" in gsd-*) ;; *) exit 0 ;; esac   # not a GSD command → allow
 
 # The phase is the first word that is only a number: a number inside a path or
@@ -167,7 +167,7 @@ block() { printf '%s\n' "$@" >&2; exit 2; }
 # Rule 0 — the plan is started by gsd-init, never by the bare skill
 case "$cmd" in gsd-new-project|gsd-ingest-docs)
   [ -f "$dir/.gsd.conf" ] || block \
-    "BLOCKED: /$cmd needs the gsd-worktrees setup first — this repo has no .gsd.conf." \
+    "BLOCKED: /$cmd needs the gsd-toolkit setup first — this repo has no .gsd.conf." \
     "Run gsd-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /$cmd. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)" ;;
 esac
 [ "$GLOBAL" = 0 ] || [ -f "$dir/.gsd.conf" ] || exit 0
@@ -175,12 +175,12 @@ esac
 # Rule 0b — GSD skills that clash with one-phase-per-worktree (set-up repos)
 if [ -f "$dir/.gsd.conf" ]; then
   clash() {  # $1=why  $2=what to run instead
-    block "BLOCKED: /$cmd does not work with gsd-worktrees — $1." \
+    block "BLOCKED: /$cmd does not work with gsd-toolkit — $1." \
           "Instead: $2   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)"
   }
   case "$cmd" in
     gsd-autonomous) clash "it runs every phase in this one checkout and skips the review, validate and secure gates" \
-      "gsd-start -n \"<desc>\" (or -p <N>) per phase, then /gsdw-flow in that phase's worktree" ;;
+      "gsd-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree" ;;
     gsd-manager) clash "it runs several phases as background agents in one checkout, and two writers in one checkout are not safe" \
       "gsd-list to see every phase, gsd-start per phase (each gets its own worktree and session)" ;;
     gsd-workspace|gsd-workstreams) clash "it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's" \

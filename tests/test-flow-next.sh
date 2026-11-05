@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-flow-next.sh — the /gsdw-flow step engine walks the agreed order.
+# test-flow-next.sh — the /gsdt-flow step engine walks the agreed order.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; PKG="$(cd "$HERE/.." && pwd)"
 NEXT="$PKG/bin/gsd-flow-next"

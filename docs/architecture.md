@@ -30,7 +30,7 @@ environment, provider-specific repository command, default-provider legacy
 `.gsd/INSTRUCTIONS.md` is the canonical generated project instruction block.
 Provider files (`CLAUDE.md`, `AGENTS.md`) receive only a marked,
 replaceable entrypoint pointing to it. Existing content outside the markers is
-preserved. The shared `gsdw-flow` skill describes state transitions and asks the
+preserved. The shared `gsdt-flow` skill describes state transitions and asks the
 active agent to use its own skill mechanism; it never calls a provider-native
 skill API directly.
 

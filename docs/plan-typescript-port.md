@@ -17,7 +17,7 @@ A TypeScript port runs the same on all three systems.
 
 - Users **already have Node**: GSD (`get-shit-done-cc`), `gsd-sdk`, Claude
   Code, Codex and Gemini CLI are all npm packages.
-- Install/update becomes `npm i -g gsd-worktrees`, the same channel as GSD.
+- Install/update becomes `npm i -g gsd-toolkit`, the same channel as GSD.
   `get.sh`, `gsd-update`, SHA256 checks and the release-dir pruning go away.
 - One language replaces three (bash, Python, Perl).
 - Go (second choice): single binary, fast, but a separate install channel.
@@ -117,12 +117,12 @@ against the new commands.
    tag-gated like today).
 8. Migration for 0.2.x users:
    - last 0.2.x release: `gsd-update` / the update notice say "moved to npm:
-     `npm i -g gsd-worktrees`";
+     `npm i -g gsd-toolkit`";
    - a `gsd-migrate` step (or doc) removes the old `~/.local/bin` links and
-     `~/.local/share/gsd-worktrees/` using the install manifest (only files it
+     `~/.local/share/gsd-toolkit/` using the install manifest (only files it
      owns);
    - skills: re-installed by the new setup command into each agent's skill
-     dir, replacing the marked (`.gsd-worktrees-skill`) copies.
+     dir, replacing the marked (`<!-- gsd-toolkit-skill -->`) copies.
 9. Docs: README install, `docs/releases.md`, `docs/architecture.md`,
    `CLAUDE.md` (commands, tests, bash-3.2 notes can go), CHANGELOG 1.0.0.
 
@@ -140,7 +140,7 @@ About **2–3 days**. The slow part is checking and trying it, not writing it.
 
 ## Open questions (decide at start)
 
-- npm package name: `gsd-worktrees` free? Else a scope, e.g. `@arconme/gsd-worktrees`.
+- npm package name: `gsd-toolkit` free? Else a scope, e.g. `@malyeg/gsd-toolkit`.
 - Keep a bash 0.2.x maintenance line for a while, or freeze it at the last
   release?
 - Skills install: a `gsd-setup --agent …` command, or fold into `gsd-init`?

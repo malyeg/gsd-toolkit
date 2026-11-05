@@ -143,7 +143,8 @@ blocked "node_modules cannot bypass failed install" gsd-execute-phase "7"
 echo ok > "$REPO/.gsd-install.status"
 blocked "review in wrong phase is blocked" gsd-review "--phase 9 --codex"
 blocked "flow in wrong phase is blocked" gsd-flow "9"
-blocked "…by its skill name gsdw-flow too" gsdw-flow "9"
+blocked "…by its skill name gsdt-flow too" gsdt-flow "9"
+blocked "…and by its pre-0.8.0 name gsdw-flow" gsdw-flow "9"
 blocked "a plugin-namespaced skill (gsd-core:gsd-review) is guarded" gsd-core:gsd-review "--phase 9 --codex"
 blocked "omitted phase still enforces discuss gate" gsd-plan-phase ""
 git -C "$REPO" checkout -q -b agent-untrusted
@@ -248,6 +249,10 @@ NOJQ="$WORK/no-jq"; mkdir -p "$NOJQ"
 for c in bash cat dirname sed head grep git python3 tr awk env readlink; do ln -sf "$(command -v "$c")" "$NOJQ/$c"; done
 rm -f "$BARE/.gsd.conf"
 gis "no jq: the Python reader takes the cwd too → blocked" "$(printf '%s' "$(upe gsd-new-project "$BARE")" | PATH="$NOJQ" env -u CLAUDE_PROJECT_DIR "$GUARD" --global >/dev/null 2>"$WORK/err"; echo $?)" 2
+# the flow skill by both names (gsdw-flow: a session started before 0.8.0)
+for fs in gsdt-flow gsdw-flow; do
+  r=$(skl "$fs" "$BARE" | python3 "$PKG/lib/gsd_hook_payload.py" --claude | tr '\0' ' ' | cut -d' ' -f1-2); [ "$r" = "guard gsd-flow" ] && ok "the Python reader maps $fs to gsd-flow" || bad "the Python reader maps $fs to gsd-flow" "got: $r"
+done
 
 section "rule 0b — GSD skills that clash with the worktree model (set-up repos)"
 mkrepo "" phase-7-thing 07-thing

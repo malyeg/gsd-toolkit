@@ -109,7 +109,7 @@ while [ -L "$SELF" ]; do
   case "$tgt" in /*) SELF="$tgt" ;; *) SELF="$(dirname "$SELF")/$tgt" ;; esac
 done
 GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
-[ -f "$GSD_PKG/lib/common.sh" ] || die "gsd-worktrees toolkit lib not found (looked in $GSD_PKG/lib) — reinstall with install.sh"
+[ -f "$GSD_PKG/lib/common.sh" ] || die "gsd-toolkit toolkit lib not found (looked in $GSD_PKG/lib) — reinstall with install.sh"
 # shellcheck source=../lib/common.sh
 . "$GSD_PKG/lib/common.sh"
 # shellcheck source=../lib/ticket.sh

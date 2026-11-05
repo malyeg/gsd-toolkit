@@ -1,14 +1,14 @@
 ---
-name: gsdw-worktrees
+name: gsdt-worktrees
 description: "The gsd-* shell commands that run GSD phases in parallel git worktrees — gsd-start, gsd-finish, gsd-list, gsd-doctor, gsd-init, gsd-bootstrap-repo, gsd-planning-repair, gsd-update. Use when asked to start/begin/pick up a feature or phase, to finish/land/ship a phase, to see what phases exist or what is in flight, to set GSD up in a repo or start a new project (gsd-init, never a bare /gsd-new-project or /gsd-ingest-docs), or to diagnose a broken .planning/ or worktree. These are shell commands run via Bash, distinct from the /gsd-* planning skills."
 ---
 
-# gsd-worktrees — the shell commands around GSD
+# gsd-toolkit — the shell commands around GSD
 
 GSD's provider-native planning skills do the planning. This toolkit does everything around
 them: one-command feature start/finish, a git worktree per phase, parallel-safe
 phase claims, and provider-neutral command guards. Commands live in `~/.local/bin`; toolkit repo
-is `arconme/gsd-worktrees`.
+is `malyeg/gsd-toolkit`.
 
 Only relevant in a **GSD-fitted repo** — one with `.gsd.conf` and `.planning/`.
 Check with `ls .gsd.conf .planning` before assuming. If it isn't fitted, the
@@ -26,7 +26,7 @@ blocks these (Codex: these rules are the guard). Use the toolkit command:
 
 | Don't run | Why | Run instead |
 |---|---|---|
-| `/gsd-autonomous` | every phase in one checkout; skips review, validate, secure | `gsd-start` per phase, then `/gsdw-flow` |
+| `/gsd-autonomous` | every phase in one checkout; skips review, validate, secure | `gsd-start` per phase, then `/gsdt-flow` |
 | `/gsd-manager` | several phases as background agents in one checkout | `gsd-list`, then `gsd-start` per phase |
 | `/gsd-workspace`, `/gsd-workstreams` | GSD's own isolation fights the toolkit's | `gsd-start -n "<desc>"` |
 | `/gsd-phase` (add), `--insert` | the claim is not pushed (number races), ROADMAP rows missing | `gsd-start -n` / `gsd-start --insert <N>` |
@@ -71,7 +71,7 @@ user says no ticket covers the work.
    branch, and prints a safely quoted command for the configured provider.
 2. **Relay that one-liner to the user** to run in a fresh terminal. Do not open
    a nested session, and do not do the phase work in the current session.
-3. Select `--flow` on the start command above, or use the installed `gsdw-flow` skill in the new session. It
+3. Select `--flow` on the start command above, or use the installed `gsdt-flow` skill in the new session. It
    resumes the step reported by `gsd-flow-next <N>`. Without `--flow`,
    `gsd-start` begins at discussion; invoke the later steps through the
    provider's actual skill mechanism. The engine is authoritative for order.

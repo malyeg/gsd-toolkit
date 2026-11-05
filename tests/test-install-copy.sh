@@ -28,7 +28,7 @@ install_copy
 [ "$(cat "$COPY/lib/common.sh.bak")" = 'local library' ]
 [ "$(cat "$COPY/unrelated-dir/file")" = keep ]
 [ -f "$COPY/shims/scripts/gsd-init.sh" ] || [ -d "$COPY/shims/scripts" ]
-[ -f "$COPY/skills/gsdw-flow/SKILL.md" ]
+[ -f "$COPY/skills/gsdt-flow/SKILL.md" ]
 # a skill an older release shipped leaves the runtime on the next copy install
 mkdir -p "$COPY/skills/gsd-flow"; printf 'old\n' > "$COPY/skills/gsd-flow/SKILL.md"
 install_copy
@@ -38,7 +38,7 @@ install_copy
 [ -f "$COPY/lib/vendor/axe-core/axe.min.js" ]
 [ -f "$COPY/lib/vendor/axe-core/LICENSE" ]
 [ -f "$COPY/lib/vendor/axe-core/VERSION" ]
-[ -f "$SKILLS/gsdw-flow/SKILL.md" ]
+[ -f "$SKILLS/gsdt-flow/SKILL.md" ]
 
 # A skill an older release placed but this one no longer ships (renamed or
 # retired) is removed; a skill of the user's own, with no marker, stays.
@@ -47,14 +47,14 @@ printf 'old\n' > "$SKILLS/gsd-retired/SKILL.md"; printf '0.4.4\n' > "$SKILLS/gsd
 printf 'old\n<!-- gsd-worktrees-skill 0.5.0 -->\n' > "$SKILLS/gsd-retired2/SKILL.md"
 printf 'mine\n' > "$SKILLS/my-own/SKILL.md"
 # an older copy, marked by a file of its own, is replaced by one marked in SKILL.md
-printf '0.4.4\n' > "$SKILLS/gsdw-flow/.gsd-worktrees-skill"
+printf '0.4.4\n' > "$SKILLS/gsdt-flow/.gsd-worktrees-skill"
 ln -s "$PKG/skills/gsd-gone" "$SKILLS/gsd-gone"
 ln -s "$WORK/elsewhere/skill" "$SKILLS/not-ours"
 install_copy
 [ ! -e "$SKILLS/gsd-retired" ]
 [ ! -e "$SKILLS/gsd-retired2" ]
-[ ! -e "$SKILLS/gsdw-flow/.gsd-worktrees-skill" ]
-grep -q '^<!-- gsd-worktrees-skill ' "$SKILLS/gsdw-flow/SKILL.md"
+[ ! -e "$SKILLS/gsdt-flow/.gsd-worktrees-skill" ]
+grep -q '^<!-- gsd-toolkit-skill ' "$SKILLS/gsdt-flow/SKILL.md"
 [ ! -L "$SKILLS/gsd-gone" ]
 [ -f "$SKILLS/my-own/SKILL.md" ]
 [ -L "$SKILLS/not-ours" ]
@@ -65,17 +65,42 @@ install_copy
 after=$(find "$WORK" -name '*.bak*' | wc -l | tr -d ' ')
 [ "$before" = "$after" ]
 
+# Before 0.8.0 the package was gsd-worktrees: its skills (gsdw-*, the old
+# mark) are retired, and its command links (into share/gsd-worktrees, a
+# runtime that may be gone) are replaced in place, not moved to .bak.
+for s in gsdw-flow gsdw-worktrees gsdw-tracker; do
+  mkdir -p "$SKILLS/$s"; printf 'old\n<!-- gsd-worktrees-skill 0.7.0 -->\n' > "$SKILLS/$s/SKILL.md"
+done
+OLDRT="$WORK/share/gsd-worktrees/releases/0.7.0"
+rm -f "$BIN/gsd-list" "$BIN/gsd-start"
+ln -s "$OLDRT/bin/gsd-list" "$BIN/gsd-list"            # dangling: the old runtime is gone
+ln -s "$OLDRT/bin/gsd-retired-cmd" "$BIN/gsd-retired-cmd"
+mkdir -p "$OLDRT/bin"; printf 'old\n' > "$OLDRT/bin/gsd-start"
+ln -s "$OLDRT/bin/gsd-start" "$BIN/gsd-start"          # live: into an old runtime folder
+install_copy
+for s in gsdw-flow gsdw-worktrees gsdw-tracker; do [ ! -e "$SKILLS/$s" ]; done
+[ -f "$SKILLS/gsdt-flow/SKILL.md" ]
+[ "$(readlink "$BIN/gsd-list")" = "$COPY/bin/gsd-list" ]
+[ "$(readlink "$BIN/gsd-start")" = "$COPY/bin/gsd-start" ]
+[ ! -L "$BIN/gsd-retired-cmd" ]
+[ -z "$(find "$BIN" -name 'gsd-list.bak.[2-9]*' -o -name 'gsd-start.bak*' -o -name 'gsd-retired-cmd*')" ]
+# a current copy marked by an older release is still ours: replaced, no .bak
+printf 'old\n<!-- gsd-worktrees-skill 0.7.0 -->\n' > "$SKILLS/gsdt-tracker/SKILL.md"
+install_copy
+grep -q '^<!-- gsd-toolkit-skill ' "$SKILLS/gsdt-tracker/SKILL.md"
+[ ! -e "$SKILLS/gsdt-tracker.bak" ]
+
 # Codex: skills go to ~/.agents/skills; ours left in the old ~/.codex/skills
 # (a marked copy, a link of ours, an older name) are removed, a user's stays.
 CH="$WORK/codex-home"; mkdir -p "$CH/.codex/skills/gsd-flow" "$CH/.codex/skills/mine"
 printf 'old\n' > "$CH/.codex/skills/gsd-flow/SKILL.md"; printf '0.4.4\n' > "$CH/.codex/skills/gsd-flow/.gsd-worktrees-skill"
-ln -s "$PKG/skills/gsdw-tracker" "$CH/.codex/skills/gsdw-tracker"
+ln -s "$PKG/skills/gsdt-tracker" "$CH/.codex/skills/gsdt-tracker"
 printf 'mine\n' > "$CH/.codex/skills/mine/SKILL.md"
 env -u GSD_CODEX_SKILL_DIR -u CODEX_HOME HOME="$CH" GSD_BIN_DIR="$WORK/codex-bin" GSD_COPY_DIR="$WORK/codex-runtime" \
   "$PKG/lib/install.sh" --agent codex --no-user-hook >/dev/null
-[ -f "$CH/.agents/skills/gsdw-flow/SKILL.md" ]
+[ -f "$CH/.agents/skills/gsdt-flow/SKILL.md" ]
 [ ! -e "$CH/.codex/skills/gsd-flow" ]
-[ ! -L "$CH/.codex/skills/gsdw-tracker" ]
+[ ! -L "$CH/.codex/skills/gsdt-tracker" ]
 [ -f "$CH/.codex/skills/mine/SKILL.md" ]
 # an older release's manifest records ~/.codex/skills: a reinstall from it
 # moves the skills too, and a recorded custom dir is kept
@@ -114,11 +139,11 @@ GSD_BIN_DIR="$WORK/upgrade-bin" GSD_COPY_DIR="$WORK/upgrade-runtime" \
 [ -f "$WORK/upgrade-runtime/bin/gsd-obsolete.bak" ]
 [ -L "$WORK/upgrade-bin/unrelated" ]
 # an old link install's skill (a link into a checkout) is replaced by a copy
-mkdir -p "$WORK/isolated-skills"; ln -s "$FIXTURE/skills/gsdw-flow" "$WORK/isolated-skills/gsdw-flow"
+mkdir -p "$WORK/isolated-skills"; ln -s "$FIXTURE/skills/gsdt-flow" "$WORK/isolated-skills/gsdt-flow"
 GSD_BIN_DIR="$WORK/isolated-bin" GSD_COPY_DIR="$WORK/isolated-runtime" \
   GSD_CLAUDE_SKILL_DIR="$WORK/isolated-skills" "$FIXTURE/lib/install.sh" >/dev/null
-[ -d "$WORK/isolated-skills/gsdw-flow" ]
-[ ! -L "$WORK/isolated-skills/gsdw-flow" ]
+[ -d "$WORK/isolated-skills/gsdt-flow" ]
+[ ! -L "$WORK/isolated-skills/gsdt-flow" ]
 rm -rf "$FIXTURE"
 "$WORK/isolated-bin/gsd-planning-repair" --help >/dev/null
 
@@ -185,7 +210,7 @@ grep -qx -- '-y --package=@opengsd/gsd-core@latest -- gsd-core --claude --global
 [ ! -s "$CORE/fresh.stdin" ]   # the installer never reads install.sh's stdin
 [ -x "$CORE/fresh/.claude/gsd-core/bin/gsd_run" ]
 grep -q '✔ claude gsd-core 1.19.0' "$CORE/fresh.out"
-[ -f "$CORE/fresh/claude-skills/gsdw-flow/SKILL.md" ]   # our skills are installed first
+[ -f "$CORE/fresh/claude-skills/gsdt-flow/SKILL.md" ]   # our skills are installed first
 core_install fresh --agent claude   # it is there now: left alone
 [ "$(wc -l < "$CORE/fresh.log")" -eq 1 ]
 grep -q '• claude already has gsd-core 1.19.0' "$CORE/fresh.out"

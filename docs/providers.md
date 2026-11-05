@@ -47,7 +47,7 @@ override. Empty entries, duplicate names, unknown names, and whitespace within
 the comma-separated list are rejected before worktree creation. Fix the list
 in `.gsd.conf`; `gsd-doctor` reports invalid provider configuration as `T050`.
 
-By default, `gsd-start` opens or prints the full `gsdw-flow` session, which
+By default, `gsd-start` opens or prints the full `gsdt-flow` session, which
 resumes the phase at its first unfinished step from existing artifacts.
 `--no-flow` opens only the provider's discuss-phase prompt for one invocation;
 `start_mode = discuss` makes that the repo's default, and `--flow` overrides it.

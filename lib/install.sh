@@ -22,7 +22,7 @@
 #
 # Env:
 #   GSD_BIN_DIR   install target (default: ~/.local/bin)
-#   GSD_COPY_DIR  the runtime (default: GSD_BIN_DIR/../share/gsd-worktrees)
+#   GSD_COPY_DIR  the runtime (default: GSD_BIN_DIR/../share/gsd-toolkit)
 #   GSD_CLAUDE_SETTINGS   where the user-level hook goes
 #   GSD_GEMINI_SKILL_DIR, GSD_GEMINI_SETTINGS   an old Gemini setup to clean up
 #   GSD_NO_CORE=1 same as --no-core (tests)
@@ -57,13 +57,14 @@ absolute_path() { "$INSTALL_PYTHON" -c 'import os,sys; print(os.path.realpath(sy
 within() { case "$1/" in "$2/"*) return 0 ;; *) return 1 ;; esac; }
 # A command link or skill this toolkit placed earlier (from any checkout or
 # release runtime) is replaced in place, not moved to .bak: a gsd-list.bak on
-# PATH, or a gsdw-flow.bak in an agent's skill dir, would be picked up as real.
+# PATH, or a gsdt-flow.bak in an agent's skill dir, would be picked up as real.
 toolkit_pkg() { [ -f "$1/install.sh" ] && [ -f "$1/lib/common.sh" ]; }
 owned_link() {  # $1=symlink $2=bin|skills
   local t; t=$(readlink "$1") || return 1
   case "$t" in /*) ;; *) t="$(dirname "$1")/$t" ;; esac
   toolkit_pkg "$(dirname "$(dirname "$t")")" && return 0
-  case "$t" in */gsd-worktrees/releases/*/"$2"/*) return 0 ;; esac   # a removed release
+  # a removed release (gsd-worktrees: the package's name before 0.8.0)
+  case "$t" in */gsd-toolkit/releases/*/"$2"/*|*/gsd-worktrees/releases/*/"$2"/*) return 0 ;; esac
   return 1
 }
 BIN_DIR=$(absolute_path "$BIN_DIR")
@@ -111,7 +112,7 @@ for provider in $PROVIDERS; do
 done
 IFS=$oldifs
 
-COPY_REQUEST=${GSD_COPY_DIR:-$BIN_DIR/../share/gsd-worktrees}
+COPY_REQUEST=${GSD_COPY_DIR:-$BIN_DIR/../share/gsd-toolkit}
 COPY_REQUEST=$("$INSTALL_PYTHON" -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "$COPY_REQUEST")
 if [ -L "$COPY_REQUEST" ]; then
   echo "unsafe destination: runtime root is a symlink ($COPY_REQUEST)" >&2
@@ -173,7 +174,7 @@ if [ -f "$COPY_DIR/.gsd-owned-commands" ]; then
   done < "$COPY_DIR/.gsd-owned-commands"
 fi
 for component in bin lib shims skills; do copy_tree "$REPO/$component" "$COPY_DIR/$component"; done
-# A skill an older release shipped (renamed gsd-flow → gsdw-flow) would
+# A skill an older release shipped (renamed gsd-flow → gsdw-flow → gsdt-flow) would
 # stay in the runtime's skills/, which is only ever ours: doctor would
 # compare it against the installed ones. Remove it.
 for d in "$COPY_DIR"/skills/*/; do
@@ -392,7 +393,7 @@ mv "$manifest_tmp" "$MANIFEST"
 # ── GSD itself (gsd-core) ────────────────────────────────────────────────────
 # The toolkit needs gsd-core: gsd-start claims phases with its gsd_run. An
 # install adds it (lib/core.sh) for each chosen agent that has none. Runs
-# after our skills: they are gsdw-*, so gsd-core's installer (it deletes
+# after our skills: they are gsdt-*, so gsd-core's installer (it deletes
 # skills/gsd-*) keeps them. An agent that has gsd-core is left alone here;
 # gsd-update brings it to the latest. An update (--reuse-install-config),
 # --no-core and GSD_NO_CORE=1 (tests) skip this. Failing here never fails

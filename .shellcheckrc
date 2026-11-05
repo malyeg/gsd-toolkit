@@ -1,4 +1,4 @@
-# shellcheck policy for the gsd-worktrees toolkit (CI runs shellcheck on every
+# shellcheck policy for the gsd-toolkit toolkit (CI runs shellcheck on every
 # script). Only codes that flag INTENTIONAL patterns are disabled — with a
 # reason — so everything else stays a hard failure.
 #

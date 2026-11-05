@@ -96,7 +96,7 @@ printf '%s\n' '{"disableAllHooks":true,"hooks":{}}' > "$R/.claude/settings.json"
 [ "$(gsd_provider_hook_state "$R" claude)" = absent ]
 ok 'explicitly disabled hooks remain disabled'
 cp "$R/.gsd/INSTRUCTIONS.md" "$WORK/canonical"
-printf '<!-- gsd-worktrees:canonical:start -->\n' >> "$R/.gsd/INSTRUCTIONS.md"
+printf '<!-- gsd-toolkit:canonical:start -->\n' >> "$R/.gsd/INSTRUCTIONS.md"
 reject bash -c 'cd "$1" && "$2/bin/gsd-bootstrap-repo" --agent claude' _ "$R" "$PKG"
 grep -q 'ambiguous canonical' "$WORK/rejected"; ok 'malformed canonical markers stop bootstrap'
 cp "$WORK/canonical" "$R/.gsd/INSTRUCTIONS.md"
@@ -115,8 +115,8 @@ chmod -x "$WORK/broken/bin/gsd-worktree-guard"
 "$WORK/broken/bin/gsd-doctor" --repo "$R" --json > "$WORK/doctor" || true
 grep -q '"command_guard":false' "$WORK/doctor"
 ok 'doctor JSON reports broken command guard honestly'
-mkdir -p "$WORK/skills/gsdw-flow"
-cp "$PKG/skills/gsdw-flow/SKILL.md" "$WORK/skills/gsdw-flow/SKILL.md"
+mkdir -p "$WORK/skills/gsdt-flow"
+cp "$PKG/skills/gsdt-flow/SKILL.md" "$WORK/skills/gsdt-flow/SKILL.md"
 GSD_CLAUDE_SKILL_DIR="$WORK/skills" gsd-doctor --repo "$R" --json > "$WORK/doctor" || true
 grep -q '"skill_installed":true' "$WORK/doctor"
 ok 'doctor respects installer skill destination override'

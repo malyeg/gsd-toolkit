@@ -85,7 +85,7 @@ With a tracker set:
 | When | What happens |
 |---|---|
 | `gsd-start` claims or attaches | `gsd-tracker start <id>`: ticket → "in progress", plus a comment |
-| `/gsdw-flow` first step | `ticket`: `gsd-tracker snapshot <id> --out <P>-TICKET.md`, then commit |
+| `/gsdt-flow` first step | `ticket`: `gsd-tracker snapshot <id> --out <P>-TICKET.md`, then commit |
 | `gsd-finish --pr` opens the PR | `gsd-tracker finish <id>`: ticket → "in testing", plus a comment |
 | `gsd-finish` merges | the same, with the merge commit |
 

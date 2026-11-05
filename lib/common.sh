@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# lib/common.sh — shared helpers for the gsd-worktrees commands. Sourced, not run.
+# lib/common.sh — shared helpers for the gsd-toolkit commands. Sourced, not run.
 #
 # Per-repo settings come from an OPTIONAL committed `.gsd.conf` at the repo
 # root (key = value); anything not set there falls back to detection, so most
@@ -239,16 +239,18 @@ gsd_cli_missing() {  # → why there is no gsd_cli, and the fix
 # A skill copy this toolkit installed (install.sh --copy) ends its SKILL.md
 # with this comment line. It used to be a .gsd-worktrees-skill file next to
 # SKILL.md, but gsd-core's installer stops on any file under skills/gsd-*/ it
-# cannot prove it owns, and it keeps SKILL.md. The old file is still read.
-GSD_SKILL_MARK='<!-- gsd-worktrees-skill'
+# cannot prove it owns, and it keeps SKILL.md. The old file is still read, and
+# so is the mark releases before 0.8.0 wrote (the package was gsd-worktrees).
+GSD_SKILL_MARK='<!-- gsd-toolkit-skill'
+GSD_SKILL_MARK_OLD='<!-- gsd-worktrees-skill'
 gsd_skill_owned() {  # dir → 0 when it is a copy this toolkit placed
-  [ -f "$1/.gsd-worktrees-skill" ] || grep -qF "$GSD_SKILL_MARK" "$1/SKILL.md" 2>/dev/null
+  [ -f "$1/.gsd-worktrees-skill" ] || grep -qF -e "$GSD_SKILL_MARK" -e "$GSD_SKILL_MARK_OLD" "$1/SKILL.md" 2>/dev/null
 }
 gsd_skill_differs() {  # src dest → 0 when dest is not the current copy of src
   local src=${1%/} dest=${2%/}
   [ -d "$dest" ] && [ ! -f "$dest/.gsd-worktrees-skill" ] || return 0
   diff -qr -x SKILL.md "$src" "$dest" >/dev/null 2>&1 || return 0
-  ! grep -vF "$GSD_SKILL_MARK" "$dest/SKILL.md" 2>/dev/null | cmp -s - "$src/SKILL.md"
+  ! grep -vF -e "$GSD_SKILL_MARK" -e "$GSD_SKILL_MARK_OLD" "$dest/SKILL.md" 2>/dev/null | cmp -s - "$src/SKILL.md"
 }
 
 gsd_python() {  # → the interpreter for lib/gsd_planning.py; nonzero when none
@@ -445,7 +447,7 @@ gsd_planning_apply() {  # $1=repo root — install whatever gsd_planning_status 
     # The driver covers merges; the hook covers a plain `git pull` on the base
     # branch by someone who never runs gsd-finish.
     local body='#!/usr/bin/env sh
-# Installed by gsd-bootstrap-repo (gsd-worktrees toolkit).
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
 # .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
 # A pull whose driver was missing, or a merge done by another tool, can still
 # leave both sides of a single-value line behind — reconcile them here.

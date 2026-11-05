@@ -161,17 +161,30 @@ gsd_stale_hooks_notice() {
   return 0
 }
 
+# The marked blocks this toolkit owns in a target repo's files. They are
+# written as <!-- gsd-toolkit:<kind>:start/end -->; releases before 0.8.0 wrote
+# gsd-worktrees: instead. Both are read (a start of one name may end with the
+# other), so gsd-init --no-launch replaces an old block in place and doctor
+# T016 reports it as out of date.
+GSD_MARK_RE='gsd-(toolkit|worktrees)'
 gsd_owned_markers_valid() { # file, marker kind; an absent block is valid
   [ -f "$1" ] || return 0
-  awk -v start="<!-- gsd-worktrees:$2:start -->" -v end="<!-- gsd-worktrees:$2:end -->" '
-    index($0,start) { if ($0 != start || state != 0 || starts++) bad=1; state=1 }
-    index($0,end) { if ($0 != end || state != 1) bad=1; state=2 }
+  awk -v start="<!-- $GSD_MARK_RE:$2:start -->" -v end="<!-- $GSD_MARK_RE:$2:end -->" '
+    $0 ~ start { if ($0 !~ "^" start "$" || state != 0 || starts++) bad=1; state=1 }
+    $0 ~ end { if ($0 !~ "^" end "$" || state != 1) bad=1; state=2 }
     END { exit (bad || state == 1) ? 1 : 0 }
   ' "$1"
 }
 
+gsd_owned_block_get() { # file, kind → the marked block as it is in the file
+  [ -f "$1" ] || return 0
+  awk -v start="^<!-- $GSD_MARK_RE:$2:start -->\$" -v end="^<!-- $GSD_MARK_RE:$2:end -->\$" '
+    !on && $0 ~ start { on=1 } on { print } on && $0 ~ end { on=0 }
+  ' "$1"
+}
+
 gsd_provider_instruction_members() { # file; supports older generated headers
-  sed -n '/^<!-- gsd-worktrees:provider:start -->$/,/^<!-- gsd-worktrees:provider:end -->$/p' "$1" 2>/dev/null |
+  gsd_owned_block_get "$1" provider 2>/dev/null |
     sed -n 's/^## GSD worktrees (\([^)]*\) adapter)$/\1/p'
 }
 
@@ -179,12 +192,12 @@ gsd_provider_instruction_integrated() { # repo, provider
   local file members
   file=$1/$(gsd_provider_instruction_file "$2")
   gsd_owned_markers_valid "$file" provider || return 1
-  grep -qx '<!-- gsd-worktrees:provider:start -->' "$file" 2>/dev/null || return 1
+  grep -qxE "<!-- $GSD_MARK_RE:provider:start -->" "$file" 2>/dev/null || return 1
   members=$(gsd_provider_instruction_members "$file")
   case ",$members," in *",$2,"*) ;; *) return 1 ;; esac
-  sed -n '/^<!-- gsd-worktrees:provider:start -->$/,/^<!-- gsd-worktrees:provider:end -->$/p' "$file" |
+  gsd_owned_block_get "$file" provider |
     grep -qF 'Read and follow `.gsd/INSTRUCTIONS.md`.' || return 1
-  grep -qx '<!-- gsd-worktrees:canonical:start -->' "$1/.gsd/INSTRUCTIONS.md" 2>/dev/null &&
+  grep -qxE "<!-- $GSD_MARK_RE:canonical:start -->" "$1/.gsd/INSTRUCTIONS.md" 2>/dev/null &&
     gsd_owned_markers_valid "$1/.gsd/INSTRUCTIONS.md" canonical
 }
 
@@ -206,7 +219,7 @@ skip a step without asking. \`gsd-flow-next\` asks for each step (\`ui_gates\` i
 \`.gsd.conf\`).
 "
   cat <<EOF
-<!-- gsd-worktrees:canonical:start -->
+<!-- gsd-toolkit:canonical:start -->
 # GSD worktree workflow
 
 The shell commands are the source of truth. One feature equals one phase and
@@ -230,27 +243,22 @@ shell commands outside GSD are outside this enforcement boundary.
 ${ui_text}
 Providers: \`$1\` (default: first, \`$2\`); base \`$3\`;
 worktrees \`../$4/\`.
-<!-- gsd-worktrees:canonical:end -->
+<!-- gsd-toolkit:canonical:end -->
 EOF
 }
 
 gsd_provider_entry_block() { # the providers sharing this instruction file
   cat <<EOF
-<!-- gsd-worktrees:provider:start -->
+<!-- gsd-toolkit:provider:start -->
 ## GSD worktrees ($1 adapter)
 
-Read and follow \`.gsd/INSTRUCTIONS.md\`. Use the \`gsdw-flow\` skill when it is
+Read and follow \`.gsd/INSTRUCTIONS.md\`. Use the \`gsdt-flow\` skill when it is
 available; otherwise run \`gsd-flow-next <N>\` and follow each printed action.
 For toolkit command syntax and workflow order, this marked adapter and the
 canonical document supersede older unmarked GSD text in this file. Continue to
 follow repository-specific policy from that older text.
-<!-- gsd-worktrees:provider:end -->
+<!-- gsd-toolkit:provider:end -->
 EOF
-}
-
-gsd_owned_block_get() { # file, kind → the marked block as it is in the file
-  [ -f "$1" ] || return 0
-  sed -n "/^<!-- gsd-worktrees:$2:start -->\$/,/^<!-- gsd-worktrees:$2:end -->\$/p" "$1"
 }
 
 gsd_replace_owned_block() { # file, kind, new block file; caller prevalidates
@@ -258,8 +266,8 @@ gsd_replace_owned_block() { # file, kind, new block file; caller prevalidates
   [ ! -f "$1" ] || cp -p "$1" "$tmp"
   BLOCK_FILE=$3 BLOCK_KIND=$2 perl -0777 -pe '
     BEGIN { open my $b, "<", $ENV{BLOCK_FILE} or die $!; local $/; $block=<$b>; $kind=$ENV{BLOCK_KIND}; }
-    if (/^<!-- gsd-worktrees:\Q$kind\E:start -->$/m) {
-      s/^<!-- gsd-worktrees:\Q$kind\E:start -->\n.*?^<!-- gsd-worktrees:\Q$kind\E:end -->(?:\n|\z)/$block/msg;
+    if (/^<!-- gsd-(?:toolkit|worktrees):\Q$kind\E:start -->$/m) {
+      s/^<!-- gsd-(?:toolkit|worktrees):\Q$kind\E:start -->\n.*?^<!-- gsd-(?:toolkit|worktrees):\Q$kind\E:end -->(?:\n|\z)/$block/msg;
     } else { $_ .= (length && !/\n\z/ ? "\n" : "") . "\n" . $block; }
   ' "${1:-/dev/null}" > "$tmp" || { rm -f "$tmp"; return 1; }
   # a linked file (AGENTS.md -> CLAUDE.md, dotfile repos) is written through, not replaced
@@ -424,8 +432,8 @@ gsd_provider_prompt() { # provider, kind, phase-or-empty
       esac ;;
     flow)
       case "$p" in
-        claude) printf '/gsdw-flow %s\n' "$n" ;;
-        codex) printf 'Use the gsdw-flow skill to drive phase %s. Start by running gsd-flow-next %s and obey every reported gate.\n' "$n" "$n" ;;
+        claude) printf '/gsdt-flow %s\n' "$n" ;;
+        codex) printf 'Use the gsdt-flow skill to drive phase %s. Start by running gsd-flow-next %s and obey every reported gate.\n' "$n" "$n" ;;
         custom) printf 'Drive GSD phase %s by running gsd-flow-next %s before every phase step; obey every gate in .gsd/INSTRUCTIONS.md.\n' "$n" "$n" ;;
       esac ;;
     new)

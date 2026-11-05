@@ -1,12 +1,12 @@
 ---
-name: gsdw-flow
+name: gsdt-flow
 description: "Drive one GSD phase through the provider-neutral resumable order. Use when asked to run, continue, or inspect a phase end-to-end. gsd-flow-next is the authoritative state machine and command-level guard."
 ---
 
-# gsdw-flow — one phase, in order, resumable
+# gsdt-flow — one phase, in order, resumable
 
 Start this installed skill through the active provider's supported mechanism.
-Claude may use `/gsdw-flow <N>`; Codex uses `$gsdw-flow` with the phase number
+Claude may use `/gsdt-flow <N>`; Codex uses `$gsdt-flow` with the phase number
 in the request. The shell entrypoint is `gsd-flow-next <N>` for every provider.
 
 You are the driver. Use this agent's real skill invocation mechanism when the

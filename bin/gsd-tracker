@@ -6,7 +6,7 @@
 # (it uses only lib/tracker/), and the GSD toolkit runs it as a command:
 # gsd-start calls `start` when a phase tagged tk-<id> is claimed or attached;
 # gsd-finish calls `finish` after the merge (or when --pr opens the PR); the
-# /gsdw-flow ticket step calls `snapshot` to save the ticket as <P>-TICKET.md.
+# /gsdt-flow ticket step calls `snapshot` to save the ticket as <P>-TICKET.md.
 #
 # Usage:
 #   gsd-tracker [--repo <dir>] [--tracker <name>] <command> …
@@ -151,7 +151,7 @@ fi
 . "$TRK_LIB/$TRACKER.sh"
 if [ "$cmd" = snapshot ] && [ -n "$OUT" ]; then
   # A failed fetch must not leave an empty file: the file is what marks the
-  # /gsdw-flow ticket step done.
+  # /gsdt-flow ticket step done.
   tmp="$OUT.tmp.$$"
   if ( tracker_run "$@" ) > "$tmp" && [ -s "$tmp" ]; then
     mv "$tmp" "$OUT"; echo "✔ ticket $ID → $OUT"
