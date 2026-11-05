@@ -52,7 +52,7 @@ shellcheck -x bin/* lib/*.sh lib/tracker/*.sh tools/*.sh shims/scripts/*.sh shim
 tools/release.sh X.Y.Z --push   # a push changing VERSION → .github/workflows/release.yml tests, tags, builds, publishes
 ```
 
-There is no per-test runner: each suite uses `ok`/`bad`/`is` helpers and `section` headers, and builds throwaway repos in `mktemp -d`. To focus, run one suite. Every command has `--help`. New suites must also be added to `.github/workflows/tests.yml` and the README test list.
+There is no per-test runner: each suite uses `ok`/`bad`/`is` helpers and `section` headers, and builds throwaway repos in `mktemp -d`. To focus, run one suite. Every command has `--help`. New suites must also be added to `.github/workflows/tests.yml` and the suite list above (the README links here).
 
 ## Architecture
 
