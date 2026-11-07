@@ -170,7 +170,7 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | Custom: `tracker_command` gets `start` / `finish` / `comment` / `status` / `snapshot` / `check` + `<id> [text]` | `lib/tracker/custom.sh` |
 | Snapshot `--out` writes only on success (the file marks the flow step done) | `gsd-tracker` |
 | Shared verbs `create` / `update` / `tasks` for every tracker (options passed to the connector; `none` fails them); a connector's own commands via `TRACKER_EXTRA` | `gsd-tracker` |
-| ClickUp connector: `create` / `update` (name, markdown description, assignees by me/id/email/username, status, priority, tags, parent) / `tasks` (filters, `--match` name search); own commands `lists` / `members` / `api` (any v2 call); workspace from `CLICKUP_TEAM_ID` or the token's only one | `lib/tracker/clickup.sh`, `gsd-clickup` |
+| ClickUp connector: `create` / `update` (name, markdown description, assignees by me/id/email/username, status, priority, tags, parent) / `tasks` (filters, `--match` name search); own commands `lists` / `members` / `api` (any v2 call); workspace from `CLICKUP_TEAM_ID` or the token's only one | `lib/tracker/clickup.sh` |
 | Agent skill: read and write the repo's tickets through `gsd-tracker` (checks `which` first) | `skills/gsdt-tracker` |
 | Install removes a toolkit skill no longer shipped (renamed or retired) | `lib/install.sh` |
 | Legacy read-only: `--cu`, `cu_<id>` tags, `STORY.md` | `lib/ticket.sh` |

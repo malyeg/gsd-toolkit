@@ -43,7 +43,7 @@ A TypeScript port runs the same on all three systems.
 | `bin/gsd-planning-repair`, `bin/gsd-planning-merge` | 115 + 57 | thin entries over `planning.ts` |
 | `lib/roadmap-audit.pl`, `lib/roadmap-rows.pl` | 98 + 88 | `src/roadmap.ts` |
 | `lib/version.sh`, `bin/gsd-update`, `get.sh` | 112 + 77 + 90 | update notice checks the npm registry; the rest is removed |
-| `bin/gsd-derive-port`, `bin/gsd-clickup` | 22 + 17 | small entries |
+| `bin/gsd-derive-port` | 22 | small entry |
 
 Every command keeps its **name, flags, output and exit codes**. `--help` text
 stays the same.

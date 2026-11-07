@@ -57,8 +57,9 @@ around it.
 - `<who>` = `me`, a user id, an email or a username (`gsd-tracker members`).
 - Anything else: `gsd-tracker api <GET|POST|PUT|DELETE> </path> ['<json>']`
   (ClickUp API v2 paths, e.g. `/task/<id>/tag/<tag>`).
-- Full list: `gsd-clickup --help`. Outside a gsd-toolkit repo,
-  `gsd-clickup <command>` is the same with the tracker fixed to ClickUp.
+- Full list: `gsd-tracker --help`. To force ClickUp whatever the repo sets:
+  `gsd-tracker --tracker clickup <command>`. There is no `gsd-clickup`
+  command: never run it.
 
 ## Rules
 

@@ -28,8 +28,9 @@
 #                              from (offline; never prints a token)
 #   <id> may be the bare id, tk-<id>, #<id>, or the ticket's URL.
 #   create/update/tasks options go to the tracker as written; what <where> is
-#   and which options work depend on it (ClickUp: gsd-clickup --help).
+#   and which options work depend on it (ClickUp: see below).
 #   A tracker may add its own commands (ClickUp: lists, members, api, login).
+#   --tracker clickup forces ClickUp, whatever the repo sets.
 #
 # Settings, first match wins: the environment, then the repo's git config
 # (section gsd-tracker, in .git/config: never committed, shared by every
@@ -51,6 +52,23 @@
 #              <cmd> create <where> <title> [option…] · update <id> <option>…
 #              <cmd> tasks [option…]
 #            GSD_TRACKER_STATUS carries the configured status for start/finish.
+#
+# ClickUp's options for create/update/tasks, and its own commands:
+#   create  <list-id> <name> [--desc <md>|-] [--assign <who>]… [--status <s>]
+#           [--priority 1-4] [--tag <t>]… [--parent <id>]   prints the new id + url
+#   update  <id> [--name <n>] [--desc <md>|-] [--assign <who>]… [--unassign <who>]…
+#           [--status <s>] [--priority 1-4] [--parent <id>]
+#   tasks   [--list <id>]… [--status <s>]… [--assign <who>]… [--tag <t>]…
+#           [--closed] [--match <text>] [--page <n>]        "<id>  [<status>]  <name> · <list>"
+#   lists                    spaces, folders and lists, with ids
+#   members                  workspace members: id, username, email
+#   api     <GET|POST|PUT|DELETE> </path> [json]   any API v2 call; prints the body
+#   login   [<profile>]      see below
+# <who> is me, a user id, an email or a username. --desc - reads stdin.
+# Priority: 1 urgent · 2 high · 3 normal · 4 low. --match filters task names
+# (the API has no text search) over up to 10 pages of 100.
+# The workspace: $CLICKUP_TEAM_ID (env or the token file), else the only one
+# the token sees.
 #
 # A profile names the login: ClickUp then reads ~/.config/gsd/clickup-<name>.env
 # instead of the shared ~/.config/gsd/clickup.env (no fallback); custom gets

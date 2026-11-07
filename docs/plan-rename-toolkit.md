@@ -1,7 +1,10 @@
 # Plan: rename gsd-worktrees → gsd-toolkit (new repo)
 
-Status: steps 1–5 done 2026-11-04 (uncommitted, all suites green in both
-folders). Step 6 (commit, push, release, archive) waits for the user's OK.
+Status 2026-11-05: DONE. 0.8.0 released from malyeg/gsd-toolkit, 0.7.1
+bridge released from arconme/gsd-worktrees (CI green on both). Step 7 passed on
+this machine: 0.6.3 → 0.7.1 → 0.8.0 with two `gsd-update` runs (old runtime and
+gsdw-* skills removed). All six projects under ~/projects moved to the new
+markers (`gsd-init --no-launch`, committed). arconme/gsd-worktrees archived.
 
 Changed while building: the 0.7.1 bridge ships the NEW `install.sh` (same
 file as 0.8.0). It picks the tarball name from `SHA256SUMS`, maps a

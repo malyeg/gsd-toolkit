@@ -132,12 +132,17 @@ GSD_BIN_DIR="$WORK/upgrade-bin" GSD_COPY_DIR="$WORK/upgrade-runtime" \
   GSD_CODEX_SKILL_DIR="$WORK/upgrade-skills" "$FIXTURE/lib/install.sh" --agent codex >/dev/null
 rm "$FIXTURE/bin/gsd-obsolete"
 ln -s "$WORK/unrelated-missing" "$WORK/upgrade-bin/unrelated"
+# a command an older release had (0.8.0's gsd-clickup) goes on update
+OLDREL="$WORK/share/gsd-toolkit/releases/0.8.0"; mkdir -p "$OLDREL/bin"
+printf '#!/bin/sh\n' > "$OLDREL/bin/gsd-clickup"
+ln -s "$OLDREL/bin/gsd-clickup" "$WORK/upgrade-bin/gsd-clickup"
 GSD_BIN_DIR="$WORK/upgrade-bin" GSD_COPY_DIR="$WORK/upgrade-runtime" \
   "$FIXTURE/lib/install.sh" --reuse-install-config >/dev/null
 [ ! -L "$WORK/upgrade-bin/gsd-obsolete" ]
 [ ! -e "$WORK/upgrade-runtime/bin/gsd-obsolete" ]
 [ -f "$WORK/upgrade-runtime/bin/gsd-obsolete.bak" ]
 [ -L "$WORK/upgrade-bin/unrelated" ]
+[ ! -e "$WORK/upgrade-bin/gsd-clickup" ] && [ ! -L "$WORK/upgrade-bin/gsd-clickup" ]
 # an old link install's skill (a link into a checkout) is replaced by a copy
 mkdir -p "$WORK/isolated-skills"; ln -s "$FIXTURE/skills/gsdt-flow" "$WORK/isolated-skills/gsdt-flow"
 GSD_BIN_DIR="$WORK/isolated-bin" GSD_COPY_DIR="$WORK/isolated-runtime" \

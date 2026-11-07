@@ -5,6 +5,13 @@ Each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## 0.8.1
+
+- **`gsd-clickup` is removed.** Use `gsd-tracker` (it does everything
+  `gsd-clickup` did; `--tracker clickup` forces ClickUp). `gsd-update` removes
+  the old `gsd-clickup` from your PATH. ClickUp's options are now in
+  `gsd-tracker --help`.
+
 ## 0.8.0
 
 - **gsd-worktrees is now gsd-toolkit**, at

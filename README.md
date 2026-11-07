@@ -96,7 +96,7 @@ in the worktree vs the main checkout, is in
 |---|---|
 | `gsd-bootstrap-repo` | Writes the repo files (config, shims, instruction blocks). Called by `gsd-init`; safe to re-run. |
 | `gsd-planning-repair` | Fixes `ROADMAP.md` / `STATE.md` after a bad merge. `--check` for CI. |
-| `gsd-tracker` | Reads and updates tickets ([docs/trackers.md](docs/trackers.md)). `gsd-clickup` is the same, fixed to ClickUp. |
+| `gsd-tracker` | Reads and updates tickets ([docs/trackers.md](docs/trackers.md)). |
 | `gsd-ui` | UI quality steps for phases with screens: design, layout, browser check, review, approval. |
 | `gsd-codex-wait` | Waits out a Codex usage limit, then runs the command again. |
 

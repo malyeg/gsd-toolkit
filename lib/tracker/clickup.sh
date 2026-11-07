@@ -187,16 +187,16 @@ clickup_user() {  # $1=me | user id | email | username → the numeric user id
       out=$(clickup_members_json)
       id=$(jq -r --arg u "$1" 'first(.[] | select(((.email // "") | ascii_downcase) == ($u | ascii_downcase)
                                                or ((.username // "") | ascii_downcase) == ($u | ascii_downcase)) | .id) // empty' <<< "$out")
-      [ -n "$id" ] || die "no workspace member '$1' (see gsd-clickup members)"
+      [ -n "$id" ] || die "no workspace member '$1' (see gsd-tracker members)"
       printf '%s\n' "$id" ;;
     *) printf '%s\n' "$1" ;;
   esac
 }
 
 clickup_create() {  # <list-id> <name> [options] → prints the new id and url
-  [ $# -ge 2 ] || die "usage: gsd-clickup create <list-id> <name> [--desc <md>|-] [--assign <who>]… [--status <s>] [--priority 1-4] [--tag <t>]… [--parent <id>]"
+  [ $# -ge 2 ] || die "usage: gsd-tracker create <list-id> <name> [--desc <md>|-] [--assign <who>]… [--status <s>] [--priority 1-4] [--tag <t>]… [--parent <id>]"
   local list="$1" body out v
-  printf '%s' "$list" | grep -qE '^[0-9]+$' || die "not a list id: $list (see gsd-clickup lists)"
+  printf '%s' "$list" | grep -qE '^[0-9]+$' || die "not a list id: $list (see gsd-tracker lists)"
   body=$(jq -cn --arg n "$2" '{name: $n}')
   shift 2
   while [ $# -gt 0 ]; do
@@ -218,7 +218,7 @@ clickup_create() {  # <list-id> <name> [options] → prints the new id and url
 }
 
 clickup_update() {  # <id> [options]
-  [ $# -ge 3 ] || die "usage: gsd-clickup update <id> [--name <n>] [--desc <md>|-] [--assign <who>]… [--unassign <who>]… [--status <s>] [--priority 1-4] [--parent <id>]"
+  [ $# -ge 3 ] || die "usage: gsd-tracker update <id> [--name <n>] [--desc <md>|-] [--assign <who>]… [--unassign <who>]… [--status <s>] [--priority 1-4] [--parent <id>]"
   local id body='{}' v
   id=$(trk_id_norm "$1" clickup) || die "not a ticket id: $1"
   shift
@@ -289,7 +289,7 @@ clickup_lists() {  # → the workspace tree with ids
 }
 
 clickup_raw() {  # <METHOD> </path> [json] → the response body
-  [ $# -ge 2 ] || die "usage: gsd-clickup api <GET|POST|PUT|DELETE> </path> [json]"
+  [ $# -ge 2 ] || die "usage: gsd-tracker api <GET|POST|PUT|DELETE> </path> [json]"
   case "$1" in GET|POST|PUT|DELETE) ;; *) die "method must be GET, POST, PUT or DELETE, not '$1'" ;; esac
   case "$2" in
     *[[:space:]]*) die "the path has spaces — encode them" ;;

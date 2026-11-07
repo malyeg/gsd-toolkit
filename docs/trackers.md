@@ -169,9 +169,9 @@ gsd-tracker api DELETE /task/869e33cv4/tag/bug   # any API v2 call; prints the b
 username. `--desc -` reads the markdown from stdin. Priority: 1 urgent,
 2 high, 3 normal, 4 low. `tasks`, `lists` and `members` need the workspace:
 `CLICKUP_TEAM_ID` (env or the token file), else the only workspace the token
-sees. They use the same token and profile as above. `gsd-clickup <command>`
-is the same with the tracker fixed to ClickUp, whatever the repo sets.
-See `gsd-clickup --help`.
+sees. They use the same token and profile as above.
+`gsd-tracker --tracker clickup <command>` forces ClickUp, whatever the repo
+sets. See `gsd-tracker --help`.
 
 ## Custom
 

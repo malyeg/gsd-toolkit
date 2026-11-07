@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # test-tracker.sh — tickets: id parsing, gsd-tracker with none / custom /
-# clickup, the gsd-clickup alias, and the ticket paths through gsd-start,
+# clickup, --tracker clickup, and the ticket paths through gsd-start,
 # gsd-finish and gsd-doctor.
 # CI-safe: the ClickUp API is a curl stub, gsd_run (GSD) and gh are stubbed, and
 # remotes are local bare repos.
@@ -213,17 +213,17 @@ else
   has "snapshot: description"               "As a buyer I keep a cart." "$WORK/snap"
   has "snapshot: comments"                  "^- looks good" "$WORK/snap"
   is  "an API error → exit 2"               "$(cd "$R" && gsd-tracker start nope404 x >/dev/null 2>&1; echo $?)" 2
-  : > "$CURL_LOG"; (cd "$WORK/none" && gsd-clickup start abc123 hi) >/dev/null 2>&1
-  has "gsd-clickup alias forces clickup (repo says none)" 'PUT /task/abc123' "$CURL_LOG"
-  is  "gsd-clickup extract still works"     "$(gsd-clickup extract 'cart cu_abc123')" abc123
+  : > "$CURL_LOG"; (cd "$WORK/none" && gsd-tracker --tracker clickup start abc123 hi) >/dev/null 2>&1
+  has "--tracker clickup forces clickup (repo says none)" 'PUT /task/abc123' "$CURL_LOG"
+  is  "no gsd-clickup command (gsd-tracker only)" "$([ -e "$PKG/bin/gsd-clickup" ] && echo there || echo gone)" gone
 fi
 
-section "gsd-clickup — ClickUp-only commands (fake API)"
+section "gsd-tracker — ClickUp-only commands (fake API)"
 if ! command -v jq >/dev/null 2>&1; then
   echo "  SKIPPED: jq not installed"
 else
   R="$WORK/cu"; printf 'tracker = clickup\n' > "$R/.gsd.conf"
-  cu() { (cd "$R" && env -u CLICKUP_TEAM_ID gsd-clickup "$@"); }
+  cu() { (cd "$R" && env -u CLICKUP_TEAM_ID gsd-tracker "$@"); }
   : > "$CURL_LOG"; cu create 901 'Fix "login"' --desc '# Steps' --assign me --assign sara@x.io \
     --priority 2 --tag bug --parent tk-abc123 > "$WORK/out" 2>&1
   has "create prints the new id + url"      '✔ ClickUp new1 created · https://app.clickup.com/t/new1' "$WORK/out"
@@ -253,7 +253,7 @@ else
   has "api passes any call through"         'DELETE /task/abc123/tag/bug' "$CURL_LOG"
   fails "api refuses a path without /"      cu api GET task/abc123
   fails "api refuses a body that is not JSON" cu api POST /task/abc123/comment 'hi'
-  : > "$CURL_LOG"; (cd "$R" && CLICKUP_TEAM_ID=T1 gsd-clickup tasks) >/dev/null 2>&1
+  : > "$CURL_LOG"; (cd "$R" && CLICKUP_TEAM_ID=T1 gsd-tracker tasks) >/dev/null 2>&1
   hasnt "CLICKUP_TEAM_ID skips the workspace lookup" 'GET /team ' "$CURL_LOG"
   section "gsd-tracker — create / update / tasks and ClickUp's own commands (tracker = clickup)"
   : > "$CURL_LOG"; (cd "$R" && gsd-tracker update tk-abc123 --priority 1) > "$WORK/out" 2>&1
@@ -422,16 +422,16 @@ fi
 
 section "gsd-tracker is standalone"
 S="$WORK/solo-pkg"; mkdir -p "$S/bin" "$S/lib"
-cp "$PKG/bin/gsd-tracker" "$PKG/bin/gsd-clickup" "$S/bin/"; cp -R "$PKG/lib/tracker" "$S/lib/"
+cp "$PKG/bin/gsd-tracker" "$S/bin/"; cp -R "$PKG/lib/tracker" "$S/lib/"
 is  "runs with only its own files"             "$(cd "$WORK/noconf" && "$S/bin/gsd-tracker" which)" clickup
-: > "$CURL_LOG"; (cd "$WORK/noconf" && "$S/bin/gsd-clickup" check) > "$WORK/out" 2>&1
+: > "$CURL_LOG"; (cd "$WORK/noconf" && "$S/bin/gsd-tracker" --tracker clickup check) > "$WORK/out" 2>&1
 has "…and talks to ClickUp"                    'GET /user' "$CURL_LOG"
 echo pk_s | cuat "$WORK/noconf" "$S/bin/gsd-tracker" login standalone > "$WORK/out" 2>&1
 is  "…and logs in"                             "$?" 0
 uses=$(cd "$PKG" && grep -nE '(^|[^A-Za-z0-9_])gsd_[a-z]|lib/(common|ticket|provider)\.sh' \
-         bin/gsd-tracker bin/gsd-clickup lib/tracker/*.sh | grep -vE "^[^:]+:[0-9]+:[[:space:]]*#" || true)
+         bin/gsd-tracker lib/tracker/*.sh | grep -vE "^[^:]+:[0-9]+:[[:space:]]*#" || true)
 is  "tracker files use no GSD code"            "$uses" ""
-srcs=$(cd "$PKG" && grep -nE '^[[:space:]]*\. .*lib/tracker/' bin/* lib/*.sh | grep -vE '^bin/gsd-(tracker|clickup):' || true)
+srcs=$(cd "$PKG" && grep -nE '^[[:space:]]*\. .*lib/tracker/' bin/* lib/*.sh | grep -vE '^bin/gsd-tracker:' || true)
 is  "GSD never sources tracker files"          "$srcs" ""
 is  "GSD: a tracker nobody set counts as none" "$(GSD_PKG=$PKG gsd_tracker_which "$WORK/noconf")" none
 is  "…a set one counts"                     "$(GSD_PKG=$PKG gsd_tracker_which "$WORK/custom")" custom
