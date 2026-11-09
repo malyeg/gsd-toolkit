@@ -68,7 +68,7 @@ rules. After reviewing and relocating any project-specific rules, maintainers
 may remove obsolete legacy wording manually. Invalid JSON settings are left
 untouched with a warning.
 
-Repos set up before the instructions split (the release after 0.8.3) hold the full rules in
+Repos set up before the instructions split (0.9.0) hold the full rules in
 `.gsd/INSTRUCTIONS.md`. They keep working unchanged: that copy is complete,
 and Claude sessions also load the current rules from `gsd-rules`. Doctor
 reports T016 one last time; one `gsd-init --no-launch` (or

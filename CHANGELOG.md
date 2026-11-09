@@ -5,7 +5,7 @@ Each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## Unreleased
+## 0.9.0
 
 - **The workflow rules come from the installed toolkit.** A new command,
   `gsd-rules`, prints them (with the repo's values; the screens paragraph
