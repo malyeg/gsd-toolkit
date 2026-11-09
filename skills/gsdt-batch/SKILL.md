@@ -1,6 +1,6 @@
 ---
 name: gsdt-batch
-description: "Run several quick tasks at once, cheaper: use this INSTEAD of /gsd-quick-batch. Takes a task list (inline or --file) OR any brief in plain words (\"Read FIX-BRIEF.md, validate each item, fix the real ones, recommend the owner calls\"). A helper checks and scouts each item first so the planners search less, tiny items go to gsd-fast instead of a planner, and gsd-batch-report shows what it cost. Use when asked to batch, fix or do several small tasks/bugs together, or to work through a fix brief."
+description: "Run several quick tasks at once, cheaper: use this INSTEAD of /gsd-quick-batch. Start it with the gsd-batch shell command (gsd-batch '<list or brief>'), not by typing /gsdt-batch in the main checkout: there it only prints that command. Takes a task list (inline or --file) OR any brief in plain words (\"Read FIX-BRIEF.md, validate each item, fix the real ones, recommend the owner calls\"). A helper checks and scouts each item first so the planners search less, tiny items go to gsd-fast instead of a planner, and gsd-batch-report shows what it cost. Use when asked to batch, fix or do several small tasks/bugs together, or to work through a fix brief."
 ---
 
 # gsdt-batch — scout, sort, then run the batch
