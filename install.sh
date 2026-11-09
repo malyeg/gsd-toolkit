@@ -65,9 +65,12 @@ while [ $# -gt 0 ]; do
   esac
 done
 for tool in curl tar; do command -v "$tool" >/dev/null 2>&1 || die "$tool is required"; done
+# GitHub's release downloads sometimes answer 500/502/503 for a moment:
+# retry those (curl retries only transient errors) before giving up.
+RETRY=(--retry 3 --retry-delay 2)
 
 if [ -z "$VERSION" ]; then
-  VERSION=$(curl -fsSL --max-time 15 -H 'Accept: application/vnd.github+json' \
+  VERSION=$(curl -fsSL "${RETRY[@]}" --max-time 15 -H 'Accept: application/vnd.github+json' \
       "https://api.github.com/repos/$SLUG/releases/latest" \
     | sed -n 's/.*"tag_name"[[:space:]]*:[[:space:]]*"v\{0,1\}\([0-9][0-9.]*\)".*/\1/p' | head -1) \
     || die "cannot reach GitHub to find the latest release of $SLUG"
@@ -90,14 +93,14 @@ case "$RELEASES" in */share/gsd-toolkit/releases) OLD_SHARE="${RELEASES%/gsd-too
 TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
 URL="https://github.com/$SLUG/releases/download/v$VERSION"
 echo "▶ downloading gsd-toolkit ${VERSION}…"
-curl -fsSL --max-time 30 "$URL/SHA256SUMS" -o "$TMP/SHA256SUMS" || die "download failed: $URL/SHA256SUMS"
+curl -fsSL "${RETRY[@]}" --max-time 30 "$URL/SHA256SUMS" -o "$TMP/SHA256SUMS" || die "download failed: $URL/SHA256SUMS"
 # The package's name: gsd-toolkit, or gsd-worktrees for a release before 0.8.0.
 PKGNAME=gsd-toolkit
 for n in gsd-toolkit gsd-worktrees; do
   if awk -v f="$n-$VERSION.tar.gz" '$2 == f || $2 == "*" f {found=1} END {exit !found}' "$TMP/SHA256SUMS"; then PKGNAME=$n; break; fi
 done
 NAME="$PKGNAME-$VERSION.tar.gz"
-curl -fsSL --max-time 120 "$URL/$NAME" -o "$TMP/$NAME" || die "download failed: $URL/$NAME"
+curl -fsSL "${RETRY[@]}" --max-time 120 "$URL/$NAME" -o "$TMP/$NAME" || die "download failed: $URL/$NAME"
 want=$(awk -v f="$NAME" '$2 == f || $2 == "*" f {print $1}' "$TMP/SHA256SUMS")
 if command -v sha256sum >/dev/null 2>&1; then have=$(sha256sum "$TMP/$NAME" | awk '{print $1}')
 else have=$(shasum -a 256 "$TMP/$NAME" | awk '{print $1}'); fi

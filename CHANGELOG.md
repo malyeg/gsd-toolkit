@@ -21,6 +21,8 @@ becomes its release notes.
   `gsd-rules` from the `AGENTS.md` line.
 - **Old repos keep working** (their copy of the rules is complete). Doctor
   reports T016 one last time; `gsd-init --no-launch` converts them.
+- **`install.sh` retries a download** (`curl --retry 3`) when GitHub answers
+  500/502/503 for a moment, instead of failing `gsd-update`.
 - **New doctor finding T062:** Claude is configured but its sessions cannot
   load the rules (`gsd-rules` not on PATH, or no hook). A note after
   `--no-user-hook`.

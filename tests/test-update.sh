@@ -60,8 +60,10 @@ mkdir -p "$WORK/stub"
 cat > "$WORK/stub/curl" <<'CURL'
 #!/usr/bin/env bash
 out=""; url=""
-while [ $# -gt 0 ]; do case "$1" in -o) out=$2; shift ;; -H|--max-time) shift ;; http*) url=$1 ;; esac; shift; done
+retry=""
+while [ $# -gt 0 ]; do case "$1" in -o) out=$2; shift ;; --retry) retry=" retry=$2"; shift ;; -H|--max-time|--retry-delay) shift ;; http*) url=$1 ;; esac; shift; done
 echo "$url" >> "$WORK/curl.log"
+case "$url" in */releases/download/*) echo "$url$retry" >> "$WORK/curl-retry.log" ;; esac
 case "$url" in
   https://api.github.com/repos/acme/gsd-toolkit/releases/latest)
     [ -s "$WORK/latest" ] || exit 22
@@ -95,6 +97,7 @@ is  "installs"                          "$?" 0
 is  "commands link into releases/9.9.8" "$(points gsd-list)" 9.9.8
 is  "the runtime says 9.9.8"            "$(cat "$RUN/9.9.8/VERSION")" 9.9.8
 if [ -f "$RUN/9.9.8/install.sh" ]; then ok "the runtime carries install.sh (for gsd-update)"; else bad "the runtime carries install.sh (for gsd-update)"; fi
+is "both downloads retry a GitHub blip (curl --retry 3)" "$(grep -c 'v9.9.8/.* retry=3$' "$WORK/curl-retry.log")" 2
 if grep -q '^<!-- gsd-toolkit-skill ' "$WORK/skills/gsdt-flow/SKILL.md"; then ok "the skill copy is marked as the toolkit's"; else bad "the skill copy is marked as the toolkit's"; fi
 if [ -z "$(find "$WORK/skills/gsdt-flow" -type f ! -name SKILL.md)" ]; then ok "…in SKILL.md: no other file (gsd-core's installer stops on one)"; else bad "…in SKILL.md: no other file (gsd-core's installer stops on one)"; fi
 "$BIN/gsd-list" --help >/dev/null 2>&1; is "an installed command runs" "$?" 0
