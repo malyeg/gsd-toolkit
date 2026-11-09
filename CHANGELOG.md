@@ -5,7 +5,7 @@ Each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## Unreleased
+## 0.8.3
 
 - **`gsd-batch` runs the batch in its own worktree.** It makes a
   `batch-<date>-<slug>` branch + worktree off the base branch (slug from the
