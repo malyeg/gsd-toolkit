@@ -69,6 +69,8 @@ jobs:
         run: tests/test-doctor.sh
       - name: codex usage-limit wait suite
         run: tests/test-codex-wait.sh
+      - name: batch report suite
+        run: tests/test-batch.sh
       - name: a browser for the UI check suite
         # The runner behind `gsd-ui check` is only tested when it drives a real
         # browser: a pinned Playwright and its Chromium, outside the checkout.

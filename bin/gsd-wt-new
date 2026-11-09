@@ -8,6 +8,11 @@
 #
 # Usage (from inside the target repo, typically its main checkout):
 #   gsd-wt-new [slug] [--phase <N>] [--no-install|--install]
+#   gsd-wt-new --batch batch-<date>-<slug> [--no-install|--install]
+#
+#   --batch makes the worktree of a quick-task batch instead (gsd-batch runs
+#   it): branch + dir = the name given, off the base branch. No phase, no
+#   ROADMAP.md. Reused when the branch exists, like a phase's.
 #
 #   - <N>  is auto-detected: the phase added by the latest claim commit, else
 #          the highest-numbered phase in .planning/ROADMAP.md. Pass --phase <N>
@@ -39,6 +44,7 @@ GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 INSTALL_MODE=background   # background | foreground | none
 SLUG=""
 PHASE=""
+BATCH=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --no-install)  INSTALL_MODE=none; shift ;;
@@ -46,6 +52,10 @@ while [ $# -gt 0 ]; do
     --background)  INSTALL_MODE=background; shift ;;
     --phase)       [ $# -ge 2 ] || { echo "error: --phase needs a value" >&2; exit 1; }
                    PHASE="$2"; shift 2 ;;
+    --batch)       [ $# -ge 2 ] || { echo "error: --batch needs a name" >&2; exit 1; }
+                   printf '%s' "$2" | grep -qE '^batch-[a-z0-9][a-z0-9.-]*$' \
+                     || { echo "error: --batch needs a batch-<date>-<slug> name (a-z, 0-9, ., -), got '$2'" >&2; exit 1; }
+                   BATCH="$2"; shift 2 ;;
     -*)            echo "unknown flag: $1" >&2; exit 1 ;;
     *)             SLUG="$1"; shift ;;
   esac
@@ -56,12 +66,20 @@ MAIN=$(gsd_main .)
 # The existing-branch check below and `git worktree add` must not interleave
 # with another run for the same phase. Re-entrant: gsd-start already holds it.
 gsd_acquire_lock "$MAIN"
-ROADMAP="$MAIN/.planning/ROADMAP.md"
-[ -f "$ROADMAP" ] || { echo "error: $ROADMAP not found (is GSD initialized?)" >&2; exit 1; }
 BASE=$(gsd_base "$MAIN")
 WTDIR=$(gsd_wtdir "$MAIN")
 INSTALL_CMD=$(gsd_install_cmd "$MAIN")
 [ -n "$INSTALL_CMD" ] || INSTALL_MODE=none
+
+if [ -n "$BATCH" ]; then
+  # A batch: no phase, no ROADMAP. The rest (reuse, local config, baseRef,
+  # install) is the same as for a phase.
+  N=""; NAME="$BATCH"; WHAT="batch"
+  EXISTING=""
+  git -C "$MAIN" show-ref --verify --quiet "refs/heads/$NAME" && EXISTING="$NAME"
+else
+ROADMAP="$MAIN/.planning/ROADMAP.md"
+[ -f "$ROADMAP" ] || { echo "error: $ROADMAP not found (is GSD initialized?)" >&2; exit 1; }
 
 # Phase number: --phase wins; else prefer the one added in the latest commit
 # (the claim), else the highest-numbered phase in ROADMAP.md.
@@ -90,12 +108,13 @@ if [ -z "$SLUG" ]; then
   [ -n "$SLUG" ] || SLUG="feature"
 fi
 
-NAME="phase-$N-$SLUG"
+NAME="phase-$N-$SLUG"; WHAT="phase $N"
 
 # Idempotent per phase: reuse any existing phase-<N>-* branch (whatever its
 # slug), and its worktree if still attached. PR branches (*-pr, from
 # /gsd-pr-branch) are NOT the feature branch — never attach to those.
 EXISTING=$(gsd_phase_branch "$MAIN" "$N")
+fi
 if [ -n "$EXISTING" ]; then
   NAME="$EXISTING"
   WT=$(git -C "$MAIN" worktree list --porcelain \
@@ -112,7 +131,7 @@ if [ -n "$EXISTING" ]; then
     # A worktree made before the toolkit set it (or by hand) lacks it.
     gsd_baseref_ensure "$WT"
     echo ""
-    echo "✅ worktree ready: $WT   (phase $N)"
+    echo "✅ worktree ready: $WT   ($WHAT)"
     exit 0
   fi
 fi
@@ -186,8 +205,10 @@ case "$INSTALL_MODE" in
 esac
 
 echo ""
-echo "✅ worktree ready: $DEST   (phase $N)"
-if [ -z "${GSD_WT_NEW_SUPPRESS_NEXT:-}" ]; then
+echo "✅ worktree ready: $DEST   ($WHAT)"
+if [ -z "${GSD_WT_NEW_SUPPRESS_NEXT:-}" ] && [ -n "$BATCH" ]; then
+  echo "Open an agent session there and run /gsdt-batch. Finish:  gsd-finish $NAME"
+elif [ -z "${GSD_WT_NEW_SUPPRESS_NEXT:-}" ]; then
   echo "Open an agent session there, then:"
   echo "    /gsd-discuss-phase $N → /gsd-plan-phase $N → /gsd-execute-phase $N"
   echo "Finish:  gsd-finish $N"

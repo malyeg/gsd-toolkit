@@ -949,8 +949,9 @@ while IFS= read -r line; do
 done < <(git -C "$MAIN" worktree list --porcelain 2>/dev/null)
 
 # T034 — worktree.baseRef = "head" (gsd_baseref): without it /gsd-execute-phase
-# runs a wave's plans one at a time in every phase worktree. The main checkout
-# and each phase worktree read their own .claude/settings.local.json. Other
+# runs a wave's plans one at a time in every phase worktree (and gsd-core's
+# quick-batch its items, in a gsd-batch worktree). The main checkout and each
+# phase or batch worktree read their own .claude/settings.local.json. Other
 # worktrees are skipped: Claude's per-plan agent-* copies (.claude/worktrees/)
 # never run the check, and each new one would be a false alarm.
 BASEREF_FIX=""
@@ -959,7 +960,7 @@ if [ "$IS_GSD_REPO" = 1 ]; then
   while IFS= read -r line; do
     case "$line" in
       "worktree "*) wt="${line#worktree }"; [ "$wt" = "$MAIN" ] || continue ;;
-      "branch refs/heads/phase-"*) [ "$wt" != "$MAIN" ] || continue ;;
+      "branch refs/heads/phase-"*|"branch refs/heads/batch-"*) [ "$wt" != "$MAIN" ] || continue ;;
       *) continue ;;
     esac
     [ -d "$wt" ] || continue
@@ -990,11 +991,11 @@ while IFS= read -r br; do
   [ -n "$br" ] || continue
   case " $live_branches " in *" $br "*) continue ;; esac
   orphans="$orphans $br"
-done < <(git -C "$MAIN" for-each-ref --format='%(refname:short)' 'refs/heads/phase-*' 2>/dev/null)
+done < <(git -C "$MAIN" for-each-ref --format='%(refname:short)' 'refs/heads/phase-*' 'refs/heads/batch-*' 2>/dev/null)
 if [ -n "$orphans" ]; then
-  fail "phase branch(es) with no worktree:$orphans" "gsd-finish <N>, or git branch -d" "W017"
+  fail "phase or batch branch(es) with no worktree:$orphans" "gsd-finish <N | branch>, or git branch -d" "W017"
 else
-  pass "every phase branch has its worktree"
+  pass "every phase and batch branch has its worktree"
 fi
 
 # Branches whose upstream was deleted (a merged PR, a gsd-finish run from

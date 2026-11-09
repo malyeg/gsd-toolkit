@@ -1,6 +1,6 @@
 ---
 name: gsdt-doctor
-description: "Check this repo's GSD setup with gsd-doctor and fix what it finds, asking first — including a context that got too big: oversized ROADMAP/STATE files. Use when asked to run the doctor, fix GSD setup problems, or slim down the context GSD adds."
+description: "Check this repo's GSD setup with gsd-doctor and fix what it finds, asking first — including a context that got too big: oversized ROADMAP/STATE files, and (Claude) skills, plugins and CLAUDE.md text via Claude's /skill-doctor, /context and /doctor. Use when asked to run the doctor, fix GSD setup problems, or slim down the context GSD adds."
 ---
 
 # gsdt-doctor — find with gsd-doctor, fix with the user's yes
@@ -72,16 +72,23 @@ that, show the command and let the user decide. Missing gsd-core skills
 (T009): the fix names `/gsd-surface enable <group>` or the gsd-core installer;
 run it on a yes.
 
-## 6. The agent's own context (Claude)
+## 6. The agent's own context (Claude only)
 
 Claude's built-in checks see what gsd-doctor does not: CLAUDE.md files,
-memory, MCP servers, plugins, unused skills. A skill cannot start them. Tell
-the user to type:
+memory, MCP servers, plugins, unused skills. They run from the shell with
+`claude -p` (one command, print, exit). Skip this step and step 8 when the
+agent is not Claude or `claude` is not on PATH.
 
-- `/doctor` — unused skills, MCP servers and plugins against their cost, and
-  CLAUDE.md text to cut or move.
-- `/skill-doctor` — each skill's cost and how often it runs.
-- `/context` — the real token numbers.
+These two are free (no model call). Run them and give a short summary — the
+biggest costs and the skills never used:
+
+```
+Bash: claude -p "/skill-doctor"
+Bash: claude -p "/context"
+```
+
+`/context` measures a fresh session: what every session costs before the user
+types, not this session.
 
 ## 7. Check again
 
@@ -90,3 +97,18 @@ Bash: gsd-doctor
 ```
 
 Report what is fixed, what is left, and what the user chose to keep.
+
+## 8. Last: Claude's /doctor (ask first)
+
+Ask once: run Claude's `/doctor` to clean up the rest (unused plugins and
+skills, CLAUDE.md text to cut or move)? Say it is a real model run (a minute
+or two) and that it applies its own fixes without asking each one. Only on a
+yes:
+
+```
+Bash: claude -p "/doctor"
+```
+
+(timeout 10 minutes). It uses the user's permission mode: when that mode
+blocks edits, it only reports. Show its summary: what it changed, how to undo
+it, and what it left for the user.

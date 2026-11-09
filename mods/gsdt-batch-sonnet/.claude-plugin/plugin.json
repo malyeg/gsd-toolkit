@@ -1,0 +1,7 @@
+{
+  "name": "gsdt-batch-sonnet",
+  "version": "0.1.0",
+  "author": { "name": "gsd-toolkit" },
+  "description": "While a /gsdt-batch run is on, the main session's model requests go to Sonnet; subagents (planners) keep theirs.",
+  "types": "./types/index.d.ts"
+}

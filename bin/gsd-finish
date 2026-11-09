@@ -14,8 +14,9 @@
 #     checkout, prints where to cd afterwards)
 #
 # Usage:
-#   gsd-finish                      # from inside a phase-N-* worktree
+#   gsd-finish                      # from inside a phase-N-* or batch-* worktree
 #   gsd-finish <N | phase-N-slug>   # from anywhere in the repo
+#   gsd-finish batch-<date>-<slug>  # a gsd-batch worktree
 #   gsd-finish <N> --repo <path>    # from outside the repo
 set -euo pipefail
 
@@ -30,10 +31,14 @@ the worktree + branch. Companion to gsd-start; delegates the merge/cleanup to
 the repo's scripts/gsd-finish-worktree-feature.sh.
 
 USAGE
-  gsd-finish [<N> | phase-<N>-<slug>] [options]
+  gsd-finish [<N> | phase-<N>-<slug> | batch-<date>-<slug>] [options]
 
-  With no phase argument, run it from INSIDE the phase worktree — the phase is
+  With no argument, run it from INSIDE the phase (or batch) worktree — it is
   inferred from the current branch.
+
+  A batch worktree (made by gsd-batch) lands the same way as a phase: tests →
+  merge → .planning repair → push → remove worktree + branch. The per-phase
+  gates (UI steps, test audit) and the ticket update are skipped for it.
 
 OPTIONS
   --repo <path>   any checkout of the target repo (default: derived from the
@@ -56,6 +61,9 @@ EXAMPLES
 
   gsd-finish phase-7-invoice-fix
       Same, naming the branch explicitly.
+
+  gsd-finish batch-2026-11-09-fix-labels
+      Land a gsd-batch run: merge its branch, push, remove its worktree.
 
   gsd-finish 7 --repo ~/projects/acme/webshop
       Finish a phase of another repo without cd-ing into it first.
@@ -134,15 +142,16 @@ export GSD_LOCK_HELD=1
 if [ -z "$ID" ]; then
   br=$(git branch --show-current 2>/dev/null || true)
   case "$br" in
-    phase-*) ID="$br" ;;
-    *) die "no phase given and current branch '$br' is not a phase-* worktree" \
-           'usage: gsd-finish [N | phase-N-slug] [--repo <path>]' ;;
+    phase-*|batch-*) ID="$br" ;;
+    *) die "no phase given and current branch '$br' is not a phase-* or batch-* worktree" \
+           'usage: gsd-finish [N | phase-N-slug | batch-…] [--repo <path>]' ;;
   esac
 fi
 
 # ── main checkout must be on the base branch (auto-switch when clean) ────────
-printf '%s' "$ID" | grep -qE '^([0-9]+(\.[0-9]+)?|phase-[0-9]+(\.[0-9]+)?-.+)$' \
-  || die 'finish requires a phase number or phase-N-slug branch'
+printf '%s' "$ID" | grep -qE '^([0-9]+(\.[0-9]+)?|phase-[0-9]+(\.[0-9]+)?-.+|batch-.+)$' \
+  || die 'finish requires a phase number, a phase-N-slug branch or a batch-* branch'
+KIND="phase"; case "$ID" in batch-*) KIND="batch" ;; esac
 case "$ID" in phase-*) ! gsd_is_pr_helper "$MAIN" "$ID" || die 'finish the phase branch, not a PR-helper branch' ;; esac
 cur=$(git -C "$MAIN" branch --show-current)
 if [ "$cur" != "$BASE" ]; then
@@ -159,11 +168,13 @@ fi
 TICKET_ID=""
 PHASE_N=""
 case "$ID" in
+  batch-*) BR="$ID" ;;
   phase-*) BR="$ID"; PHASE_N=$(printf '%s' "$ID" | sed -E 's/^phase-([0-9]+(\.[0-9]+)?)-.*/\1/') ;;
   *)       PHASE_N="$ID"
            BR=$(gsd_phase_branch "$MAIN" "$ID") ;;
 esac
-if [ "$(gsd_tracker_which "$MAIN")" != none ]; then
+# A batch has no ROADMAP phase, so no ticket.
+if [ "$KIND" = phase ] && [ "$(gsd_tracker_which "$MAIN")" != none ]; then
   if [ -n "$PHASE_N" ] && [ -f "$MAIN/.planning/ROADMAP.md" ]; then
     N_RE=$(printf '%s' "$PHASE_N" | sed 's/\./\\./g')
     TITLE=$(grep -E "^### Phase $N_RE:" "$MAIN/.planning/ROADMAP.md" | head -1 || true)
@@ -178,24 +189,27 @@ fi
 if [ "$PR" = 1 ]; then
   command -v gh >/dev/null 2>&1 || die "--pr needs the GitHub CLI (gh) on PATH"
   case "$ID" in
-    phase-*) BR="$ID" ;;
+    phase-*|batch-*) BR="$ID" ;;
     *) BR=$(gsd_phase_branch "$MAIN" "$ID")
        [ -n "$BR" ] || die "no phase-$ID-* branch found" ;;
   esac
-  PHASE_N=$(printf '%s' "$BR" | sed -E 's/^phase-([0-9]+(\.[0-9]+)?)-.*/\1/')
+  git -C "$MAIN" show-ref --verify --quiet "refs/heads/$BR" || die "branch '$BR' not found"
+  PHASE_N=""
+  [ "$KIND" = batch ] || PHASE_N=$(printf '%s' "$BR" | sed -E 's/^phase-([0-9]+(\.[0-9]+)?)-.*/\1/')
   HEAD_BR="$BR"
   git -C "$MAIN" show-ref --verify --quiet "refs/heads/$BR-pr" && HEAD_BR="$BR-pr"
   # The same UI gate as the merge path (the PR is how this phase reaches the base).
   PR_WT=$(git -C "$MAIN" worktree list --porcelain \
             | awk -v b="branch refs/heads/$BR" '/^worktree /{w=substr($0,10)} $0==b{print w; exit}')
-  gsd_finish_gates "$MAIN" "$BR" "${PR_WT:-}" || die "no PR was opened"
+  [ "$KIND" = batch ] || gsd_finish_gates "$MAIN" "$BR" "${PR_WT:-}" || die "no PR was opened"
   echo "▶ pushing '$HEAD_BR'…"
   # No retry loop here: a rejected push means origin has commits this branch
   # lacks, and only the user can say how to integrate them.
   git -C "$MAIN" push -u origin "$HEAD_BR" --quiet \
     || die "push of '$HEAD_BR' failed — if origin has newer commits, run 'git pull --rebase origin $HEAD_BR' where that branch is checked out, then rerun gsd-finish --pr"
   N_RE=$(printf '%s' "${PHASE_N:-x}" | sed 's/\./\\./g')
-  TITLE=$(grep -E "^### Phase $N_RE:" "$MAIN/.planning/ROADMAP.md" 2>/dev/null | head -1 | sed -E 's/^### //' || true)
+  TITLE=""
+  [ "$KIND" = batch ] || TITLE=$(grep -E "^### Phase $N_RE:" "$MAIN/.planning/ROADMAP.md" 2>/dev/null | head -1 | sed -E 's/^### //' || true)
   echo "▶ opening PR ${HEAD_BR} → ${BASE}…"
   gh pr create --repo "$(git -C "$MAIN" remote get-url origin)" --base "$BASE" --head "$HEAD_BR" \
      --title "${TITLE:-$HEAD_BR}" --fill-verbose ${DRAFT:+--draft} 2>/dev/null \

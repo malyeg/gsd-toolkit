@@ -5,9 +5,13 @@
 # callable standalone too.
 #
 # Usage (from inside the target repo):
-#   gsd-wt-finish <N | phase-N-slug> [base]
+#   gsd-wt-finish <N | phase-N-slug | batch-…> [base]
 #   gsd-wt-finish 1                       # finds phase-1-* (never *-pr)
 #   gsd-wt-finish phase-1-customer-onboarding-terms
+#   gsd-wt-finish batch-2026-11-09-fix-labels   # a gsd-batch worktree
+#
+# A batch (batch-*, made by gsd-batch) lands the same way, minus the per-phase
+# gates (UI steps, test audit): it has no phase folder for them to read.
 #
 # Safety: refuses if the worktree has uncommitted changes or if the main
 # checkout isn't on the base branch. A conflicting merge is aborted — the base
@@ -57,7 +61,7 @@ GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 
 ID="${1:-}"
 if [ -z "$ID" ]; then
-  echo "usage: gsd-wt-finish <N | phase-N-slug> [base]" >&2; exit 1
+  echo "usage: gsd-wt-finish <N | phase-N-slug | batch-…> [base]" >&2; exit 1
 fi
 
 MAIN=$(gsd_main .)
@@ -72,12 +76,15 @@ gsd_acquire_lock "$MAIN"
 
 # Resolve the branch: a bare number → the phase-<N>-* branch; else use as-is.
 # PR branches (*-pr, from /gsd-pr-branch) are never the feature branch.
-if printf '%s' "$ID" | grep -qE '^[0-9]+(\.[0-9]+)?$'; then
+KIND="phase"
+if printf '%s' "$ID" | grep -qE '^batch-.+$'; then
+  KIND="batch"; BRANCH="$ID"
+elif printf '%s' "$ID" | grep -qE '^[0-9]+(\.[0-9]+)?$'; then
   BRANCH=$(gsd_phase_branch "$MAIN" "$ID")
   [ -n "$BRANCH" ] || { echo "error: no 'phase-$ID-*' branch found" >&2; exit 1; }
 else
   printf '%s' "$ID" | grep -qE '^phase-[0-9]+(\.[0-9]+)?-.+$' || {
-    echo "error: finish requires a phase number or phase-N-slug branch" >&2; exit 1;
+    echo "error: finish requires a phase number, a phase-N-slug branch or a batch-* branch" >&2; exit 1;
   }
   ! gsd_is_pr_helper "$MAIN" "$ID" || { echo 'error: finish the phase branch, not a PR-helper branch' >&2; exit 1; }
   BRANCH="$ID"
@@ -148,10 +155,10 @@ if [ "$HAS_ORIGIN" = 1 ]; then
   if ! git -C "$MAIN" fetch origin "$BASE" --quiet \
     || ! git -C "$MAIN" merge --ff-only "origin/$BASE"; then
     if gsd_origin_lacks "$MAIN" "$BASE"; then
-      echo "error: origin has no '$BASE' branch — push it first (git -C \"$MAIN\" push -u origin $BASE), or set base = <branch> in .gsd.conf. Phase worktree retained." >&2
+      echo "error: origin has no '$BASE' branch — push it first (git -C \"$MAIN\" push -u origin $BASE), or set base = <branch> in .gsd.conf. The ${KIND} worktree is kept." >&2
       exit 1
     fi
-    echo "error: could not synchronize '$BASE'; resolve remote connectivity or divergence, then retry finish. Phase worktree retained." >&2
+    echo "error: could not synchronize '$BASE'; resolve remote connectivity or divergence, then retry finish. The ${KIND} worktree is kept." >&2
     exit 1
   fi
 fi
@@ -160,9 +167,12 @@ fi
 # After the sync: a phase whose UI review is already on the base branch is left
 # alone. strict refuses while a step is open or stale; warn only says so.
 # Then the test audit (flow = strict). Both read the branch's own files.
-gsd_finish_gates "$MAIN" "$BRANCH" "$DEST" || {
-  echo "  Nothing was merged. Phase worktree retained." >&2; exit 1;
-}
+# A batch has no phase folder: none of these gates applies to it.
+if [ "$KIND" = phase ]; then
+  gsd_finish_gates "$MAIN" "$BRANCH" "$DEST" || {
+    echo "  Nothing was merged. The ${KIND} worktree is kept." >&2; exit 1;
+  }
+fi
 
 # ── pre-merge check hook (repo-specific validations) ─────────────────────────
 # Runs after the sync so it sees the freshest $BASE; nonzero exit aborts with
@@ -181,7 +191,7 @@ if [ "$PREMERGE" != none ] && [ -e "$PREMERGE_PATH" ] && [ ! -x "$PREMERGE_PATH"
 elif [ "$PREMERGE" != none ] && [ -x "$PREMERGE_PATH" ]; then
   echo "▶ pre-merge check ($PREMERGE)…"
   if ! ( cd "$MAIN" && "$PREMERGE_PATH" "$BRANCH" "$BASE" ); then
-    echo "✗ validation failed ($stage) — not pushing or removing the phase worktree." >&2
+    echo "✗ validation failed ($stage) — not pushing or removing the ${KIND} worktree." >&2
     return 1
   fi
 elif TEST_CMD=$(gsd_test_cmd "$MAIN") && [ -n "$TEST_CMD" ]; then
@@ -190,7 +200,7 @@ elif TEST_CMD=$(gsd_test_cmd "$MAIN") && [ -n "$TEST_CMD" ]; then
   # in .gsd.conf overrides the detection; 'none' skips.
   echo "▶ tests ($TEST_CMD, in $validation_dir; $stage)…"
   if ! ( cd "$validation_dir" && bash -c "$TEST_CMD" ); then
-    echo "✗ tests failed ($stage) — not pushing or removing the phase worktree. Any merge remains local." >&2
+    echo "✗ tests failed ($stage) — not pushing or removing the ${KIND} worktree. Any merge remains local." >&2
     echo "  (skip with 'test = none' in .gsd.conf, or provide $PREMERGE)" >&2
     return 1
   fi

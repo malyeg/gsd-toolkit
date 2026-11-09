@@ -240,6 +240,9 @@ the design system and sketch, UI approval, and review findings. Never bypass a g
 the final action because it removes the worktree. Provider hooks are early
 feedback only; \`gsd-flow-next\` invokes the mandatory neutral guard. Arbitrary
 shell commands outside GSD are outside this enforcement boundary.
+
+For several quick tasks at once, use \`/gsdt-batch\` (or \`gsd-batch\`), not
+\`/gsd-quick-batch\`. Same task list.
 ${ui_text}
 Providers: \`$1\` (default: first, \`$2\`); base \`$3\`;
 worktrees \`../$4/\`.
@@ -435,6 +438,12 @@ gsd_provider_prompt() { # provider, kind, phase-or-empty
         claude) printf '/gsdt-flow %s\n' "$n" ;;
         codex) printf 'Use the gsdt-flow skill to drive phase %s. Start by running gsd-flow-next %s and obey every reported gate.\n' "$n" "$n" ;;
         custom) printf 'Drive GSD phase %s by running gsd-flow-next %s before every phase step; obey every gate in .gsd/INSTRUCTIONS.md.\n' "$n" "$n" ;;
+      esac ;;
+    batch)  # $3 = the task list / --file argument text, passed on unchanged
+      case "$p" in
+        claude) printf '/gsdt-batch %s\n' "$n" ;;
+        codex) printf 'Use the gsdt-batch skill to run this task list or brief as one batch: %s\n' "$n" ;;
+        custom) printf 'Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsd-batch-report): %s\n' "$n" ;;
       esac ;;
     new)
       case "$p" in claude) echo /gsd-new-project ;; *) echo 'Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.' ;; esac ;;
