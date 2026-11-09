@@ -196,16 +196,20 @@ gsd_provider_instruction_integrated() { # repo, provider
   members=$(gsd_provider_instruction_members "$file")
   case ",$members," in *",$2,"*) ;; *) return 1 ;; esac
   gsd_owned_block_get "$file" provider |
-    grep -qF 'Read and follow `.gsd/INSTRUCTIONS.md`.' || return 1
+    grep -qF 'Read and follow `.gsd/INSTRUCTIONS.md`' || return 1
   grep -qxE "<!-- $GSD_MARK_RE:canonical:start -->" "$1/.gsd/INSTRUCTIONS.md" 2>/dev/null &&
     gsd_owned_markers_valid "$1/.gsd/INSTRUCTIONS.md" canonical
 }
 
-# The generated instruction blocks — one definition, written by
-# gsd-bootstrap-repo and compared by gsd-doctor (T016: out of date).
-gsd_canonical_block() { # providers, default provider, base, worktree dir, ui on|off
+# The toolkit's rules: the same text in every repo, for the INSTALLED
+# release. `gsd-rules` prints them (Claude: a user-level SessionStart hook
+# loads that output into every session in a set-up repo; Codex/custom: the
+# AGENTS.md entry says to run it). A repo keeps only its values and a short
+# core (gsd_canonical_block), so a rule change reaches every repo through
+# gsd-update, with no T016. One definition: edit the text only here.
+gsd_rules_text() { # ui on|off (off: leave out the screens paragraph)
   local ui_text=""
-  [ "${5:-on}" = off ] || ui_text="
+  [ "${1:-on}" = off ] || ui_text="
 Screens: every screen uses the design system in \`.planning/design/DESIGN.md\`
 (tokens, components, page templates) — don't invent new styles. In a new
 project with screens, make the first phase \"Design system\". Each phase with
@@ -219,7 +223,6 @@ skip a step without asking. \`gsd-flow-next\` asks for each step (\`ui_gates\` i
 \`.gsd.conf\`).
 "
   cat <<EOF
-<!-- gsd-toolkit:canonical:start -->
 # GSD worktree workflow
 
 The shell commands are the source of truth. One feature equals one phase and
@@ -244,19 +247,63 @@ shell commands outside GSD are outside this enforcement boundary.
 For several quick tasks at once, use \`/gsdt-batch\` (or \`gsd-batch\`), not
 \`/gsd-quick-batch\`. Same task list.
 ${ui_text}
-Providers: \`$1\` (default: first, \`$2\`); base \`$3\`;
-worktrees \`../$4/\`.
+EOF
+}
+
+# The repo's values, the last lines of both the local block and gsd-rules.
+# The local block leaves out ui_gates and flow: gsd-rules reads them live
+# from .gsd.conf, so editing them never makes the committed file stale.
+gsd_repo_values() { # providers, default provider, base, worktree dir, [ui_gates, flow]
+  if [ -n "${5:-}" ]; then
+    printf 'Providers: `%s` (default: first, `%s`); base `%s`;\nworktrees `../%s/`; flow `%s`; ui_gates `%s`.\n' \
+      "$1" "$2" "$3" "$4" "${6:-off}" "$5"
+  else
+    printf 'Providers: `%s` (default: first, `%s`); base `%s`;\nworktrees `../%s/`.\n' "$1" "$2" "$3" "$4"
+  fi
+}
+
+# The generated instruction blocks — one definition, written by
+# gsd-bootstrap-repo and compared by gsd-doctor (T016: out of date).
+# .gsd/INSTRUCTIONS.md is small: a pointer to gsd-rules, a core that holds
+# without the toolkit, and the repo's values. It changes only when a repo
+# setting gsd-init writes (providers, base, worktree dir) or this core changes.
+gsd_canonical_block() { # providers, default provider, base, worktree dir
+  cat <<EOF
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run \`gsd-rules\` and follow its output (Claude Code loads it when a session
+starts). If \`gsd-rules\` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one \`phase-<N>-<slug>\` git worktree; the main checkout stays
+  on the base branch.
+- Run \`gsd-flow-next <N>\` before every phase action and follow it.
+- \`gsd-finish\` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for \`GSD_SKIP_GUARD=1\`.
+
+$(gsd_repo_values "$1" "$2" "$3" "$4")
 <!-- gsd-toolkit:canonical:end -->
 EOF
 }
 
 gsd_provider_entry_block() { # the providers sharing this instruction file
+  local how="Before any GSD or phase work, run \`gsd-rules\` and follow its output: it prints
+the toolkit's rules for the installed version."
+  case ",$1," in *,claude,*) how="The toolkit's rules are the output of \`gsd-rules\`: a session-start hook loads
+them (\"GSD toolkit rules\"); when they are not in your context, run \`gsd-rules\`
+before any GSD or phase work and follow its output." ;; esac
   cat <<EOF
 <!-- gsd-toolkit:provider:start -->
 ## GSD worktrees ($1 adapter)
 
-Read and follow \`.gsd/INSTRUCTIONS.md\`. Use the \`gsdt-flow\` skill when it is
-available; otherwise run \`gsd-flow-next <N>\` and follow each printed action.
+Read and follow \`.gsd/INSTRUCTIONS.md\` (this repo's settings and core rules).
+$how
+Use the \`gsdt-flow\` skill when it is available; otherwise run
+\`gsd-flow-next <N>\` and follow each printed action.
 For toolkit command syntax and workflow order, this marked adapter and the
 canonical document supersede older unmarked GSD text in this file. Continue to
 follow repository-specific policy from that older text.

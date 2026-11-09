@@ -14,11 +14,13 @@
 # has none. --no-core leaves that out; an update (--reuse-install-config)
 # never does it.
 #
-# Claude also gets a user-level hook (next to its skills dir:
-# ~/.claude/settings.json). It refuses /gsd-new-project
+# Claude also gets user-level hooks (next to its skills dir:
+# ~/.claude/settings.json). The guard's refuses /gsd-new-project
 # and /gsd-ingest-docs in a repo gsd-init has not set up, and nothing else
 # there; in a set-up repo it applies the whole guard (gsd-worktree-guard
-# --global). --no-user-hook leaves it out (and removes it).
+# --global). A SessionStart hook runs `gsd-rules --hook`: in a repo with
+# .gsd.conf it loads the toolkit's rules into the session, elsewhere it
+# prints nothing. --no-user-hook leaves both out (and removes them).
 #
 # Env:
 #   GSD_BIN_DIR   install target (default: ~/.local/bin)
@@ -295,25 +297,28 @@ oldifs=$IFS; IFS=,; for provider in $PROVIDERS; do install_skills "$provider"; d
 # Before gsd-init a repo has no toolkit files, so no repo hook can stop a bare
 # /gsd-new-project — only one in the user's own settings can. The settings
 # file sits next to the provider's skills dir (~/.claude/skills →
-# ~/.claude/settings.json). Ours is the entry whose command runs
-# gsd-worktree-guard --global: replaced on every install, never duplicated.
+# ~/.claude/settings.json). Ours are the entries whose command runs
+# gsd-worktree-guard --global or gsd-rules --hook: replaced on every
+# install, never duplicated.
 # Settings that turn hooks off, or are not a JSON object, are left alone.
 user_hook() {  # $1=provider $2=on|off
-  local provider=$1 settings guard cmd
+  local provider=$1 settings guard rules cmd rules_cmd
   case "$provider" in
     claude) settings=$(gsd_provider_user_hook_file "$provider") ;;
     gemini) settings=${GSD_GEMINI_SETTINGS:-$(dirname "$GEMINI_OLD")/settings.json} ;;   # removal only
     *) return 0 ;;
   esac
   [ "$2" = on ] || [ -f "$settings" ] || return 0
-  guard="$BIN_DIR/gsd-worktree-guard"
+  guard="$BIN_DIR/gsd-worktree-guard"; rules="$BIN_DIR/gsd-rules"
   case "$guard" in *"'"*) echo "• $provider user hook skipped: the bin path holds a quote"; return 0 ;; esac
   # A missing toolkit (uninstalled) must not break every slash command: no guard → allow.
   cmd="[ ! -x '$guard' ] || exec '$guard' --global"
+  # …nor every session start: no gsd-rules → nothing loaded.
+  rules_cmd="[ ! -x '$rules' ] || exec '$rules' --hook"
   mkdir -p "$(dirname "$settings")"
-  "$INSTALL_PYTHON" - "$settings" "$provider" "$2" "$cmd" <<'PY'
+  "$INSTALL_PYTHON" - "$settings" "$provider" "$2" "$cmd" "$rules_cmd" <<'PY'
 import json, os, sys
-path, provider, mode, cmd = sys.argv[1:]
+path, provider, mode, cmd, rules_cmd = sys.argv[1:]
 try:
     with open(path) as f:
         text = f.read()
@@ -327,12 +332,14 @@ if not isinstance(data, dict) or not isinstance(data.get("hooks", {}), dict):
 if mode == "on" and (data.get("disableAllHooks") is True or (data.get("hooksConfig") or {}).get("enabled") is False):
     print("• hooks are turned off in %s; %s user hook not added" % (path, provider)); sys.exit(0)
 hooks = data.setdefault("hooks", {})
-wanted = {"claude": [("PreToolUse", "Skill"), ("UserPromptExpansion", "gsd.*")],
-          "gemini": [("BeforeTool", "activate_skill")]}[provider]
+# (event, matcher or None = every source, command)
+wanted = {"claude": [("PreToolUse", "Skill", cmd), ("UserPromptExpansion", "gsd.*", cmd),
+                     ("SessionStart", None, rules_cmd)],
+          "gemini": [("BeforeTool", "activate_skill", cmd)]}[provider]
 def ours(h):
     c = h.get("command", "") if isinstance(h, dict) else ""
-    return "gsd-worktree-guard" in c and "--global" in c
-for event in [e for e, _ in wanted if e in hooks]:
+    return ("gsd-worktree-guard" in c and "--global" in c) or ("gsd-rules" in c and "--hook" in c)
+for event in [e for e, _, _ in wanted if e in hooks]:
     groups = hooks[event]
     if not isinstance(groups, list):
         continue
@@ -347,11 +354,15 @@ for event in [e for e, _ in wanted if e in hooks]:
     if kept: hooks[event] = kept
     else: del hooks[event]
 if mode == "on":
-    entry = lambda m: {"matcher": m, "hooks": [{"type": "command", "command": cmd}]}
-    for event, matcher in wanted:
+    def entry(m, c):
+        e = {"matcher": m} if m is not None else {}
+        e["hooks"] = [{"type": "command", "command": c}]
+        return e
+    for event, _, _ in wanted:
         if not isinstance(hooks.get(event, []), list):
             print("⚠ %s: hooks.%s is not a list; left unchanged (no %s user hook)" % (path, event, provider)); sys.exit(0)
-        hooks.setdefault(event, []).append(entry(matcher))
+    for event, matcher, c in wanted:
+        hooks.setdefault(event, []).append(entry(matcher, c))
 if not hooks:
     del data["hooks"]
 new = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
@@ -368,6 +379,8 @@ if new != text:
     os.replace(tmp, real)
 if mode == "on":
     print("✔ %s user hook: /gsd-new-project only after gsd-init → %s" % (provider, path))
+    if provider == "claude":
+        print("✔ %s user hook: sessions in a set-up repo load gsd-rules → %s" % (provider, path))
 elif new != text:
     print("✂ %s user hook removed from %s" % (provider, path))
 PY

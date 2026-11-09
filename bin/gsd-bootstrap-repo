@@ -143,11 +143,10 @@ if [ -f "$CANON" ] && grep -qx '<!-- gsd-worktrees:canonical -->' "$CANON"; then
 fi
 [ -f "$CANON" ] || touch "$CANON"
 canonical_block=$(mktemp)
-ui_on=on; [ "$(gsd_ui_gates "$DEST")" != off ] || ui_on=off
-gsd_canonical_block "$SELECTED" "$DEFAULT" "$BASE" "$WT_DIR" "$ui_on" > "$canonical_block"
+gsd_canonical_block "$SELECTED" "$DEFAULT" "$BASE" "$WT_DIR" > "$canonical_block"
 gsd_replace_owned_block "$CANON" canonical "$canonical_block"
 rm -f "$canonical_block"
-echo '✔ .gsd/INSTRUCTIONS.md (canonical workflow instructions)'
+echo '✔ .gsd/INSTRUCTIONS.md (repo settings + core; the rules come from gsd-rules)'
 preserve_legacy_claude() {
   local file=$DEST/CLAUDE.md
   [ -f "$file" ] || return 0

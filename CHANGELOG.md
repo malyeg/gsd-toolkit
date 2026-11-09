@@ -5,6 +5,26 @@ Each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## Unreleased
+
+- **The workflow rules come from the installed toolkit.** A new command,
+  `gsd-rules`, prints them (with the repo's values; the screens paragraph
+  unless `ui_gates = off`). `.gsd/INSTRUCTIONS.md` becomes small: the repo's
+  providers, base and worktree dir, a core that holds without the toolkit,
+  and "run `gsd-rules`". A rule change now reaches every repo through
+  `gsd-update`, with no `gsd-init` there and no T016. Changing `ui_gates` in
+  `.gsd.conf` no longer raises T016 either (`gsd-rules` reads it live).
+- **Claude loads them by itself:** the installer adds a user-level
+  `SessionStart` hook (`gsd-rules --hook`) next to the guard's. It runs on
+  startup, resume, `/clear` and compaction, and prints nothing outside a repo
+  with `.gsd.conf`. `--no-user-hook` leaves it out too. Codex and custom run
+  `gsd-rules` from the `AGENTS.md` line.
+- **Old repos keep working** (their copy of the rules is complete). Doctor
+  reports T016 one last time; `gsd-init --no-launch` converts them.
+- **New doctor finding T062:** Claude is configured but its sessions cannot
+  load the rules (`gsd-rules` not on PATH, or no hook). A note after
+  `--no-user-hook`.
+
 ## 0.8.3
 
 - **`gsd-batch` runs the batch in its own worktree.** It makes a

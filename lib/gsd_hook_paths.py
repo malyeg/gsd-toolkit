@@ -14,7 +14,7 @@ Usage: gsd_hook_paths.py <scope>:<settings file> [--project <dir>] ...
 
 Prints one line per missing file, tab-separated:
   <settings file> <scope> <owner> <hook> <event> <missing path>
-owner = toolkit (our gsd-worktree-guard) | gsd (any other gsd-* hook);
+owner = toolkit (our gsd-worktree-guard or gsd-rules) | gsd (any other gsd-* hook);
 hook = the hook's number in its file, so one hook missing two files counts once.
 
 Only GSD hooks count: a command is checked when one of its words names a
@@ -72,7 +72,7 @@ def missing(command, project):
     names = [os.path.basename(w) for w in words]
     if not any(GSD_WORD.match(n) for n in names):
         return None, []
-    owner = "toolkit" if "gsd-worktree-guard" in names else "gsd"
+    owner = "toolkit" if ("gsd-worktree-guard" in names or "gsd-rules" in names) else "gsd"
     # A runner picked at run time ("$(for n in <node> … ; do …)", gsd-core's
     # chain) falls back on its own: only its gsd-* scripts can be judged.
     if "$(" in command or "`" in command:

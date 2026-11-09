@@ -372,8 +372,8 @@ else
 fi
 # shellcheck source=../lib/provider.sh
 . "$PKG/lib/provider.sh"
-gsd_canonical_block claude claude main x-worktrees off > "$WORK/canon"
-has "the generated instructions point at /gsdt-batch" "use \`/gsdt-batch\` (or \`gsd-batch\`), not" "$WORK/canon"
+gsd_rules_text off > "$WORK/canon"
+has "the toolkit rules (gsd-rules) point at /gsdt-batch" "use \`/gsdt-batch\` (or \`gsd-batch\`), not" "$WORK/canon"
 
 section "an enriched line is ONE quick-batch item"
 QB=""

@@ -332,7 +332,7 @@ has "fresh instructions pass" "GSD instructions match this toolkit" "$OUT"
 printf '\nMy own project notes.\n' >> "$I/CLAUDE.md"
 json "$I"
 hasnt "text outside the marked blocks is ignored" '"T016"' "$OUT"
-sed -i.bak 's/^worktree\. Several configured providers/worktree. Some configured providers/' "$I/.gsd/INSTRUCTIONS.md"
+sed -i.bak 's/^- Run `gsd-flow-next <N>` before every phase action/- Run `gsd-flow-next <N>` before most phase actions/' "$I/.gsd/INSTRUCTIONS.md"
 json "$I"
 has "an old canonical block → T016" 'older than this toolkit.*INSTRUCTIONS.md' "$OUT"
 sed -i.bak 's/^Read and follow/Please read and follow/' "$I/AGENTS.md"
@@ -364,7 +364,52 @@ is "…in the same place, the user's text around it kept" "$(head -1 "$I/CLAUDE.
 rm -f "$I"/*.bak "$I"/.gsd/*.bak
 printf 'base = develop\nproviders = claude,codex\nui_gates = off\n' > "$I/.gsd.conf"
 json "$I"
-has "ui_gates changed since the last gsd-init → T016" '"T016"' "$OUT"
+hasnt "ui_gates changed since the last gsd-init → no T016 (gsd-rules reads it live)" '"T016"' "$OUT"
+
+# A repo set up before the split: its .gsd/INSTRUCTIONS.md holds the full
+# rules. It still works (the text is complete); T016 asks for one gsd-init.
+# shellcheck source=../lib/provider.sh
+. "$PKG/lib/provider.sh"
+{ echo '<!-- gsd-toolkit:canonical:start -->'; gsd_rules_text on
+  printf 'Providers: `claude,codex` (default: first, `claude`); base `develop`;\nworktrees `../instr-worktrees/`.\n'
+  echo '<!-- gsd-toolkit:canonical:end -->'; } > "$I/.gsd/INSTRUCTIONS.md"
+printf 'base = develop\nproviders = claude,codex\n' > "$I/.gsd.conf"
+json "$I"
+has "a full block from before the split → T016" 'older than this toolkit.*INSTRUCTIONS.md' "$OUT"
+(cd "$I" && PATH="$BASEPATH" gsd-bootstrap-repo --agents claude,codex) >/dev/null 2>&1
+json "$I"
+hasnt "…one gsd-init converts it (no T016)" '"T016"' "$OUT"
+has "…to the small block that points at gsd-rules" 'run `gsd-rules` and follow its output' "$I/.gsd/INSTRUCTIONS.md"
+hasnt "…without the full rules" 'The shell commands are the source of truth' "$I/.gsd/INSTRUCTIONS.md"
+printf 'base = develop\nproviders = claude,codex\nflow = strict\n' > "$I/.gsd.conf"
+json "$I"
+hasnt "flow changed since the last gsd-init → no T016 (gsd-rules reads it live)" '"T016"' "$OUT"
+
+section "Claude sessions load the rules (T062)"
+HS="$WORK/rules-hook.json"
+printf '{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"[ ! -x %s ] || exec %s --hook"}]}]}}\n' \
+  "$PKG/bin/gsd-rules" "$PKG/bin/gsd-rules" > "$HS"
+GSD_CLAUDE_SETTINGS="$HS" doc "$I"
+has "the hook is registered → pass" "Claude sessions load the toolkit rules" "$OUT"
+GSD_CLAUDE_SETTINGS="$HS" json "$I"
+hasnt "…no T062" '"T062"' "$OUT"
+echo '{"hooks":{}}' > "$WORK/nohook.json"
+GSD_CLAUDE_SETTINGS="$WORK/nohook.json" json "$I"
+has "no SessionStart hook runs gsd-rules → T062" '"code":"T062","message":"no Claude SessionStart hook' "$OUT"
+GSD_CLAUDE_SETTINGS="$WORK/nosuch.json" json "$I"
+has "…a missing settings file too" '"T062"' "$OUT"
+grep -q '"safe":\[[^]]*reinstall' "$OUT" && bad "…T062 adds no safe action" || ok "…T062 adds no safe action"
+farm "$WORK/norules" gsd-rules
+GSD_CLAUDE_SETTINGS="$HS" DPATH="$WORK/norules" json "$I"
+has "gsd-rules not on PATH → T062" '"code":"T062","message":"gsd-rules is not on PATH' "$OUT"
+farm "$WORK/optout"; printf 'providers\tclaude\nuser_hook\toff\n' > "$WORK/optout/.gsd-install-manifest"
+GSD_CLAUDE_SETTINGS="$WORK/nohook.json" DPATH="$WORK/optout" json "$I"
+hasnt "installed with --no-user-hook → no T062" '"T062"' "$OUT"
+has "…a note instead" 'installed with --no-user-hook' "$OUT"
+printf 'base = develop\nproviders = codex\n' > "$I/.gsd.conf"
+GSD_CLAUDE_SETTINGS="$WORK/nohook.json" json "$I"
+hasnt "Claude not configured → no T062" '"T062"' "$OUT"
+printf 'base = develop\nproviders = claude,codex\n' > "$I/.gsd.conf"
 
 section "doctor only reads"
 before="$(git -C "$R" status --porcelain; git -C "$R" config --local --list | sort)"

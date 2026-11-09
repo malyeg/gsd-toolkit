@@ -68,6 +68,14 @@ rules. After reviewing and relocating any project-specific rules, maintainers
 may remove obsolete legacy wording manually. Invalid JSON settings are left
 untouched with a warning.
 
+Repos set up before the instructions split (the release after 0.8.3) hold the full rules in
+`.gsd/INSTRUCTIONS.md`. They keep working unchanged: that copy is complete,
+and Claude sessions also load the current rules from `gsd-rules`. Doctor
+reports T016 one last time; one `gsd-init --no-launch` (or
+`gsd-doctor --fix`) rewrites the block to the small form and the provider
+entries to point at `gsd-rules`. Commit the result. After that, a rule change
+needs only `gsd-update` on each machine.
+
 Bootstrap validates generated instruction markers before writing any files.
 Unmatched, nested, duplicate, reversed, or inline markers stop the migration
 with a filename to repair; user content is preserved. Resolve the markers and

@@ -490,18 +490,21 @@ for name in plain noui; do
   T="$WORK/$name"; git init -q -b develop "$T"; git -C "$T" commit -q --allow-empty -m init
 done
 (cd "$WORK/plain" && gsd-bootstrap-repo) > "$OUT" 2>&1 || bad "bootstrap runs" "$(tail -5 "$OUT")"
-has "instructions carry the screens rule" "Screens: every screen uses the design system" "$WORK/plain/.gsd/INSTRUCTIONS.md"
-has "the flow order names the UI steps" "design" "$WORK/plain/.gsd/INSTRUCTIONS.md"
-has "…the checks of the built pages" "UI check, UI look, UI approval, UI review" "$WORK/plain/.gsd/INSTRUCTIONS.md"
-has "…and the commands" "gsd-ui check <N>" "$WORK/plain/.gsd/INSTRUCTIONS.md"
+gsd-rules --repo "$WORK/plain" > "$WORK/plain.rules"
+has "the rules (gsd-rules) carry the screens rule" "Screens: every screen uses the design system" "$WORK/plain.rules"
+has "the flow order names the UI steps" "design" "$WORK/plain.rules"
+has "…the checks of the built pages" "UI check, UI look, UI approval, UI review" "$WORK/plain.rules"
+has "…and the commands" "gsd-ui check <N>" "$WORK/plain.rules"
 hasnt ".gsd.conf leaves ui_gates at the default" "^ui_gates" "$WORK/plain/.gsd.conf"
 [ ! -e "$WORK/plain/.planning" ] && ok "no .planning/ is created (ingest-docs would switch to merge mode)" || bad "no .planning/ is created"
 (cd "$WORK/noui" && gsd-bootstrap-repo --no-ui) > "$OUT" 2>&1 || bad "bootstrap --no-ui runs" "$(tail -5 "$OUT")"
 has "--no-ui writes ui_gates = off" "^ui_gates = off" "$WORK/noui/.gsd.conf"
-hasnt "…and no screens rule" "Screens:" "$WORK/noui/.gsd/INSTRUCTIONS.md"
+gsd-rules --repo "$WORK/noui" > "$WORK/noui.rules"
+hasnt "…and no screens rule" "Screens:" "$WORK/noui.rules"
 (cd "$WORK/plain" && gsd-bootstrap-repo --no-ui) > "$OUT" 2>&1
 has "--no-ui on an existing .gsd.conf sets the key" "^ui_gates = off" "$WORK/plain/.gsd.conf"
-hasnt "…and drops the screens rule" "Screens:" "$WORK/plain/.gsd/INSTRUCTIONS.md"
+gsd-rules --repo "$WORK/plain" > "$WORK/plain.rules"
+hasnt "…and drops the screens rule" "Screens:" "$WORK/plain.rules"
 
 printf '\n%d passed, %d failed\n' "$PASS" "$FAIL"
 [ "$FAIL" = 0 ]
