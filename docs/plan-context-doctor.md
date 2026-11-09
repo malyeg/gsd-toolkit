@@ -76,9 +76,12 @@ of rules.
    the milestone has shipped.
 5. Other findings: show the fix; run it only on a yes. Never commit, push, or
    edit ROADMAP.md by hand.
-6. Claude: tell the user to type `/doctor` and `/skill-doctor` (a skill cannot
-   start them).
+6. Claude: run `claude -p "/skill-doctor"` and `claude -p "/context"` (free,
+   no model call) and sum them up. (Changed after 0.8.2: built-in commands do
+   run in `claude -p`.)
 7. Run `gsd-doctor` again and report.
+8. Claude, last: ask to run `claude -p "/doctor"`; on a yes run it — it
+   applies its own fixes under the user's permission mode.
 
 ## Tests
 

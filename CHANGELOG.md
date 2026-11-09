@@ -10,6 +10,10 @@ becomes its release notes.
 - **`gsd-doctor` and `gsdt-doctor` no longer suggest hiding gsd-core skill
   groups.** It saves only a few hundred tokens. The groups stay in `--json`
   (`context.agents[].hideable`); `gsdt-doctor` hides them only if you ask.
+- **`gsdt-doctor` runs Claude's own checks.** With Claude it runs
+  `claude -p "/skill-doctor"` and `claude -p "/context"` (free) and sums them
+  up. At the end it asks to run `claude -p "/doctor"`; on a yes, `/doctor`
+  applies its fixes.
 
 ## 0.8.2
 
