@@ -28,6 +28,16 @@ gsd_base() {  # $1=repo root (any checkout — branch refs are shared)
   else git -C "$1" branch --show-current; fi
 }
 
+gsd_flow_mode() {  # $1=MAIN checkout → strict|off (`flow` in .gsd.conf)
+  [ "$(gsd_conf_get "$1" flow)" = strict ] && echo strict || echo off
+}
+
+gsd_conf_providers() {  # $1=MAIN checkout → the configured list (legacy `provider`, else claude)
+  local v; v=$(gsd_conf_get "$1" providers)
+  [ -n "$v" ] || v=$(gsd_conf_get "$1" provider)
+  printf '%s\n' "${v:-claude}"
+}
+
 gsd_wtdir() {  # $1=MAIN checkout → NAME of the sibling worktrees dir
   local v; v=$(gsd_conf_get "$1" wtdir)
   printf '%s\n' "${v:-$(basename "$1")-worktrees}"

@@ -27,10 +27,31 @@ environment, provider-specific repository command, default-provider legacy
 
 ## Instructions and skills
 
-`.gsd/INSTRUCTIONS.md` is the canonical generated project instruction block.
-Provider files (`CLAUDE.md`, `AGENTS.md`) receive only a marked,
-replaceable entrypoint pointing to it. Existing content outside the markers is
-preserved. The shared `gsdt-flow` skill describes state transitions and asks the
+The workflow rules are not copied into each repo. `gsd-rules` prints them
+for the installed release (`gsd_rules_text`, `lib/provider.sh`), plus the
+repo's values and, unless `ui_gates = off`, the screens paragraph. So a
+release changes the rules in every repo through `gsd-update` alone.
+
+`.gsd/INSTRUCTIONS.md` is the canonical generated block, now small: a pointer
+to `gsd-rules`, a core that holds without the toolkit (one phase = one
+worktree, `gsd-flow-next` before a phase action, `gsd-finish` never
+automatic, never bypass a guard), and the values `gsd-init` writes
+(providers, base, worktree dir). `flow` and `ui_gates` stay out: `gsd-rules`
+reads them live from `.gsd.conf`, so editing them never makes the file
+stale. It changes only when a value or the core changes, so T016 stays
+meaningful. Provider files (`CLAUDE.md`, `AGENTS.md`)
+receive only a marked, replaceable entrypoint pointing to both. Existing
+content outside the markers is preserved.
+
+How each provider gets the rules: Claude through a user-level `SessionStart`
+hook (`lib/install.sh`, next to the guard's `--global` hook) that runs
+`gsd-rules --hook` — it fires on startup, resume, `/clear` and compaction,
+prints nothing outside a repo with `.gsd.conf`, and always exits 0; the
+entry line is the fallback. Codex and custom have no such hook: the
+`AGENTS.md` entry says to run `gsd-rules` first (checked: fresh Codex
+sessions do, see `docs/plan-instructions-split.md`). Keep the output well
+under ~10 KB: Claude Code saves a larger hook output to a file and shows
+only its start. The shared `gsdt-flow` skill describes state transitions and asks the
 active agent to use its own skill mechanism; it never calls a provider-native
 skill API directly.
 

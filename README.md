@@ -149,9 +149,11 @@ and more are listed in the
 All logic lives in the installed toolkit. A repo carries only:
 
 - **`.gsd.conf`**: the settings above.
-- **`.gsd/INSTRUCTIONS.md`**: the workflow rules for agents, plus a short
-  marked block in `CLAUDE.md` / `AGENTS.md` that points to it. Text outside
-  the markers is never touched.
+- **`.gsd/INSTRUCTIONS.md`**: small: the repo's settings, a few core rules,
+  and a pointer to `gsd-rules`, which prints the full workflow rules of the
+  installed toolkit (so an update reaches every repo with no step there).
+  Plus a short marked block in `CLAUDE.md` / `AGENTS.md` that points to
+  both. Text outside the markers is never touched.
 - **`scripts/gsd-*.sh`**: frozen one-line delegators to the installed
   commands, so `package.json` scripts and hooks work on every checkout.
 - **`.gitattributes`** + a `post-merge` hook: the planning merge driver and
@@ -175,9 +177,10 @@ it to `~/.local/share/gsd-toolkit/releases/<version>/` and links the commands
 into `~/.local/bin`. It also installs gsd-core for each chosen agent that has
 none (`--no-core` skips this). `--version X.Y.Z` installs a given release.
 
-For Claude, it adds one user-level hook that refuses `/gsd-new-project` and
-`/gsd-ingest-docs` in a repo that `gsd-init` has not set up.
-`--no-user-hook` leaves it out.
+For Claude, it adds two user-level hooks: one refuses `/gsd-new-project` and
+`/gsd-ingest-docs` in a repo that `gsd-init` has not set up; one loads
+`gsd-rules` (the workflow rules) when a session starts in a set-up repo.
+`--no-user-hook` leaves both out.
 
 ### Updates
 

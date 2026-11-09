@@ -61,6 +61,10 @@
 #                  set trimmed with /gsd-surface is fine while they are there).
 #                  T016 = the generated GSD instructions are older than this
 #                  toolkit (gsd-init refreshes them; --fix runs it).
+#                  T062 = Claude is configured but its sessions cannot load
+#                  the toolkit rules: gsd-rules is not on PATH, or no
+#                  user-level SessionStart hook runs it (re-run the
+#                  installer; a note after install --no-user-hook).
 #                  T070–T073 = ticket tracker config (read from `gsd-tracker config`).
 #                  T080 = phases have screens but DESIGN.md is missing or a
 #                  stub (only with `ui_gates = strict`; a note otherwise).
@@ -437,7 +441,7 @@ for configured_provider in $configured_list; do
   # older install, or edited by hand, makes the agent follow old steps).
   skillroot=$(gsd_provider_skill_root "$configured_provider" 2>/dev/null || true)
   if [ -z "$skillroot" ]; then
-    note "$configured_provider has no installable native skill format; follow .gsd/INSTRUCTIONS.md and gsd-flow-next"
+    note "$configured_provider has no installable native skill format; it runs gsd-rules, follows .gsd/INSTRUCTIONS.md and gsd-flow-next"
   elif [ ! -f "$skillroot/gsdt-flow/SKILL.md" ]; then
     note "$configured_provider skills not installed — $REINSTALL --agent $configured_provider"
   else
@@ -470,8 +474,7 @@ done
 stale_docs=""
 canon_now=$(gsd_owned_block_get "$MAIN/.gsd/INSTRUCTIONS.md" canonical)
 if [ -n "$canon_now" ] && gsd_owned_markers_valid "$MAIN/.gsd/INSTRUCTIONS.md" canonical; then
-  ui_on=on; [ "$(gsd_ui_gates "$MAIN")" != off ] || ui_on=off
-  [ "$canon_now" = "$(gsd_canonical_block "$configured_list" "${configured_list%%,*}" "$(gsd_base "$MAIN")" "$(gsd_wtdir "$MAIN")" "$ui_on")" ] \
+  [ "$canon_now" = "$(gsd_canonical_block "$configured_list" "${configured_list%%,*}" "$(gsd_base "$MAIN")" "$(gsd_wtdir "$MAIN")")" ] \
     || stale_docs=" .gsd/INSTRUCTIONS.md"
 fi
 seen_files=","
@@ -487,6 +490,37 @@ for p in $configured_list; do
     || [ "$block_now" = "$(gsd_provider_entry_block "$members")" ] || stale_docs="$stale_docs $f"
 done
 IFS=$oldifs
+# T062 — Claude sessions get the toolkit's rules from `gsd-rules`, loaded by
+# the user-level SessionStart hook (lib/install.sh). Without it they see only
+# the repo's short core. An opt-out (install --no-user-hook) is a note.
+case "$configured" in
+  *,claude,*)
+    if [ -n "$canon_now" ]; then
+      rules_bin=$(command -v gsd-rules 2>/dev/null || true)
+      rules_hook=$(gsd_provider_user_hook_file claude)
+      if [ -z "$rules_bin" ]; then
+        fail "gsd-rules is not on PATH — Claude sessions get no toolkit rules" "$REINSTALL" "T062"
+      elif ! PY=$(gsd_python) || ! "$PY" - "$rules_hook" 2>/dev/null <<'PY'
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+    ok = any("gsd-rules" in h.get("command", "") and "--hook" in h.get("command", "")
+             for g in d["hooks"]["SessionStart"] for h in g["hooks"])
+except Exception:
+    ok = False
+sys.exit(0 if ok else 1)
+PY
+      then
+        if grep -qx $'user_hook\toff' "$(dirname "$rules_bin")/.gsd-install-manifest" 2>/dev/null; then
+          note "Claude sessions do not load gsd-rules (installed with --no-user-hook); they follow the entry line in CLAUDE.md"
+        else
+          fail "no Claude SessionStart hook runs gsd-rules in $rules_hook — sessions miss the toolkit rules" "$REINSTALL" "T062"
+        fi
+      else
+        pass "Claude sessions load the toolkit rules (gsd-rules SessionStart hook)"
+      fi
+    fi ;;
+esac
 if [ -n "$stale_docs" ]; then
   fail "GSD instructions are older than this toolkit ($(gsd_version)):$stale_docs — agents follow the old rules" "gsd-init --no-launch" "T016"
 elif [ -n "$canon_now" ]; then

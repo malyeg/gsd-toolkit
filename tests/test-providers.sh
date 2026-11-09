@@ -294,6 +294,17 @@ assert 'typed slash commands are covered (matcher gsd.*)' 'jq -e "any(.hooks.Use
 assert 'codex gets no settings file' '[ ! -e "$UH/codex/settings.json" ]'
 uinstall --reuse-install-config
 assert 'reinstall does not duplicate it' '[ "$(ours "$UH/claude/settings.json")" = 2 ]'
+rules_hooks() { jq '[.hooks.SessionStart[]?.hooks[]? | select(.command | test("gsd-rules.*--hook"))] | length' "$1"; }
+assert 'claude settings get the gsd-rules SessionStart hook, once' '[ "$(rules_hooks "$UH/claude/settings.json")" = 1 ]'
+assert '…for every session source (no matcher)' 'jq -e ".hooks.SessionStart | all(has(\"matcher\") | not)" "$UH/claude/settings.json" >/dev/null'
+rcmd=$(jq -r '.hooks.SessionStart[0].hooks[0].command' "$UH/claude/settings.json")
+RR=$WORK/uh-repo; repo "$RR"; printf 'base = develop\n' > "$RR/.gsd.conf"
+out=$(printf '{"source":"startup"}' | (cd "$RR" && env -u CLAUDE_PROJECT_DIR sh -c "$rcmd"))
+assert 'the installed hook loads the rules in a set-up repo' "printf '%s' \"\$out\" | grep -q '^GSD toolkit rules' && printf '%s' \"\$out\" | grep -q 'base \`develop\`'"
+mkdir -p "$WORK/uh-plain"; out=$(printf '{}' | (cd "$WORK/uh-plain" && env -u CLAUDE_PROJECT_DIR sh -c "$rcmd")); rc=$?
+assert '…and prints nothing elsewhere' '[ -z "$out" ] && [ "$rc" = 0 ]'
+rc=$(printf '{}' | env -u CLAUDE_PROJECT_DIR sh -c "$(printf '%s' "$rcmd" | sed "s|$UH/bin|$UH/gone|g")" 2>/dev/null; echo $?)
+assert 'a removed toolkit: the rules hook exits 0' '[ "$rc" = 0 ]'
 cmd=$(jq -r '.hooks.UserPromptExpansion[0].hooks[0].command' "$UH/claude/settings.json")
 bare=$WORK/uh-bare; mkdir -p "$bare"; git -C "$bare" init -q
 rc=$(printf '{"command_name":"gsd-new-project","command_args":"","cwd":"%s"}' "$bare" | (cd "$bare" && env -u CLAUDE_PROJECT_DIR sh -c "$cmd") 2>/dev/null; echo $?)
@@ -302,6 +313,7 @@ rc=$(printf '{}' | env -u CLAUDE_PROJECT_DIR sh -c "$(printf '%s' "$cmd" | sed "
 assert 'a removed toolkit fails open (exit 0)' '[ "$rc" = 0 ]'
 uinstall --reuse-install-config --no-user-hook
 assert '--no-user-hook removes it' '[ "$(ours "$UH/claude/settings.json")" = 0 ]'
+assert '--no-user-hook removes the gsd-rules hook too' '[ "$(rules_hooks "$UH/claude/settings.json")" = 0 ] && ! jq -e ".hooks | has(\"SessionStart\")" "$UH/claude/settings.json" >/dev/null'
 assert '…keeping the user'"'"'s own hook' 'jq -e "any(.hooks.PreToolUse[]; .matcher == \"Bash\")" "$UH/claude/settings.json" >/dev/null'
 assert '…and the opt-out is remembered' 'grep -q "^user_hook	off" "$UH/bin/.gsd-install-manifest"'
 uinstall --reuse-install-config
@@ -314,6 +326,7 @@ rm -f "$UH/claude/settings.json"; ln -s "$UH/real-settings.json" "$UH/claude/set
 GSD_BIN_DIR=$UH/bin2 GSD_CLAUDE_SKILL_DIR=$UH/claude/skills "$PKG/lib/install.sh" --agent claude >/dev/null
 assert 'a symlinked settings.json stays a link…' '[ -L "$UH/claude/settings.json" ]'
 assert '…and the hook is written to its target' '[ "$(ours "$UH/real-settings.json")" = 2 ]'
+assert '…the gsd-rules hook too' '[ "$(rules_hooks "$UH/real-settings.json")" = 1 ]'
 assert '…keeping its 0600 mode' '[ "$(ls -l "$UH/real-settings.json" | cut -c1-10)" = "-rw-------" ]'
 rm -f "$UH/claude/settings.json"
 printf 'not json' > "$UH/claude/settings.json"
@@ -427,5 +440,49 @@ mv "$WORK/claude/.claude/settings.json" "$WORK/claude/.claude/settings.saved"; o
 printf 'providers = invalid\n' > "$WORK/codex/.gsd.conf"; out=$(gsd-doctor --repo "$WORK/codex" --json 2>/dev/null || true); assert 'doctor JSON reports invalid provider finding' "printf '%s' \"\$out\" | grep -q '\"code\":\"T050\"'"
 printf 'provider = claude\nproviders = codex,claude\n' > "$WORK/codex/.gsd.conf"; out=$(gsd-doctor --repo "$WORK/codex" --json 2>/dev/null || true); assert 'doctor reports contradictory legacy provider' "printf '%s' \"\$out\" | grep -q '\"code\":\"T056\"'"
 printf 'providers = codex\n' > "$WORK/codex/.gsd.conf"; cp "$WORK/claude/CLAUDE.md" "$WORK/codex/CLAUDE.md"; out=$(gsd-doctor --repo "$WORK/codex" --json 2>/dev/null || true); assert 'doctor JSON reports stale provider artifact' "printf '%s' \"\$out\" | grep -q '\"code\":\"T054\"'"
+
+echo 'the split instructions: a small local block, the rules from gsd-rules'
+gsd_canonical_block claude,codex claude main x-worktrees > "$WORK/canon"
+assert 'local block keeps the canonical markers' "head -1 '$WORK/canon' | grep -qx '<!-- gsd-toolkit:canonical:start -->' && tail -1 '$WORK/canon' | grep -qx '<!-- gsd-toolkit:canonical:end -->'"
+assert 'local block points at gsd-rules' "grep -q 'run \`gsd-rules\` and follow its output' '$WORK/canon'"
+assert 'local block says how to get gsd-rules' "grep -q 'If \`gsd-rules\` is not found, install the toolkit' '$WORK/canon'"
+assert 'local block keeps the core: one phase = one worktree' "grep -q 'One phase = one \`phase-<N>-<slug>\` git worktree' '$WORK/canon'"
+assert '…gsd-flow-next before every phase action' "grep -q 'Run \`gsd-flow-next <N>\` before every phase action' '$WORK/canon'"
+assert '…gsd-finish never automatic' "grep -q '\`gsd-finish\` is never automatic' '$WORK/canon'"
+assert '…never bypass a guard' "grep -q 'Never bypass a guard' '$WORK/canon'"
+assert 'local block holds the values gsd-init writes (providers, base, worktrees)' "grep -q 'Providers: \`claude,codex\` (default: first, \`claude\`); base \`main\`;' '$WORK/canon' && grep -qx 'worktrees \`../x-worktrees/\`.' '$WORK/canon'"
+assert '…not flow / ui_gates (gsd-rules reads them live)' "! grep -q 'flow \`\|ui_gates \`' '$WORK/canon'"
+assert 'local block leaves out the full rules' "! grep -q 'The shell commands are the source of truth' '$WORK/canon' && ! grep -q 'Screens:' '$WORK/canon'"
+assert 'local block is small (< 1.2 KB)' "[ \$(wc -c < '$WORK/canon') -lt 1200 ]"
+gsd_provider_entry_block claude > "$WORK/entry-claude"; gsd_provider_entry_block codex,custom > "$WORK/entry-agents"
+for f in entry-claude entry-agents; do
+  assert "$f: still reads .gsd/INSTRUCTIONS.md" "grep -q 'Read and follow \`.gsd/INSTRUCTIONS.md\`' '$WORK/$f'"
+  assert "$f: names gsd-rules" "grep -q 'gsd-rules' '$WORK/$f'"
+done
+assert 'Claude entry: the hook loads the rules, the line is the fallback' "grep -q 'session-start hook loads' '$WORK/entry-claude' && grep -q 'when they are not in your context, run \`gsd-rules\`' '$WORK/entry-claude'"
+assert 'Codex/custom entry: run gsd-rules first' "grep -q 'Before any GSD or phase work, run \`gsd-rules\` and follow its output' '$WORK/entry-agents' && ! grep -q 'session-start hook' '$WORK/entry-agents'"
+R=$WORK/claude
+assert 'bootstrap writes the small local block' "grep -q 'run \`gsd-rules\`' '$R/.gsd/INSTRUCTIONS.md' && ! grep -q 'The shell commands are the source of truth' '$R/.gsd/INSTRUCTIONS.md'"
+assert 'bootstrap writes the provider entry with gsd-rules' "grep -q 'gsd-rules' '$R/CLAUDE.md'"
+
+out=$(gsd-rules --help); assert 'gsd-rules --help' "printf '%s' \"\$out\" | grep -q 'print the GSD toolkit' && printf '%s' \"\$out\" | grep -q -- '--hook'"
+gsd-rules --nope >/dev/null 2>&1; assert 'gsd-rules: unknown argument → exit 2' '[ $? -eq 2 ]'
+OUTSIDE=$WORK/outside; mkdir -p "$OUTSIDE"
+out=$(cd "$OUTSIDE" && gsd-rules); assert 'outside a repo: all the rules, screens included' "printf '%s' \"\$out\" | grep -q 'The shell commands are the source of truth' && printf '%s' \"\$out\" | grep -q '^Screens:'"
+assert 'outside a repo: no values line' "! printf '%s' \"\$out\" | grep -q '^Providers:'"
+assert 'outside a repo: the same text as gsd_rules_text' "[ \"\$out\" = \"\$(gsd_rules_text on)\" ]"
+out=$(cd "$OUTSIDE" && printf '{"source":"startup"}' | gsd-rules --hook); rc=$?
+assert 'outside a repo, the hook prints nothing and exits 0' "[ -z \"\$out\" ] && [ $rc -eq 0 ]"
+out=$(cd "$WORK/outside" && CLAUDE_PROJECT_DIR=$WORK/nosuch gsd-rules --hook </dev/null 2>&1); assert 'the hook never fails (no such dir)' "[ \$? -eq 0 ] && [ -z \"\$out\" ]"
+R=$WORK/rules; repo "$R"; printf 'base = develop\nwtdir = rt\nproviders = codex,claude\nflow = strict\n' > "$R/.gsd.conf"
+out=$(gsd-rules --repo "$R"); assert 'in a repo: the rules + screens (ui_gates unset = warn)' "printf '%s' \"\$out\" | grep -q 'The shell commands are the source of truth' && printf '%s' \"\$out\" | grep -q '^Screens:'"
+assert 'in a repo: its values' "printf '%s\n' \"\$out\" | tail -2 | tr '\n' ' ' | grep -q 'Providers: \`codex,claude\` (default: first, \`codex\`); base \`develop\`; worktrees \`../rt/\`; flow \`strict\`; ui_gates \`warn\`.'"
+printf 'ui_gates = off\n' >> "$R/.gsd.conf"
+out=$(gsd-rules --repo "$R"); assert 'ui_gates = off: no screens paragraph' "! printf '%s' \"\$out\" | grep -q '^Screens:' && printf '%s' \"\$out\" | grep -q 'ui_gates \`off\`'"
+mkdir -p "$R/sub"; out=$(cd "$R/sub" && gsd-rules); assert 'from a subfolder: the repo is found' "printf '%s' \"\$out\" | grep -q 'base \`develop\`'"
+git -C "$R" add -A && git -C "$R" -c user.name=t -c user.email=t@t commit -qm conf && git -C "$R" worktree add -q "$WORK/rules-wt" -b phase-1-x
+out=$(cd "$WORK/rules-wt" && echo '{}' | gsd-rules --hook); assert 'the hook in a phase worktree: header + rules + values' "printf '%s' \"\$out\" | head -1 | grep -q '^GSD toolkit rules (gsd-rules, gsd-toolkit ' && printf '%s' \"\$out\" | grep -q 'base \`develop\`'"
+out=$(cd "$OUTSIDE" && echo '{}' | CLAUDE_PROJECT_DIR=$R gsd-rules --hook); assert 'the hook uses CLAUDE_PROJECT_DIR' "printf '%s' \"\$out\" | grep -q 'gsd-toolkit '"
+assert 'the hook output stays well under the 10 KB cut' "[ \$(printf '%s' \"\$out\" | wc -c) -lt 6000 ]"
 
 printf '\n%d passed, %d failed\n' "$PASS" "$FAIL"; [ "$FAIL" -eq 0 ]

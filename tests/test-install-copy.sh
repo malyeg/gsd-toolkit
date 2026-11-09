@@ -29,6 +29,13 @@ install_copy
 [ "$(cat "$COPY/unrelated-dir/file")" = keep ]
 [ -f "$COPY/shims/scripts/gsd-init.sh" ] || [ -d "$COPY/shims/scripts" ]
 [ -f "$COPY/skills/gsdt-flow/SKILL.md" ]
+# gsd-rules is linked, and Claude's user settings get its SessionStart hook
+[ -L "$BIN/gsd-rules" ]
+grep -q "gsd-rules' --hook" "$WORK/settings.json"
+GSD_BIN_DIR="$BIN" GSD_COPY_DIR="$COPY" GSD_CLAUDE_SKILL_DIR="$SKILLS" \
+  "$PKG/lib/install.sh" --no-user-hook >/dev/null
+if grep -q "gsd-rules" "$WORK/settings.json"; then echo "--no-user-hook left the gsd-rules hook" >&2; exit 1; fi
+install_copy
 # a skill an older release shipped leaves the runtime on the next copy install
 mkdir -p "$COPY/skills/gsd-flow"; printf 'old\n' > "$COPY/skills/gsd-flow/SKILL.md"
 install_copy

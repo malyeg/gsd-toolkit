@@ -7,6 +7,7 @@
 | Interactive launch | positional prompt | positional prompt |
 | Native guard hook | `PreToolUse(Skill)` | not installed by this toolkit |
 | User-level hook (`install.sh`: `/gsd-new-project` only after `gsd-init`) | `PreToolUse(Skill)` + `UserPromptExpansion` (matcher `gsd.*`: a plain word is an exact match) in `~/.claude/settings.json` | none (the skill's written rule) |
+| Toolkit rules (`gsd-rules`) | loaded by a user-level `SessionStart` hook (`gsd-rules --hook`, every session source); the `CLAUDE.md` entry is the fallback | the `AGENTS.md` entry: run `gsd-rules` first (fresh sessions do; custom shares it) |
 | Required safety | `gsd-flow-next` command guard | same |
 
 ## Session models
@@ -138,6 +139,13 @@ does not invent `--custom`, silently skip review, or promise automatic delegatio
 A `<P>-REVIEWS.md` whose configured reviewer's section is empty or holds only
 an error (a Codex usage limit) does not count. On a Codex usage limit, run
 `gsd-codex-wait --wait-only` as a background job, then review again.
+
+`.gsd/INSTRUCTIONS.md` holds only the repo's values, a short core and a
+pointer; the rules themselves are `gsd-rules`' output, so they follow the
+installed release. T016 fires only when the repo's values or the core
+changed (or for a full block from before the split, once). T062: Claude is
+configured but `gsd-rules` is not on PATH, or no user-level `SessionStart`
+hook runs it — re-run the installer (`--no-user-hook` makes it a note).
 
 Doctor checks complete instruction blocks and actual command routes. Native-hook
 states are `present`, `absent`, `invalid`, `unverified` (no jq), or `unsupported`.
