@@ -70,11 +70,11 @@
 #                  optional add-ons that fit their stack: the Impeccable
 #                  design skill, and the shadcn MCP for Tailwind / shadcn.
 #                  context: what gsd-core's skills and agents cost in every
-#                  session, the skill groups the flow never runs (hide them
-#                  with /gsd-surface disable <group>), and GSD files over
+#                  session, and GSD files over
 #                  32 KiB — notes, never findings; in --json under context
 #                  {agents [{name, skills, skill_tokens, agents,
-#                  agent_tokens, hideable [{group, skills, tokens}]}],
+#                  agent_tokens, hideable [{group, skills, tokens}]}]
+#                  (groups the flow never runs; JSON only),
 #                  big_files [{path, kib, tokens, fix}]}. The gsdt-doctor
 #                  skill acts on them, asking first.
 #                  safe [action] = what --fix would run (empty: nothing).
@@ -879,15 +879,15 @@ EOF
 $(gsd_listing_size "$@")
 EOF
   pass "$p: $n_sk gsd-core skills + $n_ag agents, $(gsd_tokens_fmt $((c_sk + c_ag))) of descriptions in every session (a skill's full text loads only when it runs)"
-  hide_json=""; hide_txt=""; hide_n=0; hide_c=0
+  # Groups safe to hide: JSON only. The saving is small (a few hundred
+  # tokens), so the text report and gsdt-doctor do not suggest it.
+  hide_json=""
   while read -r g hn hc; do
     [ -n "$g" ] || continue
     hide_json="${hide_json:+$hide_json,}{\"group\":\"$(jstr "$g")\",\"skills\":$hn,\"tokens\":$((hc / 4))}"
-    hide_txt="${hide_txt:+$hide_txt, }$g ($hn)"; hide_n=$((hide_n + hn)); hide_c=$((hide_c + hc))
   done <<EOF
 $(gsd_core_hideable "$MAIN" "$p")
 EOF
-  [ -z "$hide_txt" ] || note "$p: the phase flow never runs these gsd-core skill groups — $hide_txt: $hide_n skills, $(gsd_tokens_fmt "$hide_c"). Hide the ones you don't use: /gsd-surface disable <group> (or the gsdt-doctor skill)"
   CTX_AGENTS_JSON="${CTX_AGENTS_JSON:+$CTX_AGENTS_JSON,}{\"name\":\"$p\",\"skills\":$n_sk,\"skill_tokens\":$((c_sk / 4)),\"agents\":$n_ag,\"agent_tokens\":$((c_ag / 4)),\"hideable\":[$hide_json]}"
 done
 big_file() {  # $1=path under MAIN $2=why it matters + the fix

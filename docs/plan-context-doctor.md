@@ -97,4 +97,8 @@ a disabled group left out), big-file notes. Skill list expectations in
   toolkit would have to write gsd-core's file. Measured gain: the 4 groups
   that can be hidden save ~500 of ~4k tokens; the big `utility` group holds
   flow skills (execute-phase, code-review), so it stays.
+- Suggesting to hide skill groups (decided 2026-11-09, after 0.8.2): on a
+  real repo it saved ~200 tokens, so the text note and gsdt-doctor's question
+  were noise. `hideable` stays in `--json`; gsdt-doctor hides a group only
+  when the user asks.
 - A `.gsd.conf` key for the 32 KiB limit (add one if someone needs it).

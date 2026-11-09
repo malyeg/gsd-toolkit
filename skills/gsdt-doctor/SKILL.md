@@ -1,6 +1,6 @@
 ---
 name: gsdt-doctor
-description: "Check this repo's GSD setup with gsd-doctor and fix what it finds, asking first — including a context that got too big: unused gsd-core skill groups, oversized ROADMAP/STATE files. Use when asked to run the doctor, fix GSD setup problems, or slim down the context GSD adds."
+description: "Check this repo's GSD setup with gsd-doctor and fix what it finds, asking first — including a context that got too big: oversized ROADMAP/STATE files. Use when asked to run the doctor, fix GSD setup problems, or slim down the context GSD adds."
 ---
 
 # gsdt-doctor — find with gsd-doctor, fix with the user's yes
@@ -19,9 +19,8 @@ Bash: gsd-doctor --json
 From the JSON use:
 
 - `findings` [{code, message, fix}] — real problems (exit status 1).
-- `context.agents` [{name, skills, skill_tokens, agents, agent_tokens,
-  hideable [{group, skills, tokens}]}] — what gsd-core adds to every session,
-  and the skill groups the phase flow never runs.
+- `context.agents` [{name, skills, skill_tokens, agents, agent_tokens, …}] —
+  what gsd-core adds to every session. Ignore `hideable`: see step 3.
 - `context.big_files` [{path, kib, tokens, fix}] — GSD files too big to keep
   reading at every step.
 - `safe` — the fixes `gsd-doctor --fix` would run (empty: none).
@@ -45,17 +44,12 @@ Bash: gsd-doctor --fix --yes
 It changes files but never commits. Show `git status --short` and ask before
 committing.
 
-## 3. Hide gsd-core skill groups
+## 3. gsd-core skill groups — do not offer
 
-For each agent with `hideable` groups: list the groups with their skill count
-and tokens, and the skills in each (`/gsd-surface list` shows them). Ask which
-to hide — the user may want none. A group is listed only when the phase flow
-never runs any of its skills, so hiding it cannot break the flow; the user
-loses only those commands, and `/gsd-surface enable <group>` brings them back.
-
-For each chosen group, invoke or follow gsd-core's `gsd-surface` skill with
-`disable <group>`. Never edit `.gsd-surface.json` or the skills folder
-yourself. Tell the user it takes effect in the next session.
+Do not ask to hide gsd-core skill groups. The saving is a few hundred tokens,
+not worth a question. Only if the user asks to hide skills: show `hideable`
+and follow gsd-core's `gsd-surface` skill with `disable <group>`. Never edit
+`.gsd-surface.json` or the skills folder yourself.
 
 ## 4. Big GSD files
 

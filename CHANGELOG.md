@@ -5,6 +5,12 @@ Each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## Unreleased
+
+- **`gsd-doctor` and `gsdt-doctor` no longer suggest hiding gsd-core skill
+  groups.** It saves only a few hundred tokens. The groups stay in `--json`
+  (`context.agents[].hideable`); `gsdt-doctor` hides them only if you ask.
+
 ## 0.8.2
 
 - **`gsd-doctor` shows what GSD adds to your context.** A new "context"

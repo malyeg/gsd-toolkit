@@ -150,7 +150,7 @@ EOF
   hasnt "…a group already disabled is left out" '"group":"stats_group"' "$OUT"
   has "T009 in a disabled group → /gsd-surface enable it" '/gsd-surface enable audit_review' "$OUT"
   doc "$R"
-  has "text: the hideable groups and the command" 'Hide the ones you don.t use: /gsd-surface disable <group>' "$OUT"
+  hasnt "text: no hint to hide skill groups (JSON only)" '/gsd-surface disable' "$OUT"
   mkskill validate-phase "back"; rm -rf "$HOME/.claude/gsd-core" "$HOME/.claude/.gsd-surface.json"
 else
   echo "  (node not found — group tests skipped)"
