@@ -5,7 +5,7 @@ Each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## Unreleased
+## 0.8.2
 
 - **`gsd-doctor` shows what GSD adds to your context.** A new "context"
   section: what gsd-core's skill and agent descriptions cost in every
