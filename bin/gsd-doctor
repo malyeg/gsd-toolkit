@@ -57,6 +57,8 @@
 #                  the current node path (GSD's installer keeps a hook it
 #                  already has) or, for a gone script, re-runs GSD's
 #                  installer for that agent; doctor never edits it.
+#                  T009 = gsd-core skills the phase flow runs are missing (a
+#                  set trimmed with /gsd-surface is fine while they are there).
 #                  T016 = the generated GSD instructions are older than this
 #                  toolkit (gsd-init refreshes them; --fix runs it).
 #                  T070–T073 = ticket tracker config (read from `gsd-tracker config`).
@@ -67,6 +69,15 @@
 #                  Projects with screens also get notes (never findings) for
 #                  optional add-ons that fit their stack: the Impeccable
 #                  design skill, and the shadcn MCP for Tailwind / shadcn.
+#                  context: what gsd-core's skills and agents cost in every
+#                  session, the skill groups the flow never runs (hide them
+#                  with /gsd-surface disable <group>), and GSD files over
+#                  32 KiB — notes, never findings; in --json under context
+#                  {agents [{name, skills, skill_tokens, agents,
+#                  agent_tokens, hideable [{group, skills, tokens}]}],
+#                  big_files [{path, kib, tokens, fix}]}. The gsdt-doctor
+#                  skill acts on them, asking first.
+#                  safe [action] = what --fix would run (empty: nothing).
 #   -h, --help     show this help
 #
 # Exit status: 0 when everything checks out, 1 when there is a finding.
@@ -96,6 +107,8 @@ GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 . "$GSD_PKG/lib/version.sh"
 # shellcheck source=../lib/ui.sh
 . "$GSD_PKG/lib/ui.sh"
+# shellcheck source=../lib/context.sh
+. "$GSD_PKG/lib/context.sh"
 
 REPO=""
 QUIET=0
@@ -231,15 +244,26 @@ if gsd_run=$(gsd_cli); then
 else
   fail "GSD (gsd-core) not found — gsd-start cannot claim phases" "$GSD_CORE_INSTALL --$gsd_agent --global --profile=full" "T005"
 fi
-# T009 — gsd-core's skill profile: core and standard leave out skills the
-# phase flow runs (validate-phase, secure-phase, ui-phase, sketch, …); only
-# full has them all. Its installer keeps the profile in <agent dir>/.gsd-profile.
+# T009 — gsd-core skills the toolkit runs (lib/context.sh
+# gsd_core_required_skills) are missing. A skill set trimmed with /gsd-surface
+# passes while those are there. Where gsd-core's skills are not found, the
+# profile name decides: core and standard leave out flow skills, full has
+# them all (its installer keeps the profile in <agent dir>/.gsd-profile).
 for p in claude codex; do
   case ",${RAW_PROVIDERS:-$DOCTOR_PROVIDER}," in *",$p,"*) ;; *) continue ;; esac
-  case "$p" in claude) d=${CLAUDE_CONFIG_DIR:-$HOME/.claude} ;; *) d=${CODEX_HOME:-$HOME/.codex} ;; esac
+  d=$(gsd_agent_home "$p")
   prof=$(head -1 "$d/.gsd-profile" 2>/dev/null | tr -d '[:space:]' || true)
-  case ",$prof," in ,,|*,full,*) continue ;; esac
-  fail "gsd-core for $p has the '$prof' skill profile — the phase flow needs skills only 'full' has" "$GSD_CORE_INSTALL --$p --global --profile=full" "T009"
+  if sd=$(gsd_core_skill_dir "$p"); then
+    missing=$(gsd_core_missing_skills "$MAIN" "$sd" | tr '\n' ' '); missing=${missing% }
+    [ -n "$missing" ] || continue
+    groups=$(gsd_core_groups_for "$d" "$missing")
+    if [ -n "$groups" ]; then fix="/gsd-surface enable $groups   (in a $p session; one group per call)"
+    else fix="$GSD_CORE_INSTALL --$p --global --profile=full"; fi
+    fail "gsd-core for $p is missing skills the phase flow runs: $missing" "$fix" "T009"
+  else
+    case ",$prof," in ,,|*,full,*) continue ;; esac
+    fail "gsd-core for $p has the '$prof' skill profile — the phase flow needs skills only 'full' has" "$GSD_CORE_INSTALL --$p --global --profile=full" "T009"
+  fi
 done
 
 # GSD hooks that run a file that is gone. The agent shows little or nothing
@@ -835,6 +859,55 @@ if { [ "$FLOW_ON" = 1 ] || [ "$UI_ON" = 1 ]; } && [ -f "$MAIN/.planning/ROADMAP.
 fi
 fi  # IS_GSD_REPO
 
+# ── context (lib/context.sh) ─────────────────────────────────────────────────
+# What GSD adds to every session, and what could go. Notes only: a big context
+# costs tokens, it breaks nothing. Claude's own /doctor and /skill-doctor cover
+# CLAUDE.md, memory, MCP servers and plugins; this covers the GSD side.
+section "context"
+CTX_AGENTS_JSON=""; CTX_FILES_JSON=""
+for p in claude codex; do
+  case ",${RAW_PROVIDERS:-$DOCTOR_PROVIDER}," in *",$p,"*) ;; *) continue ;; esac
+  sd=$(gsd_core_skill_dir "$p") || continue
+  home=$(gsd_agent_home "$p")
+  set -- "$sd"/gsd-*/SKILL.md; [ -f "$1" ] || set --
+  read -r n_sk c_sk <<EOF
+$(gsd_listing_size "$@")
+EOF
+  set -- "$home"/agents/gsd-*.md "$home"/agents/gsd-*.toml
+  for a in "$@"; do shift; [ -f "$a" ] && set -- "$@" "$a"; done
+  read -r n_ag c_ag <<EOF
+$(gsd_listing_size "$@")
+EOF
+  pass "$p: $n_sk gsd-core skills + $n_ag agents, $(gsd_tokens_fmt $((c_sk + c_ag))) of descriptions in every session (a skill's full text loads only when it runs)"
+  hide_json=""; hide_txt=""; hide_n=0; hide_c=0
+  while read -r g hn hc; do
+    [ -n "$g" ] || continue
+    hide_json="${hide_json:+$hide_json,}{\"group\":\"$(jstr "$g")\",\"skills\":$hn,\"tokens\":$((hc / 4))}"
+    hide_txt="${hide_txt:+$hide_txt, }$g ($hn)"; hide_n=$((hide_n + hn)); hide_c=$((hide_c + hc))
+  done <<EOF
+$(gsd_core_hideable "$MAIN" "$p")
+EOF
+  [ -z "$hide_txt" ] || note "$p: the phase flow never runs these gsd-core skill groups — $hide_txt: $hide_n skills, $(gsd_tokens_fmt "$hide_c"). Hide the ones you don't use: /gsd-surface disable <group> (or the gsdt-doctor skill)"
+  CTX_AGENTS_JSON="${CTX_AGENTS_JSON:+$CTX_AGENTS_JSON,}{\"name\":\"$p\",\"skills\":$n_sk,\"skill_tokens\":$((c_sk / 4)),\"agents\":$n_ag,\"agent_tokens\":$((c_ag / 4)),\"hideable\":[$hide_json]}"
+done
+big_file() {  # $1=path under MAIN $2=why it matters + the fix
+  local b; b=$(wc -c < "$MAIN/$1" 2>/dev/null | tr -d ' ') || return 0
+  [ "${b:-0}" -gt $((GSD_CONTEXT_BIG_KIB * 1024)) ] || return 0
+  note "$1 is $((b / 1024)) KiB ($(gsd_tokens_fmt "$b")) — $2"
+  CTX_FILES_JSON="${CTX_FILES_JSON:+$CTX_FILES_JSON,}{\"path\":\"$(jstr "$1")\",\"kib\":$((b / 1024)),\"tokens\":$((b / 4)),\"fix\":\"$(jstr "$2")\"}"
+}
+if [ "$IS_GSD_REPO" = 1 ]; then
+  for f in ROADMAP.md REQUIREMENTS.md STATE.md PROJECT.md; do
+    big_file ".planning/$f" "GSD reads it at nearly every step; once the milestone has shipped, /gsd-complete-milestone archives it and keeps ROADMAP.md short"
+  done
+fi
+case ",${RAW_PROVIDERS:-$DOCTOR_PROVIDER}," in
+  *,codex,*) big_file AGENTS.md "Codex reads only the first 32 KiB by default (project_doc_max_bytes); move rarely needed parts into docs it can open" ;;
+esac
+case ",${RAW_PROVIDERS:-$DOCTOR_PROVIDER}," in
+  *,claude,*) note "claude: for CLAUDE.md, memory, MCP servers and plugins, run /doctor and /skill-doctor in a Claude session; /context shows the real numbers" ;;
+esac
+
 # ── worktree hygiene ─────────────────────────────────────────────────────────
 # Worth checking anywhere: stale locks and orphaned phase branches are about
 # git state, not about whether the repo opted into GSD.
@@ -954,6 +1027,9 @@ if [ "$JSON" = 1 ]; then
   # false = not a GSD repo: its setup/planning checks were skipped, so a zero
   # count means "nothing to check", not "healthy".
   printf '"gsd_repo":%s,' "$([ "$IS_GSD_REPO" = 1 ] && echo true || echo false)"
+  printf '"context":{"agents":[%s],"big_files":[%s]},' "$CTX_AGENTS_JSON" "$CTX_FILES_JSON"
+  safe_json=""; for a in $SAFE; do safe_json="${safe_json:+$safe_json,}\"$a\""; done
+  printf '"safe":[%s],' "$safe_json"
   printf '"repo":"%s","configured":[%s],"provider":{"name":"%s","command":"%s","available":%s,"instruction_file":"%s","instruction_integrated":%s,"skill_installed":%s,"command_guard":%s,"native_hook":"%s"},"count":%d,"findings":[%s],"updates":[%s],"notes":[%s]}\n' "$(jstr "$MAIN")" "$configured_json" "$(jstr "$DOCTOR_PROVIDER")" "$(jstr "$DOCTOR_COMMAND")" "$PROVIDER_AVAILABLE" "$(jstr "$instruction_file")" "$instruction_integrated" "$skill_installed" "$command_guard" "$native_hook" "$FINDINGS" "$JSON_ITEMS" "$UPDATES_JSON" "$NOTES_JSON"
   [ "$FINDINGS" -eq 0 ]; exit $?
 fi

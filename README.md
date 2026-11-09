@@ -40,7 +40,9 @@ single commands.
 - **Ticket sync.** Phases link to ClickUp tickets (or any tracker, through
   a script) and move them along as work starts and lands.
 - **A health check.** `gsd-doctor` finds setup problems and names the
-  command that fixes each one.
+  command that fixes each one. It also shows what GSD adds to your context,
+  and what you could hide. The `gsdt-doctor` skill fixes it all with you,
+  asking first.
 
 See [docs/features.md](docs/features.md) for the full list.
 
@@ -87,7 +89,7 @@ in the worktree vs the main checkout, is in
 | `gsd-start` | Claims a phase and opens a session in its worktree. `-n "desc"` for a new phase, `-p <N>` for an existing one, `--insert <N>` for a hotfix, `--ticket <id>` to link a ticket. |
 | `gsd-list` | Shows every phase: number, plans done, stage, worktree. Read-only. |
 | `gsd-finish` | Tests, merges into the base branch, pushes, then removes the worktree and branch. `--pr` opens a GitHub PR instead. |
-| `gsd-doctor` | Checks the repo's setup and names the fix for each finding. `--json` for CI, `--fix` runs the safe fixes after asking. |
+| `gsd-doctor` | Checks the repo's setup and names the fix for each finding, and what GSD adds to your context. `--json` for CI, `--fix` runs the safe fixes after asking. In a session, the `gsdt-doctor` skill fixes the rest with you. |
 | `gsd-update` | Installs the latest release (checksum-verified) and the latest gsd-core. `--check` only compares. |
 
 **Occasional use**

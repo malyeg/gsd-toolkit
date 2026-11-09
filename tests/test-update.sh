@@ -206,7 +206,7 @@ if git -C "$PKG" rev-parse -q --verify 'v0.7.0^{commit}' >/dev/null; then
   is  "hop 2: gsd-update gets 0.8.0"         "$(readlink "$HB/gsd-list")" "$H/share/gsd-toolkit/releases/0.8.0/bin/gsd-list"
   is  "…every command links into the new runtime" "$(for l in "$HB"/gsd-*; do readlink "$l"; done | grep -vc "^$H/share/gsd-toolkit/releases/0.8.0/bin/")" 0
   if [ -e "$H/share/gsd-worktrees" ]; then bad "…the old runtime folder is removed" "$(find "$H/share" | head)"; else ok "…the old runtime folder is removed"; fi
-  is  "…skills are gsdt-* only"              "$(cd "$HS" && printf "%s " *)" "gsdt-flow gsdt-tracker gsdt-worktrees "
+  is  "…skills are gsdt-* only"              "$(cd "$HS" && printf "%s " *)" "$(cd "$PKG/skills" && printf "%s " gsdt-*)"
   has "…marked with the new name"            '^<!-- gsd-toolkit-skill 0.8.0 -->' "$HS/gsdt-flow/SKILL.md"
   is  "…no .bak anywhere"                    "$(find "$HB" "$HS" -name '*.bak*' | wc -l | tr -d ' ')" 0
   "$HB/gsd-list" --help >/dev/null 2>&1;  is "…and the commands run" "$?" 0

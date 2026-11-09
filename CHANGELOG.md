@@ -5,6 +5,19 @@ Each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## Unreleased
+
+- **`gsd-doctor` shows what GSD adds to your context.** A new "context"
+  section: what gsd-core's skill and agent descriptions cost in every
+  session, the gsd-core skill groups the phase flow never runs (hide them
+  with `/gsd-surface disable <group>`), and GSD files over 32 KiB
+  (`ROADMAP.md`, `STATE.md`, …). Notes only — never a finding. `--json` has
+  it under `context`, and the safe fixes under `safe`.
+- **T009 checks skills, not the profile name.** A skill set trimmed with
+  `/gsd-surface` is fine as long as the skills the phase flow runs are there.
+- **New skill `gsdt-doctor`**: runs `gsd-doctor` and fixes what it finds,
+  one item at a time, after you say yes.
+
 ## 0.8.1
 
 - **`gsd-clickup` is removed.** Use `gsd-tracker` (it does everything

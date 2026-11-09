@@ -99,6 +99,74 @@ hasnt "a profile that includes full → no T009" '"T009"' "$OUT"
 rm -f "$HOME/.claude/.gsd-profile" "$HOME/.codex/.gsd-profile"
 json "$R"
 hasnt "no profile file (the default is full) → no T009" '"T009"' "$OUT"
+
+section "T009 by skills + the context section (lib/context.sh)"
+SK="$WORK/skills"; mkdir -p "$SK"
+mkskill() { mkdir -p "$SK/gsd-$1"; printf -- '---\nname: gsd-%s\ndescription: "%s"\n---\nbody\n' "$1" "$2" > "$SK/gsd-$1/SKILL.md"; }
+for s in new-project ingest-docs discuss-phase plan-phase review execute-phase code-review verify-work validate-phase secure-phase ui-phase ui-review sketch; do mkskill "$s" "the $s step"; done
+mkskill new-milestone "start a milestone"; mkskill thread "a thread"; mkskill stats "numbers"
+printf 'core\n' > "$HOME/.claude/.gsd-profile"
+json "$R"
+hasnt "gsd-core skills found: the flow's skills decide, not the profile name" '"T009"' "$OUT"
+has "context: the skill count (16 gsd-* skills)" '"name":"claude","skills":16,' "$OUT"
+rm -rf "$SK/gsd-validate-phase"
+json "$R"
+has "a flow skill missing → T009 names it" 'missing skills the phase flow runs: gsd-validate-phase' "$OUT"
+has "…fix without gsd-core's group list: the installer" 'profile=full' "$OUT"
+rm -rf "$SK/gsd-sketch"; mkskill validate-phase "back"
+printf 'base = develop\nui_gates = off\n' > "$R/.gsd.conf"
+json "$R"
+hasnt "ui_gates = off: sketch is not needed" '"T009"' "$OUT"
+git -C "$R" checkout -q -- .gsd.conf
+json "$R"
+has "…with the UI gates on it is" 'missing skills the phase flow runs: gsd-sketch' "$OUT"
+mkskill sketch "sketch"
+mkdir -p "$HOME/.claude/agents"
+printf -- '---\nname: gsd-planner\ndescription: plans\ntools: Read\n---\nlong body\n' > "$HOME/.claude/agents/gsd-planner.md"
+printf -- '---\nname: other\ndescription: not ours\n---\n' > "$HOME/.claude/agents/other.md"
+json "$R"
+has "context: gsd-* agents counted, others not" '"agents":1,' "$OUT"
+if command -v node >/dev/null 2>&1; then
+  mkdir -p "$HOME/.claude/gsd-core/bin/lib"
+  cat > "$HOME/.claude/gsd-core/bin/lib/clusters.cjs" <<'EOF'
+exports.CLUSTERS = Object.freeze({
+  core_loop: ['plan-phase', 'execute-phase', 'help'],
+  audit_review: ['validate-phase', 'audit-uat'],
+  milestone: ['new-milestone', 'health'],
+  workspace_state: ['thread'],
+  docs: ['ingest-docs', 'docs-update'],
+  empty_one: ['not-installed'],
+  stats_group: ['stats'],
+});
+EOF
+  json "$R"
+  has "hideable: a group with no flow skill" '"group":"milestone","skills":1,' "$OUT"
+  has "…another one" '"group":"workspace_state","skills":1,' "$OUT"
+  hasnt "…never a group holding a flow skill" '"group":"docs"' "$OUT"
+  hasnt "…never a group with nothing installed" '"group":"empty_one"' "$OUT"
+  printf '{"baseProfile":"full","disabledClusters":["stats_group","audit_review"],"explicitAdds":[],"explicitRemoves":[]}\n' > "$HOME/.claude/.gsd-surface.json"
+  rm -rf "$SK/gsd-validate-phase"
+  json "$R"
+  hasnt "…a group already disabled is left out" '"group":"stats_group"' "$OUT"
+  has "T009 in a disabled group → /gsd-surface enable it" '/gsd-surface enable audit_review' "$OUT"
+  doc "$R"
+  has "text: the hideable groups and the command" 'Hide the ones you don.t use: /gsd-surface disable <group>' "$OUT"
+  mkskill validate-phase "back"; rm -rf "$HOME/.claude/gsd-core" "$HOME/.claude/.gsd-surface.json"
+else
+  echo "  (node not found — group tests skipped)"
+fi
+doc "$R"
+has "text: the cost line" 'claude: 16 gsd-core skills + 1 agents, ~' "$OUT"
+has "text: Claude's own checks are named" 'run /doctor and /skill-doctor' "$OUT"
+awk 'BEGIN { for (i = 0; i < 900; i++) print "filler line " i " that is long enough to fill the roadmap up" }' >> "$R/.planning/ROADMAP.md"
+json "$R"
+has "big_files: ROADMAP.md over 32 KiB" '"big_files":\[{"path":".planning/ROADMAP.md"' "$OUT"
+has "…fixed by /gsd-complete-milestone" 'gsd-complete-milestone' "$OUT"
+hasnt "…a note, never a finding" '"message":"[^"]*KiB' "$OUT"
+git -C "$R" checkout -q -- .planning/ROADMAP.md
+rm -rf "$SK"/gsd-* "$HOME/.claude/agents" "$HOME/.claude/.gsd-profile"
+json "$R"
+has "no gsd-core skills: no context entry" '"context":{"agents":\[\]' "$OUT"
 farm "$WORK/noperl" perl
 DPATH="$WORK/noperl" json "$R"
 has "no perl → T006" '"T006"' "$OUT"
