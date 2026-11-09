@@ -91,6 +91,25 @@ Two ways in, both covered: `gsd-batch` (Deliverable 3) starts a fresh Sonnet ses
 - Add the suite to `.github/workflows/tests.yml` and the CLAUDE.md suite list; add to `docs/features.md`; `CHANGELOG.md` unreleased entry.
 - shellcheck + `bash -n` clean.
 
+## Deliverable 6 — run the batch in its own worktree (added 2026-11-09)
+
+Why: today `gsd-batch` runs in the MAIN checkout. gsd-fast commits there and quick-batch merges each item there, so the batch lands on the base branch with no review. That breaks the invariant "the main checkout stays on the base branch".
+
+**Check first (before building):** does gsd-core's quick-batch work when the session starts inside a linked worktree? Its executors use `isolation: worktree`: confirm each item's worktree branches from the BATCH branch and merges back into it (not into base). Try it in a throwaway repo; write down what you find here. If it does not work, stop and report.
+
+**Found (2026-11-09, gsd-core 1.20.1, Claude Code, throwaway repo: `main` = A, linked worktree `batch-x` = A + B):** it works, with one condition.
+- **Fork base (Claude's `isolation: worktree`, measured with `claude -p` + one Agent):** the agent worktree is made under the MAIN checkout's `.claude/worktrees/agent-*`. Without `worktree.baseRef` it forks from origin/HEAD (A, not the batch branch). With `worktree.baseRef = "head"` in the batch worktree's `.claude/settings.local.json` it forks from the batch worktree's HEAD (B). `gsd-wt-new` already writes that key into each new worktree, so a batch worktree gets it.
+- **Without the key:** `worktree.base-check` sees batch HEAD ≠ origin/HEAD (`head-diverged-from-fork`) and degrades to `isolation = none`: executors run one by one IN the batch worktree. Still lands on the batch branch, just slower.
+- **Merge back:** `worktree.cleanup-wave` (run with the batch worktree as cwd) merged the item branch into `batch-x` (`merged_removed`); `main` untouched; the item worktree + branch removed.
+- **The condition:** gsd-core's `gsd_run` uses the cwd as the project root only when it has its own `.planning/` (`resolveMainWorktreeCwd`). A worktree with no `.planning/` (planning not committed) is remapped to the MAIN checkout: BATCH.json, STATE.md and the merges would all go there. So `gsd-batch` refuses when `.planning/` is not committed on the base branch.
+
+Build:
+- `gsd-batch` makes a `batch-<YYYY-MM-DD>-<slug>` worktree + branch from the base branch first (slug from the first words of the list/brief, or `--name <slug>`), then starts the session there. Reuse what `gsd-wt-new` / `lib/common.sh` already do (worktree dir, base branch, checkout lock, merge driver); no phase claim, no ROADMAP change. `--print` shows the worktree it would make.
+- The skill, step 6: in the main checkout on the base branch it STOPS and prints the exact `gsd-batch …` command to run instead. Anywhere else (a batch worktree) it goes on; the clean-tree check runs there. (Built as a step 0, before the scout: stopping at step 6 would throw away the scout's tokens.)
+- Landing: `gsd-finish` (and `--pr`) accepts a batch worktree: tests → merge → `gsd-planning-repair` → push → remove worktree + branch, same as a phase. Skip the per-phase gates (UI, flow, test audit) for a batch. Never lands on its own: the skill's last step prints the `gsd-finish …` command.
+- The guard, `gsd-list`, `gsd-doctor`: check how each treats a `batch-*` worktree (a non-phase worktree). The guard must not block gsd-quick / gsd-quick-batch / gsd-fast there; doctor must not call it stray; `gsd-list` shows it (or at least doesn't break).
+- Tests: `tests/test-batch.sh` (worktree made, `--print`, refuse in main), finish of a batch worktree in the finish suite, then `tests/test-e2e.sh`. Docs + CHANGELOG + CLAUDE.md invariants line ("one phase = one worktree; one batch = one `batch-*` worktree").
+
 ## Done when
 
 - All suites pass (incl. `tests/test-e2e.sh` if anything shared was touched).

@@ -101,6 +101,8 @@ in the worktree vs the main checkout, is in
 | `gsd-tracker` | Reads and updates tickets ([docs/trackers.md](docs/trackers.md)). |
 | `gsd-ui` | UI quality steps for phases with screens: design, layout, browser check, review, approval. |
 | `gsd-codex-wait` | Waits out a Codex usage limit, then runs the command again. |
+| `gsd-batch` | Runs several quick tasks as one batch, in its own `batch-*` worktree and a fresh session (Claude: on Sonnet) with the `gsdt-batch` skill: it scouts files first, sends tiny items to `gsd-fast`, and reports the cost. Land it with `gsd-finish batch-…`. Use it instead of `/gsd-quick-batch`. |
+| `gsd-batch-report` | Tokens a quick-task batch used, per role and per item (read-only, from Claude Code's transcripts). |
 
 **Called by other commands:** `gsd-wt-new`, `gsd-wt-finish`,
 `gsd-worktree-guard`, `gsd-flow-next`, `gsd-planning-merge` (the git merge
@@ -241,6 +243,25 @@ Architecture: [docs/architecture.md](docs/architecture.md).
 git clone git@github.com:malyeg/gsd-toolkit.git && cd gsd-toolkit
 tests/test-commands.sh        # each suite is standalone
 ```
+
+To try the batch tools from a checkout in another repo, before a release:
+
+```sh
+cd <your repo>
+<checkout>/bin/gsd-batch-report --days 7 --json > /tmp/before.json   # the cost now
+ln -s <checkout>/skills/gsdt-batch ~/.claude/skills/gsdt-batch        # the skill, by hand
+<checkout>/bin/gsd-batch "- task one
+- task two"                                                           # a batch-* worktree + a fresh Sonnet session there
+<checkout>/bin/gsd-batch-report --baseline /tmp/before.json           # per item, before vs after
+<checkout>/bin/gsd-finish batch-<date>-<slug>                         # land it (tests, merge, push, cleanup)
+rm ~/.claude/skills/gsdt-batch                                        # remove the link after
+```
+
+`gsd-finish` from a checkout runs its helpers from PATH (`gsd-planning-repair`
+etc.): with no release installed, put `<checkout>/bin` first on PATH for that
+command. Or type `/gsdt-batch` in a session inside a batch worktree, started with
+`claude --plugin-dir <checkout>/mods/gsdt-batch-sonnet` (the mod moves that
+session to Sonnet while the batch runs).
 
 Edits in a checkout never reach your installed commands until a release.
 Try them as `./bin/gsd-…` or through the tests. The test suites, lint

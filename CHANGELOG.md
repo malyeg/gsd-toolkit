@@ -7,6 +7,42 @@ becomes its release notes.
 
 ## Unreleased
 
+- **`gsd-batch` runs the batch in its own worktree.** It makes a
+  `batch-<date>-<slug>` branch + worktree off the base branch (slug from the
+  list's first words, the `--file` name, or `--name`), then starts the
+  session there. The batch's commits land on that branch, not on the base
+  branch. Land it with `gsd-finish batch-…` (or `--pr`): tests → merge →
+  push → cleanup, like a phase, minus the per-phase gates. `/gsdt-batch` in
+  the main checkout stops and prints the `gsd-batch` command. It needs
+  `.planning/` committed: without it gsd-core would run the batch in the
+  main checkout. `gsd-list` lists batch branches; `gsd-doctor` checks
+  `worktree.baseRef` in batch worktrees (T034) and reports a batch branch
+  whose worktree is gone (W017).
+- **New `gsdt-batch` skill and `gsd-batch` command: several quick tasks,
+  fewer tokens.** Use them instead of `/gsd-quick-batch`: give them the same task
+  list, or any brief in your own words ("Read FIX-BRIEF-7.md, validate each
+  item, fix the real ones, recommend the owner calls"). For a brief, one Opus
+  helper does the checks first and splits it into items to build, to only
+  recommend, and to drop, outside the main session. For a list, one Sonnet helper first finds each item's likely files and test, so
+  the Opus planners search less. Tiny items go to `gsd-fast` instead of a
+  planner. `gsd-batch` starts it in a fresh session, on Sonnet with Claude
+  (the planners keep their own model). It shows you the sorted list and waits
+  for your OK, and ends with `gsd-batch-report`.
+- **The generated `.gsd/INSTRUCTIONS.md` points at `/gsdt-batch`.** Doctor
+  reports T016 in each repo until you run `gsd-init --no-launch` (or
+  `gsd-doctor --fix`).
+- **A Claude Code mod, `mods/gsdt-batch-sonnet`** (not installed yet): while
+  `/gsdt-batch` runs in an open session, that session's requests go to
+  Sonnet; subagents keep theirs. Try it with
+  `claude --plugin-dir mods/gsdt-batch-sonnet`.
+- **New `gsd-batch-report`: what a quick-task batch costs.** It reads Claude
+  Code's transcripts (no tokens) and counts one `/gsd-quick-batch` or
+  `/gsdt-batch` run from its start to its end, not the whole session: the
+  main session's turns, every helper it spawned, and theirs. Per role (agent
+  type × model): agents, turns, Bash calls per helper, input split into
+  fresh / cache write / cache read, output. Per item too, next to last
+  week's numbers or a report you saved with `--json` (`--baseline`).
+  `--last N`, `--days N`, `--session <id>`. Codex: not supported yet.
 - **`gsd-doctor` and `gsdt-doctor` no longer suggest hiding gsd-core skill
   groups.** It saves only a few hundred tokens. The groups stay in `--json`
   (`context.agents[].hideable`); `gsdt-doctor` hides them only if you ask.

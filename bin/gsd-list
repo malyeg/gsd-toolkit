@@ -21,6 +21,7 @@
 #   STAGE     furthest lifecycle step reached, from the phase's artifact files:
 #             spec → discuss → ui → plan → execute → done (all plans executed)
 #   WORKTREE  the phase's phase-<N>-* branch, ● = worktree attached
+# Under the table: the gsd-batch branches (batch-*), ● = worktree attached.
 set -euo pipefail
 
 die() { printf '✖ %s\n' "$@" >&2; exit 1; }
@@ -49,6 +50,9 @@ COLUMNS
   STAGE     furthest lifecycle step reached, from the phase's artifact files:
             spec → discuss → ui → plan → execute → done (all plans executed)
   WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
+
+  Under the table: the batch-* branches of gsd-batch runs not landed yet
+  (● = worktree attached). Land one with gsd-finish <branch>.
 
 RELATED
   gsd-start -n "<desc>"     claim a NEW phase and open its session
@@ -95,13 +99,15 @@ ROADMAP="$MAIN/.planning/ROADMAP.md"
 
 # phase-* branches and which of them are attached as worktrees
 BRANCHES=$(git -C "$MAIN" for-each-ref --format='%(refname:short)' 'refs/heads/phase-*' || true)
+# gsd-batch runs: batch-* branches, listed under the table
+BATCHES=$(git -C "$MAIN" for-each-ref --format='%(refname:short)' 'refs/heads/batch-*' || true)
 WTMAP=$(git -C "$MAIN" worktree list --porcelain \
           | awk '/^worktree /{w=substr($0,10)} /^branch /{b=substr($0,8); sub("refs/heads/","",b); print b "\t" w}')
 # COLUMNS first: without a terminal (pipes, CI) tput cannot know the width.
 TERMCOLS=${COLUMNS:-$( tput cols 2>/dev/null || echo 120 )}
 PHASESROOT="$MAIN/.planning/phases"
 
-export BRANCHES WTMAP TERMCOLS FULL PHASESROOT
+export BRANCHES BATCHES WTMAP TERMCOLS FULL PHASESROOT
 exec perl -CS - "$ROADMAP" <<'PERL'
 use strict; use warnings; use utf8;
 binmode STDOUT, ':encoding(UTF-8)';
@@ -313,4 +319,9 @@ for my $i (0 .. $#phases) {
 }
 print $rule->('└', '┴', '┘');
 print "  new phase: gsd-start -n \"<desc>\" · attach: gsd-start -p <N> · ● worktree attached\n";
+my @batches = grep { length } split /\n/, ($ENV{BATCHES} // '');
+if (@batches) {
+  print "\n  batches (gsd-batch; land with gsd-finish <branch>):\n";
+  print "    ", (exists $wt{$_} ? '● ' : '  '), $_, "\n" for @batches;
+}
 PERL

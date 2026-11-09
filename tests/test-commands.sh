@@ -290,6 +290,42 @@ has "…saying what it removed"           "cov/" "$WORK/out"
 if [ -d "$wt" ]; then bad "…worktree removed" "$(tail -3 "$WORK/out")"; else ok "…worktree removed"; fi
 is  "…branch deleted"                   "$(git -C "$R" branch --list 'phase-1-*' | wc -l | tr -d ' ')" 0
 
+section "finish — a gsd-batch worktree (batch-*)"
+R="$WORK/batch"; project "$R"
+# strict gates on: a batch has no phase folder, and must land anyway
+printf 'install = none\ntest = none\nflow = strict\nui_gates = strict\n' > "$R/.gsd.conf"; commit "$R" strict; git -C "$R" push -q
+BB=batch-2026-11-09-fix-labels; bw="$WORK/batch-worktrees/$BB"
+fails "gsd-wt-new --batch refuses a name that is not batch-…" bash -c 'cd "$1" && gsd-wt-new --batch fix-labels' _ "$R"
+(cd "$R" && gsd-wt-new --batch "$BB") > "$WORK/out" 2>&1
+is  "gsd-wt-new --batch makes the worktree" "$?" 0
+is  "…on its own branch, off main"   "$(git -C "$bw" branch --show-current):$(git -C "$R" merge-base main "$BB")" "$BB:$(git -C "$R" rev-parse main)"
+is  "…no ROADMAP change"             "$(git -C "$R" status --porcelain | wc -l | tr -d ' ')" 0
+is  "…and a clean worktree"          "$(git -C "$bw" status --porcelain | wc -l | tr -d ' ')" 0
+(cd "$R" && gsd-wt-new --batch "$BB") > "$WORK/out" 2>&1
+has "…reused when run again"          "already has a worktree" "$WORK/out"
+printf 'label\n' > "$bw/f.txt"; commit "$bw" "fix: labels"
+: > "$GH_LOG"
+(cd "$bw" && gsd-finish --pr) > "$WORK/out" 2>&1
+is  "--pr from inside the batch worktree" "$?" 0
+has "…head is the batch branch"       "--head $BB" "$GH_LOG"
+if [ -d "$bw" ]; then ok "…worktree kept"; else bad "…worktree kept"; fi
+is  "…nothing merged into main"       "$(git -C "$R" log --oneline main | grep -c 'fix: labels')" 0
+git -C "$R" branch -q --unset-upstream "$BB"
+(cd "$bw" && gsd-finish) > "$WORK/out" 2>&1
+is  "gsd-finish with no argument lands it" "$?" 0
+is  "…the fix is on main"             "$(git -C "$R" log --oneline main | grep -c 'fix: labels')" 1
+is  "…and pushed"                     "$(git --git-dir="$R.git" log --oneline main | grep -c 'fix: labels')" 1
+if [ -d "$bw" ]; then bad "…worktree removed" "$(tail -3 "$WORK/out")"; else ok "…worktree removed"; fi
+is  "…branch deleted"                 "$(git -C "$R" branch --list "$BB" | wc -l | tr -d ' ')" 0
+printf 'install = none\ntest = false\n' > "$R/.gsd.conf"; commit "$R" failing; git -C "$R" push -q
+(cd "$R" && gsd-wt-new --batch "$BB-2") >/dev/null 2>&1
+printf 'y\n' > "$bw-2/g.txt"; commit "$bw-2" "fix: other"
+before=$(git -C "$R" rev-parse main)
+fails "failing tests stop a batch finish" bash -c 'cd "$1" && gsd-finish "$2"' _ "$R" "$BB-2"
+has   "…naming the batch worktree"    "removing the batch worktree" "$WORK/out"
+is    "…nothing merged"               "$(git -C "$R" rev-parse main)" "$before"
+if [ -d "$bw-2" ]; then ok "…worktree kept"; else bad "…worktree kept"; fi
+
 section "phase branches — a slug ending in -pr, a worktree deleted by hand"
 R="$WORK/slugpr"; project "$R"
 printf '# Roadmap\n\n### Phase 1: improve PR\n' > "$R/.planning/ROADMAP.md"; commit "$R" title; git -C "$R" push -q
