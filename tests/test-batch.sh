@@ -373,7 +373,7 @@ fi
 # shellcheck source=../lib/provider.sh
 . "$PKG/lib/provider.sh"
 gsd_rules_text off > "$WORK/canon"
-has "the toolkit rules (gsd-rules) point at /gsdt-batch" "use \`/gsdt-batch\` (or \`gsd-batch\`), not" "$WORK/canon"
+has "the toolkit rules (gsd-rules) point at the gsd-batch script" "\`gsd-batch '<task list or brief>'\` in a terminal (the script, not the skill)" "$WORK/canon"
 
 section "an enriched line is ONE quick-batch item"
 QB=""

@@ -244,8 +244,10 @@ the final action because it removes the worktree. Provider hooks are early
 feedback only; \`gsd-flow-next\` invokes the mandatory neutral guard. Arbitrary
 shell commands outside GSD are outside this enforcement boundary.
 
-For several quick tasks at once, use \`/gsdt-batch\` (or \`gsd-batch\`), not
-\`/gsd-quick-batch\`. Same task list.
+For several quick tasks or a fix brief, tell the user to run
+\`gsd-batch '<task list or brief>'\` in a terminal (the script, not the skill):
+it makes a \`batch-*\` worktree and a fresh, cheaper session there. Never
+\`/gsd-quick-batch\`. \`/gsdt-batch\` only works inside a \`batch-*\` worktree.
 ${ui_text}
 EOF
 }
