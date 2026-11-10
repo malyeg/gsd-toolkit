@@ -12,7 +12,7 @@
 # 2. Writes VERSION and commits "release vX.Y.Z".
 # 3. With --push: pushes main. GitHub Actions (release.yml) sees VERSION change,
 #    runs every test suite, tags the commit and publishes the release;
-#    install.sh / gsd-update pick it up from there. Without --push it prints the
+#    install.sh / gsdt-update pick it up from there. Without --push it prints the
 #    push command.
 set -euo pipefail
 die() { printf 'release: %s\n' "$*" >&2; exit 1; }

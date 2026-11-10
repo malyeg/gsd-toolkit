@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
-# gsd-list — list the GSD phases of a repo: number, description, plan
+# gsdt-list — list the GSD phases of a repo: number, description, plan
 # progress, and worktree/branch state. Read-only; safe from anywhere.
 #
 # Usage (from anywhere inside a GSD-fitted repo or its worktrees):
-#   gsd-list [--repo <path>] [--compact]
+#   gsdt-list [--repo <path>] [--compact]
 #
 # By default long PHASE/WORKTREE text wraps across lines to fit the screen so
 # nothing is truncated; pass --compact for the one-line-per-phase view.
@@ -14,24 +14,24 @@
 #   --compact, -c    one line per phase, clipping each cell (the old default)
 #
 # Columns:
-#   N         phase number (what gsd-start -p <N> takes)
+#   N         phase number (what gsdt-start -p <N> takes)
 #   PHASE     description from the '### Phase N:' heading in ROADMAP.md
 #   PLANS     plans executed/total (a plan is done once it has a SUMMARY) ·
 #             ✔ all executed · — no plans yet
 #   STAGE     furthest lifecycle step reached, from the phase's artifact files:
 #             spec → discuss → ui → plan → execute → done (all plans executed)
 #   WORKTREE  the phase's phase-<N>-* branch, ● = worktree attached
-# Under the table: the gsd-batch branches (batch-*), ● = worktree attached.
+# Under the table: the gsdt-batch branches (batch-*), ● = worktree attached.
 set -euo pipefail
 
 die() { printf '✖ %s\n' "$@" >&2; exit 1; }
 
 usage() {
   cat <<'HELP'
-gsd-list — list GSD phases: number, description, plan progress, worktree
+gsdt-list — list GSD phases: number, description, plan progress, worktree
 
 USAGE
-  gsd-list [--repo <path>] [--compact]
+  gsdt-list [--repo <path>] [--compact]
 
   By default long PHASE/WORKTREE cells wrap across lines to fit the screen
   (nothing truncated). Use --compact for the one-line-per-phase view.
@@ -43,7 +43,7 @@ OPTIONS
   -h, --help      show this help
 
 COLUMNS
-  N         phase number — what gsd-start -p <N> attaches to
+  N         phase number — what gsdt-start -p <N> attaches to
   PHASE     description from the '### Phase N:' heading in ROADMAP.md
   PLANS     plans executed/total (a plan is done once it has a SUMMARY),
             e.g. 5/6 · ✔ = all executed · — = none yet
@@ -51,13 +51,13 @@ COLUMNS
             spec → discuss → ui → plan → execute → done (all plans executed)
   WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
 
-  Under the table: the batch-* branches of gsd-batch runs not landed yet
-  (● = worktree attached). Land one with gsd-finish <branch>.
+  Under the table: the batch-* branches of gsdt-batch runs not landed yet
+  (● = worktree attached). Land one with gsdt-finish <branch>.
 
 RELATED
-  gsd-start -n "<desc>"     claim a NEW phase and open its session
-  gsd-start -p <N>       attach to an existing phase (no duplicate claim)
-  gsd-finish             finish the phase from inside its worktree
+  gsdt-start -n "<desc>"     claim a NEW phase and open its session
+  gsdt-start -p <N>       attach to an existing phase (no duplicate claim)
+  gsdt-finish             finish the phase from inside its worktree
 HELP
 }
 
@@ -69,7 +69,7 @@ while [ $# -gt 0 ]; do
     --repo)  [ $# -ge 2 ] || die "--repo needs a value"; REPO="$2"; shift 2 ;;
     -c|--compact) FULL=0; shift ;;
     --full)  FULL=1; shift ;;          # accepted for back-compat (now the default)
-    *) die "unknown argument: $1 (see gsd-list --help)" ;;
+    *) die "unknown argument: $1 (see gsdt-list --help)" ;;
   esac
 done
 
@@ -84,7 +84,7 @@ if [ -f "$GSD_PKG/lib/version.sh" ]; then
   . "$GSD_PKG/lib/provider.sh"; gsd_stale_hooks_notice
 fi
 
-# ── locate the main checkout (same detection as gsd-start) ───────────────────
+# ── locate the main checkout (same detection as gsdt-start) ───────────────────
 if [ -n "$REPO" ]; then
   MAIN="$(cd "$REPO" 2>/dev/null && git rev-parse --show-toplevel 2>/dev/null)" \
     || die "--repo is not a git checkout: $REPO"
@@ -99,7 +99,7 @@ ROADMAP="$MAIN/.planning/ROADMAP.md"
 
 # phase-* branches and which of them are attached as worktrees
 BRANCHES=$(git -C "$MAIN" for-each-ref --format='%(refname:short)' 'refs/heads/phase-*' || true)
-# gsd-batch runs: batch-* branches, listed under the table
+# gsdt-batch runs: batch-* branches, listed under the table
 BATCHES=$(git -C "$MAIN" for-each-ref --format='%(refname:short)' 'refs/heads/batch-*' || true)
 WTMAP=$(git -C "$MAIN" worktree list --porcelain \
           | awk '/^worktree /{w=substr($0,10)} /^branch /{b=substr($0,8); sub("refs/heads/","",b); print b "\t" w}')
@@ -318,10 +318,10 @@ for my $i (0 .. $#phases) {
   print $rule->('├', '┼', '┤', '┈') if $i < $#phases;
 }
 print $rule->('└', '┴', '┘');
-print "  new phase: gsd-start -n \"<desc>\" · attach: gsd-start -p <N> · ● worktree attached\n";
+print "  new phase: gsdt-start -n \"<desc>\" · attach: gsdt-start -p <N> · ● worktree attached\n";
 my @batches = grep { length } split /\n/, ($ENV{BATCHES} // '');
 if (@batches) {
-  print "\n  batches (gsd-batch; land with gsd-finish <branch>):\n";
+  print "\n  batches (gsdt-batch; land with gsdt-finish <branch>):\n";
   print "    ", (exists $wt{$_} ? '● ' : '  '), $_, "\n" for @batches;
 }
 PERL

@@ -36,8 +36,8 @@ has none: `npx -y --package=@opengsd/gsd-core@latest -- gsd-core --<agent>
 --global --profile=full` (`--config-dir` added when `CLAUDE_CONFIG_DIR` /
 `CODEX_HOME` moves the agent's dir). It runs after our skills, which are
 `gsdt-*`, so gsd-core's installer keeps them. It is skipped when the agent
-already has gsd-core (`gsd-update` updates it), on an update
-(`--reuse-install-config`, which `gsd-update` uses), and with `--no-core`. A failed or
+already has gsd-core (`gsdt-update` updates it), on an update
+(`--reuse-install-config`, which `gsdt-update` uses), and with `--no-core`. A failed or
 impossible install (no `npx`) prints the command and never fails the
 toolkit install.
 
@@ -50,10 +50,10 @@ Two versions are watched: gsd-toolkit (GitHub releases) and GSD itself
 (`@opengsd/gsd-core` on npm, compared with the installed gsd-core version;
 the update command is `npx @opengsd/gsd-core@latest --claude --global`).
 
-- `gsd-start`, `gsd-list` and `gsd-init` print one line on stderr per newer
+- `gsdt-start`, `gsdt-list` and `gsdt-init` print one line on stderr per newer
   version — only when you run them in a terminal, so JSON, pipes and agent
   output stay clean.
-- `gsd-doctor` always shows them (`↑` lines, also with `--quiet`, and an
+- `gsdt-doctor` always shows them (`↑` lines, also with `--quiet`, and an
   `updates` list in `--json`). They are not findings: the exit status is 0.
 - The latest versions are cached for a day in
   `${XDG_CACHE_HOME:-~/.cache}/gsd-toolkit/` (`latest-version`,
@@ -85,32 +85,32 @@ A session still open from before the move may call `/gsdw-flow`: the guard
 still knows it. Going back to a gsd-worktrees release:
 
 ```sh
-GSD_UPDATE_REPO=arconme/gsd-worktrees gsd-update --version 0.7.1
+GSD_UPDATE_REPO=arconme/gsd-worktrees gsdt-update --version 0.7.1
 ```
 
 ### Updating
 
 ```sh
-gsd-update --check            # installed vs latest, changes nothing
-gsd-update                    # install the latest (keeps your agent choice), then gsd-core
-gsd-update --version 0.2.0    # a given release — also how you go back
-gsd-update --no-core          # leave gsd-core as it is
+gsdt-update --check            # installed vs latest, changes nothing
+gsdt-update                    # install the latest (keeps your agent choice), then gsd-core
+gsdt-update --version 0.2.0    # a given release — also how you go back
+gsdt-update --no-core          # leave gsd-core as it is
 ```
 
-After the toolkit, `gsd-update` brings gsd-core to npm's latest for each
+After the toolkit, `gsdt-update` brings gsd-core to npm's latest for each
 agent the install chose (`lib/core.sh`, the same `--profile=full` installer
 run as a fresh install). An agent without gsd-core gets it; one on the latest
 is left alone. Offline, or without `npx`, it prints the command to run. The
-update notice and `gsd-doctor` name `gsd-update` for both.
+update notice and `gsdt-doctor` name `gsdt-update` for both.
 
-A git checkout is not an install: pull it with `git pull`; `gsd-update` run
+A git checkout is not an install: pull it with `git pull`; `gsdt-update` run
 from it says so. Commands still linked into a checkout (how older versions of
 `./install.sh` installed) move to a release with
-`./install.sh --reuse-install-config`; `gsd-doctor` notes when you have them.
+`./install.sh --reuse-install-config`; `gsdt-doctor` notes when you have them.
 
 Projects keep only `.gsd.conf`, the frozen shims and instruction blocks. After
-an update, `gsd-doctor` in a project tells you if its shims need
-`gsd-init` again.
+an update, `gsdt-doctor` in a project tells you if its shims need
+`gsdt-init` again.
 
 ## For maintainers: cutting a release
 

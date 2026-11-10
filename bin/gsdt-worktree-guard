@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 #
-# gsd-worktree-guard — shared validator called by gsd-start and gsd-flow-next.
+# gsdt-worktree-guard — shared validator called by gsdt-start and gsdt-flow-next.
 # Optional native hooks use the same validator through a per-repo shim.
 #
 # Rules (independent of how the command was invoked):
-#   0. /gsd-new-project, /gsd-ingest-docs → only in a repo gsd-init has set
+#   0. /gsd-new-project, /gsd-ingest-docs → only in a repo gsdt-init has set
 #                              up (.gsd.conf). Run alone, they write the plan
-#                              without the toolkit's files; gsd-init installs
+#                              without the toolkit's files; gsdt-init installs
 #                              those first, then opens a session that runs them.
 #   0b. GSD skills that clash with the worktree model → never in a set-up
 #                              repo; the block names the toolkit command:
 #                                /gsd-autonomous, /gsd-manager   (many phases in
-#                                               one checkout)  → gsd-start + /gsdt-flow
+#                                               one checkout)  → gsdt-start + /gsdt-flow
 #                                /gsd-workspace, /gsd-workstreams (GSD's own
-#                                               isolation)     → gsd-start
+#                                               isolation)     → gsdt-start
 #                                /gsd-phase, --insert, --remove (unpushed claim;
 #                                               --remove renumbers phases that
-#                                               may have worktrees) → gsd-start
+#                                               may have worktrees) → gsdt-start
 #                                               -n / --insert. --edit is allowed.
 #   1. /gsd-phase --edit     → only on the base branch (the shared claim point).
 #   2. per-phase commands    → only inside the matching 'phase-<N>-*' worktree.
@@ -43,7 +43,7 @@
 #                                           (or sketch: skip <reason>)
 #                                ui-review  needs the checks of the built
 #                                           pages, each current: a passed
-#                                           <P>-UI-CHECK.md (gsd-ui check), a
+#                                           <P>-UI-CHECK.md (gsdt-ui check), a
 #                                           complete <P>-UI-LOOK.md, and
 #                                           <P>-UI-APPROVAL.md (the user's
 #                                           yes). Exempt: a phase whose UI
@@ -57,7 +57,7 @@
 # is let through in this mode.
 #
 # Block = exit 2 (stderr shown). Escape hatch: GSD_SKIP_GUARD=1.
-# Repo settings (base branch, install cmd, flow): .gsd.conf, see gsd-bootstrap-repo.
+# Repo settings (base branch, install cmd, flow): .gsd.conf, see gsdt-bootstrap-repo.
 set -uo pipefail
 
 [ "${GSD_SKIP_GUARD:-}" = 1 ] && exit 0
@@ -76,7 +76,7 @@ while [ $# -gt 0 ]; do
       esac
       shift 2 ;;
     --global) GLOBAL=1; shift ;;
-    -h|--help) echo 'usage: gsd-worktree-guard [--global] [--command gsd-… --args "…" --repo <dir>]'; exit 0 ;;
+    -h|--help) echo 'usage: gsdt-worktree-guard [--global] [--command gsd-… --args "…" --repo <dir>]'; exit 0 ;;
     *) echo "unknown option: $1" >&2; exit 64 ;;
   esac
 done
@@ -164,11 +164,11 @@ BASE=$(gsd_base "$dir" 2>/dev/null || echo develop)
 
 block() { printf '%s\n' "$@" >&2; exit 2; }
 
-# Rule 0 — the plan is started by gsd-init, never by the bare skill
+# Rule 0 — the plan is started by gsdt-init, never by the bare skill
 case "$cmd" in gsd-new-project|gsd-ingest-docs)
   [ -f "$dir/.gsd.conf" ] || block \
     "BLOCKED: /$cmd needs the gsd-toolkit setup first — this repo has no .gsd.conf." \
-    "Run gsd-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /$cmd. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)" ;;
+    "Run gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /$cmd. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)" ;;
 esac
 [ "$GLOBAL" = 0 ] || [ -f "$dir/.gsd.conf" ] || exit 0
 
@@ -180,20 +180,20 @@ if [ -f "$dir/.gsd.conf" ]; then
   }
   case "$cmd" in
     gsd-autonomous) clash "it runs every phase in this one checkout and skips the review, validate and secure gates" \
-      "gsd-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree" ;;
+      "gsdt-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree" ;;
     gsd-manager) clash "it runs several phases as background agents in one checkout, and two writers in one checkout are not safe" \
-      "gsd-list to see every phase, gsd-start per phase (each gets its own worktree and session)" ;;
+      "gsdt-list to see every phase, gsdt-start per phase (each gets its own worktree and session)" ;;
     gsd-workspace|gsd-workstreams) clash "it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's" \
-      "gsd-start -n \"<desc>\" — one worktree per phase, phases run in parallel" ;;
+      "gsdt-start -n \"<desc>\" — one worktree per phase, phases run in parallel" ;;
     gsd-phase)
       case " $args " in   # --remove/--insert win over --edit: "--remove 3 --edit" still removes
         *" --remove "*) clash "--remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number" \
-          "check gsd-list first; only when no later phase is in flight, run it on $BASE with GSD_SKIP_GUARD=1" ;;
+          "check gsdt-list first; only when no later phase is in flight, run it on $BASE with GSD_SKIP_GUARD=1" ;;
         *" --insert "*) clash "its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows" \
-          "gsd-start --insert <N> \"<desc>\"" ;;
+          "gsdt-start --insert <N> \"<desc>\"" ;;
         *" --edit "*) ;;
         *) clash "its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows" \
-          "gsd-start -n \"<desc>\"" ;;
+          "gsdt-start -n \"<desc>\"" ;;
       esac ;;
   esac
 fi
@@ -213,7 +213,7 @@ esac
 
 [ "$branch" = "$BASE" ] && block \
   "BLOCKED: /$cmd is feature work — run it in the phase worktree, not on $BASE." \
-  "Create/open it with: gsd-start -p ${N:-<N>}  (then open a session in phase-${N:-<N>}-*). See .gsd/INSTRUCTIONS.md."
+  "Create/open it with: gsdt-start -p ${N:-<N>}  (then open a session in phase-${N:-<N>}-*). See .gsd/INSTRUCTIONS.md."
 
 if [ -z "$N" ]; then
   N=$(printf '%s' "$branch" | sed -nE 's/^phase-([0-9]+(\.[0-9]+)?)(-.*)?$/\1/p')
@@ -262,15 +262,15 @@ ui_block() {  # $1=what is missing  $2=how to fix it
 if [ "$UI_STRICT" = 1 ]; then
   case "$cmd" in
     gsd-ui-phase)
-      [ "$(gsd_ui_design_state "$dir")" = ok ] || ui_block "a filled .planning/design/DESIGN.md (the design system)" "gsd-ui design, then fill it with the user"
+      [ "$(gsd_ui_design_state "$dir")" = ok ] || ui_block "a filled .planning/design/DESIGN.md (the design system)" "gsdt-ui design, then fill it with the user"
       case "$([ -n "$pdir" ] && gsd_ui_layout_state "$dir" "$pdir" "$P")" in
         ok|skip) ;;
-        *) ui_block "$P-LAYOUT.md with a chosen sketch and pages" "gsd-ui layout $N, /gsd-sketch, then fill sketch: and pages:" ;;
+        *) ui_block "$P-LAYOUT.md with a chosen sketch and pages" "gsdt-ui layout $N, /gsd-sketch, then fill sketch: and pages:" ;;
       esac ;;
     gsd-ui-review)
       # check → look → approval, each for the pages as they are now. A phase
       # whose UI review is already on the base branch predates these steps.
-      [ -n "$pdir" ] || ui_block "a phase folder with the UI check of the built pages" "gsd-ui check $N"
+      [ -n "$pdir" ] || ui_block "a phase folder with the UI check of the built pages" "gsdt-ui check $N"
       if ! gsd_ui_exempt "$dir" "$pdir" "$P"; then
         gate=$(gsd_ui_gate "$dir" "$pdir" "$P")
         [ -z "$gate" ] || ui_block "the UI steps before it — ${gate##*|}" "$(gsd_ui_step_cmd "${gate%%|*}" "$N")"
@@ -287,7 +287,7 @@ case "$cmd" in
       rp=$(gsd_conf_get "$(gsd_main "$dir" 2>/dev/null || echo "$dir")" review_provider)
       if why=$(gsd_reviews_problem "$pdir/$P-REVIEWS.md" "${rp:-codex}"); then
         block "BLOCKED (flow = strict): /$cmd $N needs a usable $P-REVIEWS.md — $why." \
-              "Open it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase $N  then  /gsd-plan-phase $N --reviews   (Codex usage limit: gsd-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)"
+              "Open it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase $N  then  /gsd-plan-phase $N --reviews   (Codex usage limit: gsdt-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)"
       fi ;;
     esac ;;
   gsd-secure-phase)

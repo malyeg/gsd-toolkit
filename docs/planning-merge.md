@@ -24,7 +24,7 @@ The fix is three layers, because the damage has three entry points:
    later line instead would push phases out of numeric order, which is exactly
    what happened in one hand repair. Single-value lines collapse to their last
    copy, which is the incoming branch's, because union writes ours-then-theirs.
-2. **`gsd-planning-repair`** — run by `gsd-finish` after *both* of its merge
+2. **`gsdt-planning-repair`** — run by `gsdt-finish` after *both* of its merge
    points (the phase merge, and the `pull` on the push-retry path, which fires
    precisely when a parallel session moved the base branch), and by the
    `post-merge` hook for plain `git pull`. It redoes the structural pass and
@@ -33,14 +33,14 @@ The fix is three layers, because the damage has three entry points:
    30 phases/12 complete/96 plans and 28/11/103, and the truth was 30/13/111.
    Counters come from the roadmap's `### Phase` headings and `- [x] **Phase`
    entries, and from `.planning/phases/*/*-PLAN.md` and `*-SUMMARY.md` on disk.
-3. **`gsd-planning-repair --check`** — the CI guard, so a corrupted file cannot
+3. **`gsdt-planning-repair --check`** — the CI guard, so a corrupted file cannot
    reach the shared branch unnoticed:
 
    ```yaml
    - uses: actions/checkout@v4
    - run: |
        git clone --depth 1 https://github.com/malyeg/gsd-toolkit.git /tmp/gsd
-       /tmp/gsd/bin/gsd-planning-repair --check
+       /tmp/gsd/bin/gsdt-planning-repair --check
    ```
 
    It exits 1 only on union-merge damage. Drift that merging did not cause — a
@@ -57,7 +57,7 @@ early hand-written attempt at this destroyed seven entries that way, and
 `tests/test-planning-reconcile.sh` asserts that section stays byte-identical.
 
 **Fallbacks.** Merge drivers live in git config, which is not versioned, so a
-clone that never ran `gsd-init` gets plain union — the repair fixes
+clone that never ran `gsdt-init` gets plain union — the repair fixes
 that afterwards, and the test suite covers the no-driver path explicitly.
 Without `python3`, the driver does the plain union and warns; that is exactly
 today's behaviour, never worse.

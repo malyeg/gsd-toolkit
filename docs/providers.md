@@ -6,13 +6,13 @@
 | Skills | `~/.claude/skills` | `~/.agents/skills` (`GSD_CODEX_SKILL_DIR` overrides) |
 | Interactive launch | positional prompt | positional prompt |
 | Native guard hook | `PreToolUse(Skill)` | not installed by this toolkit |
-| User-level hook (`install.sh`: `/gsd-new-project` only after `gsd-init`) | `PreToolUse(Skill)` + `UserPromptExpansion` (matcher `gsd.*`: a plain word is an exact match) in `~/.claude/settings.json` | none (the skill's written rule) |
-| Toolkit rules (`gsd-rules`) | loaded by a user-level `SessionStart` hook (`gsd-rules --hook`, every session source); the `CLAUDE.md` entry is the fallback | the `AGENTS.md` entry: run `gsd-rules` first (fresh sessions do; custom shares it) |
-| Required safety | `gsd-flow-next` command guard | same |
+| User-level hook (`install.sh`: `/gsd-new-project` only after `gsdt-init`) | `PreToolUse(Skill)` + `UserPromptExpansion` (matcher `gsd.*`: a plain word is an exact match) in `~/.claude/settings.json` | none (the skill's written rule) |
+| Toolkit rules (`gsdt-rules`) | loaded by a user-level `SessionStart` hook (`gsdt-rules --hook`, every session source); the `CLAUDE.md` entry is the fallback | the `AGENTS.md` entry: run `gsdt-rules` first (fresh sessions do; custom shares it) |
+| Required safety | `gsdt-flow-next` command guard | same |
 
 ## Session models
 
-`gsd-init` and `gsd-start` accept `--model MODEL_ID` for the session they
+`gsdt-init` and `gsdt-start` accept `--model MODEL_ID` for the session they
 launch. Selection precedence is `--model` > `GSD_MODEL` > the matching
 `GSD_CLAUDE_MODEL` or `GSD_CODEX_MODEL` > the matching
 `claude_model` or `codex_model` key in `.gsd.conf` > no model
@@ -32,7 +32,7 @@ planning skill is unavailable, the adapter prints the exact next action instead
 of silently treating the gate as complete.
 
 All configured providers can use the same phase with
-`gsd-start -p <N> --provider <name>`. They share the phase artifacts and worktree. This is a
+`gsdt-start -p <N> --provider <name>`. They share the phase artifacts and worktree. This is a
 sequential handoff model: commit or clean the worktree before another provider
 takes over. Concurrent writers in one worktree are not safe; use parallel
 providers on different phases for concurrent mutation.
@@ -40,15 +40,15 @@ providers on different phases for concurrent mutation.
 Configure the set once as an ordered list, for example
 `providers = codex,claude`. The first entry is the default when a
 session does not pass `--provider`. Legacy repositories containing only
-`provider = claude` continue to work; re-running `gsd-init` converts that key
+`provider = claude` continue to work; re-running `gsdt-init` converts that key
 to the canonical list without changing the selected provider.
 
 Launch commands validate the whole `providers` list, even with a session
 override. Empty entries, duplicate names, unknown names, and whitespace within
 the comma-separated list are rejected before worktree creation. Fix the list
-in `.gsd.conf`; `gsd-doctor` reports invalid provider configuration as `T050`.
+in `.gsd.conf`; `gsdt-doctor` reports invalid provider configuration as `T050`.
 
-By default, `gsd-start` opens or prints the full `gsdt-flow` session, which
+By default, `gsdt-start` opens or prints the full `gsdt-flow` session, which
 resumes the phase at its first unfinished step from existing artifacts.
 `--no-flow` opens only the provider's discuss-phase prompt for one invocation;
 `start_mode = discuss` makes that the repo's default, and `--flow` overrides it.
@@ -58,13 +58,13 @@ resumes the phase at its first unfinished step from existing artifacts.
 Gemini is no longer supported, because gsd-core dropped it. `gemini` is
 refused with a reason in `providers`, `--provider`, `--agent`, `GSD_AGENT` and
 `review_provider`, and is never run as a `custom` command. To clean up a repo
-an older release set up for Gemini, run `gsd-init --no-launch` (or
-`gsd-doctor --fix`; doctor finding `T061`). It drops gemini from `providers`,
+an older release set up for Gemini, run `gsdt-init --no-launch` (or
+`gsdt-doctor --fix`; doctor finding `T061`). It drops gemini from `providers`,
 removes `gemini_command` / `gemini_model`, removes our marked block in
 `GEMINI.md` (the file is deleted if nothing else is in it) and our hook in
 `.gemini/settings.json`.
 
-Run `gsd-doctor --json` to inspect the provider, executable, instruction block,
+Run `gsdt-doctor --json` to inspect the provider, executable, instruction block,
 skill adapter, native hook, mandatory guard, stale artifacts, and remediation.
 The doctor is read-only. JSON includes `session_model` (empty means CLI default)
 and finding `T059` for malformed model selection. Model availability and account
@@ -75,7 +75,7 @@ Model flag verification: Claude Code 2.1.280 and Codex CLI 0.153.4 installed hel
 [official CLI reference](https://developers.openai.com/codex/cli/reference/).
 
 Native hooks can be disabled, unsupported, or bypassed by arbitrary shell use.
-The supported enforcement boundary is the `gsd-*` launch and `gsd-flow-next`
+The supported enforcement boundary is the `gsdt-*` launch and `gsdt-flow-next`
 path. No agent tool can prevent a user from directly running unrelated shell
 commands outside that path.
 
@@ -103,7 +103,7 @@ paths without whitespace, not templates. Model IDs cannot contain whitespace.
 
 Initialization persists the integration set selected by `--providers`; without
 that flag, an explicit `--provider` selects a one-provider setup. Session overrides
-on `gsd-start` do not rewrite the set. Refer to `gsd-init --help` for setup flags.
+on `gsdt-start` do not rewrite the set. Refer to `gsdt-init --help` for setup flags.
 
 | Repository key | Meaning / default |
 |---|---|
@@ -112,11 +112,11 @@ on `gsd-start` do not rewrite the set. Refer to `gsd-init --help` for setup flag
 | `claude_model`, `codex_model` | Optional model ID; `default` omits the flag |
 | `review_provider` | Independent reviewer: `claude`, `codex` (default), or `custom` |
 | `start_mode` | `flow` (default) or `discuss` |
-| `compact_at` | Tokens at which a launched session compacts: 100000–1000000, default `300000`; `default` keeps the CLI's own. Claude gets `env CLAUDE_CODE_AUTO_COMPACT_WINDOW=<n>`, and `gsd-start` saves it in the worktree's `.claude/settings.local.json` `env` (a plain `claude` there gets it too; an exported window or `default` removes it); Codex `-c model_auto_compact_token_limit=<n>`, custom nothing |
+| `compact_at` | Tokens at which a launched session compacts: 100000–1000000, default `300000`; `default` keeps the CLI's own. Claude gets `env CLAUDE_CODE_AUTO_COMPACT_WINDOW=<n>`, and `gsdt-start` saves it in the worktree's `.claude/settings.local.json` `env` (a plain `claude` there gets it too; an exported window or `default` removes it); Codex `-c model_auto_compact_token_limit=<n>`, custom nothing |
 | `base` | Base branch; detect develop, main, then current branch |
 | `wtdir` | Sibling worktree directory; default `<repo>-worktrees` |
 | `install` | Dependency install command; detect lockfile; `none` disables |
-| `premerge` | Validation script; default `scripts/gsd-premerge-check.sh`; `none` disables the script, not test fallback |
+| `premerge` | Validation script; default `scripts/gsdt-premerge-check.sh`; `none` disables the script, not test fallback |
 | `test` | Test command; detected by project type, `none` skips tests |
 | `flow` | `strict` enables prerequisite checks; unset preserves legacy non-strict behavior |
 | `flow_since` | Minimum phase included in doctor's historical flow-debt report |
@@ -124,12 +124,12 @@ on `gsd-start` do not rewrite the set. Refer to `gsd-init --help` for setup flag
 | `tracker` | Ticket tracker: `none` (default), `clickup`, or `custom` |
 | `tracker_command` | Executable for `tracker = custom` (see `docs/trackers.md`) |
 | `tracker_profile` | This project's tracker login: ClickUp reads `~/.config/gsd/clickup-<name>.env`; custom gets `GSD_TRACKER_PROFILE` |
-| `tracker_status_start`, `tracker_status_finish` | Ticket status set by `gsd-start` / `gsd-finish` |
-| `ui_gates` | UI quality gates: `warn` (default), `strict` (the guard and `gsd-finish` enforce), `off` |
-| `ui_min_font` | Smallest text size `gsd-ui check` accepts, in px: 8–32, default `12` |
-| `ui_url` | App address for `gsd-ui check` / `shots`; default `http://localhost:{port}`; `{port}` / `{port:<base>}` = the phase's derived port. A phase's `url:` in `<P>-LAYOUT.md` wins (projects with several apps) |
+| `tracker_status_start`, `tracker_status_finish` | Ticket status set by `gsdt-start` / `gsdt-finish` |
+| `ui_gates` | UI quality gates: `warn` (default), `strict` (the guard and `gsdt-finish` enforce), `off` |
+| `ui_min_font` | Smallest text size `gsdt-ui check` accepts, in px: 8–32, default `12` |
+| `ui_url` | App address for `gsdt-ui check` / `shots`; default `http://localhost:{port}`; `{port}` / `{port:<base>}` = the phase's derived port. A phase's `url:` in `<P>-LAYOUT.md` wins (projects with several apps) |
 
-`gsd-doctor` reports any other key as a likely typo (T017).
+`gsdt-doctor` reports any other key as a likely typo (T017).
 
 `review_provider` selects a request, not a built-in subprocess runner. The external
 `gsd-review` skill supports the three named flags; its installation and CLI access
@@ -138,15 +138,15 @@ reviewer session and record verified findings in `<P>-REVIEWS.md`. The toolkit
 does not invent `--custom`, silently skip review, or promise automatic delegation.
 A `<P>-REVIEWS.md` whose configured reviewer's section is empty or holds only
 an error (a Codex usage limit) does not count. On a Codex usage limit, run
-`gsd-codex-wait --wait-only` as a background job, then review again.
+`gsdt-codex-wait --wait-only` as a background job, then review again.
 
 `.gsd/INSTRUCTIONS.md` holds only the repo's values, a short core and a
-pointer; the rules themselves are `gsd-rules`' output, so they follow the
+pointer; the rules themselves are `gsdt-rules`' output, so they follow the
 installed release. T016 fires only when the repo's values or the core
 changed (or for a full block from before the split, once). T062: Claude is
-configured but `gsd-rules` is not on PATH, or no user-level `SessionStart`
+configured but `gsdt-rules` is not on PATH, or no user-level `SessionStart`
 hook runs it — re-run the installer (`--no-user-hook` makes it a note).
 
 Doctor checks complete instruction blocks and actual command routes. Native-hook
 states are `present`, `absent`, `invalid`, `unverified` (no jq), or `unsupported`.
-Its remediation uses `gsd-init --no-launch`, preserving the configured provider set.
+Its remediation uses `gsdt-init --no-launch`, preserving the configured provider set.

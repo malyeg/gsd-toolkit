@@ -1,6 +1,6 @@
 # shellcheck shell=bash
-# lib/ui.sh — the UI quality gates, one definition shared by gsd-flow-next,
-# gsd-worktree-guard, gsd-doctor and gsd-ui (see docs/ui-quality-plan.md).
+# lib/ui.sh — the UI quality gates, one definition shared by gsdt-flow-next,
+# gsdt-worktree-guard, gsdt-doctor and gsdt-ui (see docs/ui-quality-plan.md).
 #
 #   .planning/design/DESIGN.md   the project's design system (one per project).
 #                                A stub carries GSD_UI_STUB; it counts as filled
@@ -13,7 +13,7 @@
 #                                For the check: `app:` (where Playwright is
 #                                installed), and per page `main_button:`,
 #                                `expect:`, `waive:`.
-#   <P>-UI-CHECK.md              per phase: what gsd-ui check measured on the
+#   <P>-UI-CHECK.md              per phase: what gsdt-ui check measured on the
 #                                rendered pages. One run = one capture; the
 #                                pictures and the sheet sit in <P>-SHOTS/ (not
 #                                committed).
@@ -21,15 +21,15 @@
 #                                rule, for that capture.
 #   <P>-UI-APPROVAL.md           per phase: the user's yes to that capture (or a
 #                                recorded waiver).
-#   <P>-SHOTS.md                 gsd-ui shots (manual, no checks; the flow step
+#   <P>-SHOTS.md                 gsdt-ui shots (manual, no checks; the flow step
 #                                before 0.4.0).
 #
-# ui_gates in .gsd.conf (main checkout): warn (default) = gsd-flow-next shows
-# the steps, gsd-finish warns; strict = the guard and gsd-finish block too,
+# ui_gates in .gsd.conf (main checkout): warn (default) = gsdt-flow-next shows
+# the steps, gsdt-finish warns; strict = the guard and gsdt-finish block too,
 # doctor reports findings; off = none of it.
 #
-# gsd_ui_gate is the one answer to "which UI step is open": gsd-flow-next, the
-# guard, gsd-wt-finish and gsd-doctor all ask it (docs/plan-ui-check.md).
+# gsd_ui_gate is the one answer to "which UI step is open": gsdt-flow-next, the
+# guard, gsdt-wt-finish and gsdt-doctor all ask it (docs/plan-ui-check.md).
 # Needs lib/common.sh.
 
 GSD_UI_STUB='<!-- gsd:design-stub'
@@ -122,8 +122,8 @@ gsd_ui_playwright_installed() {  # $1=checkout → where a Playwright package is
   return 1
 }
 
-# ── the rendered-page check (gsd-ui check / look / approve) ──────────────────
-# shellcheck disable=SC2034  # read by bin/gsd-ui
+# ── the rendered-page check (gsdt-ui check / look / approve) ──────────────────
+# shellcheck disable=SC2034  # read by bin/gsdt-ui
 GSD_UI_WIDTHS='375 768 1440'
 GSD_UI_RULES='R1|One main focus per screen
 R2|The main button is on the first screen, never covered
@@ -314,9 +314,9 @@ gsd_ui_gate() {  # $1=checkout $2=phase dir $3=P $4=nostale → `step|state|what
 
 gsd_ui_step_cmd() {  # $1=step $2=phase number → the command that closes it
   case "$1" in
-    ui-check)   printf 'gsd-ui check %s' "$2" ;;
-    ui-look)    printf 'gsd-ui look %s, then answer every line' "$2" ;;
-    ui-approve) printf 'show the user the sheet (gsd-ui sheet %s); on a yes: gsd-ui approve %s' "$2" "$2" ;;
+    ui-check)   printf 'gsdt-ui check %s' "$2" ;;
+    ui-look)    printf 'gsdt-ui look %s, then answer every line' "$2" ;;
+    ui-approve) printf 'show the user the sheet (gsdt-ui sheet %s); on a yes: gsdt-ui approve %s' "$2" "$2" ;;
   esac
 }
 
@@ -410,7 +410,7 @@ screens use in `<P>-LAYOUT.md`.
 
 ## Layout rules
 
-Every picture of a built page is held against these (`gsd-ui look`). Edit
+Every picture of a built page is held against these (`gsdt-ui look`). Edit
 them for this project; keep the `- R<n>: ` form.
 
 EOF
@@ -422,8 +422,8 @@ gsd_ui_layout_template() {  # $1=file $2=phase number — write the LAYOUT templ
   cat > "$1" <<EOF
 # Phase $2 layout
 
-<!-- gsd:layout — the layout contract for this phase's screens. gsd-flow-next
-     reads sketch: and pages:; gsd-ui check reads the rest.
+<!-- gsd:layout — the layout contract for this phase's screens. gsdt-flow-next
+     reads sketch: and pages:; gsdt-ui check reads the rest.
      - url (optional): the app to open when the project has several, e.g.
        http://localhost:{port:3100} ({port:<base>} = this phase's port).
      - app (optional): the folder where Playwright is installed, e.g. apps/web.

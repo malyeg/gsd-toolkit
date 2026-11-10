@@ -3,11 +3,11 @@
 # reason — so everything else stays a hard failure.
 #
 #   SC2015  `A && B || C` — used deliberately for one-line pass/fail output
-#           (gsd-doctor); the B-may-fail caveat does not apply to these echos
+#           (gsdt-doctor); the B-may-fail caveat does not apply to these echos
 #   SC2016  single-quoted $VAR handed to a child `bash -c` on purpose
-#           (gsd-wt-new background install)
+#           (gsdt-wt-new background install)
 #   SC2194  constant word in `case` — the whitelist membership test in
-#           gsd-worktree-guard (`case " list " in *" $cmd "*`)
+#           gsdt-worktree-guard (`case " list " in *" $cmd "*`)
 disable=SC2015,SC2016,SC2194
 
 # Resolve `# shellcheck source=…` directives relative to the script being

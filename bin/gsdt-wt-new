@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 #
-# gsd-wt-new — create the worktree for a GSD phase in ONE step.
+# gsdt-wt-new — create the worktree for a GSD phase in ONE step.
 #
 # Naming convention: branch + worktree dir = phase-<N>-<slug>, where <N> is the
 # phase number. This binds a phase to exactly one worktree, which the guard
-# (gsd-worktree-guard) uses to keep per-phase commands in the right place.
+# (gsdt-worktree-guard) uses to keep per-phase commands in the right place.
 #
 # Usage (from inside the target repo, typically its main checkout):
-#   gsd-wt-new [slug] [--phase <N>] [--no-install|--install]
-#   gsd-wt-new --batch batch-<date>-<slug> [--no-install|--install]
+#   gsdt-wt-new [slug] [--phase <N>] [--no-install|--install]
+#   gsdt-wt-new --batch batch-<date>-<slug> [--no-install|--install]
 #
-#   --batch makes the worktree of a quick-task batch instead (gsd-batch runs
+#   --batch makes the worktree of a quick-task batch instead (gsdt-batch runs
 #   it): branch + dir = the name given, off the base branch. No phase, no
 #   ROADMAP.md. Reused when the branch exists, like a phase's.
 #
 #   - <N>  is auto-detected: the phase added by the latest claim commit, else
 #          the highest-numbered phase in .planning/ROADMAP.md. Pass --phase <N>
-#          to target an already-claimed phase explicitly (what gsd-start does);
+#          to target an already-claimed phase explicitly (what gsdt-start does);
 #          it must exist in ROADMAP.md.
 #   - <slug> defaults to a slugified phase title; pass one to override.
 #   - The dependency install (from .gsd.conf `install`, else lockfile
@@ -28,8 +28,8 @@
 #     PR branches (*-pr) are never treated as the feature branch.
 #
 # Repo settings (base branch, worktree dir, install cmd): .gsd.conf, see
-# gsd-bootstrap-repo. The old per-repo copy of this logic
-# (scripts/gsd-new-worktree-feature.sh) is now a shim that delegates here.
+# gsdt-bootstrap-repo. The old per-repo copy of this logic
+# (scripts/gsdt-new-worktree-feature.sh) is now a shim that delegates here.
 set -euo pipefail
 
 SELF="$0"
@@ -64,7 +64,7 @@ done
 MAIN=$(gsd_main .)
 [ -n "$MAIN" ] || { echo "error: not inside a git repository" >&2; exit 1; }
 # The existing-branch check below and `git worktree add` must not interleave
-# with another run for the same phase. Re-entrant: gsd-start already holds it.
+# with another run for the same phase. Re-entrant: gsdt-start already holds it.
 gsd_acquire_lock "$MAIN"
 BASE=$(gsd_base "$MAIN")
 WTDIR=$(gsd_wtdir "$MAIN")
@@ -97,7 +97,7 @@ else
           | sed -E 's/^### Phase ([0-9]+(\.[0-9]+)?):.*/\1/' \
           | sort -t. -k1,1n -k2,2n | tail -1 || true)
   fi
-  [ -n "${N:-}" ] || { echo "error: no phase found in ROADMAP.md — claim one first (gsd-start)" >&2; exit 1; }
+  [ -n "${N:-}" ] || { echo "error: no phase found in ROADMAP.md — claim one first (gsdt-start)" >&2; exit 1; }
 fi
 
 # Slug: from arg, else slugify the phase title.
@@ -152,7 +152,7 @@ fi
 echo "▶ copying gitignored local config…"
 # .claude/settings.local.json carries the user's permission allowlist; without
 # it every worktree re-prompts for everything. (worktree.baseRef is added below
-# when the copy does not have it.) Only gitignored files are copied — gsd-bootstrap-repo ignores it.
+# when the copy does not have it.) Only gitignored files are copied — gsdt-bootstrap-repo ignores it.
 # `git ls-files --others --ignored` does not recurse into a directory that is
 # itself ignored: it collapses the whole tree to one 'path/' entry, which the
 # pathspec still matches when a file inside it does. Nested agent checkouts
@@ -186,7 +186,7 @@ case "$INSTALL_MODE" in
   background)
     echo running > "$DEST/.gsd-install.status"
     # The redirect must cover the whole subshell: the forked `cd && nohup` list
-    # otherwise keeps our stdout open, and gsd-start's WT_OUT=$( … ) then waits
+    # otherwise keeps our stdout open, and gsdt-start's WT_OUT=$( … ) then waits
     # for the install to end.
     ( cd "$DEST" \
       && INSTALL_CMD="$INSTALL_CMD" nohup bash -c 'if bash -c "$INSTALL_CMD" >.gsd-install.log 2>&1; then echo ok >.gsd-install.status; else echo fail >.gsd-install.status; fi' & ) </dev/null >/dev/null 2>&1
@@ -207,9 +207,9 @@ esac
 echo ""
 echo "✅ worktree ready: $DEST   ($WHAT)"
 if [ -z "${GSD_WT_NEW_SUPPRESS_NEXT:-}" ] && [ -n "$BATCH" ]; then
-  echo "Open an agent session there and run /gsdt-batch. Finish:  gsd-finish $NAME"
+  echo "Open an agent session there and run /gsdt-batch. Finish:  gsdt-finish $NAME"
 elif [ -z "${GSD_WT_NEW_SUPPRESS_NEXT:-}" ]; then
   echo "Open an agent session there, then:"
   echo "    /gsd-discuss-phase $N → /gsd-plan-phase $N → /gsd-execute-phase $N"
-  echo "Finish:  gsd-finish $N"
+  echo "Finish:  gsdt-finish $N"
 fi

@@ -1,6 +1,6 @@
 # How a package is installed (lib/install.sh)
 
-You install with `install.sh` (or update with `gsd-update`), see
+You install with `install.sh` (or update with `gsdt-update`), see
 [releases.md](releases.md). It downloads a release and runs that release's
 `lib/install.sh`. This page is about that second step. Nobody runs it by
 hand; the tests run it straight on a checkout. It only copies: the old

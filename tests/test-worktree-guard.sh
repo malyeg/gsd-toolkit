@@ -12,7 +12,7 @@ set -uo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 PKG="$(cd "$HERE/.." && pwd)"
-GUARD="$PKG/bin/gsd-worktree-guard"
+GUARD="$PKG/bin/gsdt-worktree-guard"
 
 PASS=0; FAIL=0
 WORK="$(mktemp -d)"
@@ -191,7 +191,7 @@ blocked_why() {  # label, text the block must carry
   out=$("$GUARD" --command gsd-ui-review --phase 5 --repo "$REPO" 2>&1); rc=$?
   if [ "$rc" = 2 ] && printf '%s' "$out" | grep -q -- "$2"; then ok "$1"; else bad "$1" "exit $rc: $out"; fi
 }
-blocked_why "no UI-CHECK.md → blocked, run gsd-ui check"   "Run: gsd-ui check 5"
+blocked_why "no UI-CHECK.md → blocked, run gsdt-ui check"   "Run: gsdt-ui check 5"
 printf 'taken: now\n' > "$PDIR/05-SHOTS.md"
 blocked_why "0.3.x SHOTS.md alone → still blocked"         "never checked"
 rm "$PDIR/05-SHOTS.md"
@@ -200,7 +200,7 @@ blocked_why "a failed check → blocked"                     "the check found 2 
 ui_fix_check "$PDIR" 05 passed cap1 0000000000000000000000000000000000000000
 blocked_why "code changed after the check → blocked"       "the code or 05-LAYOUT.md changed after the last check"
 ui_fix_check "$PDIR" 05 passed
-blocked_why "check passed, no look → blocked"              "Run: gsd-ui look 5"
+blocked_why "check passed, no look → blocked"              "Run: gsdt-ui look 5"
 ui_fix_look "$PDIR" 05 cap1 ok "R1 R2"
 blocked_why "a look with rules deleted → blocked"          "lines without an answer"
 ui_fix_look "$PDIR" 05
@@ -218,7 +218,7 @@ rm "$PDIR/05-UI-CHECK.md" "$PDIR/05-UI-LOOK.md" "$PDIR/05-UI-APPROVAL.md"
 rc=$(GSD_SKIP_GUARD=1 "$GUARD" --command gsd-ui-review --phase 5 --repo "$REPO" 2>/dev/null; echo $?)
 [ "$rc" = 0 ] && ok "GSD_SKIP_GUARD=1 still escapes" || bad "GSD_SKIP_GUARD=1 still escapes" "rc=$rc"
 
-section "rule 0 — /gsd-new-project only after gsd-init (--global = the user-level hook)"
+section "rule 0 — /gsd-new-project only after gsdt-init (--global = the user-level hook)"
 # gg <payload> [extra guard args] → exit code; no project dir in the env, so
 # the payload's cwd decides, as in a user hook
 gg() { local p=$1; shift; printf '%s' "$p" | env -u CLAUDE_PROJECT_DIR "$GUARD" --global "$@" >/dev/null 2>"$WORK/err"; echo $?; }
@@ -227,7 +227,7 @@ BARE="$WORK/bare-$RANDOM"; mkdir -p "$BARE"; git -C "$BARE" init -q -b main
 upe() { printf '{"hook_event_name":"UserPromptExpansion","expansion_type":"slash_command","command_name":"%s","command_args":"","cwd":"%s","prompt":"/%s"}' "$1" "$2" "$1"; }
 skl() { printf '{"tool_name":"Skill","tool_input":{"skill":"%s","args":""},"cwd":"%s"}' "$1" "$2"; }
 gis "typed /gsd-new-project in a repo without .gsd.conf → blocked"  "$(gg "$(upe gsd-new-project "$BARE")")" 2
-grep -q "Run gsd-init" "$WORK/err" && ok "…and says to run gsd-init" || bad "…and says to run gsd-init" "$(cat "$WORK/err")"
+grep -q "Run gsdt-init" "$WORK/err" && ok "…and says to run gsdt-init" || bad "…and says to run gsdt-init" "$(cat "$WORK/err")"
 gis "the namespaced /gsd:new-project → blocked too"                 "$(gg "$(upe gsd:new-project "$BARE")")" 2
 gis "the Skill tool calling gsd-ingest-docs → blocked"              "$(gg "$(skl gsd-ingest-docs "$BARE")")" 2
 gis "…in its plugin form gsd-core:gsd-ingest-docs → blocked"        "$(gg "$(skl gsd-core:gsd-ingest-docs "$BARE")")" 2
@@ -241,7 +241,7 @@ gis "an old Gemini activate_skill payload → allowed (Gemini is gone)" "$(gg '{
 # closed pipe failed the test under pipefail (macOS CI)
 gis "GSD_SKIP_GUARD=1 escapes"                     "$(GSD_SKIP_GUARD=1 "$GUARD" --global 2>/dev/null <<<"$(upe gsd-new-project "$BARE")"; echo $?)" 0
 printf 'install = none\n' > "$BARE/.gsd.conf"
-gis "after gsd-init (.gsd.conf) → allowed"                          "$(gg "$(upe gsd-new-project "$BARE")")" 0
+gis "after gsdt-init (.gsd.conf) → allowed"                          "$(gg "$(upe gsd-new-project "$BARE")")" 0
 mkrepo "" phase-7-thing 07-thing
 gis "--global skips the phase rules (plan-phase on a phase branch)" "$(gg "$(upe gsd-plan-phase "$REPO")")" 0
 allowed "the repo hook: new-project in a set-up repo passes"        gsd-new-project ""
@@ -258,14 +258,14 @@ section "rule 0b — GSD skills that clash with the worktree model (set-up repos
 mkrepo "" phase-7-thing 07-thing
 says() { grep -q -- "$1" "$WORK/err" && ok "…$2" || bad "…$2" "$(cat "$WORK/err")"; }
 blocked "/gsd-autonomous is blocked"              gsd-autonomous ""
-says "gsd-start" "and names gsd-start instead"
+says "gsdt-start" "and names gsdt-start instead"
 blocked "/gsd-manager is blocked"                 gsd-manager ""
 blocked "/gsd-workspace is blocked"               gsd-workspace "--new feature"
 blocked "/gsd-workstreams is blocked"             gsd-workstreams "create x"
 blocked "/gsd-phase (add) is blocked"             gsd-phase "checkout flow"
-says 'gsd-start -n' "and names gsd-start -n"
+says 'gsdt-start -n' "and names gsdt-start -n"
 blocked "/gsd-phase --insert is blocked"          gsd-phase "--insert 7 hotfix"
-says 'gsd-start --insert' "and names gsd-start --insert"
+says 'gsdt-start --insert' "and names gsdt-start --insert"
 blocked "/gsd-phase --remove is blocked"          gsd-phase "--remove 9"
 says 'renumbers' "and says why"
 git -C "$REPO" checkout -q develop

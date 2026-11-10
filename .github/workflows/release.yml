@@ -2,7 +2,7 @@ name: release
 
 # A push to main that changes VERSION → check it is a new version with release
 # notes → run the full test suite → tag that commit and publish a GitHub release
-# with gsd-toolkit-X.Y.Z.tar.gz + SHA256SUMS. install.sh and gsd-update download
+# with gsd-toolkit-X.Y.Z.tar.gz + SHA256SUMS. install.sh and gsdt-update download
 # exactly these two files.
 #
 # A failed run tagged nothing. Fix it on main, then Actions → release → Run

@@ -1,15 +1,15 @@
 # shellcheck shell=bash
-# lib/tracker/config.sh — gsd-tracker's settings. Standalone: nothing here (or
-# anywhere in lib/tracker/) uses the GSD toolkit's code; GSD runs gsd-tracker
+# lib/tracker/config.sh — gsdt-tracker's settings. Standalone: nothing here (or
+# anywhere in lib/tracker/) uses the GSD toolkit's code; GSD runs gsdt-tracker
 # as a command.
 #
 # Each setting, first match wins:
 #   1. the environment (GSD_TRACKER, GSD_TRACKER_PROFILE, GSD_TRACKER_STATUS_*)
-#   2. the repo's git config, section gsd-tracker (.git/config: never committed,
+#   2. the repo's git config, section gsdt-tracker (.git/config: never committed,
 #      shared by every worktree of the clone)
 #   3. .gsd.conf in the repo (a GSD repo's team-shared settings; read only)
 #   4. the default: tracker = none in a repo with a .gsd.conf, clickup elsewhere
-# Sourced by bin/gsd-tracker after REPO is set.
+# Sourced by bin/gsdt-tracker after REPO is set.
 
 trk_main() {  # $1=any path inside a repo → its MAIN checkout ('' outside a repo)
   # substr, not $2: a checkout path with a space in it would be cut at the space
@@ -22,8 +22,11 @@ trk_conf_get() {  # $1=repo root  $2=.gsd.conf key → value ('' when unset)
     | head -1 | sed -e 's/[[:space:]]*$//' -e 's/[[:space:]]*#.*$//'
 }
 
-trk_git_get() {  # $1=repo root  $2=gsd-tracker.<key> → value ('' when unset or not a repo)
-  git -C "$1" config --local --get "gsd-tracker.$2" 2>/dev/null || true
+trk_git_get() {  # $1=repo root  $2=gsdt-tracker.<key> → value ('' when unset or not a repo)
+  # gsd-tracker.<key>: the section before 0.10.0, read until gsdt-migrate
+  # renames it in this clone
+  git -C "$1" config --local --get "gsdt-tracker.$2" 2>/dev/null \
+    || git -C "$1" config --local --get "gsd-tracker.$2" 2>/dev/null || true
 }
 
 # trk_get <setting> → sets TRK_VAL (the value) and TRK_FROM (env, git,
@@ -39,7 +42,7 @@ trk_get() {
                                                   gitk=statusStart;  confk=tracker_status_start ;;
     status_finish) envv=${GSD_TRACKER_STATUS_FINISH:-${GSD_CLICKUP_STATUS_FINISH:-}}
                                                   gitk=statusFinish; confk=tracker_status_finish ;;
-    *) printf 'gsd-tracker: unknown setting %s\n' "$1" >&2; return 1 ;;
+    *) printf 'gsdt-tracker: unknown setting %s\n' "$1" >&2; return 1 ;;
   esac
   TRK_VAL=$envv; TRK_FROM="env"
   if [ -z "$TRK_VAL" ]; then TRK_VAL=$(trk_git_get "$REPO" "$gitk"); TRK_FROM=git; fi
@@ -93,7 +96,7 @@ trk_python() {  # → a Python 3.7+ interpreter; nonzero when none
   return 1
 }
 
-# gsd-tracker config: the resolved settings, offline, one key=value per line.
+# gsdt-tracker config: the resolved settings, offline, one key=value per line.
 # <key>_from names where a value came from. The token itself is never printed.
 trk_print_config() {
   local t f

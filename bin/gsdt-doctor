@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# gsd-doctor — read-only health check of a repo's GSD setup.
+# gsdt-doctor — read-only health check of a repo's GSD setup.
 #
 # Diagnoses. Every finding names the command that fixes it. Being read-only is
 # what makes it safe to run anywhere, any time, including on a repo you are
 # mid-feature in. `--fix` is opt-in and narrow: after the same read-only check
-# it runs only the mechanical, undoable fixes (the scoped writers gsd-init and
-# gsd-planning-repair, plus three one-liners), shows them first, asks, and
+# it runs only the mechanical, undoable fixes (the scoped writers gsdt-init and
+# gsdt-planning-repair, plus three one-liners), shows them first, asks, and
 # never commits. Anything that needs judgment stays a command for you.
 #
 # Without --fix nothing here writes to your repos: no fetch, no git config, no
@@ -17,18 +17,19 @@
 # in ~/.cache/gsd-toolkit/ (GSD_NO_UPDATE_CHECK=1 turns it off).
 #
 # Usage:
-#   gsd-doctor [--repo <path>] [--quiet] [--json]
-#   gsd-doctor --fix [--yes] [--repo <path>]
+#   gsdt-doctor [--repo <path>] [--quiet] [--json]
+#   gsdt-doctor --fix [--yes] [--repo <path>]
 #
 # Options:
 #   --repo <path>  repo to inspect (default: the checkout containing cwd)
 #   --quiet        print findings and available updates only, not the checks that passed
 #   --fix          after the check, run the SAFE fixes it found — shown first,
 #                  then asked (y/N) — and check again. Safe = mechanical and
-#                  undoable: gsd-init --no-launch --no-commit (T010–T014,
-#                  T016, T052, T058, T061), gsd-planning-repair (T020, stale counters),
+#                  undoable: gsdt-init --no-launch --no-commit (T010–T014,
+#                  T016, T052, T058, T061), gsdt-planning-repair (T020, stale counters),
 #                  git branch --track <base> (T015), chmod +x the pre-merge
-#                  script (T019), remove a dead lock (T030), add
+#                  script (T019), remove a dead lock (T030), gsdt-migrate --apply
+#                  (T090: old gsd-* names), add
 #                  worktree.baseRef = "head" to .claude/settings.local.json
 #                  (T034; other keys kept). Never commits,
 #                  pushes, checks out, deletes branches or edits ROADMAP.md;
@@ -60,12 +61,12 @@
 #                  T009 = gsd-core skills the phase flow runs are missing (a
 #                  set trimmed with /gsd-surface is fine while they are there).
 #                  T016 = the generated GSD instructions are older than this
-#                  toolkit (gsd-init refreshes them; --fix runs it).
+#                  toolkit (gsdt-init refreshes them; --fix runs it).
 #                  T062 = Claude is configured but its sessions cannot load
-#                  the toolkit rules: gsd-rules is not on PATH, or no
+#                  the toolkit rules: gsdt-rules is not on PATH, or no
 #                  user-level SessionStart hook runs it (re-run the
 #                  installer; a note after install --no-user-hook).
-#                  T070–T073 = ticket tracker config (read from `gsd-tracker config`).
+#                  T070–T073 = ticket tracker config (read from `gsdt-tracker config`).
 #                  T080 = phases have screens but DESIGN.md is missing or a
 #                  stub (only with `ui_gates = strict`; a note otherwise).
 #                  T081 = pictures in a <P>-SHOTS/ folder are committed (the
@@ -87,9 +88,9 @@
 # Exit status: 0 when everything checks out, 1 when there is a finding.
 #
 # RELATED
-#   gsd-init             fixes repo-setup findings (re-run: it is idempotent)
-#   gsd-planning-repair  fixes planning-state findings
-#   gsd-update           fixes toolkit findings
+#   gsdt-init             fixes repo-setup findings (re-run: it is idempotent)
+#   gsdt-planning-repair  fixes planning-state findings
+#   gsdt-update           fixes toolkit findings
 set -uo pipefail
 
 die() { printf '✖ %s\n' "$@" >&2; exit 1; }
@@ -127,7 +128,7 @@ while [ $# -gt 0 ]; do
     --json) JSON=1; QUIET=1; shift ;;
     --fix|-f) FIX=1; shift ;;
     --yes|-y) YES=1; shift ;;
-    *) die "unknown argument: $1 (see gsd-doctor --help)" ;;
+    *) die "unknown argument: $1 (see gsdt-doctor --help)" ;;
   esac
 done
 
@@ -166,6 +167,7 @@ fail() {  # $1=what is wrong  $2=the command that fixes it (short — no `cd`)  
   case "${3:-}" in
     T010|T011|T012|T013|T014|T016|T052|T058|T061) safe init ;;
     T020) safe repair ;;
+    T090) safe migrate ;;
     T030) safe unlock ;;
   esac
   if [ "$JSON" = 1 ]; then
@@ -216,7 +218,7 @@ fi
 section "toolkit"
 
 resolved=""
-if live="$(command -v gsd-finish 2>/dev/null)"; then
+if live="$(command -v gsdt-finish 2>/dev/null)"; then
   while [ -L "$live" ]; do
     t=$(readlink "$live")
     case "$t" in /*) live="$t" ;; *) live="$(dirname "$live")/$t" ;; esac
@@ -246,7 +248,7 @@ case "$DOCTOR_PROVIDER" in codex) gsd_agent=codex ;; *) gsd_agent=claude ;; esac
 if gsd_run=$(gsd_cli); then
   pass "gsd-core $(gsd_gsd_installed) ($gsd_run)"
 else
-  fail "GSD (gsd-core) not found — gsd-start cannot claim phases" "$GSD_CORE_INSTALL --$gsd_agent --global --profile=full" "T005"
+  fail "GSD (gsd-core) not found — gsdt-start cannot claim phases" "$GSD_CORE_INSTALL --$gsd_agent --global --profile=full" "T005"
 fi
 # T009 — gsd-core skills the toolkit runs (lib/context.sh
 # gsd_core_required_skills) are missing. A skill set trimmed with /gsd-surface
@@ -325,7 +327,7 @@ if [ -z "${GSD_NO_UPDATE_CHECK:-}" ] && [ -n "$have" ] && command -v npm >/dev/n
   elif [ "$have" = "$want" ]; then
     pass "gsd-core $have is the latest on npm"
   elif gsd_version_gt "$want" "$have"; then
-    update gsd-core "$have" "$want" "$(gsd_core_update_how "$gsd_agent") (then re-check gsd-list/gsd-planning-repair)"
+    update gsd-core "$have" "$want" "$(gsd_core_update_how "$gsd_agent") (then re-check gsdt-list/gsdt-planning-repair)"
   else
     note "gsd-core $have installed, ahead of npm latest ($want)"
   fi
@@ -351,7 +353,7 @@ fi
 # ── is this even a GSD repo? ─────────────────────────────────────────────────
 # Without this, every repo that has nothing to do with GSD gets four red lines
 # telling it to install GSD — including this toolkit, which is the SOURCE of
-# the scripts and is deliberately not a GSD project. gsd-bootstrap-repo already
+# the scripts and is deliberately not a GSD project. gsdt-bootstrap-repo already
 # refuses to run here; doctor has to know the same thing.
 # Resolve both sides through Git: the running toolkit may itself be a linked
 # worktree, while MAIN always names the target repository's main checkout.
@@ -361,16 +363,17 @@ if [ -f "$GSD_PKG/install.sh" ] && [ -d "$GSD_PKG/shims" ] && [ "$MAIN" = "$TOOL
   note "this is the gsd-toolkit toolkit itself, not a GSD project — setup checks skipped"
   IS_GSD_REPO=0
 elif [ -d "$MAIN/.planning" ] || [ -f "$MAIN/.gsd.conf" ] \
+     || [ -f "$MAIN/scripts/gsdt-finish-worktree-feature.sh" ] \
      || [ -f "$MAIN/scripts/gsd-finish-worktree-feature.sh" ]; then
   IS_GSD_REPO=1
 else
   section "repo setup"
   note "no .planning/, no .gsd.conf, no gsd shims — this repo does not use GSD"
-  note "set it up with:  cd $MAIN && gsd-init"
+  note "set it up with:  cd $MAIN && gsdt-init"
   IS_GSD_REPO=0
 fi
 
-# ── repo setup (fixed by re-running gsd-init) ────────────────────────────────
+# ── repo setup (fixed by re-running gsdt-init) ────────────────────────────────
 if [ "$IS_GSD_REPO" = 1 ]; then
 section "repo setup"
 review_provider=$(gsd_conf_get "$MAIN" review_provider)
@@ -381,15 +384,15 @@ elif [ -n "$review_provider" ] && ! gsd_provider_known "$review_provider"; then
 fi
 
 # T061 — Gemini setup an older release wrote: gemini in providers, its keys,
-# the marked block in GEMINI.md, the hook in .gemini/settings.json. gsd-init
+# the marked block in GEMINI.md, the hook in .gemini/settings.json. gsdt-init
 # removes only those; the user's own text and settings stay.
 gemini_left=""
 case ",$RAW_PROVIDERS,$RAW_LEGACY_PROVIDER," in *,gemini,*) gemini_left="$gemini_left providers" ;; esac
 [ -z "$(gsd_conf_get "$MAIN" gemini_command)$(gsd_conf_get "$MAIN" gemini_model)" ] || gemini_left="$gemini_left gemini_*-keys"
 [ -L "$MAIN/GEMINI.md" ] || [ -z "$(gsd_owned_block_get "$MAIN/GEMINI.md" provider)" ] || gemini_left="$gemini_left GEMINI.md"   # a link shows another file's block
 # a hook command naming the guard: what bootstrap's clean-up removes
-! grep -qsE '"command"[[:space:]]*:[[:space:]]*"[^"]*gsd-worktree-guard' "$MAIN/.gemini/settings.json" || gemini_left="$gemini_left .gemini/settings.json"
-[ -z "$gemini_left" ] || fail "Gemini setup from an older gsd-toolkit:$gemini_left — $GSD_GEMINI_GONE" "gsd-init --no-launch" "T061"
+! grep -qsE '"command"[[:space:]]*:[[:space:]]*"[^"]*gsdt?-worktree-guard' "$MAIN/.gemini/settings.json" || gemini_left="$gemini_left .gemini/settings.json"
+[ -z "$gemini_left" ] || fail "Gemini setup from an older gsd-toolkit:$gemini_left — $GSD_GEMINI_GONE" "gsdt-init --no-launch" "T061"
 
 if [ "$MODEL_VALID" = 0 ]; then
   fail "invalid model configuration for $DOCTOR_PROVIDER" "check ${DOCTOR_PROVIDER}_model in .gsd.conf and GSD model environment overrides" "T059"
@@ -405,12 +408,12 @@ else
   pass "provider: $DOCTOR_PROVIDER (command: $DOCTOR_COMMAND)"
   [ "$PROVIDER_AVAILABLE" = true ] && pass "provider executable is available" || fail "provider executable '$DOCTOR_COMMAND' is unavailable (print-only still works)" "install $DOCTOR_COMMAND or set ${DOCTOR_PROVIDER}_command in .gsd.conf" "T051"
   instruction=$(gsd_provider_instruction_file "$DOCTOR_PROVIDER")
-  if gsd_provider_instruction_integrated "$MAIN" "$DOCTOR_PROVIDER"; then pass "$instruction points to canonical .gsd/INSTRUCTIONS.md"; else fail "$instruction integration is missing, malformed or legacy" "gsd-init --no-launch" "T052"; fi
+  if gsd_provider_instruction_integrated "$MAIN" "$DOCTOR_PROVIDER"; then pass "$instruction points to canonical .gsd/INSTRUCTIONS.md"; else fail "$instruction integration is missing, malformed or legacy" "gsdt-init --no-launch" "T052"; fi
   hookstate=$(gsd_provider_hook_state "$MAIN" "$DOCTOR_PROVIDER")
   case "$hookstate" in
     unsupported) note "$DOCTOR_PROVIDER native hook unsupported; command-level guard is the enforcement path" ;;
     present) pass "$DOCTOR_PROVIDER native guard hook present (defense in depth)" ;;
-    *) note "$DOCTOR_PROVIDER native hook $hookstate — inspect provider settings, then gsd-init --no-launch" ;;
+    *) note "$DOCTOR_PROVIDER native hook $hookstate — inspect provider settings, then gsdt-init --no-launch" ;;
   esac
   if gsd_command_guards_active "$GSD_PKG"; then pass "mandatory command-level guards are active"; else fail "mandatory command-level guard route is incomplete" "$REINSTALL" "T053"; fi
 fi
@@ -419,9 +422,9 @@ configured=",${RAW_PROVIDERS:-${RAW_LEGACY_PROVIDER:-$DOCTOR_PROVIDER}},"
 configured_list=${configured#,}; configured_list=${configured_list%,}
 if [ -n "$RAW_LEGACY_PROVIDER" ]; then
   if [ -n "$RAW_PROVIDERS" ] && [ "$RAW_LEGACY_PROVIDER" != "${RAW_PROVIDERS%%,*}" ]; then
-    fail "legacy provider '$RAW_LEGACY_PROVIDER' conflicts with providers default '${RAW_PROVIDERS%%,*}' and is ignored" "gsd-init --providers $configured_list --no-launch" "T056"
+    fail "legacy provider '$RAW_LEGACY_PROVIDER' conflicts with providers default '${RAW_PROVIDERS%%,*}' and is ignored" "gsdt-init --providers $configured_list --no-launch" "T056"
   else
-    note "legacy 'provider' key is supported but redundant — gsd-init --providers $configured_list --no-launch migrates it"
+    note "legacy 'provider' key is supported but redundant — gsdt-init --providers $configured_list --no-launch migrates it"
   fi
 fi
 oldifs=$IFS; IFS=,
@@ -441,7 +444,7 @@ for configured_provider in $configured_list; do
   # older install, or edited by hand, makes the agent follow old steps).
   skillroot=$(gsd_provider_skill_root "$configured_provider" 2>/dev/null || true)
   if [ -z "$skillroot" ]; then
-    note "$configured_provider has no installable native skill format; it runs gsd-rules, follows .gsd/INSTRUCTIONS.md and gsd-flow-next"
+    note "$configured_provider has no installable native skill format; it runs gsdt-rules, follows .gsd/INSTRUCTIONS.md and gsdt-flow-next"
   elif [ ! -f "$skillroot/gsdt-flow/SKILL.md" ]; then
     note "$configured_provider skills not installed — $REINSTALL --agent $configured_provider"
   else
@@ -457,11 +460,11 @@ for configured_provider in $configured_list; do
     fi
   fi
   configured_file=$(gsd_provider_instruction_file "$configured_provider")
-  gsd_provider_instruction_integrated "$MAIN" "$configured_provider" || fail "$configured_provider instruction adapter is missing or malformed in $configured_file" "gsd-init --no-launch" "T058"
+  gsd_provider_instruction_integrated "$MAIN" "$configured_provider" || fail "$configured_provider instruction adapter is missing or malformed in $configured_file" "gsdt-init --no-launch" "T058"
 done
 IFS=$oldifs
 for f in CLAUDE.md AGENTS.md; do   # GEMINI.md: T061
-  gsd_owned_markers_valid "$MAIN/$f" provider || fail "mixed/malformed GSD instruction blocks in $f" "repair the owned marker pair, then gsd-init --no-launch" "T055"
+  gsd_owned_markers_valid "$MAIN/$f" provider || fail "mixed/malformed GSD instruction blocks in $f" "repair the owned marker pair, then gsdt-init --no-launch" "T055"
   members=$(gsd_provider_instruction_members "$MAIN/$f")
   oldifs=$IFS; IFS=,
   for p in $members; do case "$configured" in *",$p,"*) ;; *) fail "stale $p provider block in $f" "remove only the stale provider's owned entrypoint, preserving shared providers and user content" "T054" ;; esac; done
@@ -469,7 +472,7 @@ for f in CLAUDE.md AGENTS.md; do   # GEMINI.md: T061
 done
 
 # T016 — the generated instruction text is older than this toolkit: compare
-# each marked block with what gsd-init would write today (the same functions
+# each marked block with what gsdt-init would write today (the same functions
 # write it), so a release that does not change the text raises nothing.
 stale_docs=""
 canon_now=$(gsd_owned_block_get "$MAIN/.gsd/INSTRUCTIONS.md" canonical)
@@ -490,21 +493,21 @@ for p in $configured_list; do
     || [ "$block_now" = "$(gsd_provider_entry_block "$members")" ] || stale_docs="$stale_docs $f"
 done
 IFS=$oldifs
-# T062 — Claude sessions get the toolkit's rules from `gsd-rules`, loaded by
+# T062 — Claude sessions get the toolkit's rules from `gsdt-rules`, loaded by
 # the user-level SessionStart hook (lib/install.sh). Without it they see only
 # the repo's short core. An opt-out (install --no-user-hook) is a note.
 case "$configured" in
   *,claude,*)
     if [ -n "$canon_now" ]; then
-      rules_bin=$(command -v gsd-rules 2>/dev/null || true)
+      rules_bin=$(command -v gsdt-rules 2>/dev/null || true)
       rules_hook=$(gsd_provider_user_hook_file claude)
       if [ -z "$rules_bin" ]; then
-        fail "gsd-rules is not on PATH — Claude sessions get no toolkit rules" "$REINSTALL" "T062"
+        fail "gsdt-rules is not on PATH — Claude sessions get no toolkit rules" "$REINSTALL" "T062"
       elif ! PY=$(gsd_python) || ! "$PY" - "$rules_hook" 2>/dev/null <<'PY'
 import json, sys
 try:
     d = json.load(open(sys.argv[1]))
-    ok = any("gsd-rules" in h.get("command", "") and "--hook" in h.get("command", "")
+    ok = any("gsdt-rules" in h.get("command", "") and "--hook" in h.get("command", "")
              for g in d["hooks"]["SessionStart"] for h in g["hooks"])
 except Exception:
     ok = False
@@ -512,17 +515,17 @@ sys.exit(0 if ok else 1)
 PY
       then
         if grep -qx $'user_hook\toff' "$(dirname "$rules_bin")/.gsd-install-manifest" 2>/dev/null; then
-          note "Claude sessions do not load gsd-rules (installed with --no-user-hook); they follow the entry line in CLAUDE.md"
+          note "Claude sessions do not load gsdt-rules (installed with --no-user-hook); they follow the entry line in CLAUDE.md"
         else
-          fail "no Claude SessionStart hook runs gsd-rules in $rules_hook — sessions miss the toolkit rules" "$REINSTALL" "T062"
+          fail "no Claude SessionStart hook runs gsdt-rules in $rules_hook — sessions miss the toolkit rules" "$REINSTALL" "T062"
         fi
       else
-        pass "Claude sessions load the toolkit rules (gsd-rules SessionStart hook)"
+        pass "Claude sessions load the toolkit rules (gsdt-rules SessionStart hook)"
       fi
     fi ;;
 esac
 if [ -n "$stale_docs" ]; then
-  fail "GSD instructions are older than this toolkit ($(gsd_version)):$stale_docs — agents follow the old rules" "gsd-init --no-launch" "T016"
+  fail "GSD instructions are older than this toolkit ($(gsd_version)):$stale_docs — agents follow the old rules" "gsdt-init --no-launch" "T016"
 elif [ -n "$canon_now" ]; then
   pass "GSD instructions match this toolkit ($(gsd_version))"
 fi
@@ -579,35 +582,35 @@ fi
 git -C "$MAIN" remote get-url origin >/dev/null 2>&1 \
   || note "no 'origin' remote — claims and finishes stay local (fine on one machine; parallel sessions elsewhere won't see them)"
 
-# The pre-merge gate: gsd-finish refuses a script it cannot run, and silently
+# The pre-merge gate: gsdt-finish refuses a script it cannot run, and silently
 # falls back to the tests when a configured path does not exist.
 pm=$(gsd_conf_get "$MAIN" premerge)
 if [ "$pm" != none ]; then
-  pm_rel=${pm:-scripts/gsd-premerge-check.sh}
+  pm_rel=${pm:-scripts/gsdt-premerge-check.sh}
   case "$pm_rel" in /*) pm_abs=$pm_rel ;; *) pm_abs="$MAIN/$pm_rel" ;; esac
   if [ -e "$pm_abs" ] && [ ! -x "$pm_abs" ]; then
-    fail "pre-merge script $pm_rel is not executable — gsd-finish will refuse" "chmod +x $pm_rel (and commit it)" "T019"; safe chmod; PM_ABS=$pm_abs
+    fail "pre-merge script $pm_rel is not executable — gsdt-finish will refuse" "chmod +x $pm_rel (and commit it)" "T019"; safe chmod; PM_ABS=$pm_abs
   elif [ -n "$pm" ] && [ ! -e "$pm_abs" ]; then
-    fail "premerge = $pm, but that file does not exist — gsd-finish falls back to the tests" "fix premerge in .gsd.conf (or premerge = none)" "T019"
+    fail "premerge = $pm, but that file does not exist — gsdt-finish falls back to the tests" "fix premerge in .gsd.conf (or premerge = none)" "T019"
   elif [ -x "$pm_abs" ]; then
     pass "pre-merge gate: $pm_rel"
   fi
 fi
 
 # ── ticket tracker ───────────────────────────────────────────────────────────
-# gsd-tracker is standalone: doctor reads its resolved settings (offline,
+# gsdt-tracker is standalone: doctor reads its resolved settings (offline,
 # key=value) instead of using its code.
-TRK_CONF=$("$GSD_PKG/bin/gsd-tracker" --repo "$MAIN" config 2>/dev/null || true)
+TRK_CONF=$("$GSD_PKG/bin/gsdt-tracker" --repo "$MAIN" config 2>/dev/null || true)
 tk_conf() { printf '%s\n' "$TRK_CONF" | sed -n "s/^$1=//p" | head -1; }
 tk_where() {  # $1=setting source $2=git key $3=.gsd.conf key → where to change it
   case "$1" in
     env) echo "your environment" ;;
-    git) echo "git config gsd-tracker.$2" ;;
+    git) echo "git config gsdt-tracker.$2" ;;
     *)   echo "$3 = in .gsd.conf" ;;
   esac
 }
 TRACKER=$(tk_conf tracker); TRACKER=${TRACKER:-none}
-# As in gsd_tracker_which: gsd-tracker's own default is not a setting.
+# As in gsd_tracker_which: gsdt-tracker's own default is not a setting.
 [ "$(tk_conf tracker_from)" != default ] || TRACKER=none
 if [ "$(tk_conf tracker_ok)" = no ]; then
   fail "unknown tracker '$TRACKER'" "set none, clickup, or custom: $(tk_where "$(tk_conf tracker_from)" tracker tracker)" "T071"
@@ -621,12 +624,12 @@ elif [ "$TRACKER" = clickup ]; then
   if [ "$(tk_conf profile_ok)" = no ]; then
     fail "tracker profile '$cu_prof' is not a name (letters, digits, . _ -)" "fix $(tk_where "$(tk_conf profile_from)" profile tracker_profile) (e.g. acme)" "T018"
   elif [ "$(tk_conf token)" = env ]; then
-    pass "tracker: clickup, token from \$CLICKUP_API_TOKEN (test it: gsd-tracker check)"
+    pass "tracker: clickup, token from \$CLICKUP_API_TOKEN (test it: gsdt-tracker check)"
     [ -z "$cu_prof" ] || note "CLICKUP_API_TOKEN is set in your environment, so profile '$cu_prof' ($cu_cfg) is not used"
   elif [ "$(tk_conf token)" = file ]; then
-    pass "tracker: clickup${cu_prof:+ (profile $cu_prof)}, token found (test it: gsd-tracker check)"
+    pass "tracker: clickup${cu_prof:+ (profile $cu_prof)}, token found (test it: gsdt-tracker check)"
   else
-    fail "tracker = clickup but no ClickUp token${cu_prof:+ for profile '$cu_prof'} on this machine — tickets will not move" "gsd-tracker login${cu_prof:+ $cu_prof} (or put CLICKUP_API_TOKEN=pk_… in $cu_cfg; ClickUp → Settings → Apps)" "T073"
+    fail "tracker = clickup but no ClickUp token${cu_prof:+ for profile '$cu_prof'} on this machine — tickets will not move" "gsdt-tracker login${cu_prof:+ $cu_prof} (or put CLICKUP_API_TOKEN=pk_… in $cu_cfg; ClickUp → Settings → Apps)" "T073"
   fi
   command -v jq >/dev/null 2>&1 || note "tracker = clickup needs jq for start/finish/snapshot — brew install jq"
 else
@@ -637,37 +640,45 @@ else
   fi
 fi
 
+# The 0.10.0 rename: files and settings that still name the gsd-* commands
+# (they no longer exist). gsdt-start/finish/flow-next/init refuse until then.
+if "$GSD_PKG/bin/gsdt-migrate" --check --repo "$MAIN" >/dev/null 2>&1; then
+  pass "uses the gsdt-* command names"
+else
+  fail "this repo still uses the old gsd-* command names (before 0.10.0) — gsdt-start and gsdt-finish refuse" "gsdt-migrate --apply" "T090"
+fi
+
 drift=0
 missing=0
 while IFS= read -r rel; do
   [ -n "$rel" ] || continue
   if [ ! -f "$MAIN/$rel" ]; then missing=$((missing + 1))
   elif ! cmp -s "$GSD_PKG/shims/$rel" "$MAIN/$rel"; then drift=$((drift + 1)); fi
-done < <( cd "$GSD_PKG/shims" && find scripts -type f -name 'gsd-*' ! -name '*.example' 2>/dev/null )
+done < <( cd "$GSD_PKG/shims" && find scripts -type f -name 'gsdt-*' ! -name '*.example' 2>/dev/null )
 if [ "$missing" -gt 0 ] || [ "$drift" -gt 0 ]; then
-  fail "shims: $missing missing, $drift out of date" "gsd-init" "T010"
+  fail "shims: $missing missing, $drift out of date" "gsdt-init" "T010"
 else
   pass "shims present and current"
 fi
 
-# The three merge-safety items, from the same predicate gsd-bootstrap-repo
+# The three merge-safety items, from the same predicate gsdt-bootstrap-repo
 # applies — one source of truth for what "installed" means.
 gsd_planning_status "$MAIN"
 case " $GSD_PLANNING_MISSING " in
   *" attributes "*)
     [ "$GSD_ATTRS_STATE" = union ] \
-      && fail ".gitattributes still on merge=union (keeps BOTH sides)" "gsd-init" "T011" \
-      || fail ".gitattributes missing the .planning merge rules" "gsd-init" "T012" ;;
+      && fail ".gitattributes still on merge=union (keeps BOTH sides)" "gsdt-init" "T011" \
+      || fail ".gitattributes missing the .planning merge rules" "gsdt-init" "T012" ;;
   *) pass ".gitattributes: merge=gsd-planning on ROADMAP.md + STATE.md" ;;
 esac
 case " $GSD_PLANNING_MISSING " in
-  # Not versioned, so a fresh clone always lacks it. gsd-finish re-asserts it,
+  # Not versioned, so a fresh clone always lacks it. gsdt-finish re-asserts it,
   # so this is a finding rather than an emergency.
-  *" driver "*) fail "merge driver not registered (per-clone; git config is not versioned)" "gsd-init" "T013" ;;
+  *" driver "*) fail "merge driver not registered (per-clone; git config is not versioned)" "gsdt-init" "T013" ;;
   *) pass "merge driver registered in git config" ;;
 esac
 case " $GSD_PLANNING_MISSING " in
-  *" hook "*) fail "no post-merge hook — a plain 'git pull' is unguarded" "gsd-init" "T014" ;;
+  *" hook "*) fail "no post-merge hook — a plain 'git pull' is unguarded" "gsdt-init" "T014" ;;
   *) pass "post-merge hook reconciles .planning after a plain git pull" ;;
 esac
 # A .husky/ dir alone counts as "husky owns the hook", but git only runs it
@@ -681,7 +692,7 @@ fi
 
 fi  # IS_GSD_REPO
 
-# ── planning state (fixed by gsd-planning-repair) ────────────────────────────
+# ── planning state (fixed by gsdt-planning-repair) ────────────────────────────
 if [ "$IS_GSD_REPO" = 1 ]; then
 section "planning state"
 
@@ -690,21 +701,21 @@ if [ ! -d "$MAIN/.planning" ]; then
 elif [ -d "$MAIN/.planning/workstreams" ] && [ -n "$(ls -A "$MAIN/.planning/workstreams" 2>/dev/null)" ]; then
   # gsd-core's /gsd-workstreams routes ROADMAP/STATE under
   # .planning/workstreams/<name>/. Every command in this toolkit reads the
-  # top-level .planning/ROADMAP.md, so gsd-start/gsd-list/gsd-planning-repair
+  # top-level .planning/ROADMAP.md, so gsdt-start/gsdt-list/gsdt-planning-repair
   # would silently claim, list and repair the wrong roadmap. Loud, not quiet.
   fail "gsd-core workstreams in use (.planning/workstreams/) — this toolkit only reads the top-level .planning/ and is not workstream-aware" \
-       "/gsd-workstreams complete <name>, or drive those phases without gsd-start" "T024"
-elif ! command -v gsd-planning-repair >/dev/null 2>&1; then
-  fail "gsd-planning-repair not on PATH — cannot check .planning" "$REINSTALL" "T004"
+       "/gsd-workstreams complete <name>, or drive those phases without gsdt-start" "T024"
+elif ! command -v gsdt-planning-repair >/dev/null 2>&1; then
+  fail "gsdt-planning-repair not on PATH — cannot check .planning" "$REINSTALL" "T004"
 else
-  out="$(gsd-planning-repair --repo "$MAIN" --check 2>&1)"; rc=$?
+  out="$(gsdt-planning-repair --repo "$MAIN" --check 2>&1)"; rc=$?
   case "$rc" in
     0) pass ".planning is coherent"
        printf '%s\n' "$out" | grep -E '^  - ' | while IFS= read -r l; do note "${l#  - }"; done
        # --fix only when the repair would change a file: some notes need a
        # hand edit, and a repair that changes nothing tidies nothing
        printf '%s\n' "$out" | grep -q '^• a repair would update:' && safe repair ;;
-    1) fail ".planning contradicts itself (union-merge damage)" "gsd-planning-repair" "T020"
+    1) fail ".planning contradicts itself (union-merge damage)" "gsdt-planning-repair" "T020"
        printf '%s\n' "$out" | grep -E '^  • ' | sed 's/^  •/      ·/' ;;
     *) note ".planning has no ROADMAP.md — nothing to check" ;;
   esac
@@ -776,12 +787,12 @@ if [ "$UI_GATES" != off ] && gsd_ui_has_screens "$HERE"; then
   ds=$(gsd_ui_design_state "$HERE")
   if [ "$ds" = ok ]; then pass "design system: .planning/design/DESIGN.md"
   elif [ "$UI_GATES" = strict ]; then
-    fail "phases have screens but .planning/design/DESIGN.md is $ds — each phase invents its own styles" "gsd-ui design, then fill it with the user (in the next phase with screens)" "T080"
-  else note "phases have screens but .planning/design/DESIGN.md is $ds — gsd-ui design, then fill it (ui_gates = strict makes this a finding)"; fi
+    fail "phases have screens but .planning/design/DESIGN.md is $ds — each phase invents its own styles" "gsdt-ui design, then fill it with the user (in the next phase with screens)" "T080"
+  else note "phases have screens but .planning/design/DESIGN.md is $ds — gsdt-ui design, then fill it (ui_gates = strict makes this a finding)"; fi
   # Files only: doctor never imports or launches the project's Playwright.
   gsd_ui_playwright_installed "$HERE" >/dev/null \
-    || note "no Playwright for gsd-ui check (looked in the project and the global npm folder) — once per machine: npm i -g playwright && npx playwright install chromium"
-  command -v node >/dev/null 2>&1 || note "no node on PATH — gsd-ui check needs it"
+    || note "no Playwright for gsdt-ui check (looked in the project and the global npm folder) — once per machine: npm i -g playwright && npx playwright install chromium"
+  command -v node >/dev/null 2>&1 || note "no node on PATH — gsdt-ui check needs it"
   # Optional add-ons for better first drafts: notes only, never findings, and
   # only what the project's files say fits. Nothing is run or installed.
   ui_stack=" $(gsd_ui_stack "$HERE") "
@@ -852,7 +863,7 @@ if { [ "$FLOW_ON" = 1 ] || [ "$UI_ON" = 1 ]; } && [ -f "$MAIN/.planning/ROADMAP.
     if [ "$TRACKER" != none ] && ! flow_has TICKET.md && ! flow_has STORY.md; then
       case "$pd" in *cu_*) ;; *)
         tk=$(gsd_ticket_extract "$(basename "$pd")")
-        miss="$miss ticket"; fix="$fix gsd-tracker snapshot ${tk:-<id>} --out ${pd#"$MAIN"/}/$p-TICKET.md;" ;;
+        miss="$miss ticket"; fix="$fix gsdt-tracker snapshot ${tk:-<id>} --out ${pd#"$MAIN"/}/$p-TICKET.md;" ;;
       esac
     fi
     flow_has REVIEW.md       || { miss="$miss code-review";     fix="$fix /gsd-code-review $n;"; }
@@ -863,7 +874,7 @@ if { [ "$FLOW_ON" = 1 ] || [ "$UI_ON" = 1 ]; } && [ -f "$MAIN/.planning/ROADMAP.
     gsd_validation_problem "$pd" "$p" "$MAIN" >/dev/null && { miss="$miss validate"; fix="$fix /gsd-validate-phase $n;"; }
     flow_has VERIFICATION.md || { miss="$miss verifier";        fix="$fix /gsd-execute-phase $n (runs the verifier);"; }
     ls "$pd/$p"-*UAT.md >/dev/null 2>&1 || { miss="$miss verify-work"; fix="$fix /gsd-verify-work $n;"; }
-    # screens: the same test gsd-flow-next uses (a UI-SPEC or a LAYOUT)
+    # screens: the same test gsdt-flow-next uses (a UI-SPEC or a LAYOUT)
     if gsd_ui_phase_screens "$pd" "$p" && ! flow_has UI-REVIEW.md; then miss="$miss ui-review"; fix="$fix /gsd-ui-review $n;"; fi
     fi
     # UI gates: the checks of the rendered pages still have an action after
@@ -876,11 +887,11 @@ if { [ "$FLOW_ON" = 1 ] || [ "$UI_ON" = 1 ]; } && [ -f "$MAIN/.planning/ROADMAP.
           passed|skipped)
             case "$(gsd_ui_approval_state "$pd" "$p")" in
               ok|waived) ;;
-              *) miss="$miss ui-approve"; fix="$fix gsd-ui sheet $n, then with the user's yes gsd-ui approve $n;" ;;
+              *) miss="$miss ui-approve"; fix="$fix gsdt-ui sheet $n, then with the user's yes gsdt-ui approve $n;" ;;
             esac ;;
-          *) miss="$miss ui-check"; fix="$fix gsd-ui check $n;" ;;
+          *) miss="$miss ui-check"; fix="$fix gsdt-ui check $n;" ;;
         esac
-      elif ! flow_has SHOTS.md; then miss="$miss ui-check"; fix="$fix gsd-ui check $n;"
+      elif ! flow_has SHOTS.md; then miss="$miss ui-check"; fix="$fix gsdt-ui check $n;"
       fi
     fi
     if [ -n "$miss" ]; then
@@ -984,7 +995,7 @@ done < <(git -C "$MAIN" worktree list --porcelain 2>/dev/null)
 
 # T034 — worktree.baseRef = "head" (gsd_baseref): without it /gsd-execute-phase
 # runs a wave's plans one at a time in every phase worktree (and gsd-core's
-# quick-batch its items, in a gsd-batch worktree). The main checkout and each
+# quick-batch its items, in a gsdt-batch worktree). The main checkout and each
 # phase or batch worktree read their own .claude/settings.local.json. Other
 # worktrees are skipped: Claude's per-plan agent-* copies (.claude/worktrees/)
 # never run the check, and each new one would be a false alarm.
@@ -1003,14 +1014,14 @@ if [ "$IS_GSD_REPO" = 1 ]; then
     case "$st" in
       missing) baseref_bad="$baseref_bad $label"; BASEREF_FIX="${BASEREF_FIX:+$BASEREF_FIX$'\n'}$wt" ;;
       invalid) baseref_odd=1; fail "$wt/.claude/settings.local.json is not plain JSON — cannot check worktree.baseRef" \
-                    "fix the JSON in that file, then gsd-doctor --fix" "T034" ;;
+                    "fix the JSON in that file, then gsdt-doctor --fix" "T034" ;;
       other:*) baseref_odd=1; note "worktree.baseRef = \"${st#other:}\" in $label — /gsd-execute-phase runs a wave's plans one at a time unless it is \"head\"" ;;
     esac
   done < <(git -C "$MAIN" worktree list --porcelain 2>/dev/null)
   if [ -n "$baseref_bad" ]; then
     safe baseref
     fail "worktree.baseRef is not set (in:$baseref_bad) — /gsd-execute-phase runs a wave's plans one at a time there" \
-         "gsd-doctor --fix   (adds worktree.baseRef = \"head\" to .claude/settings.local.json; other keys kept)" "T034"
+         "gsdt-doctor --fix   (adds worktree.baseRef = \"head\" to .claude/settings.local.json; other keys kept)" "T034"
   elif [ "$baseref_odd" = 0 ] && [ "$(gsd_baseref check "$MAIN")" != nopython ]; then
     pass "worktree.baseRef = \"head\" (a wave's plans can run in parallel)"
   fi
@@ -1027,12 +1038,12 @@ while IFS= read -r br; do
   orphans="$orphans $br"
 done < <(git -C "$MAIN" for-each-ref --format='%(refname:short)' 'refs/heads/phase-*' 'refs/heads/batch-*' 2>/dev/null)
 if [ -n "$orphans" ]; then
-  fail "phase or batch branch(es) with no worktree:$orphans" "gsd-finish <N | branch>, or git branch -d" "W017"
+  fail "phase or batch branch(es) with no worktree:$orphans" "gsdt-finish <N | branch>, or git branch -d" "W017"
 else
   pass "every phase and batch branch has its worktree"
 fi
 
-# Branches whose upstream was deleted (a merged PR, a gsd-finish run from
+# Branches whose upstream was deleted (a merged PR, a gsdt-finish run from
 # another machine). Read from the last fetch — no fetch here, by design.
 gone_up=$(git -C "$MAIN" for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads 2>/dev/null \
             | awk '$2=="[gone]"{print $1}' | tr '\n' ' ')
@@ -1042,7 +1053,7 @@ BASE="$(gsd_base "$MAIN")"
 cur="$(git -C "$MAIN" branch --show-current 2>/dev/null)"
 [ "$cur" = "$BASE" ] \
   && pass "main checkout is on '$BASE'" \
-  || fail "main checkout is on '$cur', not '$BASE' (gsd-finish will refuse)" "git checkout $BASE" "T031"
+  || fail "main checkout is on '$cur', not '$BASE' (gsdt-finish will refuse)" "git checkout $BASE" "T031"
 
 if git -C "$MAIN" show-ref --verify --quiet "refs/remotes/origin/$BASE"; then
   behind=$(git -C "$MAIN" rev-list --count "$BASE..origin/$BASE" 2>/dev/null || echo 0)
@@ -1073,10 +1084,11 @@ echo ""
 safe_label() {
   case "$1" in
     unlock) echo "rm -rf .git/gsd-cmd.lock          (the lock's process is gone)" ;;
+    migrate) echo "gsdt-migrate --apply              (old gsd-* names → gsdt-*)" ;;
     track)  echo "git branch --track $BASE origin/$BASE" ;;
     chmod)  echo "chmod +x ${PM_ABS#"$MAIN"/}" ;;
-    init)   echo "gsd-init --no-launch --no-commit  (shims, merge rules, driver, hook, instructions)" ;;
-    repair) echo "gsd-planning-repair               (.planning/ROADMAP.md + STATE.md)" ;;
+    init)   echo "gsdt-init --no-launch --no-commit  (shims, merge rules, driver, hook, instructions)" ;;
+    repair) echo "gsdt-planning-repair               (.planning/ROADMAP.md + STATE.md)" ;;
     baseref) echo "worktree.baseRef = \"head\"         (.claude/settings.local.json, other keys kept)" ;;
   esac
 }
@@ -1087,9 +1099,10 @@ run_safe() {
       if [ -n "$pid" ] && ! kill -0 "$pid" 2>/dev/null; then rm -rf "$MAIN/.git/gsd-cmd.lock"; fi ;;
     track)  git -C "$MAIN" branch -q --track "$BASE" "origin/$BASE" ;;
     chmod)  chmod +x "$PM_ABS" ;;
-    init)   (cd "$MAIN" && "$GSD_PKG/bin/gsd-init" --no-launch --no-commit) ;;
-    repair) "$GSD_PKG/bin/gsd-planning-repair" --repo "$MAIN" ;;
-    baseref)  # each dir T034 found; gsd-init above may have done the main one
+    migrate) "$GSD_PKG/bin/gsdt-migrate" --apply --repo "$MAIN" ;;
+    init)   (cd "$MAIN" && "$GSD_PKG/bin/gsdt-init" --no-launch --no-commit) ;;
+    repair) "$GSD_PKG/bin/gsdt-planning-repair" --repo "$MAIN" ;;
+    baseref)  # each dir T034 found; gsdt-init above may have done the main one
       printf '%s\n' "$BASEREF_FIX" | while IFS= read -r wt; do
         if [ -n "$wt" ]; then gsd_baseref_ensure "$wt"; fi
       done ;;
@@ -1100,7 +1113,7 @@ if [ "$FIX" = 1 ]; then
     [ "$FINDINGS" -eq 0 ] || echo "--fix: none of these findings has a safe automatic fix — run the commands below."
   else
     ordered=""
-    for a in unlock track chmod init repair baseref; do case $'\n'"$SAFE"$'\n' in *$'\n'"$a"$'\n'*) ordered="$ordered $a" ;; esac; done
+    for a in unlock track migrate chmod init repair baseref; do case $'\n'"$SAFE"$'\n' in *$'\n'"$a"$'\n'*) ordered="$ordered $a" ;; esac; done
     printf '\033[1m--fix will run (in %s):\033[0m\n' "$MAIN"
     for a in $ordered; do printf '  %s\n' "$(safe_label "$a")"; done
     answer=n
@@ -1115,7 +1128,7 @@ if [ "$FIX" = 1 ]; then
         done
         echo ""
         echo "Checking again:"
-        "$GSD_PKG/bin/gsd-doctor" --quiet --repo "$REPO"; rc=$?
+        "$GSD_PKG/bin/gsdt-doctor" --quiet --repo "$REPO"; rc=$?
         echo ""
         echo "Changed files (not committed — review with git diff, then commit):"
         git -C "$MAIN" status --short | sed 's/^/  /'
@@ -1128,8 +1141,8 @@ fi
 if [ "$FINDINGS" -eq 0 ]; then
   printf '\033[32m✔ no findings\033[0m\n'
   if [ "$FIX" = 0 ] && [ -n "$SAFE" ]; then
-    if [ "$QUIET" = 1 ]; then echo "(there are notes — gsd-doctor shows them; gsd-doctor --fix can tidy them)"
-    else echo "(gsd-doctor --fix can tidy the notes above)"; fi
+    if [ "$QUIET" = 1 ]; then echo "(there are notes — gsdt-doctor shows them; gsdt-doctor --fix can tidy them)"
+    else echo "(gsdt-doctor --fix can tidy the notes above)"; fi
   fi
   exit 0
 fi
@@ -1137,6 +1150,6 @@ printf '\033[31m%d finding(s).\033[0m Run:\n\n' "$FINDINGS"
 [ "$(git rev-parse --show-toplevel 2>/dev/null)" = "$MAIN" ] || printf '  cd %s\n' "$MAIN"
 printf '%s\n' "$FIXES" | while IFS= read -r fix; do printf '  %s\n' "$fix"; done
 echo ""
-echo "(then re-run gsd-doctor to confirm)"
-[ "$FIX" = 1 ] || [ -z "$SAFE" ] || echo "Some of these are safe to run for you:  gsd-doctor --fix"
+echo "(then re-run gsdt-doctor to confirm)"
+[ "$FIX" = 1 ] || [ -z "$SAFE" ] || echo "Some of these are safe to run for you:  gsdt-doctor --fix"
 exit 1

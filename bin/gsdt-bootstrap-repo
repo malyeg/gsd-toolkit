@@ -2,9 +2,9 @@
 set -euo pipefail
 die() { printf '✖ %s\n' "$*" >&2; exit 1; }
 usage() { cat <<'HELP'
-gsd-bootstrap-repo — install GSD worktree integration into the current repo
+gsdt-bootstrap-repo — install GSD worktree integration into the current repo
 USAGE
-  gsd-bootstrap-repo [--agent claude|codex]... [options]
+  gsdt-bootstrap-repo [--agent claude|codex]... [options]
 OPTIONS
   --agent <provider>       provider to integrate; repeat for multiple providers
   --agents <a,b,...>       comma-separated provider list
@@ -39,7 +39,7 @@ while [ $# -gt 0 ]; do
     --tracker) [ $# -ge 2 ] || die "--tracker needs none, clickup or custom"; TRACKER=$2; shift 2 ;;
     --tracker-command) [ $# -ge 2 ] && [ -n "$2" ] || die "--tracker-command needs the script's path"; TRACKER_COMMAND=$2; shift 2 ;;
     --src) [ $# -ge 2 ] || die "--src needs a value"; echo "• --src is deprecated and ignored"; shift 2 ;;
-    *) die "unknown arg: $1 (see gsd-bootstrap-repo --help)" ;;
+    *) die "unknown arg: $1 (see gsdt-bootstrap-repo --help)" ;;
   esac
 done
 SELF=$0; while [ -L "$SELF" ]; do t=$(readlink "$SELF"); case "$t" in /*) SELF=$t ;; *) SELF="$(dirname "$SELF")/$t" ;; esac; done
@@ -110,7 +110,7 @@ WT_DIR=$(gsd_wtdir "$DEST")
 if [ -f "$DEST/pnpm-lock.yaml" ]; then PM="pnpm install"; elif [ -f "$DEST/yarn.lock" ]; then PM="yarn install"; elif [ -f "$DEST/package-lock.json" ] || [ -f "$DEST/package.json" ]; then PM="npm install"; else PM=none; fi
 printf 'Toolkit     : %s\nTarget repo : %s\nBase branch : %s\nProviders   : %s (default: %s)\n\n' "$PKG" "$DEST" "$BASE" "$SELECTED" "$DEFAULT"
 if [ ! -f "$CONF" ]; then
-    { echo '# .gsd.conf — committed, inspectable GSD worktree configuration.'; printf 'base = %s\nwtdir = %s\ninstall = %s\nproviders = %s\n' "$BASE" "$WT_DIR" "$PM" "$SELECTED"; [ -z "$CLAUDE_COMMAND" ] || printf 'claude_command = %s\n' "$CLAUDE_COMMAND"; [ -z "$CODEX_COMMAND" ] || printf 'codex_command = %s\n' "$CODEX_COMMAND"; [ -z "$CUSTOM_COMMAND" ] || printf 'custom_command = %s\n' "$CUSTOM_COMMAND"; echo '# start_mode = discuss  # optional; default is flow (gsd-start opens /gsdt-flow)'; echo '# flow = strict'; if [ "$NO_UI" = 1 ]; then echo 'ui_gates = off'; else echo '# ui_gates = strict  # UI gates: warn (default), strict, off'; fi; } > "$CONF"
+    { echo '# .gsd.conf — committed, inspectable GSD worktree configuration.'; printf 'base = %s\nwtdir = %s\ninstall = %s\nproviders = %s\n' "$BASE" "$WT_DIR" "$PM" "$SELECTED"; [ -z "$CLAUDE_COMMAND" ] || printf 'claude_command = %s\n' "$CLAUDE_COMMAND"; [ -z "$CODEX_COMMAND" ] || printf 'codex_command = %s\n' "$CODEX_COMMAND"; [ -z "$CUSTOM_COMMAND" ] || printf 'custom_command = %s\n' "$CUSTOM_COMMAND"; echo '# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)'; echo '# flow = strict'; if [ "$NO_UI" = 1 ]; then echo 'ui_gates = off'; else echo '# ui_gates = strict  # UI gates: warn (default), strict, off'; fi; } > "$CONF"
   echo '✔ .gsd.conf (created)'
 else
   update_key() { local k=$1 v=$2; K=$k V=$v perl -pi -e 's/^\s*\Q$ENV{K}\E\s*=.*/$ENV{K} = $ENV{V}/' "$CONF"; grep -qE "^[[:space:]]*${k}[[:space:]]*=" "$CONF" || printf '%s = %s\n' "$k" "$v" >> "$CONF"; }
@@ -124,7 +124,7 @@ if [ -n "$TRACKER" ]; then
   echo "✔ .gsd.conf: tracker = $TRACKER${TRACKER_COMMAND:+ ($TRACKER_COMMAND)}"
 fi
 mkdir -p "$DEST/scripts/hooks" "$DEST/.gsd"
-for rel in scripts/gsd-new-worktree-feature.sh scripts/gsd-finish-worktree-feature.sh scripts/gsd-derive-port.sh scripts/gsd-planning-repair.sh scripts/hooks/gsd-worktree-guard.sh; do cp "$PKG/shims/$rel" "$DEST/$rel"; chmod +x "$DEST/$rel"; echo "✔ $rel (shim)"; done
+for rel in scripts/gsdt-new-worktree-feature.sh scripts/gsdt-finish-worktree-feature.sh scripts/gsdt-derive-port.sh scripts/gsdt-planning-repair.sh scripts/hooks/gsdt-worktree-guard.sh; do cp "$PKG/shims/$rel" "$DEST/$rel"; chmod +x "$DEST/$rel"; echo "✔ $rel (shim)"; done
 for pat in .gsd-install.status .gsd-install.log .claude/settings.local.json; do
   grep -qxF "$pat" "$DEST/.gitignore" 2>/dev/null && continue
   # a .gitignore whose last line has no newline would glue our line onto it
@@ -146,12 +146,12 @@ canonical_block=$(mktemp)
 gsd_canonical_block "$SELECTED" "$DEFAULT" "$BASE" "$WT_DIR" > "$canonical_block"
 gsd_replace_owned_block "$CANON" canonical "$canonical_block"
 rm -f "$canonical_block"
-echo '✔ .gsd/INSTRUCTIONS.md (repo settings + core; the rules come from gsd-rules)'
+echo '✔ .gsd/INSTRUCTIONS.md (repo settings + core; the rules come from gsdt-rules)'
 preserve_legacy_claude() {
   local file=$DEST/CLAUDE.md
   [ -f "$file" ] || return 0
   grep -q '^## GSD planning system' "$file" || return 0
-  grep -q 'scripts/hooks/gsd-worktree-guard.sh' "$file" || return 0
+  grep -qE 'scripts/hooks/gsdt?-worktree-guard.sh' "$file" || return 0
   grep -qE '<!-- gsd-(toolkit|worktrees):provider:start -->' "$file" && return 0
   echo '• preserved unmarked legacy GSD instructions in CLAUDE.md; the marked adapter will be appended'
 }
@@ -197,11 +197,11 @@ drop_gemini() {
     else echo '✔ GEMINI.md: the gsd-toolkit block removed (Gemini is no longer supported)'; fi
     GEMINI_FILES+=(GEMINI.md)
   fi
-  [ -f "$s" ] && grep -q 'gsd-worktree-guard' "$s" || return 0
+  [ -f "$s" ] && grep -qE 'gsdt?-worktree-guard' "$s" || return 0
   py=$(gsd_python) || { echo "⚠ ${s#"$DEST"/} still has the gsd-toolkit hook (no Python to edit it)"; return 0; }
   # Any hook naming the guard is ours (doctor's T061 finds it by that name),
   # however its path was written and under whichever event.
-  "$py" - "$s" <<'JSON' || { echo "⚠ ${s#"$DEST"/} still names gsd-worktree-guard — remove that hook by hand"; return 0; }
+  "$py" - "$s" <<'JSON' || { echo "⚠ ${s#"$DEST"/} still names the worktree guard — remove that hook by hand"; return 0; }
 import json, os, sys
 path = sys.argv[1]
 try:
@@ -210,7 +210,7 @@ except ValueError:
     sys.exit(1)
 if not isinstance(data, dict) or not isinstance(data.get("hooks"), dict):
     sys.exit(1)
-ours = lambda h: isinstance(h, dict) and "gsd-worktree-guard" in str(h.get("command", ""))
+ours = lambda h: isinstance(h, dict) and ("gsdt-worktree-guard" in str(h.get("command", "")) or "gsd-worktree-guard" in str(h.get("command", "")))
 found = False
 for event, groups in list(data["hooks"].items()):
     if not isinstance(groups, list):
@@ -243,7 +243,7 @@ JSON
 }
 drop_gemini
 [ "$GEMINI_DROPPED" = 0 ] || echo "✔ .gsd.conf: gemini removed from providers (Gemini is no longer supported)"
-for f in "$DEST"/scripts/gsd-*.sh "$DEST"/scripts/hooks/gsd-worktree-guard.sh; do bash -n "$f"; done
+for f in "$DEST"/scripts/gsdt-*.sh "$DEST"/scripts/hooks/gsdt-worktree-guard.sh; do bash -n "$f"; done
 echo '✔ self-check (shims parse)'
 if [ "$COMMIT" = 1 ]; then
   if [ -n "$DIRTY_BEFORE" ]; then echo '⚠ target repo had existing changes — skipped --commit'; else
@@ -255,4 +255,4 @@ if [ "$COMMIT" = 1 ]; then
     git -C "$DEST" add -- "${files[@]}"; gsd_planning_hook "$DEST"; [ "${GSD_HOOK_VERSIONED:-0}" = 1 ] && [ -f "$GSD_HOOK_PATH" ] && git -C "$DEST" add -- "$GSD_HOOK_PATH"; git -C "$DEST" diff --cached --quiet || git -C "$DEST" commit -q -m 'chore: add gsd-toolkit workflow'; echo '✔ bootstrap changes committed'
   fi
 fi
-echo; echo "✅ provider-neutral GSD workflow installed (default: $DEFAULT)"; echo "Next: gsd-init --no-launch (preserves $SELECTED), or gsd-start -n \"<desc>\""
+echo; echo "✅ provider-neutral GSD workflow installed (default: $DEFAULT)"; echo "Next: gsdt-init --no-launch (preserves $SELECTED), or gsdt-start -n \"<desc>\""

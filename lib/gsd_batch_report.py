@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Token report for quick-task batches, for bin/gsd-batch-report. Reads Claude
+"""Token report for quick-task batches, for bin/gsdt-batch-report. Reads Claude
 Code transcripts only; writes nothing, calls nothing.
 
   projdir --home CLAUDE_HOME --repo PATH [--repo PATH …]
@@ -530,7 +530,7 @@ def to_json(batches, combined, items):
 
 
 def print_text(d, batches, combined, items, base):
-    print("gsd-batch-report — %d batch%s · %d item%s · %s" % (
+    print("gsdt-batch-report — %d batch%s · %d item%s · %s" % (
         len(batches), "" if len(batches) == 1 else "es", items, "" if items == 1 else "s", d))
     for b in batches:
         extra = ""
@@ -669,11 +669,11 @@ def main(argv):
         sys.stdout.write("\n")
         return 0
     if not batches:
-        print("gsd-batch-report: no /gsd-quick-batch or /gsdt-batch run found in %s" % a.dir)
+        print("gsdt-batch-report: no /gsd-quick-batch or /gsdt-batch run found in %s" % a.dir)
         return 0
     base = load_baseline(a.baseline)
     if base is None:
-        print("gsd-batch-report: cannot read --baseline %s (a saved --json report)" % a.baseline,
+        print("gsdt-batch-report: cannot read --baseline %s (a saved --json report)" % a.baseline,
               file=sys.stderr)
         return 64
     print_text(a.dir, batches, combined, items, base)

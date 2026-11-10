@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 #
-# gsd-ui — the UI quality steps gsd-flow-next asks for in a phase with screens.
+# gsdt-ui — the UI quality steps gsdt-flow-next asks for in a phase with screens.
 #
 # Usage:
-#   gsd-ui design                 create .planning/design/DESIGN.md (a stub to
+#   gsdt-ui design                 create .planning/design/DESIGN.md (a stub to
 #                                 fill with the user) and .planning/design/refs/
-#   gsd-ui layout [<N>]           create <P>-LAYOUT.md (the layout contract) in
+#   gsdt-ui layout [<N>]           create <P>-LAYOUT.md (the layout contract) in
 #                                 the phase folder; fill sketch: and pages:
-#   gsd-ui check [<N>]            open every LAYOUT pages: entry at 375, 768 and
+#   gsdt-ui check [<N>]            open every LAYOUT pages: entry at 375, 768 and
 #                                 1440 px, measure it, take the pictures, write
 #                                 <P>-UI-CHECK.md and the sheet (the app must be
 #                                 running). Exit 0 passed, 1 failed, 2 could not run
-#   gsd-ui check [<N>] --skip "<reason>"
+#   gsdt-ui check [<N>] --skip "<reason>"
 #                                 record that the pages cannot be checked
-#   gsd-ui look [<N>]             create <P>-UI-LOOK.md: one line to answer per
+#   gsdt-ui look [<N>]             create <P>-UI-LOOK.md: one line to answer per
 #                                 picture and layout rule
-#   gsd-ui approve [<N>]          record the user's yes in <P>-UI-APPROVAL.md
-#   gsd-ui approve [<N>] --waive "<reason>"
+#   gsdt-ui approve [<N>]          record the user's yes in <P>-UI-APPROVAL.md
+#   gsdt-ui approve [<N>] --waive "<reason>"
 #                                 record that the user chose not to look
-#   gsd-ui sheet [<N>]            print the path of the sheet (<P>-SHOTS/index.html)
-#   gsd-ui shots [<N>]            pictures only, with the Playwright CLI (no
+#   gsdt-ui sheet [<N>]            print the path of the sheet (<P>-SHOTS/index.html)
+#   gsdt-ui shots [<N>]            pictures only, with the Playwright CLI (no
 #                                 checks, no Node script); --skip "<reason>"
-#   gsd-ui status [<N>]           design / layout / check / look / approval state
+#   gsdt-ui status [<N>]           design / layout / check / look / approval state
 #
 #   <N>       phase number; default: from the current phase-<N>-* branch
 #   --repo    checkout to work in (default: the current one)
@@ -44,8 +44,8 @@
 # The app address, first found: `url:` in <P>-LAYOUT.md (this phase's app —
 # for projects with several apps), `ui_url` in .gsd.conf, then
 # http://localhost:{port}.
-#   {port}       the port gsd-derive-port gives this phase, from the base port
-#                in a package.json dev script (gsd-derive-port.sh <base>)
+#   {port}       the port gsdt-derive-port gives this phase, from the base port
+#                in a package.json dev script (gsdt-derive-port.sh <base>)
 #   {port:5173}  the same, with the base port written here
 # A fixed address (no {port}) works too, but then parallel phases share it.
 #
@@ -56,7 +56,7 @@
 # It runs the project's Playwright with your rights, like the project's tests.
 # shots needs only the Playwright CLI (GSD_PLAYWRIGHT overrides).
 #
-# ui_gates in .gsd.conf: warn (default), strict (the guard and gsd-finish
+# ui_gates in .gsd.conf: warn (default), strict (the guard and gsdt-finish
 # enforce), off.
 set -euo pipefail
 
@@ -138,8 +138,8 @@ resolve_url() {  # sets URL; on failure sets URL_ERR and returns 1
       url=$(printf '%s' "$url" | sed -E "s/\{port:[0-9]+\}/$((10#$base + int))/") ;;
     *'{port}'*)
       bases=$(find "$REPO" -maxdepth 3 -name package.json -not -path '*/node_modules/*' -print0 2>/dev/null \
-        | xargs -0 grep -hoE 'gsd-derive-port(\.sh)?[[:space:]]+[0-9]+' 2>/dev/null | grep -oE '[0-9]+$' | sort -u || true)
-      [ -n "$bases" ] || { URL_ERR="can't tell the app's port: no 'gsd-derive-port.sh <base>' in a package.json dev script.
+        | xargs -0 grep -hoE 'gsdt-derive-port(\.sh)?[[:space:]]+[0-9]+' 2>/dev/null | grep -oE '[0-9]+$' | sort -u || true)
+      [ -n "$bases" ] || { URL_ERR="can't tell the app's port: no 'gsdt-derive-port.sh <base>' in a package.json dev script.
   Set it in $(basename "$LAYOUT"), e.g.:  url: http://localhost:{port:3000}
   (or for every phase, in .gsd.conf:  ui_url = http://localhost:{port:3000})"; return 1; }
       [ "$(printf '%s\n' "$bases" | wc -l | tr -d ' ')" = 1 ] || { URL_ERR="several base ports in package.json files ($(printf "%s" "$bases" | tr "\n" " ")) — say which app this phase uses, in $(basename "$LAYOUT"):  url: http://localhost:{port:<base>}"; return 1; }
@@ -158,8 +158,8 @@ clear_pictures() {  # the published pictures and sheet; the folder and its .giti
 check_record() {  # $1=status $2=key (error|skipped) $3=text — a check that took no pictures
   { printf -- '---\nstatus: %s\ntaken: %s\n%s: %s\n---\n\n# Phase %s UI check\n\n' "$1" "$(now)" "$2" "$(one_line "$3")" "$N"
     case "$1" in
-      skipped) printf 'The rendered pages were not checked. The user accepted that:\n`gsd-ui approve %s --waive "<reason>"` records it.\n' "$N" ;;
-      *) printf 'The check could not run, so nothing is known about the pages.\nFix the cause, then run `gsd-ui check %s` again.\n' "$N" ;;
+      skipped) printf 'The rendered pages were not checked. The user accepted that:\n`gsdt-ui approve %s --waive "<reason>"` records it.\n' "$N" ;;
+      *) printf 'The check could not run, so nothing is known about the pages.\nFix the cause, then run `gsdt-ui check %s` again.\n' "$N" ;;
     esac; } > "$CHECK_MD"
 }
 
@@ -167,7 +167,7 @@ cannot_run() {  # a run that did not finish: record it, drop the old pictures, e
   clear_pictures
   check_record error error "$1"
   printf '✖ %s\n' "$1" >&2
-  printf '  recorded in %s (status: error)\n  if the pages cannot be checked at all, ask the user, then: gsd-ui check %s --skip "<reason>"\n' "$(rel "$CHECK_MD")" "$N" >&2
+  printf '  recorded in %s (status: error)\n  if the pages cannot be checked at all, ask the user, then: gsdt-ui check %s --skip "<reason>"\n' "$(rel "$CHECK_MD")" "$N" >&2
   exit 2
 }
 
@@ -188,7 +188,7 @@ status)
   printf 'check       %s  (%s)\n' "$(gsd_ui_check_state "$REPO" "$PD" "$P")" "$(rel "$CHECK_MD")"
   printf 'look        %s  (%s)\n' "$(gsd_ui_look_state "$REPO" "$PD" "$P")" "$(rel "$LOOK_MD")"
   printf 'approval    %s  (%s)\n' "$(gsd_ui_approval_state "$PD" "$P")" "$(rel "$APPROVAL_MD")"
-  [ ! -f "$SHOTS_MD" ] || printf 'screenshots %s  (%s, gsd-ui shots)\n' "$(gsd_ui_shots_state "$PD" "$P")" "$(rel "$SHOTS_MD")"
+  [ ! -f "$SHOTS_MD" ] || printf 'screenshots %s  (%s, gsdt-ui shots)\n' "$(gsd_ui_shots_state "$PD" "$P")" "$(rel "$SHOTS_MD")"
   if gsd_ui_exempt "$REPO" "$PD" "$P"; then printf 'open        nothing — the UI review of this phase is already on the base branch\n'
   else
     gate=$(gsd_ui_gate "$REPO" "$PD" "$P")
@@ -201,10 +201,10 @@ check)
     clear_pictures
     check_record skipped skipped "$SKIP"
     echo "✔ $(rel "$CHECK_MD") records the skip: $SKIP"
-    echo "  Next, with the user's yes: gsd-ui approve $N --waive \"<reason>\""
+    echo "  Next, with the user's yes: gsdt-ui approve $N --waive \"<reason>\""
     exit 0
   fi
-  [ -n "$(pages)" ] || die "no pages: in $(rel "$LAYOUT") — list the URL paths to check (run: gsd-ui layout $N)"
+  [ -n "$(pages)" ] || die "no pages: in $(rel "$LAYOUT") — list the URL paths to check (run: gsdt-ui layout $N)"
   mkdir -p "$SHOTS_DIR"
   # The pictures stay local (large, change every run); UI-CHECK.md is the record.
   [ -f "$SHOTS_DIR/.gitignore" ] || printf '*\n' > "$SHOTS_DIR/.gitignore"
@@ -213,8 +213,8 @@ check)
 
   RUNNER=${GSD_UI_RUNNER:-}
   if [ -z "$RUNNER" ]; then
-    command -v node >/dev/null 2>&1 || cannot_run "node is not installed — gsd-ui check runs the project's Playwright with Node"
-    [ -f "$GSD_PKG/lib/ui-check.mjs" ] || cannot_run "lib/ui-check.mjs is missing from the toolkit — reinstall it (gsd-update)"
+    command -v node >/dev/null 2>&1 || cannot_run "node is not installed — gsdt-ui check runs the project's Playwright with Node"
+    [ -f "$GSD_PKG/lib/ui-check.mjs" ] || cannot_run "lib/ui-check.mjs is missing from the toolkit — reinstall it (gsdt-update)"
   fi
   resolve_url || cannot_run "$URL_ERR"
 
@@ -257,13 +257,13 @@ check)
   if [ "$rc" = 0 ]; then
     echo "✔ passed — capture $(fm capture): $(fm waived) waived, $(fm questions) question(s), $(fm unchecked) not checked"
     echo "  report: $(rel "$CHECK_MD")    sheet: $(rel "$SHOTS_DIR")/index.html"
-    echo "  Next: gsd-ui look $N"
+    echo "  Next: gsdt-ui look $N"
   else
     echo "✖ failed — $(fm failures) problem(s), $(fm unchecked) not checked:"
     gsd_ui_check_list "$CHECK_MD" Failures | sed 's/^/  - /' | head -20
     [ "$strict" = 0 ] || gsd_ui_check_list "$CHECK_MD" "Not checked" | sed 's/^/  - not checked: /' | head -10
     echo "  report: $(rel "$CHECK_MD")    sheet: $(rel "$SHOTS_DIR")/index.html"
-    echo "  Fix the page and run gsd-ui check $N again. A finding the user accepts: a waive: line in $(rel "$LAYOUT")."
+    echo "  Fix the page and run gsdt-ui check $N again. A finding the user accepts: a waive: line in $(rel "$LAYOUT")."
   fi
   exit "$rc"
   ;;
@@ -272,10 +272,10 @@ look)
   cs=$(gsd_ui_check_state "$REPO" "$PD" "$P")
   case "$cs" in
     passed) ;;
-    stale) die "the code or $(basename "$LAYOUT") changed after the last check — run: gsd-ui check $N" ;;
-    skipped) die "the check was skipped, so there are no pictures to look at — next: gsd-ui approve $N --waive \"<reason>\"" ;;
-    failed) die "the check failed — fix the page first (see $(rel "$CHECK_MD")), then: gsd-ui check $N" ;;
-    *) die "no passed check yet — run: gsd-ui check $N" ;;
+    stale) die "the code or $(basename "$LAYOUT") changed after the last check — run: gsdt-ui check $N" ;;
+    skipped) die "the check was skipped, so there are no pictures to look at — next: gsdt-ui approve $N --waive \"<reason>\"" ;;
+    failed) die "the check failed — fix the page first (see $(rel "$CHECK_MD")), then: gsdt-ui check $N" ;;
+    *) die "no passed check yet — run: gsdt-ui check $N" ;;
   esac
   cap=$(gsd_ui_fm "$CHECK_MD" capture)
   if [ -f "$LOOK_MD" ] && [ "$(gsd_ui_fm "$LOOK_MD" capture)" = "$cap" ]; then
@@ -287,7 +287,7 @@ look)
     printf 'Open each picture below and answer every line after its colon with one of:\n\n'
     printf '    ok — <what you saw>          fixed — <what was wrong, what changed>\n'
     printf '    bad — <what is wrong>        n/a — <why the rule does not apply>\n\n'
-    printf 'An answer needs its text. `bad` keeps the step open: fix the page, run\n`gsd-ui check %s` again, then `gsd-ui look %s`. Keep the `## ` and `- R1:` parts as they are.\n\n' "$N" "$N"
+    printf 'An answer needs its text. `bad` keeps the step open: fix the page, run\n`gsdt-ui check %s` again, then `gsdt-ui look %s`. Keep the `## ` and `- R1:` parts as they are.\n\n' "$N" "$N"
     printf '## Rules\n\n'
     gsd_ui_rules "$REPO" | sed -E 's/^(R[0-9]+)[|]/\1 — /'
     gsd_ui_check_list "$CHECK_MD" Shots | while IFS= read -r line; do
@@ -320,9 +320,9 @@ approve)
   gate=$(gsd_ui_gate "$REPO" "$PD" "$P")
   case "${gate%%|*}" in
     ui-check|ui-look) die "not ready for approval — ${gate##*|}
-  (if the user does not want to look: gsd-ui approve $N --waive \"<reason>\")" ;;
+  (if the user does not want to look: gsdt-ui approve $N --waive \"<reason>\")" ;;
   esac
-  [ "$(gsd_ui_check_state "$REPO" "$PD" "$P")" = passed ] || die "the check was skipped, so there are no pictures to approve — gsd-ui approve $N --waive \"<reason>\""
+  [ "$(gsd_ui_check_state "$REPO" "$PD" "$P")" = passed ] || die "the check was skipped, so there are no pictures to approve — gsdt-ui approve $N --waive \"<reason>\""
   cap=$(gsd_ui_fm "$CHECK_MD" capture)
   { printf -- '---\nstatus: approved\ncapture: %s\nby: %s\napproved: %s\n---\n\n' "$cap" "${who:-unknown}" "$(now)"
     printf '# Phase %s UI approval\n\nThe user looked at the sheet of capture %s and said yes.\n' "$N" "$cap"; } > "$APPROVAL_MD"
@@ -330,7 +330,7 @@ approve)
   ;;
 
 sheet)
-  [ -f "$SHOTS_DIR/index.html" ] || die "no sheet yet — run: gsd-ui check $N"
+  [ -f "$SHOTS_DIR/index.html" ] || die "no sheet yet — run: gsdt-ui check $N"
   printf '%s\n' "$SHOTS_DIR/index.html"
   if [ -t 1 ]; then
     if command -v open >/dev/null 2>&1; then open "$SHOTS_DIR/index.html" 2>/dev/null || true
@@ -343,12 +343,12 @@ shots)
     printf '# Phase %s screenshots\n\nskipped: %s\n' "$N" "$SKIP" > "$SHOTS_MD"
     echo "✔ $(rel "$SHOTS_MD") records the skip: $SKIP"; exit 0
   fi
-  [ -n "$(pages)" ] || die "no pages: in $(rel "$LAYOUT") — list the URL paths to shoot (run: gsd-ui layout $N)"
+  [ -n "$(pages)" ] || die "no pages: in $(rel "$LAYOUT") — list the URL paths to shoot (run: gsdt-ui layout $N)"
   PW=$(gsd_ui_playwright "$REPO" "$(gsd_ui_field "$LAYOUT" app)")
   [ -n "$PW" ] || die "Playwright CLI not found. Install it in the app: npm i -D playwright && npx playwright install chromium
-  (or: gsd-ui shots $N --skip \"<reason>\")"
+  (or: gsdt-ui shots $N --skip \"<reason>\")"
   resolve_url || die "$URL_ERR
-  (or: gsd-ui shots $N --skip \"<reason>\")"
+  (or: gsdt-ui shots $N --skip \"<reason>\")"
 
   mkdir -p "$SHOTS_DIR"
   # The PNGs stay local (large, change every run); SHOTS.md is the record.
@@ -366,7 +366,7 @@ shots)
   done
   { printf '# Phase %s screenshots\n\n' "$N"
     printf 'taken: %s\nurl: %s\nsketch: %s\n\n' "$(now)" "$URL" "$(gsd_ui_field "$LAYOUT" sketch)"
-    printf 'The PNGs are local (not committed). Pictures only: `gsd-ui check %s`\nmeasures the pages and is the step gsd-flow-next asks for.\n\n' "$N"
+    printf 'The PNGs are local (not committed). Pictures only: `gsdt-ui check %s`\nmeasures the pages and is the step gsdt-flow-next asks for.\n\n' "$N"
     printf '%s' "$list"; } > "$SHOTS_MD"
   echo "✔ $n screenshot(s) in $(rel "$SHOTS_DIR")/, recorded in $(rel "$SHOTS_MD")"
   ;;

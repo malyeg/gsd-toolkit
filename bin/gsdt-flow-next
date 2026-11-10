@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# gsd-flow-next — which phase-flow step comes next, read from the phase folder.
+# gsdt-flow-next — which phase-flow step comes next, read from the phase folder.
 #
 # The step engine behind the /gsdt-flow skill. Looks at .planning/phases/<P>-*/
 # in the checkout you are standing in (a phase worktree) and prints the FIRST
@@ -11,13 +11,13 @@
 # rule and a repo's pre-merge gate, so what this considers done, they accept.
 #
 # Order:
-#   ticket       <P>-TICKET.md (legacy: STORY.md, cu_<id>)   gsd-tracker snapshot
+#   ticket       <P>-TICKET.md (legacy: STORY.md, cu_<id>)   gsdt-tracker snapshot
 #                only when .gsd.conf sets tracker = clickup|custom
 #   discuss      <P>-CONTEXT.md                             /gsd-discuss-phase
 #   ui-decision  no UI-SPEC and no PLAN yet → the skill asks "screens?"
-#   design-system .planning/design/DESIGN.md filled (screens,   gsd-ui design
+#   design-system .planning/design/DESIGN.md filled (screens,   gsdt-ui design
 #                before the UI-SPEC; one per project)
-#   layout       <P>-LAYOUT.md: chosen /gsd-sketch + pages    gsd-ui layout, /gsd-sketch
+#   layout       <P>-LAYOUT.md: chosen /gsd-sketch + pages    gsdt-ui layout, /gsd-sketch
 #                (screens, before the UI-SPEC)
 #   ui-phase     <P>-UI-SPEC.md (screens only)              /gsd-ui-phase
 #   plan         a <P>-NN-PLAN.md                           /gsd-plan-phase
@@ -29,20 +29,20 @@
 #   gaps         <P>-VERIFICATION.md status gaps_found      --gaps / --gaps-only
 #   verify-work  a <P>-*UAT.md not pending/partial          /gsd-verify-work
 #   code-review  <P>-REVIEW.md; not clean → <P>-REVIEW-FIX  /gsd-code-review [--fix]
-#   ui-check     <P>-UI-CHECK.md passed, code unchanged     gsd-ui check
+#   ui-check     <P>-UI-CHECK.md passed, code unchanged     gsdt-ui check
 #                since (screens only)
-#   ui-look      <P>-UI-LOOK.md: every picture and rule     gsd-ui look
+#   ui-look      <P>-UI-LOOK.md: every picture and rule     gsdt-ui look
 #                answered, for that capture
-#   ui-approve   <P>-UI-APPROVAL.md names that capture      gsd-ui sheet, gsd-ui approve
+#   ui-approve   <P>-UI-APPROVAL.md names that capture      gsdt-ui sheet, gsdt-ui approve
 #   ui-review    <P>-UI-REVIEW.md (screens only)            /gsd-ui-review
 #   validate     <P>-VALIDATION.md nyquist_compliant: true,  /gsd-validate-phase
 #                or a "## Validation Audit" (manual-only left)
 #                — not with workflow.nyquist_validation false
 #   secure       <P>-SECURITY.md, threats_open: 0           /gsd-secure-phase
-#   done         → gsd-finish
+#   done         → gsdt-finish
 #
 # Usage:
-#   gsd-flow-next [<N>] [--repo <dir>] [--no-ui] [--all] [--json]
+#   gsdt-flow-next [<N>] [--repo <dir>] [--no-ui] [--all] [--json]
 #     <N>       phase number; default: from the current phase-<N>-* branch
 #     --no-ui   this phase has no screens (skips ui-decision/ui-phase/ui-review)
 #     --ui      this phase has screens (settles ui-decision without a UI-SPEC)
@@ -58,7 +58,7 @@
 # The external gsd-review skill performs delegation, not this shell command.
 # Missing capabilities require a separate review session, never a skipped gate.
 # A REVIEWS.md whose reviewer failed (Codex usage limit) does not count; with
-# Codex the note points at gsd-codex-wait --wait-only.
+# Codex the note points at gsdt-codex-wait --wait-only.
 #
 # Output (text): key=value lines — step, run, then (optional second command),
 # stop (why the skill must pause for the user after this step), note.
@@ -88,6 +88,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 REPO="${REPO:-$PWD}"
+gsd_migrate_refuse "$(gsd_main "$REPO")"
 REVIEW_PROVIDER=$(gsd_conf_get "$REPO" review_provider); REVIEW_PROVIDER=${REVIEW_PROVIDER:-codex}
 ! gsd_provider_gone "$REVIEW_PROVIDER" || { echo "review_provider = gemini: $GSD_GEMINI_GONE; set review_provider to claude, codex, or custom in .gsd.conf" >&2; exit 64; }
 gsd_provider_known "$REVIEW_PROVIDER" || { echo "invalid review_provider '$REVIEW_PROVIDER'; use claude, codex, or custom" >&2; exit 64; }
@@ -98,7 +99,7 @@ if [ -z "$N" ]; then
 fi
 printf '%s' "$N" | grep -qE '^[0-9]+(\.[0-9]+)?$' || { echo "invalid phase number: $N" >&2; exit 64; }
 case "$N" in *.*) P="$N" ;; *) P=$(printf '%02d' "$((10#$N))") ;; esac
-"$GSD_PKG/bin/gsd-worktree-guard" --command gsdt-flow --phase "$N" --repo "$REPO" || exit $?
+"$GSD_PKG/bin/gsdt-worktree-guard" --command gsdt-flow --phase "$N" --repo "$REPO" || exit $?
 pd=""; for d in "$REPO/.planning/phases/$P"-*; do [ -d "$d" ] && { pd="$d"; break; }; done
 [ -n "$pd" ] || { echo "no .planning/phases/$P-* directory in $REPO" >&2; exit 1; }
 
@@ -112,7 +113,7 @@ emit() {  # $1=step $2=run $3=then $4=stop $5=note
   # was checked above; the current executable step is checked on normal calls.
   if [ "$ALL" = 0 ] && printf '%s' "$2" | grep -qE '^/gsd-'; then
     guard_cmd=${2%% *}; guard_cmd=${guard_cmd#/}; guard_args=${2#* }
-    "$GSD_PKG/bin/gsd-worktree-guard" --command "$guard_cmd" --args "$guard_args" --repo "$REPO" || exit $?
+    "$GSD_PKG/bin/gsdt-worktree-guard" --command "$guard_cmd" --args "$guard_args" --repo "$REPO" || exit $?
   fi
   EMITTED=$((EMITTED + 1))
   if [ "$JSON" = 1 ]; then
@@ -146,9 +147,9 @@ if [ "$TRACKER" != none ] && ! has TICKET.md && ! has STORY.md; then
     tk=$(gsd_ticket_extract "$heading")
     [ -n "$tk" ] || tk=$(gsd_ticket_extract "$(basename "$pd")")
     if [ -n "$tk" ]; then
-      emit ticket "gsd-tracker snapshot $tk --out $rel" "commit $rel" "" "saves $TRACKER ticket $tk (description + comments) for discuss and planning"
+      emit ticket "gsdt-tracker snapshot $tk --out $rel" "commit $rel" "" "saves $TRACKER ticket $tk (description + comments) for discuss and planning"
     else
-      emit ticket "" "" "phase $N has no ticket: ask the user for its $TRACKER id, then run gsd-tracker snapshot <id> --out $rel and commit it (or write $rel by hand)" "a ticket holds the product intent, in product words"
+      emit ticket "" "" "phase $N has no ticket: ask the user for its $TRACKER id, then run gsdt-tracker snapshot <id> --out $rel and commit it (or write $rel by hand)" "a ticket holds the product intent, in product words"
     fi ;;
   esac
 fi
@@ -166,15 +167,15 @@ fi
 if [ "$UI" = yes ] && [ "$GATES" != off ] && ! has UI-SPEC.md; then
   case "$(gsd_ui_design_state "$REPO")" in
     ok) ;;
-    *) emit design-system "gsd-ui design" "" "agree the design system with the user and fill .planning/design/DESIGN.md (references, tokens, components, page templates), then delete its stub line. Start from real systems: offer the user the 3 closest from styles.refero.design, and chosen fonts, not the default" "one design system for every phase with screens; it is filled once, usually by the first such phase. ui_gates = off in .gsd.conf turns the UI gates off" ;;
+    *) emit design-system "gsdt-ui design" "" "agree the design system with the user and fill .planning/design/DESIGN.md (references, tokens, components, page templates), then delete its stub line. Start from real systems: offer the user the 3 closest from styles.refero.design, and chosen fonts, not the default" "one design system for every phase with screens; it is filled once, usually by the first such phase. ui_gates = off in .gsd.conf turns the UI gates off" ;;
   esac
   lrel="${pd#"$REPO"/}/$P-LAYOUT.md"
   case "$(gsd_ui_layout_state "$REPO" "$pd" "$P")" in
-    missing)   emit layout "gsd-ui layout $N" "/gsd-sketch <this phase's main screen>" "the user picks the winning sketch variant; then write its folder in sketch:, the pages (URL paths) in pages:, and each page's main button in main_button: of $lrel" "sketch: skip <reason> only when the user agrees (e.g. a small change on an existing page)" ;;
+    missing)   emit layout "gsdt-ui layout $N" "/gsd-sketch <this phase's main screen>" "the user picks the winning sketch variant; then write its folder in sketch:, the pages (URL paths) in pages:, and each page's main button in main_button: of $lrel" "sketch: skip <reason> only when the user agrees (e.g. a small change on an existing page)" ;;
     nosketch)  emit layout "/gsd-sketch <this phase's main screen>" "" "the user picks the winning sketch variant; then write its folder in sketch: of $lrel" "sketch: skip <reason> only when the user agrees" ;;
     badsketch) emit layout "" "" "sketch: in $lrel does not name a sketch folder — fix it (e.g. .planning/sketches/003-catalog)" "" ;;
     nowinner)  emit layout "" "" "the sketch in $lrel has no winner yet — ask the user to pick a variant and mark winner: in its README.md" "" ;;
-    nopages)   emit layout "" "" "list the pages this phase builds (URL paths) in pages: of $lrel — gsd-ui check opens them" "" ;;
+    nopages)   emit layout "" "" "list the pages this phase builds (URL paths) in pages: of $lrel — gsdt-ui check opens them" "" ;;
   esac
 fi
 # 4 ui-phase
@@ -213,7 +214,7 @@ if ! has REVIEWS.md || [ -n "$rev_bad" ]; then
       review_note="$P-REVIEWS.md is not a usable review ($rev_bad): delete it and run the review again. $review_note"
     fi
   fi
-  [ "$REVIEW_PROVIDER" != codex ] || review_note="$review_note On a Codex usage limit: run gsd-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete $P-REVIEWS.md if one was written, then run this step again."
+  [ "$REVIEW_PROVIDER" != codex ] || review_note="$review_note On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete $P-REVIEWS.md if one was written, then run this step again."
   emit review "$review_run" "/gsd-plan-phase $N --reviews" "show the user the independent findings before the replan; verify each against the plans, never accept on trust" "$review_note"
 fi
 # 6b replan — the --reviews replan leaves no artifact of its own, so use git:
@@ -249,25 +250,25 @@ else
   case "$st" in ""|clean|skipped) ;; *) has REVIEW-FIX.md || emit code-review "/gsd-code-review $N --fix" "" "" "REVIEW.md status: $st" ;; esac
 fi
 # 11 the rendered pages: check → look → approve, then ui-review. gsd_ui_gate
-# (lib/ui.sh) names the first open one; the guard and gsd-finish ask it too.
+# (lib/ui.sh) names the first open one; the guard and gsdt-finish ask it too.
 if [ "$UI" = yes ] && [ "$GATES" != off ] && ! gsd_ui_exempt "$REPO" "$pd" "$P"; then
   gate=$(gsd_ui_gate "$REPO" "$pd" "$P"); gstep=${gate%%|*}; gwhy=${gate##*|}
   gstate=${gate#*|}; gstate=${gstate%%|*}
   crel="${pd#"$REPO"/}/$P-UI-CHECK.md"
   if [ "$gstep" = ui-check ]; then
     case "$gstate" in
-      failed) emit ui-check "gsd-ui check $N" "" "" "$gwhy: fix the pages, then check again. A finding the user accepts becomes a waive: line in $P-LAYOUT.md — never waive without asking" ;;
-      stale)  emit ui-check "gsd-ui check $N" "" "" "$gwhy; start the app in this worktree first. Pages that look the same keep their look and approval" ;;
-      *)      emit ui-check "gsd-ui check $N" "" "" "$gwhy; start the app in this worktree first. It opens each page at 3 widths, measures it and writes $crel and the pictures. If the pages cannot be checked, ask the user, then: gsd-ui check $N --skip \"<reason>\"" ;;
+      failed) emit ui-check "gsdt-ui check $N" "" "" "$gwhy: fix the pages, then check again. A finding the user accepts becomes a waive: line in $P-LAYOUT.md — never waive without asking" ;;
+      stale)  emit ui-check "gsdt-ui check $N" "" "" "$gwhy; start the app in this worktree first. Pages that look the same keep their look and approval" ;;
+      *)      emit ui-check "gsdt-ui check $N" "" "" "$gwhy; start the app in this worktree first. It opens each page at 3 widths, measures it and writes $crel and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check $N --skip \"<reason>\"" ;;
     esac
   fi
   case "$gstep" in ui-check|ui-look)
     [ "$gstep" = ui-look ] || gwhy="after the check"
-    emit ui-look "gsd-ui look $N" "" "" "$gwhy: open every picture in $P-SHOTS/ and answer each line of $P-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again" ;;
+    emit ui-look "gsdt-ui look $N" "" "" "$gwhy: open every picture in $P-SHOTS/ and answer each line of $P-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again" ;;
   esac
   case "$gstep" in ui-check|ui-look|ui-approve)
     [ "$gstep" = ui-approve ] || gwhy="after the look"
-    emit ui-approve "gsd-ui sheet $N" "gsd-ui approve $N" "show the user the sheet and ask for a yes BEFORE gsd-ui approve; if the user does not want to look (or there are no pictures): gsd-ui approve $N --waive \"<reason>\"" "$gwhy" ;;
+    emit ui-approve "gsdt-ui sheet $N" "gsdt-ui approve $N" "show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve $N --waive \"<reason>\"" "$gwhy" ;;
   esac
 fi
 if [ "$UI" = yes ] && ! has UI-REVIEW.md; then
@@ -285,4 +286,4 @@ fi
 if ! has SECURITY.md; then emit secure "/gsd-secure-phase $N" "" "" "last code gate — after every --fix has landed"
 else open=$(fm SECURITY.md threats_open); [ "${open:-0}" = 0 ] || emit secure "/gsd-secure-phase $N" "" "" "$open open threat(s)"; fi
 
-emit "done" "gsd-finish" "" "gsd-finish deletes the worktree the session is standing in — it must be the LAST action" ""
+emit "done" "gsdt-finish" "" "gsdt-finish deletes the worktree the session is standing in — it must be the LAST action" ""

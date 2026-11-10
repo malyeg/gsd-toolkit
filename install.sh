@@ -14,7 +14,7 @@
 #   --agent <p>, --all-agents
 #                       which agents get the skills (claude, codex; default claude)
 #   --reuse-install-config
-#                       keep the agents the last install chose (gsd-update)
+#                       keep the agents the last install chose (gsdt-update)
 #   --no-core           do not install GSD itself (gsd-core); by default it
 #                       is added for each agent that has none
 #   --no-user-hook      leave out (and remove) the user-level Claude hook
@@ -81,7 +81,7 @@ printf '%s' "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$' || die "not a versi
 BIN=${GSD_BIN_DIR:-$HOME/.local/bin}
 mkdir -p "$BIN"; BIN=$(cd "$BIN" && pwd -P)
 RELEASES=${GSD_RELEASES_DIR:-$BIN/../share/gsd-toolkit/releases}
-# gsd-update passes the releases dir it runs from: the old name moves here.
+# gsdt-update passes the releases dir it runs from: the old name moves here.
 case "$RELEASES" in */gsd-worktrees/releases|*/gsd-worktrees/releases/) RELEASES="${RELEASES%/gsd-worktrees/releases*}/gsd-toolkit/releases" ;; esac
 mkdir -p "$RELEASES"; RELEASES=$(cd "$RELEASES" && pwd -P)
 # The runtime of a release before 0.8.0, beside ours: only the standard
@@ -112,12 +112,14 @@ SRC="$TMP/$PKGNAME-$VERSION"
 
 # ── install ──────────────────────────────────────────────────────────────────
 # The release the commands used before this one (kept for going back).
+# gsd-list: its name before 0.10.0.
 PREV=""
-if [ -L "$BIN/gsd-list" ]; then
-  case "$(readlink "$BIN/gsd-list")" in
-    "$RELEASES"/*/bin/gsd-list) PREV=$(readlink "$BIN/gsd-list"); PREV=${PREV#"$RELEASES"/}; PREV=${PREV%%/*} ;;
+for l in gsdt-list gsd-list; do
+  [ -z "$PREV" ] && [ -L "$BIN/$l" ] || continue
+  case "$(readlink "$BIN/$l")" in
+    "$RELEASES"/*/bin/"$l") PREV=$(readlink "$BIN/$l"); PREV=${PREV#"$RELEASES"/}; PREV=${PREV%%/*} ;;
   esac
-fi
+done
 # An older release has its installer at the top (install.sh --copy).
 INSTALLER=("$SRC/lib/install.sh")
 [ -f "$SRC/lib/install.sh" ] || INSTALLER=("$SRC/install.sh" --copy)

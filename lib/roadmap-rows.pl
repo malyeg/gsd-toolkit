@@ -4,7 +4,7 @@
 #
 # `gsd_run query phase.add` / `phase.insert` (gsd-core) write only the `### Phase N:`
 # section (plus a `- [ ] TBD (run /gsd-plan-phase N …)` line). No checklist row
-# and no Progress row — so gsd-doctor reports T022/T023, and phase.complete,
+# and no Progress row — so gsdt-doctor reports T022/T023, and phase.complete,
 # which ticks the FIRST unticked line matching "Phase N", would tick the TBD line
 # (T021). lib/roadmap-audit.pl detects exactly that; this script prevents it.
 #

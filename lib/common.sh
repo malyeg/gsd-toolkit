@@ -45,13 +45,13 @@ gsd_wtdir() {  # $1=MAIN checkout → NAME of the sibling worktrees dir
 
 gsd_register_merge_driver() {  # $1=repo root — register the .planning merge driver
   # Merge drivers live in git config, which is NOT versioned, so a clone that
-  # never ran gsd-bootstrap-repo would fall back to a plain conflict on the
+  # never ran gsdt-bootstrap-repo would fall back to a plain conflict on the
   # union-merged planning files. Every gsd command that is about to merge
   # re-asserts the registration first; it is idempotent and costs one git call.
   # Worktrees share the main checkout's config, so one registration covers all
   # of them.
-  command -v gsd-planning-merge >/dev/null 2>&1 || return 0
-  local want="gsd-planning-merge %O %A %B %P"
+  command -v gsdt-planning-merge >/dev/null 2>&1 || return 0
+  local want="gsdt-planning-merge %O %A %B %P"
   [ "$(git -C "$1" config --get merge.gsd-planning.driver 2>/dev/null)" = "$want" ] && return 0
   git -C "$1" config merge.gsd-planning.driver "$want"
   git -C "$1" config merge.gsd-planning.name \
@@ -60,7 +60,7 @@ gsd_register_merge_driver() {  # $1=repo root — register the .planning merge d
 
 gsd_reviews_problem() {  # $1=<P>-REVIEWS.md  $2=review_provider → why it is no usable review
   # The one test of "the cross-AI review really happened", shared by
-  # gsd-flow-next (review step) and the guard (flow = strict, execute-phase).
+  # gsdt-flow-next (review step) and the guard (flow = strict, execute-phase).
   # /gsd-review keeps going when a reviewer fails (e.g. a Codex usage limit,
   # its stderr discarded) and can still write the file, with that reviewer's
   # "## <Name> Review" section (gsd-core: "## <Name> Review (<instance>)" for
@@ -124,7 +124,7 @@ PY
 }
 
 gsd_validation_problem() {  # $1=phase dir $2=<P> $3=checkout → why the test audit is still open
-  # The one test of "/gsd-validate-phase ran", shared by gsd-flow-next
+  # The one test of "/gsd-validate-phase ran", shared by gsdt-flow-next
   # (validate step), the guard (flow = strict, secure-phase) and doctor (T040).
   # plan-phase writes a draft <P>-VALIDATION.md (nyquist_compliant: false).
   # validate-phase sets nyquist_compliant: true when every requirement has an
@@ -210,7 +210,7 @@ gsd_finish_gates() {  # $1=MAIN $2=phase branch $3=its worktree → 1 = refuse (
 }
 
 gsd_flow_finish_gate() {  # $1=MAIN $2=phase branch $3=its worktree → 1 = refuse the finish (flow = strict)
-  # Called by gsd-wt-finish and gsd-finish --pr, before anything is merged or
+  # Called by gsdt-wt-finish and gsdt-finish --pr, before anything is merged or
   # pushed. It checks the test audit (/gsd-validate-phase): the guard holds
   # the earlier steps, but nothing runs after validate except secure.
   [ "$(gsd_conf_get "$1" flow)" = strict ] || return 0
@@ -298,7 +298,7 @@ gsd_baseref() {  # check|ensure <dir> → head | missing | set | other:<value> |
   st=$(gsd__baseref_py "$py" check "$2")
   [ "$1" = ensure ] && [ "$st" = missing ] || { echo "$st"; return 0; }
   # Writing a tracked, or not ignored, file would show up as uncommitted work
-  # and stop gsd-finish.
+  # and stop gsdt-finish.
   if git -C "$2" ls-files --error-unmatch -- .claude/settings.local.json >/dev/null 2>&1; then
     echo tracked; return 0
   fi
@@ -357,7 +357,7 @@ gsd_baseref_ensure() {  # <dir> [label] → one line saying what happened; never
     head)     ;;
     other:*)  echo "• ${label}/.claude/settings.local.json keeps worktree.baseRef = \"${st#other:}\" (yours; \"head\" lets a wave's plans run in parallel)" ;;
     tracked)  echo "⚠ ${label}/.claude/settings.local.json is tracked by git — not changed; add worktree.baseRef = \"head\" yourself so a wave's plans run in parallel" ;;
-    unignored) echo "⚠ .claude/settings.local.json is not gitignored in ${label} — not written; run gsd-init, then add worktree.baseRef = \"head\" so a wave's plans run in parallel" ;;
+    unignored) echo "⚠ .claude/settings.local.json is not gitignored in ${label} — not written; run gsdt-init, then add worktree.baseRef = \"head\" so a wave's plans run in parallel" ;;
     nopython) echo "⚠ no python 3.7+ — could not set worktree.baseRef = \"head\" in ${label}/.claude/settings.local.json" ;;
     *)        echo "⚠ ${label}/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = \"head\" yourself so a wave's plans run in parallel" ;;
   esac
@@ -406,8 +406,8 @@ gsd_planning_hook() {  # $1=repo root → GSD_HOOK_PATH, GSD_HOOK_LABEL, GSD_HOO
 
 gsd_planning_status() {  # $1=repo root → GSD_PLANNING_MISSING + GSD_ATTRS_STATE
   # The single source of truth for "is this repo's .planning merge safety
-  # installed". gsd-bootstrap-repo applies what this reports missing and
-  # gsd-doctor reports it — one predicate, so the two can never disagree about
+  # installed". gsdt-bootstrap-repo applies what this reports missing and
+  # gsdt-doctor reports it — one predicate, so the two can never disagree about
   # what counts as installed. Three items; the repair SHIM is not one of them,
   # it rides along with the ordinary shims.
   local repo="$1" attrs="$1/.gitattributes"
@@ -423,10 +423,10 @@ gsd_planning_status() {  # $1=repo root → GSD_PLANNING_MISSING + GSD_ATTRS_STA
   [ "$GSD_ATTRS_STATE" = ok ] || gsd__add_missing attributes
 
   [ "$(git -C "$repo" config --get merge.gsd-planning.driver 2>/dev/null)" \
-      = "gsd-planning-merge %O %A %B %P" ] || gsd__add_missing driver
+      = "gsdt-planning-merge %O %A %B %P" ] || gsd__add_missing driver
 
   gsd_planning_hook "$repo"
-  { [ -x "$GSD_HOOK_PATH" ] && grep -q 'gsd-planning-repair' "$GSD_HOOK_PATH" 2>/dev/null; } || gsd__add_missing hook
+  { [ -x "$GSD_HOOK_PATH" ] && grep -q 'gsdt-planning-repair' "$GSD_HOOK_PATH" 2>/dev/null; } || gsd__add_missing hook
 }
 
 gsd_planning_apply() {  # $1=repo root — install whatever gsd_planning_status reports missing
@@ -447,27 +447,32 @@ gsd_planning_apply() {  # $1=repo root — install whatever gsd_planning_status 
   case " $GSD_PLANNING_MISSING " in *" driver "*)
     if gsd_register_merge_driver "$repo" \
        && [ -n "$(git -C "$repo" config --get merge.gsd-planning.driver 2>/dev/null)" ]; then
-      echo "✔ merge driver registered (merge.gsd-planning → gsd-planning-merge)"
+      echo "✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)"
     else
-      echo "⚠ could not register the merge driver — gsd-finish re-asserts it on every run"
+      echo "⚠ could not register the merge driver — gsdt-finish re-asserts it on every run"
     fi
   ;; esac
 
   case " $GSD_PLANNING_MISSING " in *" hook "*)
     # The driver covers merges; the hook covers a plain `git pull` on the base
-    # branch by someone who never runs gsd-finish.
+    # branch by someone who never runs gsdt-finish.
     local body='#!/usr/bin/env sh
-# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# Installed by gsdt-bootstrap-repo (gsd-toolkit).
 # .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
 # A pull whose driver was missing, or a merge done by another tool, can still
 # leave both sides of a single-value line behind — reconcile them here.
-command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+command -v gsdt-planning-repair >/dev/null 2>&1 || exit 0
 [ -d .planning ] || exit 0
-gsd-planning-repair || true
+gsdt-planning-repair || true
 '
     mkdir -p "$(dirname "$GSD_HOOK_PATH")"
-    if [ -e "$GSD_HOOK_PATH" ]; then
-      if ! grep -q 'gsd-planning-repair' "$GSD_HOOK_PATH"; then
+    if [ -e "$GSD_HOOK_PATH" ] && grep -q 'gsd-planning-repair' "$GSD_HOOK_PATH"; then
+      # our block from before 0.10.0: its `command -v gsd-planning-repair ||
+      # exit 0` would end the hook before a second block — rename in place
+      perl -pi -e 's/(?<![\w-])gsd-(planning-repair|bootstrap-repo)(?![\w-])/gsdt-$1/g' "$GSD_HOOK_PATH"
+      echo "✔ $GSD_HOOK_LABEL (renamed to gsdt-planning-repair)"
+    elif [ -e "$GSD_HOOK_PATH" ]; then
+      if ! grep -q 'gsdt-planning-repair' "$GSD_HOOK_PATH"; then
         printf '\n%s\n' "$body" | sed '1d' >> "$GSD_HOOK_PATH"
       fi
       echo "✔ $GSD_HOOK_LABEL (existing hook repaired)"
@@ -478,6 +483,32 @@ gsd-planning-repair || true
     fi
     chmod +x "$GSD_HOOK_PATH"
   ;; esac
+}
+
+# ── the 0.10.0 rename (gsd-* → gsdt-*) ───────────────────────────────────────
+# The repo files and per-clone settings the commands had before 0.10.0.
+# gsdt-migrate moves them; it and doctor (T090) share this list.
+GSD_OLD_SHIMS="scripts/gsd-new-worktree-feature.sh scripts/gsd-finish-worktree-feature.sh scripts/gsd-derive-port.sh scripts/gsd-planning-repair.sh scripts/hooks/gsd-worktree-guard.sh"
+GSD_OLD_PREMERGE=scripts/gsd-premerge-check.sh
+
+gsd_migrate_needed() {  # $1=MAIN checkout → true when it still uses the old gsd-* names
+  # Fast on purpose (every start/finish/flow step runs it): file tests, one
+  # grep and two git config reads. gsdt-migrate --check looks at more.
+  local m=$1 rel
+  for rel in $GSD_OLD_SHIMS $GSD_OLD_PREMERGE; do [ ! -f "$m/$rel" ] || return 0; done
+  ! grep -qs 'hooks/gsd-worktree-guard\.sh' "$m/.claude/settings.json" || return 0
+  [ "$(git -C "$m" config --get merge.gsd-planning.driver 2>/dev/null)" != "gsd-planning-merge %O %A %B %P" ] || return 0
+  ! git -C "$m" config --local --get-regexp '^gsd-tracker\.' >/dev/null 2>&1 || return 0
+  return 1
+}
+
+gsd_migrate_refuse() {  # $1=MAIN checkout — exit 1 when it still uses the old names
+  # Not skipped by GSD_SKIP_GUARD: this is not a workflow rule — the old files
+  # would call commands that no longer exist.
+  [ -n "$1" ] || return 0
+  gsd_migrate_needed "$1" || return 0
+  printf '✖ this repo uses the old gsd-* names (before 0.10.0) — run: gsdt-migrate --apply\n  (in %s; plain gsdt-migrate first shows what it changes)\n' "$1" >&2
+  exit 1
 }
 
 gsd_release_lock() { rm -rf "${GSD_LOCKDIR:-}" 2>/dev/null || true; }
@@ -492,8 +523,8 @@ gsd_acquire_lock() {  # $1=MAIN checkout — serialize gsd commands on this chec
   # Two gsd commands on the SAME machine share the main checkout (index, HEAD,
   # ROADMAP); this lock serializes them. Sets GSD_LOCKDIR and installs a
   # release trap. Re-entrant: a no-op when the caller already holds the lock
-  # (gsd-finish exports GSD_LOCK_HELD=1 before delegating to gsd-wt-finish).
-  # NOT exported here: gsd-start execs an agent session after releasing, and an
+  # (gsdt-finish exports GSD_LOCK_HELD=1 before delegating to gsdt-wt-finish).
+  # NOT exported here: gsdt-start execs an agent session after releasing, and an
   # inherited GSD_LOCK_HELD=1 would disable locking for that whole session.
   [ "${GSD_LOCK_HELD:-}" = 1 ] && return 0
   GSD_LOCKDIR="$1/.git/gsd-cmd.lock"

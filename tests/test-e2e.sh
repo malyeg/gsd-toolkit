@@ -6,8 +6,8 @@
 # gsd-core (gsd_run), against a local bare repo standing in for GitHub. The AI's work is
 # simulated with plain files and commits, so it costs nothing. It covers what
 # unit suites cannot: pieces working together —
-#   gsd-init for claude+codex · two clones claiming at the same moment ·
-#   gsd-list · a hotfix --insert · the guard · the flow order with a
+#   gsdt-init for claude+codex · two clones claiming at the same moment ·
+#   gsdt-list · a hotfix --insert · the guard · the flow order with a
 #   Claude → Codex handoff · both clones finishing at once · doctor + repair.
 # It found the claim-race phase loss (R15), missing roadmap rows (R16), the
 # pull-then-claim block (R17) and the padded-decimal guard block (R18).
@@ -32,9 +32,9 @@ export GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1
 export GIT_AUTHOR_NAME=e2e GIT_AUTHOR_EMAIL=e2e@t GIT_COMMITTER_NAME=e2e GIT_COMMITTER_EMAIL=e2e@t
 # the laptop's installed skills are not what this checkout is testing
 export GSD_CLAUDE_SKILL_DIR="$S/skills" GSD_CODEX_SKILL_DIR="$S/skills-codex"
-# …and its Claude settings hold what an install writes: the gsd-rules session hook
+# …and its Claude settings hold what an install writes: the gsdt-rules session hook
 export GSD_CLAUDE_SETTINGS="$S/claude-settings.json"
-printf '{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"exec %s/bin/gsd-rules --hook"}]}]}}\n' "$PKG" > "$GSD_CLAUDE_SETTINGS"
+printf '{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"exec %s/bin/gsdt-rules --hook"}]}]}}\n' "$PKG" > "$GSD_CLAUDE_SETTINGS"
 unset GSD_PROVIDER GSD_AGENT GSD_AGENT_COMMAND GSD_LOCK_HELD GSD_SKIP_GUARD
 PASS=0; FAIL=0
 ok()  { PASS=$((PASS + 1)); printf '  ✔ %s\n' "$1"; }
@@ -43,16 +43,16 @@ check() { if eval "$2"; then ok "$1"; else bad "$1" "${3:-}"; fi; }
 step() { printf '\n== %s\n' "$1"; }
 art() { git -C "$1" add -A; git -C "$1" commit -qm "$2"; }   # simulate an AI step's commit
 
-step "1. project + gsd-init (claude, codex)"
+step "1. project + gsdt-init (claude, codex)"
 git init -q --bare -b main origin.git
 mkdir shop; git -C shop init -qb main
 printf '# Fake Shop\n' > shop/README.md; printf 'test:\n\t@test -f README.md\n' > shop/Makefile
 art shop "initial code"; git -C shop remote add origin "$S/origin.git"; git -C shop push -qu origin main
-(cd shop && gsd-init --providers claude,codex --provider claude --no-launch) > init.log 2>&1
-check "gsd-init succeeds" '[ $? = 0 ]'
+(cd shop && gsdt-init --providers claude,codex --provider claude --no-launch) > init.log 2>&1
+check "gsdt-init succeeds" '[ $? = 0 ]'
 check "2 instruction entrypoints" '[ -f shop/CLAUDE.md ] && [ -f shop/AGENTS.md ] && [ ! -e shop/GEMINI.md ]'
 check "main checkout: worktree.baseRef = head" 'grep -q "\"baseRef\": \"head\"" shop/.claude/settings.local.json'
-check "claude hook, codex none" 'grep -q gsd-worktree-guard shop/.claude/settings.json && grep -q "codex native guard hook: unsupported" init.log'
+check "claude hook, codex none" 'grep -q gsdt-worktree-guard shop/.claude/settings.json && grep -q "codex native guard hook: unsupported" init.log'
 printf 'flow = strict\ntest = test -f README.md && test -f Makefile\n' >> shop/.gsd.conf
 
 step "2. simulated /gsd-new-project"
@@ -106,15 +106,15 @@ Stopped at: Project initialized
 Resume file: None
 EOF
 art shop "docs: initialize project"; git -C shop push -q
-(cd shop && gsd-doctor --quiet) > doctor0.log 2>&1; d0=$?
+(cd shop && gsdt-doctor --quiet) > doctor0.log 2>&1; d0=$?
 check "doctor clean after init" '[ "$d0" = 0 ]' "$(cat doctor0.log)"
 
 step "3. two sessions claim at the same moment (second clone = second laptop)"
 git clone -q origin.git laptop2
 # a fresh clone has no merge driver (git config is not versioned) — as on a new laptop
-git -C laptop2 config merge.gsd-planning.driver "gsd-planning-merge %O %A %B %P"
-(cd shop && gsd-start -n "shopping cart" --no-launch > "$S/start-a.log" 2>&1; echo $? > "$S/rc-a") &
-(cd laptop2 && gsd-start -n "user login" --provider codex --no-launch > "$S/start-b.log" 2>&1; echo $? > "$S/rc-b") &
+git -C laptop2 config merge.gsd-planning.driver "gsdt-planning-merge %O %A %B %P"
+(cd shop && gsdt-start -n "shopping cart" --no-launch > "$S/start-a.log" 2>&1; echo $? > "$S/rc-a") &
+(cd laptop2 && gsdt-start -n "user login" --provider codex --no-launch > "$S/start-b.log" 2>&1; echo $? > "$S/rc-b") &
 wait
 check "both claims succeed" '[ "$(cat rc-a)" = 0 ] && [ "$(cat rc-b)" = 0 ]' "$(tail -5 start-a.log start-b.log)"
 ROAD=$(git --git-dir=origin.git show main:.planning/ROADMAP.md)
@@ -136,35 +136,35 @@ GSD_RUN=$(GSD_PKG="$PKG"; . "$PKG/lib/common.sh"; gsd_cli)
 (cd "$WT_CART" && CLAUDE_CONFIG_DIR="$S/no-claude" "$GSD_RUN" query worktree.base-check --mode harness-worktree) > basecheck.log 2>&1
 check "fresh worktree: gsd-core base-check does not degrade" 'grep -q "\"shouldDegrade\": false" basecheck.log' "$(cat basecheck.log)"
 
-step "4. gsd-list"
-(cd shop && COLUMNS=100 gsd-list) > list.log 2>&1
+step "4. gsdt-list"
+(cd shop && COLUMNS=100 gsdt-list) > list.log 2>&1
 check "list shows all 3 phases" 'grep -q "Product catalog" list.log && grep -q "shopping cart" list.log && grep -q "user login" list.log' "$(cat list.log)"
 check "cart worktree marked attached" 'grep "shopping cart" list.log | grep -q "●"'
 
 step "4b. hotfix phase (--insert) and roadmap rows"
-(cd shop && gsd-start --insert "$CART_N" "urgent price bug" --no-launch) > insert.log 2>&1; ri=$?
+(cd shop && gsdt-start --insert "$CART_N" "urgent price bug" --no-launch) > insert.log 2>&1; ri=$?
 check "hotfix claim succeeds (padded decimal phase)" '[ "$ri" = 0 ]' "$(tail -3 insert.log)"
 git -C shop push -q 2>/dev/null
 AUD=$(perl "$PKG/lib/roadmap-audit.pl" shop/.planning/ROADMAP.md)
 check "every claimed phase has its checklist + Progress rows" '[ -z "$AUD" ]' "$AUD"
 
 step "5. the guard"
-G() { gsd-worktree-guard --command "$1" --phase "$2" --repo "$3" > guard.log 2>&1; echo $?; }
+G() { gsdt-worktree-guard --command "$1" --phase "$2" --repo "$3" > guard.log 2>&1; echo $?; }
 check "feature work on main is blocked"              '[ "$(G gsd-discuss-phase "$CART_N" "$S/shop")" = 2 ]'
 check "wrong phase in cart worktree is blocked"      '[ "$(G gsd-discuss-phase "$LOGIN_N" "$WT_CART")" = 2 ]'
 check "discuss in its own worktree is allowed"       '[ "$(G gsd-discuss-phase "$CART_N" "$WT_CART")" = 0 ]'
 check "strict: plan before discuss is blocked"       '[ "$(G gsd-plan-phase "$CART_N" "$WT_CART")" = 2 ]'
-check "/gsd-phase off main is blocked"               '[ "$(gsd-worktree-guard --command gsd-phase --repo "$WT_CART" >/dev/null 2>&1; echo $?)" = 2 ]'
+check "/gsd-phase off main is blocked"               '[ "$(gsdt-worktree-guard --command gsd-phase --repo "$WT_CART" >/dev/null 2>&1; echo $?)" = 2 ]'
 P=$(printf '%02d' "$CART_N")
 check "zero-padded phase ($P) works"                 '[ "$(G gsd-discuss-phase "$P" "$WT_CART")" = 0 ]'
 
 step "6. flow, with a Claude → Codex handoff on the cart phase"
 PD=$(ls -d "$WT_CART"/.planning/phases/"$P"-* 2>/dev/null | head -1)
 [ -n "$PD" ] || { PD="$WT_CART/.planning/phases/$P-shopping-cart"; mkdir -p "$PD"; }
-NEXT() { gsd-flow-next "$CART_N" --repo "$WT_CART" --no-ui 2>&1 | sed -n 's/^step=//p'; }
+NEXT() { gsdt-flow-next "$CART_N" --repo "$WT_CART" --no-ui 2>&1 | sed -n 's/^step=//p'; }
 check "no tracker → first step is discuss" '[ "$(NEXT)" = discuss ]'
 printf '# context (by claude)\n' > "$PD/$P-CONTEXT.md"; art "$WT_CART" "discuss (claude)"
-(cd shop && gsd-start -p "$CART_N" --provider codex --no-launch) > handoff.log 2>&1
+(cd shop && gsdt-start -p "$CART_N" --provider codex --no-launch) > handoff.log 2>&1
 check "handoff to codex reuses the same worktree" 'grep -q "$WT_CART" handoff.log && grep -q "&& codex " handoff.log' "$(tail -4 handoff.log)"
 check "after discuss → plan"  '[ "$(NEXT)" = plan ]'
 : > "$PD/$P-01-PLAN.md"; art "$WT_CART" "plan (codex)"
@@ -182,7 +182,7 @@ step "7. finish both phases (login has a change too)"
 # login was claimed on laptop2, so laptop2 does its work and finishes it
 WT_LOGIN=$(git -C laptop2 worktree list --porcelain | awk '/^worktree /{w=substr($0,10)} /^branch refs\/heads\/phase-/{print w}' | head -1)
 printf 'login\n' > "$WT_LOGIN/login.txt"; art "$WT_LOGIN" "login work"
-(cd shop && gsd-finish "$CART_N") > finish-0.log 2>&1; r0=$?
+(cd shop && gsdt-finish "$CART_N") > finish-0.log 2>&1; r0=$?
 check "strict: finish without the test audit is refused" '[ "$r0" != 0 ] && grep -q "gsd-validate-phase $CART_N" finish-0.log' "$(tail -4 finish-0.log)"
 check "…and the cart worktree is kept" '[ -d "$WT_CART" ]'
 audit() {  # $1=worktree $2=phase → a compliant <P>-VALIDATION.md (what /gsd-validate-phase leaves)
@@ -191,17 +191,17 @@ audit() {  # $1=worktree $2=phase → a compliant <P>-VALIDATION.md (what /gsd-v
   printf -- '---\nnyquist_compliant: true\n---\n' > "$d/$p-VALIDATION.md"; art "$1" "validate"
 }
 audit "$WT_CART" "$CART_N"; audit "$WT_LOGIN" "$LOGIN_N"
-(cd shop && gsd-finish "$CART_N") > finish-a.log 2>&1 & pa=$!
-(cd laptop2 && gsd-finish "$LOGIN_N") > finish-b.log 2>&1 & pb=$!
+(cd shop && gsdt-finish "$CART_N") > finish-a.log 2>&1 & pa=$!
+(cd laptop2 && gsdt-finish "$LOGIN_N") > finish-b.log 2>&1 & pb=$!
 wait $pa; ra=$?; wait $pb; rb=$?
 check "cart finish succeeds"  '[ "$ra" = 0 ]' "$(tail -8 finish-a.log)"
 check "login finish succeeds" '[ "$rb" = 0 ]' "$(tail -8 finish-b.log)"
 check "both changes on origin" 'git --git-dir=origin.git cat-file -e main:cart.txt && git --git-dir=origin.git cat-file -e main:login.txt'
 check "worktrees removed" '[ ! -d "$WT_CART" ] && [ ! -d "$WT_LOGIN" ]'
 git -C shop pull -q --ff-only 2>/dev/null
-(cd shop && gsd-planning-repair --check) > repair.log 2>&1; rr=$?
+(cd shop && gsdt-planning-repair --check) > repair.log 2>&1; rr=$?
 check "planning files coherent" '[ "$rr" = 0 ]' "$(cat repair.log)"
-(cd shop && gsd-doctor --quiet) > doctor1.log 2>&1; d1=$?
+(cd shop && gsdt-doctor --quiet) > doctor1.log 2>&1; d1=$?
 check "doctor after finishing" '[ "$d1" = 0 ]' "$(grep -E '✖|T0' doctor1.log)"
 
 printf '\n%d passed, %d failed\n' "$PASS" "$FAIL"

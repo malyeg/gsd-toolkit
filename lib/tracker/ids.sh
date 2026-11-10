@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# lib/tracker/ids.sh — ticket ids, for gsd-tracker. Its own copy: the GSD
+# lib/tracker/ids.sh — ticket ids, for gsdt-tracker. Its own copy: the GSD
 # toolkit keeps a twin in lib/ticket.sh, and tests/test-tracker.sh runs both
 # over the same inputs so they cannot drift.
 

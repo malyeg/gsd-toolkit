@@ -27,9 +27,9 @@ commands.
 
 ## Features
 
-- **One phase, one worktree.** `gsd-start` claims a phase, pushes the claim,
+- **One phase, one worktree.** `gsdt-start` claims a phase, pushes the claim,
   creates a `phase-<N>-<slug>` worktree and opens an agent session in it.
-  `gsd-finish` tests, merges it back, pushes and cleans up.
+  `gsdt-finish` tests, merges it back, pushes and cleans up.
 - **Safe in parallel.** Two sessions claiming at once get different phase
   numbers. A merge conflict aborts cleanly and never leaves the base branch
   broken. Each worktree gets its own dev port.
@@ -43,17 +43,17 @@ commands.
   or out of phase order, and blocks steps whose required artifacts are
   missing. The commands check it themselves; agent hooks are only an extra
   layer.
-- **The whole phase, in order.** `gsd-flow-next` reads the phase folder and
+- **The whole phase, in order.** `gsdt-flow-next` reads the phase folder and
   says which step is next: discuss, plan, cross-AI review, execute, verify,
   UI checks, and finish. It can resume at any point.
 - **UI quality gates.** For phases with screens: a design file, a layout
   contract, a real-browser check at three widths, a visual review and your
   sign-off, before the phase can land.
-- **Cheaper small tasks.** `gsd-batch` runs a list of quick tasks in one
-  batch worktree, and `gsd-batch-report` shows what it cost.
+- **Cheaper small tasks.** `gsdt-batch` runs a list of quick tasks in one
+  batch worktree, and `gsdt-batch-report` shows what it cost.
 - **Ticket sync.** Phases link to ClickUp tickets (or any tracker, through a
   script) and move them along as work starts and lands.
-- **A health check.** `gsd-doctor` finds setup problems and names the
+- **A health check.** `gsdt-doctor` finds setup problems and names the
   command that fixes each one. It also shows what GSD adds to your context,
   and what you could hide.
 
@@ -67,17 +67,22 @@ curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh 
 
 # 2. Set up a repo and make its plan
 cd ~/projects/my-app
-gsd-init
+gsdt-init
 
 # 3. Work on a phase
-gsd-start -p 1          # an existing phase; or: gsd-start -n "description" for new work
+gsdt-start -p 1          # an existing phase; or: gsdt-start -n "description" for new work
 # ... the agent session runs the phase flow in the worktree ...
-gsd-finish              # test, merge, push, remove the worktree
+gsdt-finish              # test, merge, push, remove the worktree
 
 # Any time
-gsd-list                # what is in flight
-gsd-doctor              # what is wrong, and how to fix it
+gsdt-list                # what is in flight
+gsdt-doctor              # what is wrong, and how to fix it
 ```
+
+> **Upgrading from 0.9 or older?** The commands are now `gsdt-*` (`gsd-start`
+> → `gsdt-start`, …); `gsd-*` is gsd-core's prefix. Run the old `gsd-update`
+> one last time, then in each repo `gsdt-migrate` (shows the changes),
+> `gsdt-migrate --apply`, and commit. See [docs/migration.md](docs/migration.md#0100-commands-renamed-to-gsdt-).
 
 Every command has `--help`. The full order of a phase, and which steps run
 in the worktree vs the main checkout, is in
@@ -90,8 +95,8 @@ in the worktree vs the main checkout, is in
 - Node.js (`npx`), to install gsd-core
 - At least one agent CLI: [Claude Code](https://claude.com/claude-code) or
   [Codex](https://github.com/openai/codex)
-- Optional: `jq` (native hooks, ClickUp), `gh` (`gsd-finish --pr`),
-  [Playwright](https://playwright.dev) (`gsd-ui check`, for phases with screens)
+- Optional: `jq` (native hooks, ClickUp), `gh` (`gsdt-finish --pr`),
+  [Playwright](https://playwright.dev) (`gsdt-ui check`, for phases with screens)
 
 ## Commands
 
@@ -99,29 +104,30 @@ in the worktree vs the main checkout, is in
 
 | Command | What it does |
 |---|---|
-| `gsd-init` | Sets up a repo from zero, then opens the session that writes the plan (`/gsd-new-project`, or `/gsd-ingest-docs` when docs exist). |
-| `gsd-start` | Claims a phase and opens a session in its worktree. `-n "desc"` for a new phase, `-p <N>` for an existing one, `--insert <N>` for a hotfix, `--ticket <id>` to link a ticket, `--provider <name>` to pick the agent. |
-| `gsd-list` | Shows every phase: number, plans done, stage, worktree. Read-only. |
-| `gsd-finish` | Tests, merges into the base branch, pushes, then removes the worktree and branch. `--pr` opens a GitHub PR instead. |
-| `gsd-doctor` | Checks the repo's setup and names the fix for each finding. `--json` for CI; `--fix` runs the safe fixes after asking. |
-| `gsd-update` | Installs the latest release (checksum-verified) and the latest gsd-core. `--check` only compares. |
+| `gsdt-init` | Sets up a repo from zero, then opens the session that writes the plan (`/gsd-new-project`, or `/gsd-ingest-docs` when docs exist). |
+| `gsdt-start` | Claims a phase and opens a session in its worktree. `-n "desc"` for a new phase, `-p <N>` for an existing one, `--insert <N>` for a hotfix, `--ticket <id>` to link a ticket, `--provider <name>` to pick the agent. |
+| `gsdt-list` | Shows every phase: number, plans done, stage, worktree. Read-only. |
+| `gsdt-finish` | Tests, merges into the base branch, pushes, then removes the worktree and branch. `--pr` opens a GitHub PR instead. |
+| `gsdt-doctor` | Checks the repo's setup and names the fix for each finding. `--json` for CI; `--fix` runs the safe fixes after asking. |
+| `gsdt-update` | Installs the latest release (checksum-verified) and the latest gsd-core. `--check` only compares. |
 
 **Occasional use**
 
 | Command | What it does |
 |---|---|
-| `gsd-batch` | Runs several quick tasks as one batch, in its own `batch-*` worktree and a fresh session. Scouts files first, sends tiny items to `gsd-fast`, and reports the cost. Land it with `gsd-finish batch-…`. Use it instead of `/gsd-quick-batch`. |
-| `gsd-batch-report` | Tokens a batch used, per role and per item (read-only, from Claude Code's transcripts). |
-| `gsd-ui` | UI quality steps for phases with screens: design, layout, browser check, review, approval. |
-| `gsd-tracker` | Reads and updates tickets ([docs/trackers.md](docs/trackers.md)). Works in any repo, GSD or not. |
-| `gsd-planning-repair` | Fixes `ROADMAP.md` / `STATE.md` after a bad merge. `--check` for CI. |
-| `gsd-bootstrap-repo` | Writes the repo files (config, shims, instruction blocks). Called by `gsd-init`; safe to re-run. |
-| `gsd-rules` | Prints the workflow rules of the installed release, which agents load at the start of a session. |
-| `gsd-codex-wait` | Waits out a Codex usage limit, then runs the command again. |
+| `gsdt-batch` | Runs several quick tasks as one batch, in its own `batch-*` worktree and a fresh session. Scouts files first, sends tiny items to `gsd-fast`, and reports the cost. Land it with `gsdt-finish batch-…`. Use it instead of `/gsd-quick-batch`. |
+| `gsdt-batch-report` | Tokens a batch used, per role and per item (read-only, from Claude Code's transcripts). |
+| `gsdt-ui` | UI quality steps for phases with screens: design, layout, browser check, review, approval. |
+| `gsdt-tracker` | Reads and updates tickets ([docs/trackers.md](docs/trackers.md)). Works in any repo, GSD or not. |
+| `gsdt-planning-repair` | Fixes `ROADMAP.md` / `STATE.md` after a bad merge. `--check` for CI. |
+| `gsdt-bootstrap-repo` | Writes the repo files (config, shims, instruction blocks). Called by `gsdt-init`; safe to re-run. |
+| `gsdt-rules` | Prints the workflow rules of the installed release, which agents load at the start of a session. |
+| `gsdt-codex-wait` | Waits out a Codex usage limit, then runs the command again. |
+| `gsdt-migrate` | Moves a repo set up before 0.10.0 to the `gsdt-*` names. Dry run by default; `--apply` changes, `--check` for CI. |
 
-**Called by other commands:** `gsd-wt-new`, `gsd-wt-finish`,
-`gsd-worktree-guard`, `gsd-flow-next`, `gsd-planning-merge` (the git merge
-driver) and `gsd-derive-port` (per-worktree dev ports).
+**Called by other commands:** `gsdt-wt-new`, `gsdt-wt-finish`,
+`gsdt-worktree-guard`, `gsdt-flow-next`, `gsdt-planning-merge` (the git merge
+driver) and `gsdt-derive-port` (per-worktree dev ports).
 
 ### Agent skills
 
@@ -132,9 +138,9 @@ words instead of typing commands:
 |---|---|
 | `gsdt-worktrees` | Start, finish, list or set up phases with the commands above. |
 | `gsdt-flow` | Run or resume one phase from start to finish, step by step. |
-| `gsdt-doctor` | Run `gsd-doctor` and fix what it finds, asking first. |
+| `gsdt-doctor` | Run `gsdt-doctor` and fix what it finds, asking first. |
 | `gsdt-tracker` | Read, update, create or search tickets. |
-| `gsdt-batch` | Run a batch of small tasks (started with `gsd-batch`). |
+| `gsdt-batch` | Run a batch of small tasks (started with `gsdt-batch`). |
 
 ## Providers
 
@@ -145,11 +151,11 @@ words instead of typing commands:
 | `custom` | `AGENTS.md` | none | no |
 
 ```sh
-gsd-init --provider claude
-gsd-init --providers claude,codex --provider codex   # install both, start with Codex
+gsdt-init --provider claude
+gsdt-init --providers claude,codex --provider codex   # install both, start with Codex
 ```
 
-One phase can move between agents: `gsd-start -p 7 --provider codex` reuses
+One phase can move between agents: `gsdt-start -p 7 --provider codex` reuses
 the phase's worktree and work. Take turns, though: only one agent may write
 in a worktree at a time. Run agents in parallel on *different* phases.
 
@@ -178,7 +184,7 @@ All logic lives in the installed toolkit. A repo carries only:
 
 - **`.gsd.conf`**: the settings above.
 - **`.gsd/INSTRUCTIONS.md`**: the repo's settings, a few core rules, and a
-  pointer to `gsd-rules` for the rest. An update changes the rules in every
+  pointer to `gsdt-rules` for the rest. An update changes the rules in every
   repo, with no step there. Plus a short marked block in `CLAUDE.md` /
   `AGENTS.md` that points to both. Text outside the markers is never
   touched.
@@ -186,8 +192,8 @@ All logic lives in the installed toolkit. A repo carries only:
   commands, so `package.json` scripts and hooks work on every checkout.
 - **`.gitattributes`** and a `post-merge` hook: the planning merge driver
   and repair.
-- **`scripts/gsd-premerge-check.sh`** (optional, yours): extra checks before
-  each merge. Without it, `gsd-finish` runs the project's tests.
+- **`scripts/gsdt-premerge-check.sh`** (optional, yours): extra checks before
+  each merge. Without it, `gsdt-finish` runs the project's tests.
 
 ## Install
 
@@ -219,8 +225,8 @@ agent that has none.
 | `--no-user-hook` | Leave out the two Claude user-level hooks (below). |
 
 For Claude, the installer adds two user-level hooks. One refuses
-`/gsd-new-project` and `/gsd-ingest-docs` in a repo that `gsd-init` has not
-set up. The other loads the workflow rules (`gsd-rules`) when a session
+`/gsd-new-project` and `/gsd-ingest-docs` in a repo that `gsdt-init` has not
+set up. The other loads the workflow rules (`gsdt-rules`) when a session
 starts in a set-up repo.
 
 ### Updates
@@ -229,17 +235,17 @@ Commands tell you when a newer release is out (at most one GitHub call a
 day; `GSD_NO_UPDATE_CHECK=1` turns it off).
 
 ```sh
-gsd-update --check            # installed vs latest
-gsd-update                    # the latest toolkit + gsd-core
-gsd-update --version 0.8.3    # a given release; going back works too
+gsdt-update --check            # installed vs latest
+gsdt-update                    # the latest toolkit + gsd-core
+gsdt-update --version 0.8.3    # a given release; going back works too
 ```
 
 The previous release stays on disk. See [CHANGELOG.md](CHANGELOG.md) and
 [docs/releases.md](docs/releases.md).
 
 > **Coming from `gsd-worktrees`?** That is this project's old name
-> (`arconme/gsd-worktrees`). Run `gsd-update` twice, then
-> `gsd-init --no-launch` in each project. See
+> (`arconme/gsd-worktrees`). Run `gsdt-update` twice, then
+> `gsdt-init --no-launch` in each project. See
 > [Moving from gsd-worktrees](docs/releases.md#moving-from-gsd-worktrees).
 
 ### Windows (WSL2)

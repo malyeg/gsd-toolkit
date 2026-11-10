@@ -160,7 +160,7 @@ mkdir -p "$E2E/.planning/phases/01-a" "$E2E/.planning/phases/02-b"
 git init -q "$E2E"
 git -C "$E2E" config user.email t@example.com
 git -C "$E2E" config user.name test
-git -C "$E2E" config merge.gsd-planning.driver "$PKG/bin/gsd-planning-merge %O %A %B %P"
+git -C "$E2E" config merge.gsd-planning.driver "$PKG/bin/gsdt-planning-merge %O %A %B %P"
 : > "$E2E/.planning/phases/01-a/01-01-PLAN.md"
 : > "$E2E/.planning/phases/01-a/01-01-SUMMARY.md"
 : > "$E2E/.planning/phases/02-b/02-01-PLAN.md"
@@ -284,7 +284,7 @@ is "the merged tree passes --check" "$?" 0
 
 # ── 6. the same merge WITHOUT the driver — repair still fixes it ─────────────
 # The driver lives in git config, which is not versioned, so a clone that never
-# ran gsd-bootstrap-repo still gets plain union. gsd-finish's post-merge repair
+# ran gsdt-bootstrap-repo still gets plain union. gsdt-finish's post-merge repair
 # has to be able to clean that up on its own.
 section "no driver registered — plain union, repaired afterwards"
 git -C "$E2E" config merge.gsd-planning.driver 'git merge-file -q --union %A %O %B'
@@ -300,10 +300,10 @@ is "repair alone keeps history intact"   "$(grep -c '^Resume file:' "$S")" 2
 python3 "$ENGINE" repair --check "$E2E/.planning" >/dev/null 2>&1
 is "the repaired tree passes --check" "$?" 0
 
-# ── 7. the real gsd-finish path ──────────────────────────────────────────────
+# ── 7. the real gsdt-finish path ──────────────────────────────────────────────
 # The guarantee the whole change exists for: a normal finish must never leave
 # .planning self-contradictory on the base branch.
-section "gsd-finish leaves the base branch coherent"
+section "gsdt-finish leaves the base branch coherent"
 WT="$WORK/wt"
 mkdir -p "$WT/repo/.planning/phases/01-a"
 git init -q -b develop "$WT/repo"
@@ -331,9 +331,9 @@ roadmap ' ' '' 'x' ' (completed 2026-03-02)' '0/TBD | Not started | - ' '2/2 | C
 state executing 2 1 '2026-03-02T00:00:00.000Z'
 git -C "$WT/repo" commit -qam "parallel session finished phase 2"
 
-finish_out="$( cd "$WT/wt/phase-1-alpha" && PATH="$PKG/bin:$PATH" gsd-wt-finish 1 2>&1 )"
+finish_out="$( cd "$WT/wt/phase-1-alpha" && PATH="$PKG/bin:$PATH" gsdt-wt-finish 1 2>&1 )"
 finish_rc=$?
-is "gsd-wt-finish succeeds" "$finish_rc" 0
+is "gsdt-wt-finish succeeds" "$finish_rc" 0
 is "it reports reconciling .planning" "$(grep -c 'reconciling .planning after the phase merge' <<<"$finish_out")" 1
 
 R="$WT/repo/.planning/ROADMAP.md"
@@ -343,7 +343,7 @@ is "develop has both phases complete"        "$(grep -c '^- \[x\] \*\*Phase' "$R
 is "develop has one 'status:'"               "$(grep -c '^status:' "$S")" 1
 is "develop's counters were recomputed"      "$(grep -c '  completed_phases: 2' "$S")" 1
 is "develop's history is intact"             "$(grep -c '^Resume file:' "$S")" 2
-( cd "$WT/repo" && PATH="$PKG/bin:$PATH" gsd-planning-repair --check >/dev/null 2>&1 )
+( cd "$WT/repo" && PATH="$PKG/bin:$PATH" gsdt-planning-repair --check >/dev/null 2>&1 )
 is "develop passes --check after the finish" "$?" 0
 is "the repair left no uncommitted changes"  "$(git -C "$WT/repo" status --porcelain -- .planning | wc -l | tr -d ' ')" 0
 
@@ -412,7 +412,7 @@ is "and takes the incoming value"     "$(grep -c '^status: executing' "$FM/.plan
 is "counters still recomputed"        "$(grep -c '  total_phases: 1' "$FM/.planning/STATE.md")" 1
 
 # C: --commit ran `git add` on both planning files unconditionally, which is
-# fatal when one is absent. Called from gsd-finish that aborted the repair with
+# fatal when one is absent. Called from gsdt-finish that aborted the repair with
 # the merge already committed.
 NOSTATE="$WORK/nostate"
 mkdir -p "$NOSTATE/.planning/phases"
@@ -423,22 +423,22 @@ printf '# Roadmap\n\n## Phases\n\n- [x] **Phase 1: A** - a\n' > "$NOSTATE/.plann
 git -C "$NOSTATE" add -A && git -C "$NOSTATE" commit -qm init
 printf '# Roadmap\n\n## Phases\n\n- [ ] **Phase 1: A** - a\n- [x] **Phase 1: A** - a (completed 2026-01-01)\n' \
   > "$NOSTATE/.planning/ROADMAP.md"
-PATH="$PKG/bin:$PATH" gsd-planning-repair --repo "$NOSTATE" --commit >/dev/null 2>&1
+PATH="$PKG/bin:$PATH" gsdt-planning-repair --repo "$NOSTATE" --commit >/dev/null 2>&1
 is "--commit succeeds with no STATE.md" "$?" 0
 is "the repair was committed"           "$(git -C "$NOSTATE" status --porcelain -- .planning | wc -l | tr -d ' ')" 0
 is "the duplicate was collapsed"        "$(grep -c '^- \[.\] \*\*Phase 1:' "$NOSTATE/.planning/ROADMAP.md")" 1
 printf -- '- [ ] **Phase 2: B** - b\n- [ ] **Phase 2: B** - b\n' >> "$NOSTATE/.planning/ROADMAP.md"
 printf 'mine\n' > "$NOSTATE/src.txt"; git -C "$NOSTATE" add src.txt
-PATH="$PKG/bin:$PATH" gsd-planning-repair --repo "$NOSTATE" --commit >/dev/null 2>&1
+PATH="$PKG/bin:$PATH" gsdt-planning-repair --repo "$NOSTATE" --commit >/dev/null 2>&1
 is "--commit leaves out a file the user staged" "$(git -C "$NOSTATE" show --name-only --format= HEAD | tr '\n' ' ')" ".planning/ROADMAP.md "
 is "…which stays staged"                "$(git -C "$NOSTATE" diff --cached --name-only)" "src.txt"
 
-# ── 9. gsd-doctor ────────────────────────────────────────────────────────────
+# ── 9. gsdt-doctor ────────────────────────────────────────────────────────────
 # It diagnoses and never fixes. The read-only guarantee is the whole reason it
 # is safe to run on a repo you are mid-feature in, so it is asserted, not
 # assumed. (Toolkit-level findings are ignored here: they reflect the state of
 # the checkout the tests run from, not the repo under inspection.)
-section "gsd-doctor"
+section "gsdt-doctor"
 
 DOC="$WORK/doctor"
 mkdir -p "$DOC/.planning/phases/01-a" "$DOC/scripts"
@@ -449,42 +449,42 @@ printf '.planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n' > "$
 cp "$FIX/phase-11-merge/ROADMAP.md" "$FIX/phase-11-merge/STATE.md" "$DOC/.planning/"
 git -C "$DOC" add -A && git -C "$DOC" commit -qm init
 
-out="$(PATH="$PKG/bin:$PATH" gsd-doctor --repo "$DOC" 2>&1)"
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$DOC" 2>&1)"
 is "reports merge=union"          "$(grep -c 'still on merge=union' <<<"$out")" 1
 is "reports the missing driver"   "$(grep -c 'merge driver not registered' <<<"$out")" 1
 is "reports the missing hook"     "$(grep -c 'no post-merge hook' <<<"$out")" 1
 is "reports missing shims"        "$(grep -c 'shims: .* missing' <<<"$out")" 1
 is "reports the planning damage"  "$(grep -c 'contradicts itself' <<<"$out")" 1
-is "names gsd-init as the fix"    "$([ "$(grep -c 'gsd-init' <<<"$out")" -ge 4 ] && echo yes)" yes
-is "names the repair as the fix"  "$([ "$(grep -c 'gsd-planning-repair' <<<"$out")" -ge 1 ] && echo yes)" yes
+is "names gsdt-init as the fix"    "$([ "$(grep -c 'gsdt-init' <<<"$out")" -ge 4 ] && echo yes)" yes
+is "names the repair as the fix"  "$([ "$(grep -c 'gsdt-planning-repair' <<<"$out")" -ge 1 ] && echo yes)" yes
 
 # THE guarantee: a diagnosis must not change the thing it diagnoses.
 before_tree="$(git -C "$DOC" status --porcelain)"
 before_cfg="$(git -C "$DOC" config --local --list | sort)"
 before_files="$(find "$DOC" -type f -not -path '*/.git/*' | sort | xargs shasum 2>/dev/null | shasum)"
-PATH="$PKG/bin:$PATH" gsd-doctor --repo "$DOC" >/dev/null 2>&1
+PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$DOC" >/dev/null 2>&1
 is "working tree untouched"  "$(git -C "$DOC" status --porcelain)" "$before_tree"
 is "git config untouched"    "$(git -C "$DOC" config --local --list | sort)" "$before_cfg"
 is "no file contents changed" "$(find "$DOC" -type f -not -path '*/.git/*' | sort | xargs shasum 2>/dev/null | shasum)" "$before_files"
 # --fix is opt-in AND asks: with no terminal and no --yes it changes nothing.
-PATH="$PKG/bin:$PATH" gsd-doctor --fix --repo "$DOC" </dev/null >/dev/null 2>&1
+PATH="$PKG/bin:$PATH" gsdt-doctor --fix --repo "$DOC" </dev/null >/dev/null 2>&1
 is "--fix unanswered: working tree untouched" "$(git -C "$DOC" status --porcelain)" "$before_tree"
 is "--fix unanswered: git config untouched"   "$(git -C "$DOC" config --local --list | sort)" "$before_cfg"
 
-# --fix --yes runs the scoped writers (gsd-init, gsd-planning-repair) itself;
+# --fix --yes runs the scoped writers (gsdt-init, gsdt-planning-repair) itself;
 # the repo-setup and planning findings clear, and nothing is committed.
 head_before="$(git -C "$DOC" rev-parse HEAD)"
-out="$(PATH="$PKG/bin:$PATH" gsd-doctor --fix --yes --repo "$DOC" 2>&1)"
-is "--fix ran gsd-init and the repair" "$(grep -c '^▶ gsd-init\|^▶ gsd-planning-repair' <<<"$out")" 2
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --fix --yes --repo "$DOC" 2>&1)"
+is "--fix ran gsdt-init and the repair" "$(grep -c '^▶ gsdt-init\|^▶ gsdt-planning-repair' <<<"$out")" 2
 is "--fix committed nothing"            "$(git -C "$DOC" rev-parse HEAD)" "$head_before"
-out="$(PATH="$PKG/bin:$PATH" gsd-doctor --repo "$DOC" 2>&1)"
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$DOC" 2>&1)"
 is "merge=union finding clears"   "$(grep -c 'still on merge=union' <<<"$out")" 0
 is "driver finding clears"        "$(grep -c 'merge driver not registered' <<<"$out")" 0
 is "hook finding clears"          "$(grep -c 'no post-merge hook' <<<"$out")" 0
 is "planning reports coherent"    "$(grep -c '.planning is coherent' <<<"$out")" 1
 
 # ── 10. one predicate for "installed" ────────────────────────────────────────
-# gsd-bootstrap-repo writes the merge safety and gsd-doctor reports on it. When
+# gsdt-bootstrap-repo writes the merge safety and gsdt-doctor reports on it. When
 # those were two implementations they could disagree — doctor calling a repo
 # clean that bootstrap would still change. Both now go through
 # gsd_planning_status, and this asserts the contract directly.
@@ -512,15 +512,15 @@ is "attributes now read as ok"       "$GSD_ATTRS_STATE" ok
 # Applying twice must be a no-op, or the hook body would be appended repeatedly.
 PATH="$PKG/bin:$PATH" gsd_planning_apply "$PRED" >/dev/null 2>&1
 is "apply is idempotent (hook not duplicated)" \
-   "$(grep -c 'gsd-planning-repair || true' "$PRED/.git/hooks/post-merge")" 1
+   "$(grep -c 'gsdt-planning-repair || true' "$PRED/.git/hooks/post-merge")" 1
 is "apply is idempotent (attributes not duplicated)" \
    "$(grep -c 'merge=gsd-planning' "$PRED/.gitattributes")" 2
 
-# ── 11. gsd-doctor knows what it is looking at ───────────────────────────────
+# ── 11. gsdt-doctor knows what it is looking at ───────────────────────────────
 # It used to run the setup checks on anything, so a repo with no interest in GSD
 # — including the toolkit itself, which is the SOURCE of the scripts and is
-# deliberately not a GSD project — got four red lines telling it to run gsd-init.
-section "gsd-doctor does not demand GSD from repos that do not use it"
+# deliberately not a GSD project — got four red lines telling it to run gsdt-init.
+section "gsdt-doctor does not demand GSD from repos that do not use it"
 
 PLAIN="$WORK/plain"
 mkdir -p "$PLAIN"
@@ -529,7 +529,7 @@ git -C "$PLAIN" config user.email t@example.com
 git -C "$PLAIN" config user.name test
 echo hi > "$PLAIN/f" && git -C "$PLAIN" add -A && git -C "$PLAIN" commit -qm init
 
-out="$(PATH="$PKG/bin:$PATH" gsd-doctor --repo "$PLAIN" 2>&1)"; rc=$?
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$PLAIN" 2>&1)"; rc=$?
 is "a plain repo has no findings"       "$rc" 0
 is "it says the repo does not use GSD"  "$(grep -c 'does not use GSD' <<<"$out")" 1
 is "no red line about .gitattributes"   "$(grep -c 'gitattributes' <<<"$out")" 0
@@ -537,7 +537,7 @@ is "no red line about the driver"       "$(grep -c 'merge driver not registered'
 is "no red line about the hook"         "$(grep -c 'no post-merge hook' <<<"$out")" 0
 is "no red line about shims"            "$(grep -c 'shims:' <<<"$out")" 0
 
-out="$(PATH="$PKG/bin:$PATH" gsd-doctor --repo "$PKG" 2>&1)"
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$PKG" 2>&1)"
 is "the toolkit is recognised as itself" "$(grep -c 'toolkit itself, not a GSD project' <<<"$out")" 1
 is "and its setup checks are skipped"    "$(grep -c 'merge driver not registered' <<<"$out")" 0
 
@@ -552,23 +552,23 @@ git -C "$TOOLKIT_FIXTURE" add .
 git -C "$TOOLKIT_FIXTURE" -c user.name=t -c user.email=t@t commit -qm toolkit
 git -C "$TOOLKIT_FIXTURE" worktree add -q -b test-linked "$TOOLKIT_LINKED"
 for target in "$TOOLKIT_FIXTURE" "$TOOLKIT_LINKED"; do
-  out="$(PATH="$TOOLKIT_LINKED/bin:$PATH" "$TOOLKIT_LINKED/bin/gsd-doctor" --repo "$target" 2>&1)"; rc=$?
+  out="$(PATH="$TOOLKIT_LINKED/bin:$PATH" "$TOOLKIT_LINKED/bin/gsdt-doctor" --repo "$target" 2>&1)"; rc=$?
   is "linked toolkit recognises $(basename "$target")" "$(grep -c 'toolkit itself, not a GSD project' <<<"$out")" 1
   is "linked toolkit setup checks produce no findings" "$rc" 0
 done
-out="$(PATH="$TOOLKIT_LINKED/bin:$PATH" "$TOOLKIT_LINKED/bin/gsd-doctor" --repo "$DOC" 2>&1)"
+out="$(PATH="$TOOLKIT_LINKED/bin:$PATH" "$TOOLKIT_LINKED/bin/gsdt-doctor" --repo "$DOC" 2>&1)"
 is "linked toolkit still checks an unrelated GSD repo" "$(grep -c 'merge=gsd-planning on ROADMAP' <<<"$out")" 1
 
 # Toolkit housekeeping is a note, not a finding: it is about the toolkit
 # checkout, not the repo you asked about.
 is "a dirty toolkit does not fail another repo's check" \
-   "$(PATH="$PKG/bin:$PATH" gsd-doctor --repo "$PLAIN" 2>&1 | grep -c '✖.*toolkit has')" 0
+   "$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$PLAIN" 2>&1 | grep -c '✖.*toolkit has')" 0
 
 # A real GSD repo must still get the full treatment.
-out="$(PATH="$PKG/bin:$PATH" gsd-doctor --repo "$DOC" 2>&1)"
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$DOC" 2>&1)"
 is "a real GSD repo is still checked in full" "$(grep -c 'merge=gsd-planning on ROADMAP' <<<"$out")" 1
 
-section "gsd-doctor tells you what to run"
+section "gsdt-doctor tells you what to run"
 # Every finding used to carry its own 'cd <absolute path> && <cmd>', repeated
 # verbatim on each line, which pushed the actual command off the right edge and
 # read as noise. The commands are now collected once, at the end, in order.
@@ -583,12 +583,12 @@ printf '# Roadmap\n' > "$SUMM/.planning/ROADMAP.md"
 git -C "$SUMM" add -A && git -C "$SUMM" commit -qm init
 
 # strip colour codes: they sit between words and break plain greps
-out="$(PATH="$PKG/bin:$PATH" gsd-doctor --repo "$SUMM" 2>&1 | sed 's/\x1b\[[0-9;]*m//g')"
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$SUMM" 2>&1 | sed 's/\x1b\[[0-9;]*m//g')"
 is "the summary says what to run"      "$(grep -c 'finding(s)\.' <<<"$out")" 1
 is "no repeated 'cd … &&' on findings" "$(grep -c '→ cd ' <<<"$out")" 0
 is "the cd is given once"              "$(grep -c '^  cd .*/summary$' <<<"$out")" 1
-is "gsd-init listed once, not 3×"      "$(grep -c '^  gsd-init$' <<<"$out")" 1
-is "and it says how to confirm"        "$(grep -c 're-run gsd-doctor to confirm' <<<"$out")" 1
+is "gsdt-init listed once, not 3×"      "$(grep -c '^  gsdt-init$' <<<"$out")" 1
+is "and it says how to confirm"        "$(grep -c 're-run gsdt-doctor to confirm' <<<"$out")" 1
 
 section "post-merge hook: versioned when it lands in the working tree"
 # A repo may point core.hooksPath at a TRACKED directory (scripts/git-hooks is
@@ -621,7 +621,7 @@ gsd_planning_hook "$PLAIN"
 is "default .git/hooks stays unversioned" "$GSD_HOOK_VERSIONED" "0"
 
 # End to end: the bootstrap must COMMIT the hook in the custom-path repo.
-( cd "$HK" && PATH="$PKG/bin:$PATH" gsd-bootstrap-repo --commit >/dev/null 2>&1 )
+( cd "$HK" && PATH="$PKG/bin:$PATH" gsdt-bootstrap-repo --commit >/dev/null 2>&1 )
 is "the hook is tracked after bootstrap" \
    "$(git -C "$HK" ls-files scripts/git-hooks/post-merge | wc -l | tr -d ' ')" "1"
 is "and nothing is left untracked" \

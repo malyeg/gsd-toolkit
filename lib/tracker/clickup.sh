@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# lib/tracker/clickup.sh — ClickUp adapter for bin/gsd-tracker.
+# lib/tracker/clickup.sh — ClickUp adapter for bin/gsdt-tracker.
 #
 # Auth: a personal API token (pk_…), first match wins:
 #   1. $CLICKUP_API_TOKEN in the environment
@@ -7,7 +7,7 @@
 #      $GSD_CLICKUP_CONFIG, else ~/.config/gsd/clickup-<profile>.env when a
 #      profile is set (lib/tracker/config.sh), else ~/.config/gsd/clickup.env
 # Create one in ClickUp: avatar → Settings → Apps → API Token.
-# `gsd-tracker login` saves one and picks it for this repo in one step (clickup_login).
+# `gsdt-tracker login` saves one and picks it for this repo in one step (clickup_login).
 #
 # start/finish resolve the status against the task's own list: names match
 # ignoring case, spaces, hyphens and underscores ("in testing" finds
@@ -22,9 +22,9 @@
 # (TRACKER_EXTRA: lists, members, api, login), let an agent work tickets through this
 # one connector. Commands that need the workspace use $CLICKUP_TEAM_ID (env or
 # the token file), else the only workspace the token sees.
-# Sourced by bin/gsd-tracker (die, tracker_status set there).
+# Sourced by bin/gsdt-tracker (die, tracker_status set there).
 
-# shellcheck disable=SC2034  # read by bin/gsd-tracker
+# shellcheck disable=SC2034  # read by bin/gsdt-tracker
 TRACKER_EXTRA="lists members api login"  # this tracker's own commands, beyond the shared verbs
 trk_get profile; PROFILE=$TRK_VAL
 CONFIG=$(trk_clickup_env)
@@ -37,7 +37,7 @@ load_token() {
     . "$CONFIG"
   fi
   [ -n "${CLICKUP_API_TOKEN:-}" ] \
-    || die "no CLICKUP_API_TOKEN${PROFILE:+ for profile '$PROFILE'} — run gsd-tracker login${PROFILE:+ $PROFILE}, or put CLICKUP_API_TOKEN=pk_… in $CONFIG"
+    || die "no CLICKUP_API_TOKEN${PROFILE:+ for profile '$PROFILE'} — run gsdt-tracker login${PROFILE:+ $PROFILE}, or put CLICKUP_API_TOKEN=pk_… in $CONFIG"
 }
 
 api() {  # api <method> <path> [json-body]; prints response body, fails on HTTP >= 400
@@ -48,11 +48,11 @@ api() {  # api <method> <path> [json-body]; prints response body, fails on HTTP 
   [ -n "$body" ] && args+=(-d "$body")
   local out http
   out=$(curl "${args[@]}" -w '\n%{http_code}' "https://api.clickup.com/api/v2$path") \
-    || { printf 'gsd-tracker: curl failed (network?)\n' >&2; return 2; }
+    || { printf 'gsdt-tracker: curl failed (network?)\n' >&2; return 2; }
   http="${out##*$'\n'}"
   out="${out%$'\n'*}"
   if [ "$http" -ge 400 ] 2>/dev/null; then
-    printf 'gsd-tracker: ClickUp API %s %s → HTTP %s: %s\n' "$method" "$path" "$http" "$out" >&2
+    printf 'gsdt-tracker: ClickUp API %s %s → HTTP %s: %s\n' "$method" "$path" "$http" "$out" >&2
     return 2
   fi
   printf '%s\n' "$out"
@@ -80,7 +80,7 @@ resolve_status() {
   local list_id="$1"; shift
   local list_json names cand name
   if ! list_json=$(api GET "/list/$list_id"); then
-    printf 'gsd-tracker: cannot fetch list %s statuses — trying "%s" verbatim\n' "$list_id" "$1" >&2
+    printf 'gsdt-tracker: cannot fetch list %s statuses — trying "%s" verbatim\n' "$list_id" "$1" >&2
     printf '%s\n' "$1"; return 0
   fi
   names=$(printf '%s' "$list_json" | jq -r '.statuses[].status')
@@ -91,7 +91,7 @@ resolve_status() {
       fi
     done <<< "$names"
   done
-  printf 'gsd-tracker: no candidate (%s) matches list %s statuses [%s] — trying "%s" verbatim\n' \
+  printf 'gsdt-tracker: no candidate (%s) matches list %s statuses [%s] — trying "%s" verbatim\n' \
     "$*" "$list_id" "$(printf '%s' "$names" | paste -sd ',' -)" "$1" >&2
   printf '%s\n' "$1"
 }
@@ -187,16 +187,16 @@ clickup_user() {  # $1=me | user id | email | username → the numeric user id
       out=$(clickup_members_json)
       id=$(jq -r --arg u "$1" 'first(.[] | select(((.email // "") | ascii_downcase) == ($u | ascii_downcase)
                                                or ((.username // "") | ascii_downcase) == ($u | ascii_downcase)) | .id) // empty' <<< "$out")
-      [ -n "$id" ] || die "no workspace member '$1' (see gsd-tracker members)"
+      [ -n "$id" ] || die "no workspace member '$1' (see gsdt-tracker members)"
       printf '%s\n' "$id" ;;
     *) printf '%s\n' "$1" ;;
   esac
 }
 
 clickup_create() {  # <list-id> <name> [options] → prints the new id and url
-  [ $# -ge 2 ] || die "usage: gsd-tracker create <list-id> <name> [--desc <md>|-] [--assign <who>]… [--status <s>] [--priority 1-4] [--tag <t>]… [--parent <id>]"
+  [ $# -ge 2 ] || die "usage: gsdt-tracker create <list-id> <name> [--desc <md>|-] [--assign <who>]… [--status <s>] [--priority 1-4] [--tag <t>]… [--parent <id>]"
   local list="$1" body out v
-  printf '%s' "$list" | grep -qE '^[0-9]+$' || die "not a list id: $list (see gsd-tracker lists)"
+  printf '%s' "$list" | grep -qE '^[0-9]+$' || die "not a list id: $list (see gsdt-tracker lists)"
   body=$(jq -cn --arg n "$2" '{name: $n}')
   shift 2
   while [ $# -gt 0 ]; do
@@ -218,7 +218,7 @@ clickup_create() {  # <list-id> <name> [options] → prints the new id and url
 }
 
 clickup_update() {  # <id> [options]
-  [ $# -ge 3 ] || die "usage: gsd-tracker update <id> [--name <n>] [--desc <md>|-] [--assign <who>]… [--unassign <who>]… [--status <s>] [--priority 1-4] [--parent <id>]"
+  [ $# -ge 3 ] || die "usage: gsdt-tracker update <id> [--name <n>] [--desc <md>|-] [--assign <who>]… [--unassign <who>]… [--status <s>] [--priority 1-4] [--parent <id>]"
   local id body='{}' v
   id=$(trk_id_norm "$1" clickup) || die "not a ticket id: $1"
   shift
@@ -289,7 +289,7 @@ clickup_lists() {  # → the workspace tree with ids
 }
 
 clickup_raw() {  # <METHOD> </path> [json] → the response body
-  [ $# -ge 2 ] || die "usage: gsd-tracker api <GET|POST|PUT|DELETE> </path> [json]"
+  [ $# -ge 2 ] || die "usage: gsdt-tracker api <GET|POST|PUT|DELETE> </path> [json]"
   case "$1" in GET|POST|PUT|DELETE) ;; *) die "method must be GET, POST, PUT or DELETE, not '$1'" ;; esac
   case "$2" in
     *[[:space:]]*) die "the path has spaces — encode them" ;;
@@ -306,20 +306,20 @@ clickup_raw() {  # <METHOD> </path> [json] → the response body
 # terminal, before anything is typed): use it, or replace it. A new token is
 # read hidden on a terminal, else as one line of stdin, and tested: a token
 # ClickUp refuses is never saved. The file is mode 600 and keeps its other
-# lines. In a git repo, git config gsd-tracker.profile <name> then picks it for
+# lines. In a git repo, git config gsdt-tracker.profile <name> then picks it for
 # this clone and all its worktrees. .gsd.conf is never edited.
 clickup_login() {
   local p="${1:-}" token="" file tmp verb=saved in_repo=0 reuse=0 ans="" cur conf
-  [ $# -le 1 ] || die "usage: gsd-tracker login [<profile>]"
+  [ $# -le 1 ] || die "usage: gsdt-tracker login [<profile>]"
   if git -C "$REPO" rev-parse --git-dir >/dev/null 2>&1; then in_repo=1; fi
   [ -n "$p" ] || p=$PROFILE
   if [ -z "$p" ]; then
-    [ "$in_repo" = 1 ] || die "not in a git repo — name the profile: gsd-tracker login <name>"
+    [ "$in_repo" = 1 ] || die "not in a git repo — name the profile: gsdt-tracker login <name>"
     p=$(basename "$REPO" | tr '[:upper:]' '[:lower:]' \
           | sed -e 's/[^a-z0-9._-]/-/g' -e 's/^[^a-z0-9]*//' | cut -c1-64)
   fi
   trk_profile_ok "$p" \
-    || die "'$p' is not a profile name (letters, digits, . _ -) — use gsd-tracker login <name>"
+    || die "'$p' is not a profile name (letters, digits, . _ -) — use gsdt-tracker login <name>"
   file="$HOME/.config/gsd/clickup-$p.env"
 
   # A token already saved for this profile: offer it before anything is typed.
@@ -367,7 +367,7 @@ clickup_login() {
     printf '%s' "$token" | grep -qE '^[A-Za-z0-9_-]+$' \
       || die "that does not look like a ClickUp token (pk_…) — nothing saved"
     CLICKUP_API_TOKEN=$token api GET /user >/dev/null \
-      || { printf 'gsd-tracker: ClickUp did not accept that token — nothing saved\n' >&2; exit 2; }
+      || { printf 'gsdt-tracker: ClickUp did not accept that token — nothing saved\n' >&2; exit 2; }
     [ ! -f "$file" ] || verb=replaced
     tmp="$file.tmp.$$"
     ( umask 077
@@ -381,20 +381,20 @@ clickup_login() {
   if [ "$in_repo" = 1 ]; then
     cur=$(trk_git_get "$REPO" profile)
     if [ "$cur" = "$p" ]; then
-      echo "✔ this repo already uses profile $p (git config gsd-tracker.profile)"
-    elif git -C "$REPO" config --local gsd-tracker.profile "$p"; then
-      echo "✔ this repo now uses profile $p (git config gsd-tracker.profile: this clone and its worktrees, never committed)"
+      echo "✔ this repo already uses profile $p (git config gsdt-tracker.profile)"
+    elif git -C "$REPO" config --local gsdt-tracker.profile "$p"; then
+      echo "✔ this repo now uses profile $p (git config gsdt-tracker.profile: this clone and its worktrees, never committed)"
     else
-      echo "• could not write git config — set it by hand: git -C $REPO config gsd-tracker.profile $p"
+      echo "• could not write git config — set it by hand: git -C $REPO config gsdt-tracker.profile $p"
     fi
     conf=$(trk_conf_get "$REPO" tracker_profile)
     [ -z "$conf" ] || [ "$conf" = "$p" ] \
       || echo "• .gsd.conf says tracker_profile = $conf; in this clone git config wins, so $p is used"
     trk_get tracker
     [ "$TRK_VAL" = clickup ] \
-      || echo "• the tracker here is $TRK_VAL, so start/finish/comment don't use ClickUp yet — set it: git config gsd-tracker.tracker clickup (this clone), or tracker = clickup in .gsd.conf (the team)"
+      || echo "• the tracker here is $TRK_VAL, so start/finish/comment don't use ClickUp yet — set it: git config gsdt-tracker.tracker clickup (this clone), or tracker = clickup in .gsd.conf (the team)"
   else
-    echo "• not in a git repo, so no repo uses it yet — in the repo, run: gsd-tracker login $p (it offers this saved token)"
+    echo "• not in a git repo, so no repo uses it yet — in the repo, run: gsdt-tracker login $p (it offers this saved token)"
   fi
   [ -z "${GSD_TRACKER_PROFILE:-}" ] || [ "$GSD_TRACKER_PROFILE" = "$p" ] \
     || echo "• GSD_TRACKER_PROFILE=$GSD_TRACKER_PROFILE is set in this shell and picks another profile"

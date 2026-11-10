@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# gsd-batch-report — how many tokens a quick-task batch used, per role and
+# gsdt-batch-report — how many tokens a quick-task batch used, per role and
 # per item. Reads Claude Code's transcripts; read-only, costs no tokens.
 #
 # A batch is one /gsd-quick-batch or /gsdt-batch run. It is counted from its
@@ -10,7 +10,7 @@
 # and the helpers those spawned.
 #
 # Usage:
-#   gsd-batch-report [options]
+#   gsdt-batch-report [options]
 #
 # Options:
 #   --last <N>        the last N batches (default: the last one)
@@ -52,7 +52,7 @@ GSD_PKG=$(cd "$(dirname "$SELF")/.." && pwd)
 LIB="$GSD_PKG/lib/gsd_batch_report.py"
 
 usage() { awk 'NR>1 && /^set -uo/{exit} NR>1 {sub(/^# ?/,""); print}' "$0"; }
-die() { echo "gsd-batch-report: $1" >&2; exit "${2:-64}"; }
+die() { echo "gsdt-batch-report: $1" >&2; exit "${2:-64}"; }
 num() { case "$2" in ''|*[!0-9]*) die "$1 needs a whole number, got: $2" ;; esac; }
 
 ARGS=(); REPO=""; DIR=""; PROVIDER=claude; PICK=""
@@ -83,7 +83,7 @@ done
 if gsd_provider_gone "$PROVIDER"; then die "$GSD_GEMINI_GONE"; fi
 gsd_provider_known "$PROVIDER" || die "unknown provider: $PROVIDER (claude, codex, custom)"
 if [ "$PROVIDER" != claude ]; then
-  echo "gsd-batch-report: not supported yet for $PROVIDER — it reads Claude Code transcripts only."
+  echo "gsdt-batch-report: not supported yet for $PROVIDER — it reads Claude Code transcripts only."
   exit 0
 fi
 
@@ -99,7 +99,7 @@ if [ -z "$DIR" ]; then
   DIR=$("$PY" "$LIB" projdir --home "${CLAUDE_CONFIG_DIR:-$HOME/.claude}" --repo "$REPO" ${ALT[@]+"${ALT[@]}"})
 fi
 if [ ! -d "$DIR" ]; then
-  echo "gsd-batch-report: no Claude Code transcripts for this repo (looked in $DIR)."
+  echo "gsdt-batch-report: no Claude Code transcripts for this repo (looked in $DIR)."
   exit 0
 fi
 exec "$PY" "$LIB" report --dir "$DIR" ${ARGS[@]+"${ARGS[@]}"}

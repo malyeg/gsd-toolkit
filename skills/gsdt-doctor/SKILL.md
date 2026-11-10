@@ -1,19 +1,19 @@
 ---
 name: gsdt-doctor
-description: "Check this repo's GSD setup with gsd-doctor and fix what it finds, asking first — including a context that got too big: oversized ROADMAP/STATE files, and (Claude) skills, plugins and CLAUDE.md text via Claude's /skill-doctor, /context and /doctor. Use when asked to run the doctor, fix GSD setup problems, or slim down the context GSD adds."
+description: "Check this repo's GSD setup with gsdt-doctor and fix what it finds, asking first — including a context that got too big: oversized ROADMAP/STATE files, and (Claude) skills, plugins and CLAUDE.md text via Claude's /skill-doctor, /context and /doctor. Use when asked to run the doctor, fix GSD setup problems, or slim down the context GSD adds."
 ---
 
-# gsdt-doctor — find with gsd-doctor, fix with the user's yes
+# gsdt-doctor — find with gsdt-doctor, fix with the user's yes
 
-`gsd-doctor` only reads. This skill does the fixing, one item at a time, after
-the user agrees. It follows `gsd-doctor --json`; it adds no rules of its own.
+`gsdt-doctor` only reads. This skill does the fixing, one item at a time, after
+the user agrees. It follows `gsdt-doctor --json`; it adds no rules of its own.
 Start it through the active provider's skill mechanism (Claude:
 `/gsdt-doctor`; Codex: `$gsdt-doctor`).
 
 ## 1. Read
 
 ```
-Bash: gsd-doctor --json
+Bash: gsdt-doctor --json
 ```
 
 From the JSON use:
@@ -23,7 +23,7 @@ From the JSON use:
   what gsd-core adds to every session. Ignore `hideable`: see step 3.
 - `context.big_files` [{path, kib, tokens, fix}] — GSD files too big to keep
   reading at every step.
-- `safe` — the fixes `gsd-doctor --fix` would run (empty: none).
+- `safe` — the fixes `gsdt-doctor --fix` would run (empty: none).
 - `updates` — newer gsd-toolkit / gsd-core (the user's call).
 - `notes` — everything else, as text.
 
@@ -38,7 +38,7 @@ undoable: regenerate shims and instructions, repair `.planning` counters,
 remove a dead lock, …), ask once, then:
 
 ```
-Bash: gsd-doctor --fix --yes
+Bash: gsdt-doctor --fix --yes
 ```
 
 It changes files but never commits. Show `git status --short` and ask before
@@ -74,7 +74,7 @@ run it on a yes.
 
 ## 6. The agent's own context (Claude only)
 
-Claude's built-in checks see what gsd-doctor does not: CLAUDE.md files,
+Claude's built-in checks see what gsdt-doctor does not: CLAUDE.md files,
 memory, MCP servers, plugins, unused skills. They run from the shell with
 `claude -p` (one command, print, exit). Skip this step and step 8 when the
 agent is not Claude or `claude` is not on PATH.
@@ -93,7 +93,7 @@ types, not this session.
 ## 7. Check again
 
 ```
-Bash: gsd-doctor
+Bash: gsdt-doctor
 ```
 
 Report what is fixed, what is left, and what the user chose to keep.

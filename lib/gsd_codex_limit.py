@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Codex usage-limit helpers for bin/gsd-codex-wait. Reads text and files only;
+"""Codex usage-limit helpers for bin/gsdt-codex-wait. Reads text and files only;
 never calls Codex.
 
   parse --base EPOCH   text on stdin → the reset time as epoch seconds.

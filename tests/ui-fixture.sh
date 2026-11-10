@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 # ui-fixture.sh — fixture files for the checks of the rendered pages, sourced
-# by the suites (no browser: the files are written as gsd-ui would write them).
+# by the suites (no browser: the files are written as gsdt-ui would write them).
 #
 #   ui_fix_check <phase dir> <P> [status] [capture] [code]
 #       <P>-UI-CHECK.md for the pages / and /cart at 375px. An empty code

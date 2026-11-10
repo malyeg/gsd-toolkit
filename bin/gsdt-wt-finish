@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 #
-# gsd-wt-finish — merge a finished phase worktree back into the base branch,
-# push, and clean up the worktree + branch. The worker behind gsd-finish;
+# gsdt-wt-finish — merge a finished phase worktree back into the base branch,
+# push, and clean up the worktree + branch. The worker behind gsdt-finish;
 # callable standalone too.
 #
 # Usage (from inside the target repo):
-#   gsd-wt-finish <N | phase-N-slug | batch-…> [base]
-#   gsd-wt-finish 1                       # finds phase-1-* (never *-pr)
-#   gsd-wt-finish phase-1-customer-onboarding-terms
-#   gsd-wt-finish batch-2026-11-09-fix-labels   # a gsd-batch worktree
+#   gsdt-wt-finish <N | phase-N-slug | batch-…> [base]
+#   gsdt-wt-finish 1                       # finds phase-1-* (never *-pr)
+#   gsdt-wt-finish phase-1-customer-onboarding-terms
+#   gsdt-wt-finish batch-2026-11-09-fix-labels   # a gsdt-batch worktree
 #
-# A batch (batch-*, made by gsd-batch) lands the same way, minus the per-phase
+# A batch (batch-*, made by gsdt-batch) lands the same way, minus the per-phase
 # gates (UI steps, test audit): it has no phase folder for them to read.
 #
 # Safety: refuses if the worktree has uncommitted changes or if the main
@@ -21,13 +21,13 @@
 # .planning reconcile: ROADMAP.md and STATE.md merge with a union strategy so
 # parallel sessions can each append their own entries. Union keeps BOTH sides of
 # any line that is a single source of truth, so this command registers the
-# reconciling merge driver (gsd-planning-merge) and runs gsd-planning-repair
+# reconciling merge driver (gsdt-planning-merge) and runs gsdt-planning-repair
 # after BOTH merge points — the phase merge, and the `pull` on the push-retry
 # path, which fires exactly when a parallel session moved the base branch. The
 # base branch is never pushed while .planning contradicts itself.
 #
 # Pre-merge check hook: if the repo has an executable pre-merge script
-# (default scripts/gsd-premerge-check.sh, override with `premerge = <path>` in
+# (default scripts/gsdt-premerge-check.sh, override with `premerge = <path>` in
 # .gsd.conf, 'none' disables), it runs from the main checkout AFTER the origin
 # sync and BEFORE the merge, as `<script> <branch> <base>`. Nonzero exit
 # aborts the finish with nothing merged — the place for repo-specific
@@ -43,8 +43,8 @@
 # `ui_gates = strict` an open step refuses the finish with nothing merged;
 # with `warn` (default) it prints a warning. GSD_SKIP_GUARD=1 is the escape.
 #
-# Repo settings (base branch, worktree dir): .gsd.conf, see gsd-bootstrap-repo.
-# The old per-repo copy of this logic (scripts/gsd-finish-worktree-feature.sh)
+# Repo settings (base branch, worktree dir): .gsd.conf, see gsdt-bootstrap-repo.
+# The old per-repo copy of this logic (scripts/gsdt-finish-worktree-feature.sh)
 # is now a shim that delegates here.
 set -euo pipefail
 
@@ -61,7 +61,7 @@ GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 
 ID="${1:-}"
 if [ -z "$ID" ]; then
-  echo "usage: gsd-wt-finish <N | phase-N-slug | batch-…> [base]" >&2; exit 1
+  echo "usage: gsdt-wt-finish <N | phase-N-slug | batch-…> [base]" >&2; exit 1
 fi
 
 MAIN=$(gsd_main .)
@@ -69,9 +69,9 @@ MAIN=$(gsd_main .)
 BASE="${2:-$(gsd_base "$MAIN")}"
 
 # ── serialize on the shared main checkout ────────────────────────────────────
-# Same lock as gsd-start/gsd-finish; parallel finishes would otherwise race on
+# Same lock as gsdt-start/gsdt-finish; parallel finishes would otherwise race on
 # the one base-branch working tree. Skipped when the caller already holds it
-# (gsd-finish exports GSD_LOCK_HELD=1). Logic: gsd_acquire_lock, lib/common.sh.
+# (gsdt-finish exports GSD_LOCK_HELD=1). Logic: gsd_acquire_lock, lib/common.sh.
 gsd_acquire_lock "$MAIN"
 
 # Resolve the branch: a bare number → the phase-<N>-* branch; else use as-is.
@@ -120,12 +120,12 @@ repair_planning() {  # $1 = a phrase naming the merge that just happened
   # No ROADMAP.md → nothing to reconcile. The repair tool exits 2 on this, and
   # letting that reach the --check below would read as "corrupt — not pushing".
   [ -f "$MAIN/.planning/ROADMAP.md" ] || return 0
-  if ! command -v gsd-planning-repair >/dev/null 2>&1; then
-    echo "⚠ gsd-planning-repair not on PATH — skipping the .planning reconcile (re-run install.sh)" >&2
+  if ! command -v gsdt-planning-repair >/dev/null 2>&1; then
+    echo "⚠ gsdt-planning-repair not on PATH — skipping the .planning reconcile (re-run install.sh)" >&2
     return 0
   fi
   echo "▶ reconciling .planning after $1…"
-  gsd-planning-repair --repo "$MAIN" --commit \
+  gsdt-planning-repair --repo "$MAIN" --commit \
     || echo "⚠ .planning reconcile exited nonzero — verifying before we go on" >&2
 
   # Assert the guarantee rather than assume it, and assert it even when the
@@ -133,9 +133,9 @@ repair_planning() {  # $1 = a phrase naming the merge that just happened
   # the merge unverified. Two things must hold — the files must be coherent, and
   # the repair must have been COMMITTED, since --check reads the working tree
   # and a repaired-but-uncommitted tree would push the corruption anyway.
-  if ! gsd-planning-repair --repo "$MAIN" --check >/dev/null 2>&1; then
+  if ! gsdt-planning-repair --repo "$MAIN" --check >/dev/null 2>&1; then
     echo "✗ .planning is STILL self-contradictory after the repair — not pushing." >&2
-    gsd-planning-repair --repo "$MAIN" --check >&2 || true
+    gsdt-planning-repair --repo "$MAIN" --check >&2 || true
     echo "  The merge is committed locally only. Fix .planning, commit, then re-run finish." >&2
     return 1
   fi
@@ -178,7 +178,7 @@ fi
 # Runs after the sync so it sees the freshest $BASE; nonzero exit aborts with
 # nothing merged. No-op in repos without the script.
 PREMERGE=$(gsd_conf_get "$MAIN" premerge)
-PREMERGE="${PREMERGE:-scripts/gsd-premerge-check.sh}"
+PREMERGE="${PREMERGE:-scripts/gsdt-premerge-check.sh}"
 case "$PREMERGE" in /*) PREMERGE_PATH="$PREMERGE" ;; *) PREMERGE_PATH="$MAIN/$PREMERGE" ;; esac
 validate_finish() { # checkout whose code will be validated; before/after merge
 local validation_dir=$1 stage=$2

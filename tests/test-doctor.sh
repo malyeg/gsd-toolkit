@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-doctor.sh — the gsd-doctor checks added in 0.2.3: missing tools (T005,
+# test-doctor.sh — the gsdt-doctor checks added in 0.2.3: missing tools (T005,
 # T006), stale skills (T007), .gsd.conf typos and bad values (T017, T018), a
 # missing base branch (T015), the pre-merge gate (T019), duplicate phase
 # headings (T025), failed worktree installs (T032), a ClickUp tracker with no
@@ -46,8 +46,8 @@ farm() {  # $1=dir  $2...=names to leave out
 }
 
 OUT="$WORK/out"
-doc()  { PATH="${DPATH:-$BASEPATH}" gsd-doctor --repo "$1" > "$OUT" 2>&1; }
-json() { PATH="${DPATH:-$BASEPATH}" gsd-doctor --json --repo "$1" > "$OUT" 2>&1; }
+doc()  { PATH="${DPATH:-$BASEPATH}" gsdt-doctor --repo "$1" > "$OUT" 2>&1; }
+json() { PATH="${DPATH:-$BASEPATH}" gsdt-doctor --json --repo "$1" > "$OUT" 2>&1; }
 
 mkrepo() {  # $1=dir — a small GSD repo on develop with an origin
   git init -q -b develop "$1"
@@ -189,7 +189,7 @@ has "a checkout reinstalls with its install.sh" 'install.sh --reuse-install-conf
 # A release runtime has no .git: it re-runs its own install.sh for its version.
 RT="$WORK/runtime"; mkdir -p "$RT"
 cp -R "$PKG/bin" "$PKG/lib" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$PKG/VERSION" "$RT/"
-PATH="$RT/bin:$PATH:$STUB" "$RT/bin/gsd-doctor" --json --repo "$R" > "$OUT" 2>&1
+PATH="$RT/bin:$PATH:$STUB" "$RT/bin/gsdt-doctor" --json --repo "$R" > "$OUT" 2>&1
 has "a release reinstalls with its install.sh and version" "install.sh --version $(cat "$PKG/VERSION") --reuse-install-config" "$OUT"
 rm -rf "$WORK/skills"
 
@@ -227,10 +227,10 @@ json "$L"
 hasnt "no origin is not a finding" 'origin remote' "$OUT"
 
 section "pre-merge gate (T019)"
-mkdir -p "$R/scripts"; printf '#!/bin/sh\nexit 0\n' > "$R/scripts/gsd-premerge-check.sh"
+mkdir -p "$R/scripts"; printf '#!/bin/sh\nexit 0\n' > "$R/scripts/gsdt-premerge-check.sh"
 json "$R"
 has "a pre-merge script that is not executable → T019" 'is not executable' "$OUT"
-chmod +x "$R/scripts/gsd-premerge-check.sh"
+chmod +x "$R/scripts/gsdt-premerge-check.sh"
 json "$R"
 hasnt "executable → no T019" '"T019"' "$OUT"
 printf 'premerge = scripts/nope.sh\n' >> "$R/.gsd.conf"
@@ -325,25 +325,25 @@ has "a bad flow_skip entry → T018" "flow_skip has 'four'" "$OUT"
 
 section "instructions older than the toolkit (T016)"
 I="$WORK/instr"; mkrepo "$I"
-(cd "$I" && PATH="$BASEPATH" gsd-bootstrap-repo --agents claude,codex) >/dev/null 2>&1
+(cd "$I" && PATH="$BASEPATH" gsdt-bootstrap-repo --agents claude,codex) >/dev/null 2>&1
 git -C "$I" add -A && git -C "$I" commit -qm bootstrap
 doc "$I"
 has "fresh instructions pass" "GSD instructions match this toolkit" "$OUT"
 printf '\nMy own project notes.\n' >> "$I/CLAUDE.md"
 json "$I"
 hasnt "text outside the marked blocks is ignored" '"T016"' "$OUT"
-sed -i.bak 's/^- Run `gsd-flow-next <N>` before every phase action/- Run `gsd-flow-next <N>` before most phase actions/' "$I/.gsd/INSTRUCTIONS.md"
+sed -i.bak 's/^- Run `gsdt-flow-next <N>` before every phase action/- Run `gsdt-flow-next <N>` before most phase actions/' "$I/.gsd/INSTRUCTIONS.md"
 json "$I"
 has "an old canonical block → T016" 'older than this toolkit.*INSTRUCTIONS.md' "$OUT"
 sed -i.bak 's/^Read and follow/Please read and follow/' "$I/AGENTS.md"
 json "$I"
 has "…an old provider block is named too" 'INSTRUCTIONS.md AGENTS.md' "$OUT"
-PATH="$BASEPATH" gsd-doctor --fix --yes --repo "$I" > "$OUT" 2>&1
+PATH="$BASEPATH" gsdt-doctor --fix --yes --repo "$I" > "$OUT" 2>&1
 json "$I"
 hasnt "--fix refreshes them" '"T016"' "$OUT"
 has "…and keeps the user's own text" "My own project notes." "$I/CLAUDE.md"
 # A project set up before 0.8.0 (package gsd-worktrees, skill gsdw-flow):
-# its blocks still count as installed, but are out of date; gsd-init
+# its blocks still count as installed, but are out of date; gsdt-init
 # --no-launch rewrites them in place.
 for f in .gsd/INSTRUCTIONS.md CLAUDE.md AGENTS.md; do
   sed -i.bak 's/<!-- gsd-toolkit:/<!-- gsd-worktrees:/; s/gsdt-flow/gsdw-flow/' "$I/$f"
@@ -353,9 +353,9 @@ json "$I"
 has "pre-0.8.0 marker blocks → T016 for every file" 'older than this toolkit.*INSTRUCTIONS.md CLAUDE.md AGENTS.md' "$OUT"
 hasnt "…but they still count as installed (no T052)" '"T052"' "$OUT"
 hasnt "…(no T058)" '"T058"' "$OUT"
-(cd "$I" && PATH="$BASEPATH" gsd-bootstrap-repo --agents claude,codex) >/dev/null 2>&1
+(cd "$I" && PATH="$BASEPATH" gsdt-bootstrap-repo --agents claude,codex) >/dev/null 2>&1
 json "$I"
-hasnt "gsd-init rewrites them → no T016" '"T016"' "$OUT"
+hasnt "gsdt-init rewrites them → no T016" '"T016"' "$OUT"
 for f in .gsd/INSTRUCTIONS.md CLAUDE.md AGENTS.md; do
   hasnt "…no old marker left in $f" 'gsd-worktrees:\|gsdw-flow' "$I/$f"
 done
@@ -364,10 +364,10 @@ is "…in the same place, the user's text around it kept" "$(head -1 "$I/CLAUDE.
 rm -f "$I"/*.bak "$I"/.gsd/*.bak
 printf 'base = develop\nproviders = claude,codex\nui_gates = off\n' > "$I/.gsd.conf"
 json "$I"
-hasnt "ui_gates changed since the last gsd-init → no T016 (gsd-rules reads it live)" '"T016"' "$OUT"
+hasnt "ui_gates changed since the last gsdt-init → no T016 (gsdt-rules reads it live)" '"T016"' "$OUT"
 
 # A repo set up before the split: its .gsd/INSTRUCTIONS.md holds the full
-# rules. It still works (the text is complete); T016 asks for one gsd-init.
+# rules. It still works (the text is complete); T016 asks for one gsdt-init.
 # shellcheck source=../lib/provider.sh
 . "$PKG/lib/provider.sh"
 { echo '<!-- gsd-toolkit:canonical:start -->'; gsd_rules_text on
@@ -376,32 +376,32 @@ hasnt "ui_gates changed since the last gsd-init → no T016 (gsd-rules reads it 
 printf 'base = develop\nproviders = claude,codex\n' > "$I/.gsd.conf"
 json "$I"
 has "a full block from before the split → T016" 'older than this toolkit.*INSTRUCTIONS.md' "$OUT"
-(cd "$I" && PATH="$BASEPATH" gsd-bootstrap-repo --agents claude,codex) >/dev/null 2>&1
+(cd "$I" && PATH="$BASEPATH" gsdt-bootstrap-repo --agents claude,codex) >/dev/null 2>&1
 json "$I"
-hasnt "…one gsd-init converts it (no T016)" '"T016"' "$OUT"
-has "…to the small block that points at gsd-rules" 'run `gsd-rules` and follow its output' "$I/.gsd/INSTRUCTIONS.md"
+hasnt "…one gsdt-init converts it (no T016)" '"T016"' "$OUT"
+has "…to the small block that points at gsdt-rules" 'run `gsdt-rules` and follow its output' "$I/.gsd/INSTRUCTIONS.md"
 hasnt "…without the full rules" 'The shell commands are the source of truth' "$I/.gsd/INSTRUCTIONS.md"
 printf 'base = develop\nproviders = claude,codex\nflow = strict\n' > "$I/.gsd.conf"
 json "$I"
-hasnt "flow changed since the last gsd-init → no T016 (gsd-rules reads it live)" '"T016"' "$OUT"
+hasnt "flow changed since the last gsdt-init → no T016 (gsdt-rules reads it live)" '"T016"' "$OUT"
 
 section "Claude sessions load the rules (T062)"
 HS="$WORK/rules-hook.json"
 printf '{"hooks":{"SessionStart":[{"hooks":[{"type":"command","command":"[ ! -x %s ] || exec %s --hook"}]}]}}\n' \
-  "$PKG/bin/gsd-rules" "$PKG/bin/gsd-rules" > "$HS"
+  "$PKG/bin/gsdt-rules" "$PKG/bin/gsdt-rules" > "$HS"
 GSD_CLAUDE_SETTINGS="$HS" doc "$I"
 has "the hook is registered → pass" "Claude sessions load the toolkit rules" "$OUT"
 GSD_CLAUDE_SETTINGS="$HS" json "$I"
 hasnt "…no T062" '"T062"' "$OUT"
 echo '{"hooks":{}}' > "$WORK/nohook.json"
 GSD_CLAUDE_SETTINGS="$WORK/nohook.json" json "$I"
-has "no SessionStart hook runs gsd-rules → T062" '"code":"T062","message":"no Claude SessionStart hook' "$OUT"
+has "no SessionStart hook runs gsdt-rules → T062" '"code":"T062","message":"no Claude SessionStart hook' "$OUT"
 GSD_CLAUDE_SETTINGS="$WORK/nosuch.json" json "$I"
 has "…a missing settings file too" '"T062"' "$OUT"
 grep -q '"safe":\[[^]]*reinstall' "$OUT" && bad "…T062 adds no safe action" || ok "…T062 adds no safe action"
-farm "$WORK/norules" gsd-rules
+farm "$WORK/norules" gsdt-rules
 GSD_CLAUDE_SETTINGS="$HS" DPATH="$WORK/norules" json "$I"
-has "gsd-rules not on PATH → T062" '"code":"T062","message":"gsd-rules is not on PATH' "$OUT"
+has "gsdt-rules not on PATH → T062" '"code":"T062","message":"gsdt-rules is not on PATH' "$OUT"
 farm "$WORK/optout"; printf 'providers\tclaude\nuser_hook\toff\n' > "$WORK/optout/.gsd-install-manifest"
 GSD_CLAUDE_SETTINGS="$WORK/nohook.json" DPATH="$WORK/optout" json "$I"
 hasnt "installed with --no-user-hook → no T062" '"T062"' "$OUT"
@@ -420,21 +420,21 @@ section "--fix runs only the safe fixes, after asking"
 F="$WORK/fixme"; mkrepo "$F"
 git -C "$F" branch -q release && git -C "$F" push -q origin release && git -C "$F" branch -q -D release
 printf 'base = release\n' > "$F/.gsd.conf"
-mkdir -p "$F/scripts"; printf '#!/bin/sh\nexit 0\n' > "$F/scripts/gsd-premerge-check.sh"
+mkdir -p "$F/scripts"; printf '#!/bin/sh\nexit 0\n' > "$F/scripts/gsdt-premerge-check.sh"
 mkdir -p "$F/.git/gsd-cmd.lock"; echo 999999 > "$F/.git/gsd-cmd.lock/pid"
 git -C "$F" add -A && git -C "$F" commit -qm "fixture"; head_before=$(git -C "$F" rev-parse HEAD)
 origin_before=$(git -C "$F.origin.git" rev-parse develop)
 doc "$F"
-has "without --fix it points at --fix" "gsd-doctor --fix" "$OUT"
-PATH="$BASEPATH" gsd-doctor --fix --repo "$F" </dev/null > "$OUT" 2>&1
+has "without --fix it points at --fix" "gsdt-doctor --fix" "$OUT"
+PATH="$BASEPATH" gsdt-doctor --fix --repo "$F" </dev/null > "$OUT" 2>&1
 has "--fix lists what it would run" "--fix will run" "$OUT"
 has "…no terminal: asks for --yes" "add --yes" "$OUT"
 [ -d "$F/.git/gsd-cmd.lock" ] && ok "…and changed nothing" || bad "…and changed nothing"
-PATH="$BASEPATH" gsd-doctor --fix --yes --repo "$F" > "$OUT" 2>&1
+PATH="$BASEPATH" gsdt-doctor --fix --yes --repo "$F" > "$OUT" 2>&1
 [ ! -d "$F/.git/gsd-cmd.lock" ] && ok "--yes: dead lock removed (T030)" || bad "--yes: dead lock removed (T030)" "$(tail -5 "$OUT")"
 git -C "$F" show-ref --verify --quiet refs/heads/release && ok "--yes: base tracked from origin (T015)" || bad "--yes: base tracked from origin (T015)"
-[ -x "$F/scripts/gsd-premerge-check.sh" ] && ok "--yes: pre-merge script made executable (T019)" || bad "--yes: pre-merge script made executable (T019)"
-[ -f "$F/scripts/hooks/gsd-worktree-guard.sh" ] && ok "--yes: gsd-init ran (shims, T010)" || bad "--yes: gsd-init ran (shims, T010)"
+[ -x "$F/scripts/gsdt-premerge-check.sh" ] && ok "--yes: pre-merge script made executable (T019)" || bad "--yes: pre-merge script made executable (T019)"
+[ -f "$F/scripts/hooks/gsdt-worktree-guard.sh" ] && ok "--yes: gsdt-init ran (shims, T010)" || bad "--yes: gsdt-init ran (shims, T010)"
 is "--yes: nothing committed" "$(git -C "$F" rev-parse HEAD)" "$head_before"
 is "--yes: nothing pushed" "$(git -C "$F.origin.git" rev-parse develop)" "$origin_before"
 has "…checks again after fixing" "Checking again" "$OUT"
@@ -444,7 +444,7 @@ hasnt "the safe findings are gone" '"T0\(10\|11\|12\|13\|14\|15\|19\|30\)"' "$OU
 mkdir -p "$F/.git/gsd-cmd.lock"; : > "$F/.git/gsd-cmd.lock/pid"
 json "$F"
 has "a lock with no pid yet is its own finding (T033)" '"T033"' "$OUT"
-PATH="$BASEPATH" gsd-doctor --fix --yes --repo "$F" > /dev/null 2>&1
+PATH="$BASEPATH" gsdt-doctor --fix --yes --repo "$F" > /dev/null 2>&1
 [ -d "$F/.git/gsd-cmd.lock" ] && ok "…which --fix never removes (it may be a command starting)" || bad "…which --fix never removes (it may be a command starting)"
 rm -rf "$F/.git/gsd-cmd.lock"
 section "--fix is offered only when a fix would change something"
@@ -459,11 +459,11 @@ has "a stale percent → a note" "progress bar recomputed to 0%" "$OUT"
 has "…and the --fix offer" "safe to run for you" "$OUT"
 rm "$F/.planning/STATE.md"
 printf '\n### Phase 02: dup\n' >> "$F/.planning/ROADMAP.md"
-PATH="$BASEPATH" gsd-doctor --fix --yes --repo "$F" > "$OUT" 2>&1
+PATH="$BASEPATH" gsdt-doctor --fix --yes --repo "$F" > "$OUT" 2>&1
 has "a judgment finding (T025) is not auto-fixed" "none of these findings has a safe automatic fix" "$OUT"
-PATH="$BASEPATH" gsd-doctor --fix --json --repo "$F" > "$OUT" 2>&1
+PATH="$BASEPATH" gsdt-doctor --fix --json --repo "$F" > "$OUT" 2>&1
 has "--fix and --json don't mix" "don't mix" "$OUT"
-PATH="$BASEPATH" gsd-doctor --yes --repo "$F" > "$OUT" 2>&1
+PATH="$BASEPATH" gsdt-doctor --yes --repo "$F" > "$OUT" 2>&1
 has "--yes alone is refused" "only goes with --fix" "$OUT"
 
 section "worktree.baseRef (T034)"
@@ -477,9 +477,9 @@ json "$B"
 has "not set in the main checkout or a worktree → T034" '"T034"' "$OUT"
 doc "$B"
 has "…naming both" "not set (in: main checkout phase-1-one)" "$OUT"
-has "…and the safe fix" "gsd-doctor --fix" "$OUT"
+has "…and the safe fix" "gsdt-doctor --fix" "$OUT"
 hasnt "…not Claude's agent-* copies" "agent-a1" "$OUT"
-PATH="$BASEPATH" gsd-doctor --fix --yes --repo "$B" > "$OUT" 2>&1
+PATH="$BASEPATH" gsdt-doctor --fix --yes --repo "$B" > "$OUT" 2>&1
 is "--fix sets it in the main checkout" "$(baseref "$B")" head
 is "…keeping the other keys" "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["permissions"]["allow"][0])' "$B/.claude/settings.local.json")" "Bash(ls)"
 is "…and in the phase worktree" "$(baseref "$BW")" head
@@ -529,7 +529,7 @@ hasnt "a node picked at run time (gsd-core) → no T008" '"T008"' "$OUT"
 hook PostToolUse "\"\$(for n in \"$HK/bin/node\"; do printf '%s' \"\$n\"; done)\" \"$HK/gone/gsd-context-monitor.js\"" > "$GSD_CLAUDE_SETTINGS"
 json "$R"
 has "…but its gsd-* script gone → T008" "run a missing file: $HK/gone/gsd-context-monitor.js" "$OUT"
-hook PreToolUse "[ ! -x '$HK/gone/gsd-worktree-guard' ] || exec '$HK/gone/gsd-worktree-guard' --global" > "$GSD_CLAUDE_SETTINGS"
+hook PreToolUse "[ ! -x '$HK/gone/gsdt-worktree-guard' ] || exec '$HK/gone/gsdt-worktree-guard' --global" > "$GSD_CLAUDE_SETTINGS"
 json "$R"
 has "our --global guard gone → T008" '"T008"' "$OUT"
 has "…counted once, though named twice" '1 GSD hook(s)' "$OUT"
@@ -554,9 +554,9 @@ json "$R"
 hasnt "settings that are not JSON → skipped, no crash" '"T008"' "$OUT"
 rm -rf "$R/.claude"
 hook PostToolUse "\"$HK/old/node\" \"$HK/gsd-context-monitor.js\"" > "$GSD_CLAUDE_SETTINGS"
-PATH="$BASEPATH" GSD_UPDATE_NOTICE=always gsd-list --repo "$R" > "$OUT" 2>&1
-has "gsd-list warns at a terminal" "⚠ 1 GSD hook(s) in $GSD_CLAUDE_SETTINGS run a file that is gone" "$OUT"
-PATH="$BASEPATH" gsd-list --repo "$R" > "$OUT" 2>&1
+PATH="$BASEPATH" GSD_UPDATE_NOTICE=always gsdt-list --repo "$R" > "$OUT" 2>&1
+has "gsdt-list warns at a terminal" "⚠ 1 GSD hook(s) in $GSD_CLAUDE_SETTINGS run a file that is gone" "$OUT"
+PATH="$BASEPATH" gsdt-list --repo "$R" > "$OUT" 2>&1
 hasnt "…and stays quiet when piped" '⚠' "$OUT"
 rm -f "$GSD_CLAUDE_SETTINGS"
 unset GSD_CLAUDE_SETTINGS GSD_CODEX_HOOKS

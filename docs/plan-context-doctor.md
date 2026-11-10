@@ -1,4 +1,4 @@
-# Plan: gsd-doctor watches context size; gsdt-doctor fixes it
+# Plan: gsdt-doctor watches context size; gsdt-doctor fixes it
 
 Status: **built** 2026-11-09 (unreleased). Agreed the same day (option A: GSD parts only).
 
@@ -23,16 +23,16 @@ GSD's own files grow too. `ROADMAP.md`, `STATE.md`, `REQUIREMENTS.md` and
 - `/context`: the real token numbers, by category. Session only.
 - `claude doctor` (shell): install and settings only.
 
-These see Claude only, and they know nothing about GSD. gsd-doctor covers the
+These see Claude only, and they know nothing about GSD. gsdt-doctor covers the
 rest and points at them.
 
-## gsd-doctor (read-only, as always)
+## gsdt-doctor (read-only, as always)
 
 1. **T009 checks skills, not the profile name.** Before: any profile but
    `full` was a finding. Now: the finding names the skills the phase flow runs
    that are missing from the agent's skill folder (`gsd_core_required_skills`:
    discuss, plan, review, execute, code-review, verify-work, validate, secure,
-   `gsd-init`'s new-project and ingest-docs, plus ui-phase, ui-review and
+   `gsdt-init`'s new-project and ingest-docs, plus ui-phase, ui-review and
    sketch unless `ui_gates = off`). So a skill set trimmed with `/gsd-surface`
    passes as long as the flow's skills are there. With no `gsd-*` skill in the
    folder (gsd-core put them elsewhere) the old profile check stays.
@@ -64,12 +64,12 @@ skills is a choice, and gsd-core has no shell command for it.
 
 Runs in a session, so it can use skills. Named `gsdt-*` (gsd-core's installer
 deletes `skills/gsd-*`). Provider-neutral, like the other toolkit skills. Like
-`gsdt-flow`, it only reads `gsd-doctor --json` and acts on it — no second set
+`gsdt-flow`, it only reads `gsdt-doctor --json` and acts on it — no second set
 of rules.
 
-1. Run `gsd-doctor --json`. Show findings, context cost, hideable groups, big
+1. Run `gsdt-doctor --json`. Show findings, context cost, hideable groups, big
    files.
-2. Safe toolkit fixes: ask, then `gsd-doctor --fix --yes`.
+2. Safe toolkit fixes: ask, then `gsdt-doctor --fix --yes`.
 3. Skill groups: ask which to hide; for each, follow gsd-core's `gsd-surface`
    skill (`disable <group>`). Takes effect in the next session.
 4. Big files: explain; offer `gsd-complete-milestone` only when the user says
@@ -79,7 +79,7 @@ of rules.
 6. Claude: run `claude -p "/skill-doctor"` and `claude -p "/context"` (free,
    no model call) and sum them up. (Changed after 0.8.2: built-in commands do
    run in `claude -p`.)
-7. Run `gsd-doctor` again and report.
+7. Run `gsdt-doctor` again and report.
 8. Claude, last: ask to run `claude -p "/doctor"`; on a yes run it — it
    applies its own fixes under the user's permission mode.
 

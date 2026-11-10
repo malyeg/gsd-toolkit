@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 #
-# gsd-tracker — read and write tickets (issues/tasks) from the shell.
+# gsdt-tracker — read and write tickets (issues/tasks) from the shell.
 #
 # Works in any folder: a plain git repo, a GSD repo, or none. It is standalone
 # (it uses only lib/tracker/), and the GSD toolkit runs it as a command:
-# gsd-start calls `start` when a phase tagged tk-<id> is claimed or attached;
-# gsd-finish calls `finish` after the merge (or when --pr opens the PR); the
+# gsdt-start calls `start` when a phase tagged tk-<id> is claimed or attached;
+# gsdt-finish calls `finish` after the merge (or when --pr opens the PR); the
 # /gsdt-flow ticket step calls `snapshot` to save the ticket as <P>-TICKET.md.
 #
 # Usage:
-#   gsd-tracker [--repo <dir>] [--tracker <name>] <command> …
+#   gsdt-tracker [--repo <dir>] [--tracker <name>] <command> …
 #     start    <id> <text>     ticket → "in progress" + comment
 #     finish   <id> <text>     ticket → "in testing" + comment
 #     comment  <id> <text>     post a comment
@@ -33,14 +33,14 @@
 #   --tracker clickup forces ClickUp, whatever the repo sets.
 #
 # Settings, first match wins: the environment, then the repo's git config
-# (section gsd-tracker, in .git/config: never committed, shared by every
+# (section gsdt-tracker, in .git/config: never committed, shared by every
 # worktree of the clone), then .gsd.conf (a GSD repo's team settings):
 #   setting        env                          git config                  .gsd.conf
-#   tracker        GSD_TRACKER (--tracker wins) gsd-tracker.tracker         tracker
-#   profile        GSD_TRACKER_PROFILE          gsd-tracker.profile         tracker_profile
-#   command        -                            gsd-tracker.command         tracker_command
-#   start status   GSD_TRACKER_STATUS_START     gsd-tracker.statusStart     tracker_status_start
-#   finish status  GSD_TRACKER_STATUS_FINISH    gsd-tracker.statusFinish    tracker_status_finish
+#   tracker        GSD_TRACKER (--tracker wins) gsdt-tracker.tracker         tracker
+#   profile        GSD_TRACKER_PROFILE          gsdt-tracker.profile         tracker_profile
+#   command        -                            gsdt-tracker.command         tracker_command
+#   start status   GSD_TRACKER_STATUS_START     gsdt-tracker.statusStart     tracker_status_start
+#   finish status  GSD_TRACKER_STATUS_FINISH    gsdt-tracker.statusFinish    tracker_status_finish
 # With none of them the tracker is none in a repo with a .gsd.conf, else clickup.
 # (Legacy GSD_CLICKUP_STATUS_START / _FINISH still work.)
 #   none     start/finish/comment/status do nothing and succeed;
@@ -72,16 +72,16 @@
 #
 # A profile names the login: ClickUp then reads ~/.config/gsd/clickup-<name>.env
 # instead of the shared ~/.config/gsd/clickup.env (no fallback); custom gets
-# GSD_TRACKER_PROFILE. `gsd-tracker login [<name>]` (ClickUp) asks for the token
+# GSD_TRACKER_PROFILE. `gsdt-tracker login [<name>]` (ClickUp) asks for the token
 # (or offers the one already saved for <name>), tests it, saves that file, and
-# in a git repo sets gsd-tracker.profile — one step.
+# in a git repo sets gsdt-tracker.profile — one step.
 #
 # Exit codes: 0 ok · 1 usage/config error · 2 tracker call failed.
-# gsd-start / gsd-finish report any failure as a note: a tracker outage never
+# gsdt-start / gsdt-finish report any failure as a note: a tracker outage never
 # blocks a claim or a merge.
 set -euo pipefail
 
-die() { printf 'gsd-tracker: %s\n' "$*" >&2; exit 1; }
+die() { printf 'gsdt-tracker: %s\n' "$*" >&2; exit 1; }
 usage() { awk 'NR>1 && /^set -euo/{exit} NR>1 {sub(/^# ?/,""); print}' "$0"; }
 
 SELF="$0"
@@ -114,13 +114,13 @@ tracker_status() {  # $1=start|finish → configured status name ('' = adapter d
   trk_get "status_$1"; printf '%s\n' "$TRK_VAL"
 }
 
-SET_HINT="set it: git config gsd-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf"
+SET_HINT="set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf"
 
 cmd="${1:-}"
 case "$cmd" in
   '') usage >&2; exit 1 ;;
   extract)
-    [ $# -ge 2 ] || die "usage: gsd-tracker extract <string>"
+    [ $# -ge 2 ] || die "usage: gsdt-tracker extract <string>"
     trk_id_extract "$2"; exit 0 ;;
   which) printf '%s\n' "$TRACKER"; exit 0 ;;
   config) trk_print_config; exit 0 ;;
@@ -130,9 +130,9 @@ trk_known "$TRACKER" || die "unknown tracker '$TRACKER' — use none, clickup, o
 case "$cmd" in
   start|finish|comment|status|snapshot|update)
     case "$cmd" in
-      snapshot) [ $# -ge 2 ] || die "usage: gsd-tracker snapshot <id>" ;;
-      update)   [ $# -ge 3 ] || die "usage: gsd-tracker update <id> <option>…" ;;
-      *)        [ $# -ge 3 ] || die "usage: gsd-tracker $cmd <id> <text>" ;;
+      snapshot) [ $# -ge 2 ] || die "usage: gsdt-tracker snapshot <id>" ;;
+      update)   [ $# -ge 3 ] || die "usage: gsdt-tracker update <id> <option>…" ;;
+      *)        [ $# -ge 3 ] || die "usage: gsdt-tracker $cmd <id> <text>" ;;
     esac
     ID=$(trk_id_norm "$2" "$TRACKER") || die "not a ticket id: $2"
     shift 2
@@ -141,7 +141,7 @@ case "$cmd" in
       [ $# -ge 2 ] || die "--out needs a file"; OUT="$2"; shift 2
     fi
     set -- "$cmd" "$ID" "$@" ;;
-  create) [ $# -ge 3 ] || die "usage: gsd-tracker create <where> <title> [option…]" ;;
+  create) [ $# -ge 3 ] || die "usage: gsdt-tracker create <where> <title> [option…]" ;;
   tasks|check) ;;
   *)
     # Not a shared verb: maybe one of the tracker's own (TRACKER_EXTRA).
@@ -153,7 +153,7 @@ case "$cmd" in
     extra=""
     if [ -n "${TRACKER_EXTRA:-}" ]; then extra=" (tracker ${TRACKER} also has: ${TRACKER_EXTRA})"
     elif [ "$TRACKER" = none ]; then extra=" (the tracker here is none — ${SET_HINT})"; fi
-    die "unknown command: ${cmd}${extra} — see gsd-tracker --help" ;;
+    die "unknown command: ${cmd}${extra} — see gsdt-tracker --help" ;;
 esac
 
 if [ "$TRACKER" = none ]; then

@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# lib/context.sh — what GSD adds to an agent's context, for gsd-doctor.
+# lib/context.sh — what GSD adds to an agent's context, for gsdt-doctor.
 #
 # Every session lists each installed skill's and agent's name and description;
 # gsd-core installs ~75 skills and ~35 agents. A skill's full text loads only
@@ -10,11 +10,11 @@
 # (gsd_ui_gates). Reads files only; node runs only to read gsd-core's own
 # skill-group list (clusters.cjs), never anything that changes state.
 
-# shellcheck disable=SC2034  # used by bin/gsd-doctor
+# shellcheck disable=SC2034  # used by bin/gsdt-doctor
 GSD_CONTEXT_BIG_KIB=32   # a GSD planning file, or AGENTS.md, over this is noted
 
 # gsd-core skills (names without gsd-) the toolkit runs: the phase flow's steps
-# (bin/gsd-flow-next) and gsd-init's planning session. With ui_gates = off the
+# (bin/gsdt-flow-next) and gsdt-init's planning session. With ui_gates = off the
 # layout step is gone, so sketch is not needed; ui-phase and ui-review still run.
 gsd_core_required_skills() {  # $1=repo
   local s="new-project ingest-docs discuss-phase plan-phase review execute-phase code-review verify-work validate-phase secure-phase ui-phase ui-review"

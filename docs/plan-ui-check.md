@@ -3,7 +3,7 @@
 Status: **built in 0.4.0** (revision 2). Written 2026-09-27, revised the same day
 after the review in `docs/plan-ui-check-review.md` (31 findings; the accepted
 ones are marked `[#n]` below). Builds on the UI gates from 0.3.0 / 0.3.1
-(`docs/ui-quality-plan.md`, `lib/ui.sh`, `bin/gsd-ui`).
+(`docs/ui-quality-plan.md`, `lib/ui.sh`, `bin/gsdt-ui`).
 
 ## Problem
 
@@ -25,14 +25,14 @@ passed the UI spec — colors, fonts and spacing were right — and still had:
 
 What 0.3.x covers: one design system (`DESIGN.md`), a chosen sketch per phase
 (`<P>-LAYOUT.md`, with `url:` since 0.3.1), screenshots before ui-review
-(`gsd-ui shots`, `<P>-SHOTS.md`).
+(`gsdt-ui shots`, `<P>-SHOTS.md`).
 
 What is still open:
 
 1. Nothing **measures** the rendered page.
 2. The agent is only *told* to look at the screenshots. Nothing records that
    it did, or what it saw.
-3. The user has no fast way to judge the result before `gsd-finish`.
+3. The user has no fast way to judge the result before `gsdt-finish`.
 4. The layout rules are a few lines of prose, not a checklist.
 
 ## Goals and non-goals
@@ -63,10 +63,10 @@ phase under `ui_gates = strict`.
 | File | Written by | Holds |
 |---|---|---|
 | `<P>-LAYOUT.md` | the agent, with the user | `sketch:`, `pages:`, `url:`, and new: `app:`, `main_button:`, `expect:`, `waive:` |
-| `<P>-UI-CHECK.md` | `gsd-ui check` | the machine result of one capture `[#27]` |
-| `<P>-SHOTS/` | `gsd-ui check` | the pictures and the sheet (`index.html`); never committed |
-| `<P>-UI-LOOK.md` | `gsd-ui look`, then the agent | what the agent saw, per picture and rule `[#27]` |
-| `<P>-UI-APPROVAL.md` | `gsd-ui approve` | the user's yes, naming the capture `[#30]` |
+| `<P>-UI-CHECK.md` | `gsdt-ui check` | the machine result of one capture `[#27]` |
+| `<P>-SHOTS/` | `gsdt-ui check` | the pictures and the sheet (`index.html`); never committed |
+| `<P>-UI-LOOK.md` | `gsdt-ui look`, then the agent | what the agent saw, per picture and rule `[#27]` |
+| `<P>-UI-APPROVAL.md` | `gsdt-ui approve` | the user's yes, naming the capture `[#30]` |
 
 New LAYOUT lines (each may repeat):
 
@@ -81,7 +81,7 @@ waive: C3 | /blog | 375 | .brand-tag | brand color, agreed with <user> [#31]
 
 ### 2. The capture id and staleness `[#4]`
 
-- One run of `gsd-ui check` = one **capture**. Its id is a hash of the
+- One run of `gsdt-ui check` = one **capture**. Its id is a hash of the
   pictures it took (names + content). Same pictures → same id.
 - `<P>-UI-CHECK.md` records `capture:` and `code:` — a hash of the working
   tree outside `.planning/` at capture time (committing the same content does
@@ -91,11 +91,11 @@ waive: C3 | /blog | 375 | .brand-tag | brand color, agreed with <user> [#31]
 - `<P>-UI-LOOK.md` and `<P>-UI-APPROVAL.md` name the capture they belong to.
 - **Stale** means: the code or the LAYOUT changed since the check (`code:` differs), or the
   look / approval names another capture.
-- After a code change the agent re-runs `gsd-ui check`. When the pages look
+- After a code change the agent re-runs `gsdt-ui check`. When the pages look
   the same, the capture id is the same, and the look and the approval stay
   valid. When a page changed, the look and the approval open again.
 
-### 3. `gsd-ui check <N>` — measure the rendered page
+### 3. `gsdt-ui check <N>` — measure the rendered page
 
 - Runs `lib/ui-check.mjs` with Node and the **project's** Playwright. The
   toolkit installs no browser.
@@ -107,10 +107,10 @@ waive: C3 | /blog | 375 | .brand-tag | brand color, agreed with <user> [#31]
   refuses and asks for `app:`. The path and version go into the report.
 - **Trust `[#21]`.** The runner launches the project's own Playwright, so it
   runs project code with the user's rights — the same trust as the project's
-  test suite. It never loads the project's Playwright config. `gsd-doctor`
+  test suite. It never loads the project's Playwright config. `gsdt-doctor`
   never imports or launches anything; it only looks at files.
 - Pages and address come from LAYOUT (`pages:`, `url:`) and `ui_url`, as
-  `gsd-ui shots` resolves them. Sizes: 375×812, 768×1024, 1440×900.
+  `gsdt-ui shots` resolves them. Sizes: 375×812, 768×1024, 1440×900.
 - **Readiness `[#19]`.** Per page: wait for `load`, scroll the page once (lazy
   images), wait for fonts and images, then for the `expect:` text. One fixed
   time budget per page (30 s). Animations are turned off.
@@ -159,18 +159,18 @@ waive: C3 | /blog | 375 | .brand-tag | brand color, agreed with <user> [#31]
   ```
 
 - Exit codes: 0 passed, 1 failed checks, 2 could not run.
-- `gsd-ui check <N> --skip "<reason>"` records `status: skipped` `[#9]`.
-- `gsd-ui shots` stays for manual use (Playwright CLI, no checks) `[#28]`. It
+- `gsdt-ui check <N> --skip "<reason>"` records `status: skipped` `[#9]`.
+- `gsdt-ui shots` stays for manual use (Playwright CLI, no checks) `[#28]`. It
   now finds the CLI in `app:`, `apps/*` and `packages/*` too, and gives
   pictures a hashed name.
 
 ### 4. Screenshot sheet
 
-`gsd-ui check` writes `<P>-SHOTS/index.html`: the result on top, every
+`gsdt-ui check` writes `<P>-SHOTS/index.html`: the result on top, every
 picture grouped by page, the chosen sketch named beside them. A static file,
 git-ignored like the PNGs. Every text is HTML-escaped; picture names carry a
 hash of the page path, so `/a/b` and `/a-b` never collide `[#23]`.
-`gsd-ui sheet <N>` prints its path (and opens it on a terminal).
+`gsdt-ui sheet <N>` prints its path (and opens it on a terminal).
 
 ### 5. Rules checklist `[#24]`
 
@@ -192,7 +192,7 @@ Defaults, defined once in `lib/ui.sh`. A project edits them in `DESIGN.md`
 
 ### 6. `<P>-UI-LOOK.md` — what the agent saw `[#8]`
 
-- `gsd-ui look <N>` writes the template for the current capture: one section
+- `gsdt-ui look <N>` writes the template for the current capture: one section
   per picture (page × size), one line per rule, plus one line per question
   from the check (C2, C3 "could not measure").
 - The agent opens each picture and answers each line:
@@ -209,10 +209,10 @@ Defaults, defined once in `lib/ui.sh`. A project edits them in `DESIGN.md`
 
 ### 7. Approval `[#30][#9]`
 
-- `gsd-ui approve <N>` writes `<P>-UI-APPROVAL.md` (`status: approved`,
+- `gsdt-ui approve <N>` writes `<P>-UI-APPROVAL.md` (`status: approved`,
   `capture:`, `by:`, `approved:`). It refuses unless the check passed and the
   look is complete for that capture.
-- `gsd-ui approve <N> --waive "<reason>"` records `status: waived` — the user
+- `gsdt-ui approve <N> --waive "<reason>"` records `status: waived` — the user
   chose not to look, or there are no pictures (check skipped).
 - Three separate records, each needing the user's yes: a skipped check
   (no runner, or the pages cannot be captured), and a waived approval.
@@ -227,13 +227,13 @@ ui-check → ui-look → ui-approve → ui-review
 
 | Step | Done when | Command |
 |---|---|---|
-| `ui-check` | `<P>-UI-CHECK.md` is `passed` (or `skipped`) and not stale | `gsd-ui check <N>`; on failure fix the code and re-run |
-| `ui-look` | `<P>-UI-LOOK.md` complete for the capture | `gsd-ui look <N>`, then the agent fills it |
-| `ui-approve` | `<P>-UI-APPROVAL.md` names the capture (or is waived) | the agent shows the sheet and **stops for the user**; on a yes: `gsd-ui approve <N>` |
+| `ui-check` | `<P>-UI-CHECK.md` is `passed` (or `skipped`) and not stale | `gsdt-ui check <N>`; on failure fix the code and re-run |
+| `ui-look` | `<P>-UI-LOOK.md` complete for the capture | `gsdt-ui look <N>`, then the agent fills it |
+| `ui-approve` | `<P>-UI-APPROVAL.md` names the capture (or is waived) | the agent shows the sheet and **stops for the user**; on a yes: `gsdt-ui approve <N>` |
 | `ui-review` | `<P>-UI-REVIEW.md` (as today) | `/gsd-ui-review <N>` |
 
 - **One shared answer.** `gsd_ui_gate` in `lib/ui.sh` names the first open UI
-  step. `gsd-flow-next`, the guard, `gsd-finish` and doctor all ask it.
+  step. `gsdt-flow-next`, the guard, `gsdt-finish` and doctor all ask it.
 - **Old phases `[#5]`.** A phase is left alone only when its
   `<P>-UI-REVIEW.md` is already on the base branch. A review written in the
   phase's own worktree exempts nothing.
@@ -241,18 +241,18 @@ ui-check → ui-look → ui-approve → ui-review
 
   | | `off` | `warn` (default) | `strict` |
   |---|---|---|---|
-  | `gsd-flow-next` shows the steps | no | yes | yes |
+  | `gsdt-flow-next` shows the steps | no | yes | yes |
   | the guard blocks `/gsd-ui-review` | no | no | yes |
-  | `gsd-finish` | nothing | prints a warning | refuses (`GSD_SKIP_GUARD=1` is the escape) |
-  | `gsd-doctor`, merged phases | nothing | nothing | T040: `ui-check`, `ui-approve` |
-  | `gsd-doctor`, committed pictures | nothing | note | T081 `[#22]` |
+  | `gsdt-finish` | nothing | prints a warning | refuses (`GSD_SKIP_GUARD=1` is the escape) |
+  | `gsdt-doctor`, merged phases | nothing | nothing | T040: `ui-check`, `ui-approve` |
+  | `gsdt-doctor`, committed pictures | nothing | note | T081 `[#22]` |
 
 - Doctor's UI debt no longer needs `flow = strict`; `flow_since` and
   `flow_skip` still limit it. A phase merged with a 0.3.x `<P>-SHOTS.md` is
   not in debt.
 - Doctor notes are listed in `--json` (`"notes"`) `[#25]`.
 - The instruction text in `lib/provider.sh` names the new steps. After the
-  update T016 flags each project until `gsd-doctor --fix` refreshes it
+  update T016 flags each project until `gsdt-doctor --fix` refreshes it
   `[#25]`.
 
 ### 9. Config, codes, docs, tests

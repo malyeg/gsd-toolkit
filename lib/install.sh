@@ -16,9 +16,9 @@
 #
 # Claude also gets user-level hooks (next to its skills dir:
 # ~/.claude/settings.json). The guard's refuses /gsd-new-project
-# and /gsd-ingest-docs in a repo gsd-init has not set up, and nothing else
-# there; in a set-up repo it applies the whole guard (gsd-worktree-guard
-# --global). A SessionStart hook runs `gsd-rules --hook`: in a repo with
+# and /gsd-ingest-docs in a repo gsdt-init has not set up, and nothing else
+# there; in a set-up repo it applies the whole guard (gsdt-worktree-guard
+# --global). A SessionStart hook runs `gsdt-rules --hook`: in a repo with
 # .gsd.conf it loads the toolkit's rules into the session, elsewhere it
 # prints nothing. --no-user-hook leaves both out (and removes them).
 #
@@ -58,7 +58,7 @@ backup_path() { local base=$1 out=$1.bak n=1; while [ -e "$out" ] || [ -L "$out"
 absolute_path() { "$INSTALL_PYTHON" -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$1"; }
 within() { case "$1/" in "$2/"*) return 0 ;; *) return 1 ;; esac; }
 # A command link or skill this toolkit placed earlier (from any checkout or
-# release runtime) is replaced in place, not moved to .bak: a gsd-list.bak on
+# release runtime) is replaced in place, not moved to .bak: a gsdt-list.bak on
 # PATH, or a gsdt-flow.bak in an agent's skill dir, would be picked up as real.
 toolkit_pkg() { [ -f "$1/install.sh" ] && [ -f "$1/lib/common.sh" ]; }
 owned_link() {  # $1=symlink $2=bin|skills
@@ -165,7 +165,7 @@ mkdir -p "$COPY_DIR"
 # in backups and leave unrelated runtime files and PATH links alone.
 if [ -f "$COPY_DIR/.gsd-owned-commands" ]; then
   while IFS= read -r old; do
-    case "$old" in gsd-*) ;; *) echo 'invalid copied command inventory' >&2; exit 1 ;; esac
+    case "$old" in gsd-*|gsdt-*) ;; *) echo 'invalid copied command inventory' >&2; exit 1 ;; esac
     case "$old" in */*|*..*) echo 'unsafe copied command inventory' >&2; exit 1 ;; esac
     [ ! -e "$REPO/bin/$old" ] || continue
     if [ -e "$COPY_DIR/bin/$old" ] || [ -L "$COPY_DIR/bin/$old" ]; then
@@ -221,12 +221,14 @@ done
 # would otherwise sit on PATH forever as a broken command. Links into another
 # toolkit runtime (an older release) for a command this version no longer has
 # go too.
-for dest in "$BIN_DIR"/gsd-*; do
+OLD_NAMES=0   # 1 = this install removed commands named gsd-* (before 0.10.0)
+for dest in "$BIN_DIR"/gsd-* "$BIN_DIR"/gsdt-*; do
   [ -L "$dest" ] || continue
   [ ! -e "$REPO/bin/$(basename "$dest")" ] || continue
   case "$(readlink "$dest")" in
     "$REPO"/bin/*) [ -e "$dest" ] || { rm -f "$dest"; echo "✂ $(basename "$dest") removed (deleted from the toolkit)"; } ;;
-    *) if owned_link "$dest" bin; then rm -f "$dest"; echo "✂ $(basename "$dest") removed (not in this version)"; fi ;;
+    *) if owned_link "$dest" bin; then rm -f "$dest"; echo "✂ $(basename "$dest") removed (not in this version)"
+         case "$(basename "$dest")" in gsdt-*) ;; *) OLD_NAMES=1 ;; esac; fi ;;
   esac
 done
 
@@ -293,12 +295,12 @@ retire_skills() {  # $1=skill dir  $2=provider  $3=""|all
 oldifs=$IFS; IFS=,; for provider in $PROVIDERS; do install_skills "$provider"; done; IFS=$oldifs
 [ -z "$GEMINI_OLD" ] || [ ! -d "$GEMINI_OLD" ] || retire_skills "$GEMINI_OLD" gemini all
 
-# ── the user-level hook: /gsd-new-project only after gsd-init ────────────────
-# Before gsd-init a repo has no toolkit files, so no repo hook can stop a bare
+# ── the user-level hook: /gsd-new-project only after gsdt-init ────────────────
+# Before gsdt-init a repo has no toolkit files, so no repo hook can stop a bare
 # /gsd-new-project — only one in the user's own settings can. The settings
 # file sits next to the provider's skills dir (~/.claude/skills →
 # ~/.claude/settings.json). Ours are the entries whose command runs
-# gsd-worktree-guard --global or gsd-rules --hook: replaced on every
+# gsdt-worktree-guard --global or gsdt-rules --hook: replaced on every
 # install, never duplicated.
 # Settings that turn hooks off, or are not a JSON object, are left alone.
 user_hook() {  # $1=provider $2=on|off
@@ -309,15 +311,15 @@ user_hook() {  # $1=provider $2=on|off
     *) return 0 ;;
   esac
   [ "$2" = on ] || [ -f "$settings" ] || return 0
-  guard="$BIN_DIR/gsd-worktree-guard"; rules="$BIN_DIR/gsd-rules"
+  guard="$BIN_DIR/gsdt-worktree-guard"; rules="$BIN_DIR/gsdt-rules"
   case "$guard" in *"'"*) echo "• $provider user hook skipped: the bin path holds a quote"; return 0 ;; esac
   # A missing toolkit (uninstalled) must not break every slash command: no guard → allow.
   cmd="[ ! -x '$guard' ] || exec '$guard' --global"
-  # …nor every session start: no gsd-rules → nothing loaded.
+  # …nor every session start: no gsdt-rules → nothing loaded.
   rules_cmd="[ ! -x '$rules' ] || exec '$rules' --hook"
   mkdir -p "$(dirname "$settings")"
   "$INSTALL_PYTHON" - "$settings" "$provider" "$2" "$cmd" "$rules_cmd" <<'PY'
-import json, os, sys
+import json, os, re, sys
 path, provider, mode, cmd, rules_cmd = sys.argv[1:]
 try:
     with open(path) as f:
@@ -338,7 +340,8 @@ wanted = {"claude": [("PreToolUse", "Skill", cmd), ("UserPromptExpansion", "gsd.
           "gemini": [("BeforeTool", "activate_skill", cmd)]}[provider]
 def ours(h):
     c = h.get("command", "") if isinstance(h, dict) else ""
-    return ("gsd-worktree-guard" in c and "--global" in c) or ("gsd-rules" in c and "--hook" in c)
+    # gsd-worktree-guard / gsd-rules: the names before 0.10.0, replaced too
+    return (re.search(r"gsdt?-worktree-guard", c) and "--global" in c) or (re.search(r"gsdt?-rules", c) and "--hook" in c)
 for event in [e for e, _, _ in wanted if e in hooks]:
     groups = hooks[event]
     if not isinstance(groups, list):
@@ -378,9 +381,9 @@ if new != text:
         pass
     os.replace(tmp, real)
 if mode == "on":
-    print("✔ %s user hook: /gsd-new-project only after gsd-init → %s" % (provider, path))
+    print("✔ %s user hook: /gsd-new-project only after gsdt-init → %s" % (provider, path))
     if provider == "claude":
-        print("✔ %s user hook: sessions in a set-up repo load gsd-rules → %s" % (provider, path))
+        print("✔ %s user hook: sessions in a set-up repo load gsdt-rules → %s" % (provider, path))
 elif new != text:
     print("✂ %s user hook removed from %s" % (provider, path))
 PY
@@ -404,11 +407,11 @@ fi
 mv "$manifest_tmp" "$MANIFEST"
 
 # ── GSD itself (gsd-core) ────────────────────────────────────────────────────
-# The toolkit needs gsd-core: gsd-start claims phases with its gsd_run. An
+# The toolkit needs gsd-core: gsdt-start claims phases with its gsd_run. An
 # install adds it (lib/core.sh) for each chosen agent that has none. Runs
 # after our skills: they are gsdt-*, so gsd-core's installer (it deletes
 # skills/gsd-*) keeps them. An agent that has gsd-core is left alone here;
-# gsd-update brings it to the latest. An update (--reuse-install-config),
+# gsdt-update brings it to the latest. An update (--reuse-install-config),
 # --no-core and GSD_NO_CORE=1 (tests) skip this. Failing here never fails
 # the install: it prints the command to run.
 # shellcheck source=lib/core.sh
@@ -421,5 +424,11 @@ case ":$PATH:" in
   *":$BIN_DIR:"*) ;;
   *) echo "⚠ $BIN_DIR is not on your PATH — add it to your shell profile" ;;
 esac
+if [ "$OLD_NAMES" = 1 ]; then
+  echo ""
+  echo "⚠ the commands are now gsdt-* (gsd-start → gsdt-start, …). In each repo's main checkout run:"
+  echo "    gsdt-migrate            (shows what changes)"
+  echo "    gsdt-migrate --apply    (then commit)"
+fi
 echo ""
-echo "Done. Try:  gsd-list --help"
+echo "Done. Try:  gsdt-list --help"

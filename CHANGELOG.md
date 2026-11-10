@@ -5,6 +5,34 @@ Each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## 0.10.0
+
+**Breaking: the commands are now `gsdt-*`.** Upgrade in this order:
+
+1. Everyone: `gsd-update` (the old name, one last time).
+2. In each repo's main checkout: `gsdt-migrate` (dry run), then
+   `gsdt-migrate --apply`, then commit.
+3. Each teammate, after pulling that commit: `gsdt-migrate --apply` in their
+   clone (merge driver, tracker settings and post-merge hook live in `.git/`).
+
+- **Every command is renamed `gsd-*` → `gsdt-*`** (`gsdt-start`,
+  `gsdt-finish`, `gsdt-list`, `gsdt-doctor`, `gsdt-update`, … all 20).
+  `gsd-*` is gsd-core's prefix: `gsd-update` was also its `/gsd-update` skill.
+  No aliases. The shims are `scripts/gsdt-*.sh`, the pre-merge script
+  `scripts/gsdt-premerge-check.sh`, the tracker's git section `gsdt-tracker`.
+- **New `gsdt-migrate`** moves a repo set up before 0.10.0: shims, your
+  pre-merge script, exact path references (`package.json`, CI, …), the repo
+  hook, the marked instruction blocks, and this clone's merge driver, tracker
+  section and post-merge hook. Dry run by default; never commits; never
+  rewrites free text (it lists it). See docs/migration.md.
+- `gsdt-start`, `gsdt-finish`, `gsdt-flow-next` and `gsdt-init` refuse an
+  unmigrated repo and name the fix. New doctor finding **T090**
+  (`gsdt-doctor --fix` runs the migration).
+- The install removes the old `gsd-*` links and replaces the old Claude user
+  hooks in place (one entry each, new path), then says to migrate.
+- Not renamed: the merge driver key `gsd-planning` (open worktrees still
+  merge), `.gsd.conf`, `.gsd/`, `GSD_*`, `~/.config/gsd/`.
+
 ## 0.9.0
 
 - **The workflow rules come from the installed toolkit.** A new command,

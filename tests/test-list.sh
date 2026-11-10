@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# test-list.sh — gsd-list derives PLANS/STAGE/WORKTREE from the phase files
+# test-list.sh — gsdt-list derives PLANS/STAGE/WORKTREE from the phase files
 # and lays the table out without losing text. Read-only command, fixture repo.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; PKG="$(cd "$HERE/.." && pwd)"
-LIST="$PKG/bin/gsd-list"
+LIST="$PKG/bin/gsdt-list"
 PASS=0; FAIL=0; WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
 export GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1
 export GIT_AUTHOR_NAME=t GIT_AUTHOR_EMAIL=t@t GIT_COMMITTER_NAME=t GIT_COMMITTER_EMAIL=t@t
@@ -38,7 +38,7 @@ mkdir -p "$WORK/wt7/.planning/phases/07-w"; touch "$WORK/wt7/.planning/phases/07
 git -C "$R" branch phase-6-f-pr            # a PR branch is not the phase branch
 
 OUT="$WORK/out"
-COLUMNS=70 "$LIST" --repo "$R" --compact > "$OUT" 2>&1 || bad "gsd-list --compact exits 0" "$(cat "$OUT")"
+COLUMNS=70 "$LIST" --repo "$R" --compact > "$OUT" 2>&1 || bad "gsdt-list --compact exits 0" "$(cat "$OUT")"
 cell() {  # $1=phase N  $2=column index (1=N 2=PHASE 3=PLANS 4=STAGE 5=WORKTREE)
   awk -F'│' -v n="$1" -v c="$(( $2 + 1 ))" \
     '{ k=$2; gsub(/^ +| +$/, "", k) } k==n { v=$c; gsub(/^ +| +$/, "", v); print v; exit }' "$OUT"

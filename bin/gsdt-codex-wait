@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# gsd-codex-wait — wait out a Codex usage limit instead of failing.
+# gsdt-codex-wait — wait out a Codex usage limit instead of failing.
 #
 # When its quota runs out, Codex stops with "You've hit your usage limit …
 # try again at <time>". This waits until that time (plus a margin) and then
@@ -9,10 +9,10 @@
 # waiting never calls Codex, so it burns no quota.
 #
 # Usage:
-#   gsd-codex-wait [options] -- <command> [args...]
+#   gsdt-codex-wait [options] -- <command> [args...]
 #       run the command; on a Codex usage limit wait for the reset and run it
 #       again; otherwise exit with the command's own code
-#   gsd-codex-wait [options] --wait-only
+#   gsdt-codex-wait [options] --wait-only
 #       only wait for the reset, then exit 0 — run the step again after it
 #
 # Options:
@@ -47,8 +47,8 @@ GSD_PKG=$(cd "$(dirname "$SELF")/.." && pwd)
 LIB="$GSD_PKG/lib/gsd_codex_limit.py"
 
 usage() { awk 'NR>1 && /^set -uo/{exit} NR>1 {sub(/^# ?/,""); print}' "$0"; }
-die() { echo "gsd-codex-wait: $1" >&2; exit "${2:-64}"; }
-say() { echo "gsd-codex-wait: $1" >&2; }
+die() { echo "gsdt-codex-wait: $1" >&2; exit "${2:-64}"; }
+say() { echo "gsdt-codex-wait: $1" >&2; }
 dur() {  # $1=duration → seconds
   local n=${1%[smhd]}
   case "$n" in ''|*[!0-9]*) return 1 ;; esac
@@ -76,7 +76,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 if [ "$WAIT_ONLY" = 1 ]; then [ $# -eq 0 ] || die "--wait-only takes no command"
-else [ $# -gt 0 ] || die "nothing to run: gsd-codex-wait -- <command> [args...], or --wait-only"; fi
+else [ $# -gt 0 ] || die "nothing to run: gsdt-codex-wait -- <command> [args...], or --wait-only"; fi
 [ "$INTERVAL" -gt 0 ] || die "--interval must be more than 0"
 PY=$(gsd_python) || die "needs Python 3.7+" 69
 CODEX_DIR="${CODEX_HOME:-$HOME/.codex}"
@@ -147,7 +147,7 @@ if [ "$WAIT_ONLY" = 1 ]; then
   exit 0
 fi
 
-WORK=$(mktemp -d "${TMPDIR:-/tmp}/gsd-codex-wait.XXXXXX") || die "cannot make a temp folder" 1
+WORK=$(mktemp -d "${TMPDIR:-/tmp}/gsdt-codex-wait.XXXXXX") || die "cannot make a temp folder" 1
 trap 'rm -rf "$WORK"' EXIT
 while :; do
   START=$(now)

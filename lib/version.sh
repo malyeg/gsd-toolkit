@@ -106,16 +106,16 @@ GSD_GSD_UPDATE_CMD="npx @opengsd/gsd-core@latest"   # then the agent: --claude -
 
 gsd_core_update_how() {  # [$1=agent] → the command that updates gsd-core here
   if [ -e "$GSD_PKG/.git" ]; then echo "$GSD_GSD_UPDATE_CMD --${1:-claude} --global --profile=full"
-  else echo gsd-update; fi
+  else echo gsdt-update; fi
 }
 
 gsd_update_how() {  # the command that updates THIS install
-  if [ -e "$GSD_PKG/.git" ]; then echo "$GSD_PKG/install.sh"; else echo gsd-update; fi
+  if [ -e "$GSD_PKG/.git" ]; then echo "$GSD_PKG/install.sh"; else echo gsdt-update; fi
 }
 
 # One stderr line per newer release known (this toolkit, GSD itself). Only for a person at a
 # terminal (stderr is a tty), so piped / JSON / agent output stays clean;
-# GSD_UPDATE_NOTICE=always forces it (tests). gsd-doctor always reports it.
+# GSD_UPDATE_NOTICE=always forces it (tests). gsdt-doctor always reports it.
 gsd_update_notice() {
   [ -z "${GSD_NO_UPDATE_CHECK:-}" ] || return 0
   [ -t 2 ] || [ "${GSD_UPDATE_NOTICE:-}" = always ] || return 0

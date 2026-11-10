@@ -1,5 +1,50 @@
 # Migration guide
 
+## 0.10.0: commands renamed to gsdt-*
+
+Every toolkit command is now `gsdt-*`: `gsd-start` → `gsdt-start`,
+`gsd-finish` → `gsdt-finish`, and so on for all of them. `gsd-*` is gsd-core's
+prefix (its skills `/gsd-update`, `/gsd-ui-phase`, …); now a name tells you
+who made it. There are no aliases: the old names stop working when 0.10.0
+installs.
+
+1. **Update, everyone first.** Run the old `gsd-update` one last time. It
+   installs 0.10.0, removes the old `gsd-*` links from `~/.local/bin`, and
+   replaces the toolkit's Claude hooks in `~/.claude/settings.json`.
+   A teammate on 0.9 in a migrated repo would get "install the toolkit" from
+   the new shims, and an old `gsd-init` would write the old blocks back.
+2. **In each repo's main checkout:**
+   ```sh
+   gsdt-migrate             # dry run: every change, nothing changed
+   gsdt-migrate --apply     # make them (never commits)
+   git add -A && git commit -m "Switch to gsdt-* toolkit commands"
+   ```
+   Until then `gsdt-start`, `gsdt-finish`, `gsdt-flow-next` and `gsdt-init`
+   stop with "run: gsdt-migrate --apply", and `gsdt-doctor` reports T090
+   (`gsdt-doctor --fix` runs it for you).
+3. **Each teammate's clone:** after pulling that commit,
+   `gsdt-migrate --apply` once (the merge driver, the tracker settings and the
+   post-merge hook live in `.git/`, which is not committed).
+
+What it changes: the five shims (`scripts/gsd-*.sh` → `scripts/gsdt-*.sh`);
+your pre-merge script (`scripts/gsd-premerge-check.sh` →
+`scripts/gsdt-premerge-check.sh`, content unchanged); those exact paths in
+other tracked files (`package.json`, CI, `Makefile`, `.husky/`); the repo hook
+in `.claude/settings.json`; the toolkit's marked blocks in
+`.gsd/INSTRUCTIONS.md`, `CLAUDE.md`, `AGENTS.md`; and in this clone the merge
+driver's command, the `gsd-tracker` git config section (→ `gsdt-tracker`) and
+the post-merge hook. It never rewrites free text (`.planning/`, `*.md`
+outside the markers): it lists those lines so you can fix them if you like.
+A shim you edited is reported and left for you.
+
+**Open phase worktrees** keep the old files on their branch. Commit the
+migration on the base branch first, then merge it into each phase branch (or
+finish the phases before migrating). Their planning merges keep working: the
+merge driver's key is still `gsd-planning`; only its command changed.
+
+Not renamed: `.gsd.conf`, `.gsd/`, the `GSD_*` variables, `~/.config/gsd/`,
+and the skills (already `gsdt-*`).
+
 ## 0.5.0: move to gsd-core
 
 GSD is now `@opengsd/gsd-core` (CLI `gsd_run`). The old `get-shit-done-cc`
@@ -40,25 +85,25 @@ Notes:
 
 ## Providers and instructions
 
-Run `gsd-init` from the desired base checkout. It delegates to the idempotent
+Run `gsdt-init` from the desired base checkout. It delegates to the idempotent
 bootstrap layer, does not touch existing `.planning/`, and never silently
 changes providers.
 
-- Remain Claude-only: `gsd-init --provider claude --no-launch`
-- Switch to Codex: `gsd-init --provider codex --no-launch`
-- Support several: `gsd-init --providers claude,codex --provider claude --no-launch`
+- Remain Claude-only: `gsdt-init --provider claude --no-launch`
+- Switch to Codex: `gsdt-init --provider codex --no-launch`
+- Support several: `gsdt-init --providers claude,codex --provider claude --no-launch`
 
 Use repeated `--provider-command provider=executable` flags for nonstandard
 executable paths. `--provider` must be a member of `--providers`; invalid
 selections fail before repository files are written.
 
 For per-provider executable overrides, use `claude_command` and `codex_command`. Then hand the same phase between providers with repeated
-`gsd-start -p <N> --provider <name> --no-launch` calls. This reuses the phase
+`gsdt-start -p <N> --provider <name> --no-launch` calls. This reuses the phase
 worktree and planning state; do not run concurrent mutating sessions there.
 
 Legacy Claude repositories receive `.gsd/INSTRUCTIONS.md`, a marked entrypoint
 in `CLAUDE.md`, and an ordered `providers` key. A legacy singular `provider`
-key remains readable when `providers` is absent; re-running `gsd-init` writes
+key remains readable when `providers` is absent; re-running `gsdt-init` writes
 the equivalent one-entry list and removes only that redundant key. Bootstrap never assumes that an
 unmarked `## GSD planning system` section is wholly toolkit-owned: it preserves
 that section byte-for-byte because it may contain repository-specific policy.
@@ -70,16 +115,16 @@ untouched with a warning.
 
 Repos set up before the instructions split (0.9.0) hold the full rules in
 `.gsd/INSTRUCTIONS.md`. They keep working unchanged: that copy is complete,
-and Claude sessions also load the current rules from `gsd-rules`. Doctor
-reports T016 one last time; one `gsd-init --no-launch` (or
-`gsd-doctor --fix`) rewrites the block to the small form and the provider
-entries to point at `gsd-rules`. Commit the result. After that, a rule change
-needs only `gsd-update` on each machine.
+and Claude sessions also load the current rules from `gsdt-rules`. Doctor
+reports T016 one last time; one `gsdt-init --no-launch` (or
+`gsdt-doctor --fix`) rewrites the block to the small form and the provider
+entries to point at `gsdt-rules`. Commit the result. After that, a rule change
+needs only `gsdt-update` on each machine.
 
 Bootstrap validates generated instruction markers before writing any files.
 Unmatched, nested, duplicate, reversed, or inline markers stop the migration
 with a filename to repair; user content is preserved. Resolve the markers and
-rerun `gsd-init`.
+rerun `gsdt-init`.
 
 Canonical instructions now have `canonical:start` / `canonical:end` markers;
 new bootstrap runs preserve text outside them. The older single-marker format
@@ -91,13 +136,13 @@ On migration, legacy `agent_command` is saved under its original provider's
 therefore cannot accidentally launch the old executable. An explicit command
 override updates the provider-specific key, and `--provider-command` alone
 preserves an existing configured provider set. To add a new provider, pass the
-complete set with `gsd-init --providers ...`.
+complete set with `gsdt-init --providers ...`.
 
 To remove one integration, remove its name from `providers =`, then delete only
 the text between `gsd-toolkit:provider:start` and
 `gsd-toolkit:provider:end` in its instruction file. Remove the matching hook
-entry only if it calls `gsd-worktree-guard`; do not delete unrelated settings.
-For Codex/custom, which share `AGENTS.md`, re-run `gsd-init --no-launch` after
+entry only if it calls `gsdt-worktree-guard`; do not delete unrelated settings.
+For Codex/custom, which share `AGENTS.md`, re-run `gsdt-init --no-launch` after
 editing the set; do not delete the shared block while either provider remains.
 
 To roll back, remove only the marked provider and canonical instruction

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# gsd-finish — finish a GSD phase from anywhere: merge the phase worktree back
+# gsdt-finish — finish a GSD phase from anywhere: merge the phase worktree back
 # into the base branch, push, and remove the worktree + branch.
 #
-# Companion to gsd-start. Delegates the merge/cleanup to the repo's own
-# scripts/gsd-finish-worktree-feature.sh (single source of truth, synced by
-# gsd-bootstrap-repo), but adds what a shared command can:
+# Companion to gsdt-start. Delegates the merge/cleanup to the repo's own
+# scripts/gsdt-finish-worktree-feature.sh (single source of truth, synced by
+# gsdt-bootstrap-repo), but adds what a shared command can:
 #   - no argument needed when run from inside a phase worktree (phase is
 #     inferred from the current branch)
 #   - auto-switches the main checkout back to the base branch when it was left
@@ -14,29 +14,29 @@
 #     checkout, prints where to cd afterwards)
 #
 # Usage:
-#   gsd-finish                      # from inside a phase-N-* or batch-* worktree
-#   gsd-finish <N | phase-N-slug>   # from anywhere in the repo
-#   gsd-finish batch-<date>-<slug>  # a gsd-batch worktree
-#   gsd-finish <N> --repo <path>    # from outside the repo
+#   gsdt-finish                      # from inside a phase-N-* or batch-* worktree
+#   gsdt-finish <N | phase-N-slug>   # from anywhere in the repo
+#   gsdt-finish batch-<date>-<slug>  # a gsdt-batch worktree
+#   gsdt-finish <N> --repo <path>    # from outside the repo
 set -euo pipefail
 
 die() { printf '✖ %s\n' "$@" >&2; exit 1; }
 
 usage() {
   cat <<'HELP'
-gsd-finish — finish a GSD phase: merge back, push, clean up
+gsdt-finish — finish a GSD phase: merge back, push, clean up
 
 Merges the phase worktree's branch into the base branch, pushes, and removes
-the worktree + branch. Companion to gsd-start; delegates the merge/cleanup to
-the repo's scripts/gsd-finish-worktree-feature.sh.
+the worktree + branch. Companion to gsdt-start; delegates the merge/cleanup to
+the repo's scripts/gsdt-finish-worktree-feature.sh.
 
 USAGE
-  gsd-finish [<N> | phase-<N>-<slug> | batch-<date>-<slug>] [options]
+  gsdt-finish [<N> | phase-<N>-<slug> | batch-<date>-<slug>] [options]
 
   With no argument, run it from INSIDE the phase (or batch) worktree — it is
   inferred from the current branch.
 
-  A batch worktree (made by gsd-batch) lands the same way as a phase: tests →
+  A batch worktree (made by gsdt-batch) lands the same way as a phase: tests →
   merge → .planning repair → push → remove worktree + branch. The per-phase
   gates (UI steps, test audit) and the ticket update are skipped for it.
 
@@ -47,25 +47,25 @@ OPTIONS
                   against the base branch (needs gh). Uses the *-pr branch
                   from /gsd-pr-branch when one exists (planning commits
                   stripped), else the phase branch itself. Worktree stays;
-                  run gsd-finish again (without --pr) once the PR is merged.
+                  run gsdt-finish again (without --pr) once the PR is merged.
   --draft         with --pr: open it as a draft
   -h, --help      show this help
 
 EXAMPLES
-  gsd-finish
+  gsdt-finish
       From inside ../<repo>-worktrees/phase-7-invoice-fix: merges phase 7,
       pushes, removes the worktree and branch.
 
-  gsd-finish 7
+  gsdt-finish 7
       Same, from anywhere inside the repo or its worktrees.
 
-  gsd-finish phase-7-invoice-fix
+  gsdt-finish phase-7-invoice-fix
       Same, naming the branch explicitly.
 
-  gsd-finish batch-2026-11-09-fix-labels
-      Land a gsd-batch run: merge its branch, push, remove its worktree.
+  gsdt-finish batch-2026-11-09-fix-labels
+      Land a gsdt-batch run: merge its branch, push, remove its worktree.
 
-  gsd-finish 7 --repo ~/projects/acme/webshop
+  gsdt-finish 7 --repo ~/projects/acme/webshop
       Finish a phase of another repo without cd-ing into it first.
 
 BEHAVIOR
@@ -80,12 +80,12 @@ BEHAVIOR
   - Ticket: when the ROADMAP phase title (or the branch name) carries a
     tk-<id> tag and .gsd.conf sets `tracker = clickup|custom`, the ticket is
     moved to its testing/review status with a merge comment (best-effort, via
-    gsd-tracker). --pr does the same when the PR opens.
+    gsdt-tracker). --pr does the same when the PR opens.
 
 RELATED
-  gsd-start             start a phase (claim + worktree + session) in one step
-  gsd-init              set up GSD in a repo that doesn't have it yet
-  gsd-bootstrap-repo    just the file installation (what gsd-init wraps)
+  gsdt-start             start a phase (claim + worktree + session) in one step
+  gsdt-init              set up GSD in a repo that doesn't have it yet
+  gsdt-bootstrap-repo    just the file installation (what gsdt-init wraps)
 HELP
 }
 
@@ -99,8 +99,8 @@ while [ $# -gt 0 ]; do
     --repo) [ $# -ge 2 ] || die "--repo needs a value"; REPO="$2"; shift 2 ;;
     --pr) PR=1; shift ;;
     --draft) DRAFT=1; shift ;;
-    -*) die "unknown flag: $1 (see gsd-finish --help)" ;;
-    *)  [ -z "$ID" ] || die "unexpected argument: $1 (see gsd-finish --help)"; ID="$1"; shift ;;
+    -*) die "unknown flag: $1 (see gsdt-finish --help)" ;;
+    *)  [ -z "$ID" ] || die "unexpected argument: $1 (see gsdt-finish --help)"; ID="$1"; shift ;;
   esac
 done
 
@@ -126,14 +126,15 @@ GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 . "$GSD_PKG/lib/ui.sh"
 
 MAIN=$(gsd_main .)
-FINISH="$GSD_PKG/bin/gsd-wt-finish"
+gsd_migrate_refuse "$MAIN"
+FINISH="$GSD_PKG/bin/gsdt-wt-finish"
 BASE=$(gsd_base "$MAIN")
 [ -n "$BASE" ] || die "could not determine the base branch — set 'base = <branch>' in $MAIN/.gsd.conf"
 
 # ── local lock: serialize gsd commands touching this checkout ────────────────
-# Same lock as gsd-start. Logic: gsd_acquire_lock, lib/common.sh. The export
-# tells the delegated worker (gsd-wt-finish) the lock is already held — the
-# re-entrancy guard; it is deliberate that only gsd-finish exports it, because
+# Same lock as gsdt-start. Logic: gsd_acquire_lock, lib/common.sh. The export
+# tells the delegated worker (gsdt-wt-finish) the lock is already held — the
+# re-entrancy guard; it is deliberate that only gsdt-finish exports it, because
 # everything it runs afterwards stays inside this one finish.
 gsd_acquire_lock "$MAIN"
 export GSD_LOCK_HELD=1
@@ -144,7 +145,7 @@ if [ -z "$ID" ]; then
   case "$br" in
     phase-*|batch-*) ID="$br" ;;
     *) die "no phase given and current branch '$br' is not a phase-* or batch-* worktree" \
-           'usage: gsd-finish [N | phase-N-slug | batch-…] [--repo <path>]' ;;
+           'usage: gsdt-finish [N | phase-N-slug | batch-…] [--repo <path>]' ;;
   esac
 fi
 
@@ -206,7 +207,7 @@ if [ "$PR" = 1 ]; then
   # No retry loop here: a rejected push means origin has commits this branch
   # lacks, and only the user can say how to integrate them.
   git -C "$MAIN" push -u origin "$HEAD_BR" --quiet \
-    || die "push of '$HEAD_BR' failed — if origin has newer commits, run 'git pull --rebase origin $HEAD_BR' where that branch is checked out, then rerun gsd-finish --pr"
+    || die "push of '$HEAD_BR' failed — if origin has newer commits, run 'git pull --rebase origin $HEAD_BR' where that branch is checked out, then rerun gsdt-finish --pr"
   N_RE=$(printf '%s' "${PHASE_N:-x}" | sed 's/\./\\./g')
   TITLE=""
   [ "$KIND" = batch ] || TITLE=$(grep -E "^### Phase $N_RE:" "$MAIN/.planning/ROADMAP.md" 2>/dev/null | head -1 | sed -E 's/^### //' || true)
@@ -215,11 +216,11 @@ if [ "$PR" = 1 ]; then
      --title "${TITLE:-$HEAD_BR}" --fill-verbose ${DRAFT:+--draft} 2>/dev/null \
   || gh pr create --base "$BASE" --head "$HEAD_BR" --title "${TITLE:-$HEAD_BR}" --body "" ${DRAFT:+--draft} \
   || die "gh pr create failed (is origin a GitHub repo and gh authenticated?)"
-  [ -z "$TICKET_ID" ] || "$GSD_PKG/bin/gsd-tracker" --repo "$MAIN" finish "$TICKET_ID" \
+  [ -z "$TICKET_ID" ] || "$GSD_PKG/bin/gsdt-tracker" --repo "$MAIN" finish "$TICKET_ID" \
      "🔀 GSD phase ${PHASE_N:-?}: PR opened ${HEAD_BR} → ${BASE}" \
-     || echo "• ticket $TICKET_ID not updated (non-fatal) — check: gsd-tracker check"
+     || echo "• ticket $TICKET_ID not updated (non-fatal) — check: gsdt-tracker check"
   echo ""
-  echo "Worktree kept. After the PR merges:  gsd-finish $BR"
+  echo "Worktree kept. After the PR merges:  gsdt-finish $BR"
   exit 0
 fi
 
@@ -231,9 +232,9 @@ cd "$MAIN"
 # ── ticket write-back (best-effort): ticket → "in testing" + merge comment ──
 if [ -n "$TICKET_ID" ]; then
   SHA=$(git -C "$MAIN" rev-parse --short "$BASE" 2>/dev/null || echo "?")
-  "$GSD_PKG/bin/gsd-tracker" --repo "$MAIN" finish "$TICKET_ID" \
+  "$GSD_PKG/bin/gsdt-tracker" --repo "$MAIN" finish "$TICKET_ID" \
     "✅ GSD phase ${PHASE_N:-?} merged to ${BASE} — commit ${SHA} in $(basename "$MAIN"). Ready for testing." \
-    || echo "• ticket $TICKET_ID not updated (non-fatal) — check: gsd-tracker check"
+    || echo "• ticket $TICKET_ID not updated (non-fatal) — check: gsdt-tracker check"
 fi
 
 # ── roadmap bookkeeping (best-effort, never blocks) ──────────────────────────
@@ -241,13 +242,13 @@ fi
 # it is the last cheap chance to notice that upstream's phase.insert /
 # phase.complete quietly failed to write or tick them. Warn only: the finish has
 # already succeeded by here, and a stale checkbox is not worth a red exit.
-if command -v gsd-doctor >/dev/null 2>&1; then
-  bookkeeping="$(gsd-doctor --repo "$MAIN" --quiet 2>/dev/null | grep -E 'checklist row|Progress table|tick' || true)"
+if command -v gsdt-doctor >/dev/null 2>&1; then
+  bookkeeping="$(gsdt-doctor --repo "$MAIN" --quiet 2>/dev/null | grep -E 'checklist row|Progress table|tick' || true)"
   if [ -n "$bookkeeping" ]; then
     echo ""
     echo "⚠ roadmap bookkeeping needs a hand (the merge itself is fine):"
     printf '%s\n' "$bookkeeping"
-    echo "  full report: gsd-doctor"
+    echo "  full report: gsdt-doctor"
   fi
 fi
 

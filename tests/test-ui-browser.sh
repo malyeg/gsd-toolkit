@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-ui-browser.sh — the REAL runner behind `gsd-ui check` (lib/ui-check.mjs)
+# test-ui-browser.sh — the REAL runner behind `gsdt-ui check` (lib/ui-check.mjs)
 # in a real browser, against the pages in tests/fixtures/ui/: one page per
 # check (C1–C8), the questions, waivers, the capture id, the sheet, and how
 # the runner finds the project's Playwright.
@@ -57,8 +57,8 @@ git -C "$R" checkout -q -b phase-7-blog
 CHECK="$PD/07-UI-CHECK.md"
 # layout <line>… — write the phase LAYOUT: the address, then the lines given
 layout() { { printf 'sketch: skip a test\nurl: http://127.0.0.1:%s\n' "$PORT"; printf '%s\n' "$@"; } > "$PD/07-LAYOUT.md"; }
-check() { (cd "$R" && GSD_PLAYWRIGHT_ROOT="$PWROOT" gsd-ui check 7) > "$OUT" 2>&1; }
-nocheck() { (cd "$R" && env -u GSD_PLAYWRIGHT_ROOT gsd-ui check 7) > "$OUT" 2>&1; }
+check() { (cd "$R" && GSD_PLAYWRIGHT_ROOT="$PWROOT" gsdt-ui check 7) > "$OUT" 2>&1; }
+nocheck() { (cd "$R" && env -u GSD_PLAYWRIGHT_ROOT gsdt-ui check 7) > "$OUT" 2>&1; }
 fmv() { sed -n '/^---$/,/^---$/p' "$CHECK" | sed -n "s/^$1: //p"; }
 # finds <section> <start of a line> — how many lines of that report section start so
 finds() { awk -v want="## $1" '/^## /{on = ($0 == want); next} on' "$CHECK" | grep -c -- "^- $2" | tr -d ' '; }

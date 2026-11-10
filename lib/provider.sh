@@ -8,7 +8,7 @@ gsd_provider_known() {
 
 # Gemini was a provider until 0.5.0, when GSD (gsd-core) dropped it. The name
 # is refused with this reason — never taken as a custom executable — and
-# gsd-init --no-launch removes what an older release set up for it.
+# gsdt-init --no-launch removes what an older release set up for it.
 GSD_GEMINI_GONE="Gemini is no longer supported (gsd-core, the new GSD, dropped it)"
 gsd_provider_gone() { [ "$1" = gemini ]; }
 
@@ -21,7 +21,7 @@ gsd_provider_list_validate() {
   while :; do
     p=${remaining%%,*}
     if gsd_provider_gone "$p"; then
-      printf '%s — drop it from this repo with: gsd-init --no-launch\n' "$GSD_GEMINI_GONE" >&2
+      printf '%s — drop it from this repo with: gsdt-init --no-launch\n' "$GSD_GEMINI_GONE" >&2
       return 64
     fi
     gsd_provider_known "$p" || {
@@ -69,8 +69,8 @@ gsd_provider_review_flag() {
   case "$1" in claude|codex) printf -- '--%s\n' "$1" ;; *) return 1 ;; esac
 }
 
-# Optional UI tools (ui_gates): gsd-init prints these as a tip, nothing checks
-# or requires them — gsd-ui check runs the project's Playwright from the
+# Optional UI tools (ui_gates): gsdt-init prints these as a tip, nothing checks
+# or requires them — gsdt-ui check runs the project's Playwright from the
 # shell, which every provider can do.
 gsd_provider_ui_tip() {
   case "$1" in
@@ -80,7 +80,7 @@ gsd_provider_ui_tip() {
   esac
 }
 
-# Add-ons gsd-doctor suggests for a project with screens (notes, never
+# Add-ons gsdt-doctor suggests for a project with screens (notes, never
 # findings). $1=provider $2=addon → one line on how to get it; 1 = no text.
 #   impeccable  design skill: audit/critique/polish commands and automatic
 #               checks for AI-made pages (github.com/pbakaus/impeccable)
@@ -106,7 +106,7 @@ gsd_provider_ui_addon() {
 # Shared registration metadata. Unsupported providers have no settings file.
 gsd_provider_hook_metadata() {
   case "$1" in
-    claude) GSD_HOOK_SETTINGS=.claude/settings.json; GSD_HOOK_EVENT=PreToolUse; GSD_HOOK_MATCHER=Skill; GSD_HOOK_COMMAND='$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh' ;;
+    claude) GSD_HOOK_SETTINGS=.claude/settings.json; GSD_HOOK_EVENT=PreToolUse; GSD_HOOK_MATCHER=Skill; GSD_HOOK_COMMAND='$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh' ;;
     *) return 1 ;;
   esac
 }
@@ -151,20 +151,20 @@ gsd_stale_hooks() { # [repo]
 }
 
 # One stderr line per settings file with broken GSD hooks — they fail without
-# a word, so gsd-start and gsd-list say it. Terminal only, like the update
-# notice (GSD_UPDATE_NOTICE=always forces it); gsd-doctor has the details.
+# a word, so gsdt-start and gsdt-list say it. Terminal only, like the update
+# notice (GSD_UPDATE_NOTICE=always forces it); gsdt-doctor has the details.
 # User-level files only: the repo's own are doctor's.
 gsd_stale_hooks_notice() {
   [ -t 2 ] || [ "${GSD_UPDATE_NOTICE:-}" = always ] || return 0
   gsd_stale_hooks "" | awk -F '\t' '!seen[$1 FS $4]++ { n[$1]++ }
-    END { for (f in n) printf "⚠ %d GSD hook(s) in %s run a file that is gone, so they fail silently — run gsd-doctor\n", n[f], f }' >&2
+    END { for (f in n) printf "⚠ %d GSD hook(s) in %s run a file that is gone, so they fail silently — run gsdt-doctor\n", n[f], f }' >&2
   return 0
 }
 
 # The marked blocks this toolkit owns in a target repo's files. They are
 # written as <!-- gsd-toolkit:<kind>:start/end -->; releases before 0.8.0 wrote
 # gsd-worktrees: instead. Both are read (a start of one name may end with the
-# other), so gsd-init --no-launch replaces an old block in place and doctor
+# other), so gsdt-init --no-launch replaces an old block in place and doctor
 # T016 reports it as out of date.
 GSD_MARK_RE='gsd-(toolkit|worktrees)'
 gsd_owned_markers_valid() { # file, marker kind; an absent block is valid
@@ -202,11 +202,11 @@ gsd_provider_instruction_integrated() { # repo, provider
 }
 
 # The toolkit's rules: the same text in every repo, for the INSTALLED
-# release. `gsd-rules` prints them (Claude: a user-level SessionStart hook
+# release. `gsdt-rules` prints them (Claude: a user-level SessionStart hook
 # loads that output into every session in a set-up repo; Codex/custom: the
 # AGENTS.md entry says to run it). A repo keeps only its values and a short
 # core (gsd_canonical_block), so a rule change reaches every repo through
-# gsd-update, with no T016. One definition: edit the text only here.
+# gsdt-update, with no T016. One definition: edit the text only here.
 gsd_rules_text() { # ui on|off (off: leave out the screens paragraph)
   local ui_text=""
   [ "${1:-on}" = off ] || ui_text="
@@ -215,11 +215,11 @@ Screens: every screen uses the design system in \`.planning/design/DESIGN.md\`
 project with screens, make the first phase \"Design system\". Each phase with
 screens picks a layout with \`/gsd-sketch\` before its UI-SPEC and records it in
 \`<P>-LAYOUT.md\`. After the code review, look at the built pages, not only the
-code: \`gsd-ui check <N>\` opens them in a browser, measures them and takes the
-pictures; \`gsd-ui look <N>\` lists what to answer for every picture — open each
-one and write what you saw; then show the user the sheet (\`gsd-ui sheet <N>\`)
-and run \`gsd-ui approve <N>\` only after their yes. Never waive a finding or
-skip a step without asking. \`gsd-flow-next\` asks for each step (\`ui_gates\` in
+code: \`gsdt-ui check <N>\` opens them in a browser, measures them and takes the
+pictures; \`gsdt-ui look <N>\` lists what to answer for every picture — open each
+one and write what you saw; then show the user the sheet (\`gsdt-ui sheet <N>\`)
+and run \`gsdt-ui approve <N>\` only after their yes. Never waive a finding or
+skip a step without asking. \`gsdt-flow-next\` asks for each step (\`ui_gates\` in
 \`.gsd.conf\`).
 "
   cat <<EOF
@@ -227,11 +227,11 @@ skip a step without asking. \`gsd-flow-next\` asks for each step (\`ui_gates\` i
 
 The shell commands are the source of truth. One feature equals one phase and
 worktree. Several configured providers may hand the same phase between their
-sessions; only one session may mutate that worktree at a time. Run \`gsd-list\`
+sessions; only one session may mutate that worktree at a time. Run \`gsdt-list\`
 before claiming work; attach or hand off with
-\`gsd-start -p <N>\` or claim new work with \`gsd-start -n "<desc>"\`.
+\`gsdt-start -p <N>\` or claim new work with \`gsdt-start -n "<desc>"\`.
 
-Inside the worktree, run \`gsd-flow-next <N>\` before every phase action:
+Inside the worktree, run \`gsdt-flow-next <N>\` before every phase action:
 ticket (with a tracker) → discuss → UI decision → with screens: design
 system, layout (sketch), UI phase → plan → independent review → replan →
 execute → verifier/gap loop → verify work → code review/fix → with screens:
@@ -239,21 +239,21 @@ UI check, UI look, UI approval, UI review → security → done. The human decis
 the design system and sketch, UI approval, and review findings. Never bypass a guard unless the user explicitly requests
 \`GSD_SKIP_GUARD=1\`.
 
-\`gsd-finish\` is never automatic. Run it only with explicit user intent and as
+\`gsdt-finish\` is never automatic. Run it only with explicit user intent and as
 the final action because it removes the worktree. Provider hooks are early
-feedback only; \`gsd-flow-next\` invokes the mandatory neutral guard. Arbitrary
+feedback only; \`gsdt-flow-next\` invokes the mandatory neutral guard. Arbitrary
 shell commands outside GSD are outside this enforcement boundary.
 
 For several quick tasks or a fix brief, tell the user to run
-\`gsd-batch '<task list or brief>'\` in a terminal (the script, not the skill):
+\`gsdt-batch '<task list or brief>'\` in a terminal (the script, not the skill):
 it makes a \`batch-*\` worktree and a fresh, cheaper session there. Never
 \`/gsd-quick-batch\`. \`/gsdt-batch\` only works inside a \`batch-*\` worktree.
 ${ui_text}
 EOF
 }
 
-# The repo's values, the last lines of both the local block and gsd-rules.
-# The local block leaves out ui_gates and flow: gsd-rules reads them live
+# The repo's values, the last lines of both the local block and gsdt-rules.
+# The local block leaves out ui_gates and flow: gsdt-rules reads them live
 # from .gsd.conf, so editing them never makes the committed file stale.
 gsd_repo_values() { # providers, default provider, base, worktree dir, [ui_gates, flow]
   if [ -n "${5:-}" ]; then
@@ -265,25 +265,25 @@ gsd_repo_values() { # providers, default provider, base, worktree dir, [ui_gates
 }
 
 # The generated instruction blocks — one definition, written by
-# gsd-bootstrap-repo and compared by gsd-doctor (T016: out of date).
-# .gsd/INSTRUCTIONS.md is small: a pointer to gsd-rules, a core that holds
+# gsdt-bootstrap-repo and compared by gsdt-doctor (T016: out of date).
+# .gsd/INSTRUCTIONS.md is small: a pointer to gsdt-rules, a core that holds
 # without the toolkit, and the repo's values. It changes only when a repo
-# setting gsd-init writes (providers, base, worktree dir) or this core changes.
+# setting gsdt-init writes (providers, base, worktree dir) or this core changes.
 gsd_canonical_block() { # providers, default provider, base, worktree dir
   cat <<EOF
 <!-- gsd-toolkit:canonical:start -->
 # GSD worktree workflow
 
 This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
-run \`gsd-rules\` and follow its output (Claude Code loads it when a session
-starts). If \`gsd-rules\` is not found, install the toolkit:
+run \`gsdt-rules\` and follow its output (Claude Code loads it when a session
+starts). If \`gsdt-rules\` is not found, install the toolkit:
 https://github.com/malyeg/gsd-toolkit#install
 
 These hold even without the toolkit (a teammate, CI, a cloud session):
 - One phase = one \`phase-<N>-<slug>\` git worktree; the main checkout stays
   on the base branch.
-- Run \`gsd-flow-next <N>\` before every phase action and follow it.
-- \`gsd-finish\` is never automatic: run it only when the user asks, as the
+- Run \`gsdt-flow-next <N>\` before every phase action and follow it.
+- \`gsdt-finish\` is never automatic: run it only when the user asks, as the
   last action (it removes the worktree).
 - Never bypass a guard unless the user explicitly asks for \`GSD_SKIP_GUARD=1\`.
 
@@ -293,10 +293,10 @@ EOF
 }
 
 gsd_provider_entry_block() { # the providers sharing this instruction file
-  local how="Before any GSD or phase work, run \`gsd-rules\` and follow its output: it prints
+  local how="Before any GSD or phase work, run \`gsdt-rules\` and follow its output: it prints
 the toolkit's rules for the installed version."
-  case ",$1," in *,claude,*) how="The toolkit's rules are the output of \`gsd-rules\`: a session-start hook loads
-them (\"GSD toolkit rules\"); when they are not in your context, run \`gsd-rules\`
+  case ",$1," in *,claude,*) how="The toolkit's rules are the output of \`gsdt-rules\`: a session-start hook loads
+them (\"GSD toolkit rules\"); when they are not in your context, run \`gsdt-rules\`
 before any GSD or phase work and follow its output." ;; esac
   cat <<EOF
 <!-- gsd-toolkit:provider:start -->
@@ -305,7 +305,7 @@ before any GSD or phase work and follow its output." ;; esac
 Read and follow \`.gsd/INSTRUCTIONS.md\` (this repo's settings and core rules).
 $how
 Use the \`gsdt-flow\` skill when it is available; otherwise run
-\`gsd-flow-next <N>\` and follow each printed action.
+\`gsdt-flow-next <N>\` and follow each printed action.
 For toolkit command syntax and workflow order, this marked adapter and the
 canonical document supersede older unmarked GSD text in this file. Continue to
 follow repository-specific policy from that older text.
@@ -327,10 +327,10 @@ gsd_replace_owned_block() { # file, kind, new block file; caller prevalidates
 }
 
 gsd_command_guards_active() { # toolkit package; native hook/shim is not required
-  [ -x "$1/bin/gsd-worktree-guard" ] && [ -x "$1/bin/gsd-start" ] &&
-    [ -x "$1/bin/gsd-flow-next" ] &&
-    grep -q 'gsd-worktree-guard.*--command' "$1/bin/gsd-start" &&
-    grep -q 'gsd-worktree-guard.*--command' "$1/bin/gsd-flow-next"
+  [ -x "$1/bin/gsdt-worktree-guard" ] && [ -x "$1/bin/gsdt-start" ] &&
+    [ -x "$1/bin/gsdt-flow-next" ] &&
+    grep -q 'gsdt-worktree-guard.*--command' "$1/bin/gsdt-start" &&
+    grep -q 'gsdt-worktree-guard.*--command' "$1/bin/gsdt-flow-next"
 }
 
 gsd_provider_validate() { # provider, executable override
@@ -450,7 +450,7 @@ gsd_compact_resolve() { # repo → GSD_COMPACT_RESOLVED (empty = CLI default)
 
 # A phase worktree carries the compact point in Claude's local settings
 # (.claude/settings.local.json "env"), so a session opened there later with a
-# plain `claude` gets it too, not only the one gsd-start launches. That file
+# plain `claude` gets it too, not only the one gsdt-start launches. That file
 # beats an exported variable, so a window the user exported (or `default`)
 # removes ours. Only when the repo uses Claude; best-effort, never fatal.
 gsd_compact_settings() { # repo, worktree, tokens (empty = remove ours)
@@ -461,7 +461,7 @@ gsd_compact_settings() { # repo, worktree, tokens (empty = remove ours)
   [ -z "${CLAUDE_CODE_AUTO_COMPACT_WINDOW:-}" ] || n=""
   [ -n "$n" ] || [ -f "$wt/$f" ] || return 0
   # Like gsd_baseref: a tracked, or not ignored, file would show up as
-  # uncommitted work and stop gsd-finish (gsd-wt-new adds it to the exclude).
+  # uncommitted work and stop gsdt-finish (gsdt-wt-new adds it to the exclude).
   if git -C "$wt" ls-files --error-unmatch -- "$f" >/dev/null 2>&1 \
      || ! git -C "$wt" check-ignore -q -- "$f" 2>/dev/null; then
     echo "• $f is tracked or not gitignored — compact point not saved there (a plain 'claude' keeps the CLI's own)"
@@ -485,14 +485,14 @@ gsd_provider_prompt() { # provider, kind, phase-or-empty
     flow)
       case "$p" in
         claude) printf '/gsdt-flow %s\n' "$n" ;;
-        codex) printf 'Use the gsdt-flow skill to drive phase %s. Start by running gsd-flow-next %s and obey every reported gate.\n' "$n" "$n" ;;
-        custom) printf 'Drive GSD phase %s by running gsd-flow-next %s before every phase step; obey every gate in .gsd/INSTRUCTIONS.md.\n' "$n" "$n" ;;
+        codex) printf 'Use the gsdt-flow skill to drive phase %s. Start by running gsdt-flow-next %s and obey every reported gate.\n' "$n" "$n" ;;
+        custom) printf 'Drive GSD phase %s by running gsdt-flow-next %s before every phase step; obey every gate in .gsd/INSTRUCTIONS.md.\n' "$n" "$n" ;;
       esac ;;
     batch)  # $3 = the task list / --file argument text, passed on unchanged
       case "$p" in
         claude) printf '/gsdt-batch %s\n' "$n" ;;
         codex) printf 'Use the gsdt-batch skill to run this task list or brief as one batch: %s\n' "$n" ;;
-        custom) printf 'Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsd-batch-report): %s\n' "$n" ;;
+        custom) printf 'Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsdt-batch-report): %s\n' "$n" ;;
       esac ;;
     new)
       case "$p" in claude) echo /gsd-new-project ;; *) echo 'Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.' ;; esac ;;

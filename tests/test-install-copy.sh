@@ -16,25 +16,25 @@ install_copy() {
     "$PKG/lib/install.sh" >/dev/null
 }
 mkdir -p "$BIN" "$COPY/lib" "$COPY/unrelated-dir"
-printf 'local command\n' > "$BIN/gsd-list"
-printf 'older backup\n' > "$BIN/gsd-list.bak"
+printf 'local command\n' > "$BIN/gsdt-list"
+printf 'older backup\n' > "$BIN/gsdt-list.bak"
 printf 'local library\n' > "$COPY/lib/common.sh"
 printf 'keep\n' > "$COPY/unrelated-dir/file"
 install_copy
-[ -L "$BIN/gsd-list" ]
-[ "$(readlink "$BIN/gsd-list")" = "$COPY/bin/gsd-list" ]
-[ "$(cat "$BIN/gsd-list.bak")" = 'older backup' ]
-[ "$(cat "$BIN/gsd-list.bak.1")" = 'local command' ]
+[ -L "$BIN/gsdt-list" ]
+[ "$(readlink "$BIN/gsdt-list")" = "$COPY/bin/gsdt-list" ]
+[ "$(cat "$BIN/gsdt-list.bak")" = 'older backup' ]
+[ "$(cat "$BIN/gsdt-list.bak.1")" = 'local command' ]
 [ "$(cat "$COPY/lib/common.sh.bak")" = 'local library' ]
 [ "$(cat "$COPY/unrelated-dir/file")" = keep ]
-[ -f "$COPY/shims/scripts/gsd-init.sh" ] || [ -d "$COPY/shims/scripts" ]
+[ -f "$COPY/shims/scripts/gsdt-init.sh" ] || [ -d "$COPY/shims/scripts" ]
 [ -f "$COPY/skills/gsdt-flow/SKILL.md" ]
-# gsd-rules is linked, and Claude's user settings get its SessionStart hook
-[ -L "$BIN/gsd-rules" ]
-grep -q "gsd-rules' --hook" "$WORK/settings.json"
+# gsdt-rules is linked, and Claude's user settings get its SessionStart hook
+[ -L "$BIN/gsdt-rules" ]
+grep -q "gsdt-rules' --hook" "$WORK/settings.json"
 GSD_BIN_DIR="$BIN" GSD_COPY_DIR="$COPY" GSD_CLAUDE_SKILL_DIR="$SKILLS" \
   "$PKG/lib/install.sh" --no-user-hook >/dev/null
-if grep -q "gsd-rules" "$WORK/settings.json"; then echo "--no-user-hook left the gsd-rules hook" >&2; exit 1; fi
+if grep -q "gsdt-rules" "$WORK/settings.json"; then echo "--no-user-hook left the gsdt-rules hook" >&2; exit 1; fi
 install_copy
 # a skill an older release shipped leaves the runtime on the next copy install
 mkdir -p "$COPY/skills/gsd-flow"; printf 'old\n' > "$COPY/skills/gsd-flow/SKILL.md"
@@ -79,18 +79,18 @@ for s in gsdw-flow gsdw-worktrees gsdw-tracker; do
   mkdir -p "$SKILLS/$s"; printf 'old\n<!-- gsd-worktrees-skill 0.7.0 -->\n' > "$SKILLS/$s/SKILL.md"
 done
 OLDRT="$WORK/share/gsd-worktrees/releases/0.7.0"
-rm -f "$BIN/gsd-list" "$BIN/gsd-start"
-ln -s "$OLDRT/bin/gsd-list" "$BIN/gsd-list"            # dangling: the old runtime is gone
+rm -f "$BIN/gsdt-list" "$BIN/gsdt-start"
+ln -s "$OLDRT/bin/gsdt-list" "$BIN/gsdt-list"            # dangling: the old runtime is gone
 ln -s "$OLDRT/bin/gsd-retired-cmd" "$BIN/gsd-retired-cmd"
-mkdir -p "$OLDRT/bin"; printf 'old\n' > "$OLDRT/bin/gsd-start"
-ln -s "$OLDRT/bin/gsd-start" "$BIN/gsd-start"          # live: into an old runtime folder
+mkdir -p "$OLDRT/bin"; printf 'old\n' > "$OLDRT/bin/gsdt-start"
+ln -s "$OLDRT/bin/gsdt-start" "$BIN/gsdt-start"          # live: into an old runtime folder
 install_copy
 for s in gsdw-flow gsdw-worktrees gsdw-tracker; do [ ! -e "$SKILLS/$s" ]; done
 [ -f "$SKILLS/gsdt-flow/SKILL.md" ]
-[ "$(readlink "$BIN/gsd-list")" = "$COPY/bin/gsd-list" ]
-[ "$(readlink "$BIN/gsd-start")" = "$COPY/bin/gsd-start" ]
+[ "$(readlink "$BIN/gsdt-list")" = "$COPY/bin/gsdt-list" ]
+[ "$(readlink "$BIN/gsdt-start")" = "$COPY/bin/gsdt-start" ]
 [ ! -L "$BIN/gsd-retired-cmd" ]
-[ -z "$(find "$BIN" -name 'gsd-list.bak.[2-9]*' -o -name 'gsd-start.bak*' -o -name 'gsd-retired-cmd*')" ]
+[ -z "$(find "$BIN" -name 'gsdt-list.bak.[2-9]*' -o -name 'gsdt-start.bak*' -o -name 'gsd-retired-cmd*')" ]
 # a current copy marked by an older release is still ours: replaced, no .bak
 printf 'old\n<!-- gsd-worktrees-skill 0.7.0 -->\n' > "$SKILLS/gsdt-tracker/SKILL.md"
 install_copy
@@ -157,7 +157,7 @@ GSD_BIN_DIR="$WORK/isolated-bin" GSD_COPY_DIR="$WORK/isolated-runtime" \
 [ -d "$WORK/isolated-skills/gsdt-flow" ]
 [ ! -L "$WORK/isolated-skills/gsdt-flow" ]
 rm -rf "$FIXTURE"
-"$WORK/isolated-bin/gsd-planning-repair" --help >/dev/null
+"$WORK/isolated-bin/gsdt-planning-repair" --help >/dev/null
 
 if GSD_BIN_DIR="$PKG/bin" GSD_COPY_DIR="$WORK/unsafe" \
   GSD_CLAUDE_SKILL_DIR="$WORK/unused" "$PKG/lib/install.sh" > "$WORK/unsafe-output" 2>&1; then
@@ -256,7 +256,7 @@ grep -q '⚠ gsd-core not installed for claude: no npx' "$CORE/nonpx.out"
 # downloaded) is this package's lib/install.sh; without a package it refuses
 GSD_BIN_DIR="$WORK/compat-bin" GSD_COPY_DIR="$WORK/compat-runtime" GSD_CLAUDE_SKILL_DIR="$WORK/compat-skills" \
   "$PKG/install.sh" --copy --agent claude >/dev/null
-[ "$(readlink "$WORK/compat-bin/gsd-list")" = "$WORK/compat-runtime/bin/gsd-list" ]
+[ "$(readlink "$WORK/compat-bin/gsdt-list")" = "$WORK/compat-runtime/bin/gsdt-list" ]
 [ -f "$WORK/compat-runtime/install.sh" ] && [ -f "$WORK/compat-runtime/lib/install.sh" ]
 cp "$PKG/install.sh" "$WORK/lone-install.sh"
 if bash "$WORK/lone-install.sh" --copy > "$WORK/lone.out" 2>&1; then echo 'install.sh --copy outside a package was accepted' >&2; exit 1; fi

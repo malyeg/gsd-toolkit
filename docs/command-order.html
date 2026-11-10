@@ -250,7 +250,7 @@
 
   <section>
     <h2>The whole loop</h2>
-    <p><code>gsd-flow-next N</code> is authoritative: call it after each action.
+    <p><code>gsdt-flow-next N</code> is authoritative: call it after each action.
       <code>--all</code> previews remaining steps, not permission to skip gates.
       Slash names below identify external planning skills; use your provider's
       supported invocation mechanism. Missing capability means handoff, not completion.</p>
@@ -258,14 +258,14 @@
       <div class="flow">
 
         <div class="node cap">
-          <span class="n-cmd">gsd-start -n "description" --flow</span>
+          <span class="n-cmd">gsdt-start -n "description" --flow</span>
           <span class="n-sub">on the configured base branch; run the printed session command</span>
         </div>
         <div class="link"></div>
 
         <div class="node">
           <span class="n-cmd">Ticket snapshot</span>
-          <span class="n-sub">only with a tracker; gsd-tracker snapshot</span>
+          <span class="n-sub">only with a tracker; gsdt-tracker snapshot</span>
         </div>
 
         <div class="node">
@@ -310,7 +310,7 @@
 
         <div class="branch">
           <span class="dash"></span>
-          <span class="opt"><span class="n-cmd">gsd-ui check N → look → approve → /gsd-ui-review N</span><span class="n-sub">if it has screens, after code fixes</span></span>
+          <span class="opt"><span class="n-cmd">gsdt-ui check N → look → approve → /gsd-ui-review N</span><span class="n-sub">if it has screens, after code fixes</span></span>
         </div>
 
         <div class="node">
@@ -326,7 +326,7 @@
         <div class="link"></div>
 
         <div class="node cap">
-          <span class="n-cmd">gsd-finish</span>
+          <span class="n-cmd">gsdt-finish</span>
           <span class="n-sub">only after done and explicit user intent; final session action</span>
         </div>
 
@@ -340,14 +340,14 @@
 
       <li class="step">
         <span class="num">1</span>
-        <span class="cmd">gsd-start -n "description" --flow<span class="tag tag-must">on base</span></span>
+        <span class="cmd">gsdt-start -n "description" --flow<span class="tag tag-must">on base</span></span>
         <span class="why">Claims a phase, creates its worktree, and prints a provider session command. Run that command, or request --launch. Without --flow, start uses discuss-only behavior unless configured otherwise.</span>
       </li>
 
       <li class="step">
         <span class="num">2</span>
         <span class="cmd">Ticket snapshot</span>
-        <span class="why">Only when .gsd.conf sets a tracker. Saves the phase's ticket (tk-&lt;id&gt; in its title) as &lt;P&gt;-TICKET.md with gsd-tracker snapshot. No ticket yet? Ask for it; never fabricate product intent. Without a tracker this step is skipped.</span>
+        <span class="why">Only when .gsd.conf sets a tracker. Saves the phase's ticket (tk-&lt;id&gt; in its title) as &lt;P&gt;-TICKET.md with gsdt-tracker snapshot. No ticket yet? Ask for it; never fabricate product intent. Without a tracker this step is skipped.</span>
       </li>
 
       <li class="step">
@@ -365,7 +365,7 @@
       <li class="step">
         <span class="num">5</span>
         <span class="cmd">/gsd-plan-phase N</span>
-        <span class="why">Turns decisions into numbered plans. TDD mode is on by default (<code>gsd-start</code> sets it): each plan for logic lists its test cases, input → expected result, so the review can check them, and execute writes each test before its code. Then obtain an independent review via the configured reviewer, show verified findings to the user, and replan with <code>--reviews</code> before execution. Missing reviewer capability requires a separate session handoff, not a skipped gate.</span>
+        <span class="why">Turns decisions into numbered plans. TDD mode is on by default (<code>gsdt-start</code> sets it): each plan for logic lists its test cases, input → expected result, so the review can check them, and execute writes each test before its code. Then obtain an independent review via the configured reviewer, show verified findings to the user, and replan with <code>--reviews</code> before execution. Missing reviewer capability requires a separate session handoff, not a skipped gate.</span>
       </li>
 
       <li class="step">
@@ -389,7 +389,7 @@
       <li class="step">
         <span class="num">9</span>
         <span class="cmd">/gsd-ui-review N<span class="tag tag-fe">screens only</span></span>
-        <span class="why">First <code>gsd-ui check N</code> (app running) opens each page at phone, tablet and desktop size, measures it and takes the pictures. <code>gsd-ui look N</code> lists what the agent must answer for every picture. Then you look at the sheet and say yes (<code>gsd-ui approve N</code>). Then the review scores the built screens and compares them with the chosen sketch. Do it after the code review, not before.</span>
+        <span class="why">First <code>gsdt-ui check N</code> (app running) opens each page at phone, tablet and desktop size, measures it and takes the pictures. <code>gsdt-ui look N</code> lists what the agent must answer for every picture. Then you look at the sheet and say yes (<code>gsdt-ui approve N</code>). Then the review scores the built screens and compares them with the chosen sketch. Do it after the code review, not before.</span>
       </li>
 
       <li class="step">
@@ -406,7 +406,7 @@
 
       <li class="step">
         <span class="num">12</span>
-        <span class="cmd">gsd-finish</span>
+        <span class="cmd">gsdt-finish</span>
         <span class="why">Only after the engine reports done and the user explicitly requests landing. Validates, merges, revalidates combined code, pushes and removes the worktree. Final session action.</span>
       </li>
 
@@ -437,7 +437,7 @@
 
   <section>
     <h2>The one rule that trips people up</h2>
-    <p class="note"><strong>Every command with a phase number runs inside that phase's worktree.</strong> The provider-neutral command guard blocks them anywhere else, and with <code>flow = strict</code> in <code>.gsd.conf</code> it also refuses a step whose predecessor left no artifact. The Claude native hook adds early feedback; Codex and hook-free sessions retain the same checks through <code>gsd-flow-next</code>. Arbitrary shell commands that bypass GSD are outside this boundary.</p>
+    <p class="note"><strong>Every command with a phase number runs inside that phase's worktree.</strong> The provider-neutral command guard blocks them anywhere else, and with <code>flow = strict</code> in <code>.gsd.conf</code> it also refuses a step whose predecessor left no artifact. The Claude native hook adds early feedback; Codex and hook-free sessions retain the same checks through <code>gsdt-flow-next</code>. Arbitrary shell commands that bypass GSD are outside this boundary.</p>
   </section>
 
 </div>

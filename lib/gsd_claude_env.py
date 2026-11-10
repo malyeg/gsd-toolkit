@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """gsd_claude_env.py — set or remove one variable in a Claude settings file.
 
-gsd-start launches Claude with CLAUDE_CODE_AUTO_COMPACT_WINDOW, but a session
+gsdt-start launches Claude with CLAUDE_CODE_AUTO_COMPACT_WINDOW, but a session
 opened later in the same worktree with a plain `claude` would not get it.
 Claude also reads the "env" object of .claude/settings.local.json, so the
 worktree carries the value there.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-batch.sh — gsd-batch-report: token counts per batch from Claude Code
+# test-batch.sh — gsdt-batch-report: token counts per batch from Claude Code
 # transcripts. Fixture transcripts are generated into a throwaway folder: a
 # /gsd-quick-batch run with prompts typed mid-run, duplicate message ids,
 # a helper with no meta file, a nested helper, an unrelated helper; a second
@@ -7,7 +7,7 @@
 # its done line; a session with no batch.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; PKG="$(cd "$HERE/.." && pwd)"
-BR="$PKG/bin/gsd-batch-report"
+BR="$PKG/bin/gsdt-batch-report"
 PASS=0; FAIL=0; WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
 ok()  { PASS=$((PASS + 1)); printf '  ✔ %s\n' "$1"; }
 bad() { FAIL=$((FAIL + 1)); printf '  ✘ %s\n' "$1"; [ $# -gt 1 ] && printf '      %s\n' "$2"; }
@@ -275,8 +275,8 @@ long="/$(printf 'x%.0s' $(seq 1 230))"
 lname=$(printf '%s' "$long" | sed 's/[^A-Za-z0-9]/-/g'); mkdir -p "$H/projects/${lname:0:200}-abc123"
 is "a long path: cut at 200 + hash suffix" "$(python3 "$PKG/lib/gsd_batch_report.py" projdir --home "$H" --repo "$long")" "$H/projects/${lname:0:200}-abc123"
 
-section "gsd-batch — the launcher"
-GB="$PKG/bin/gsd-batch"
+section "gsdt-batch — the launcher"
+GB="$PKG/bin/gsdt-batch"
 cd "$WORK" || exit 1   # never run from inside this repo: a slip would make a batch worktree here
 D=$(date +%Y-%m-%d)
 L="$WORK/launch"; mkdir -p "$L/.planning"; git -C "$L" init -q -b main
@@ -316,7 +316,7 @@ has "…its first words name the batch" "batch-$D-read-plan-fix-brief-7" "$WORK/
 "$GB" --repo "$L" --print --provider gemini x > "$WORK/out" 2>&1; is "gemini → 64" "$?" 64
 has "…with the reason" "no longer supported" "$WORK/out"
 
-section "gsd-batch — its own batch-* worktree"
+section "gsdt-batch — its own batch-* worktree"
 BW="$LW/batch-$D-fix-a"
 "$GB" --repo "$L" "- fix a" < /dev/null > "$WORK/out" 2> "$WORK/err"; is "no terminal → worktree made, command printed, exit 0" "$?" 0
 is "…the command opens the session in the worktree" "$(cut -d' ' -f1-2 "$WORK/out")" "cd $(printf '%q' "$BW")"
@@ -337,19 +337,19 @@ mkdir -p "$U/.planning"; printf 'x\n' > "$U/.planning/STATE.md"
 "$GB" --repo "$U" --print "- fix a" > "$WORK/out" 2>&1; is ".planning/ not committed → refused (64)" "$?" 64
 has "…saying why" "gsd-core would then run the batch in the main checkout" "$WORK/out"
 
-section "a batch worktree in the guard, gsd-list, gsd-doctor"
+section "a batch worktree in the guard, gsdt-list, gsdt-doctor"
 for c in gsd-quick-batch gsd-quick gsd-fast; do
-  "$PKG/bin/gsd-worktree-guard" --command "$c" --repo "$BW" > "$WORK/out" 2>&1
+  "$PKG/bin/gsdt-worktree-guard" --command "$c" --repo "$BW" > "$WORK/out" 2>&1
   is "the guard allows $c in a batch worktree" "$?" 0
 done
-"$PKG/bin/gsd-worktree-guard" --command gsd-plan-phase --args 1 --repo "$BW" > "$WORK/out" 2>&1
+"$PKG/bin/gsdt-worktree-guard" --command gsd-plan-phase --args 1 --repo "$BW" > "$WORK/out" 2>&1
 is "…but not phase work" "$?" 2
-"$PKG/bin/gsd-list" --repo "$L" > "$WORK/out" 2>&1
-has "gsd-list shows the batch, attached" "● batch-$D-fix-a" "$WORK/out"
-has "…and how to land it" "gsd-finish <branch>" "$WORK/out"
+"$PKG/bin/gsdt-list" --repo "$L" > "$WORK/out" 2>&1
+has "gsdt-list shows the batch, attached" "● batch-$D-fix-a" "$WORK/out"
+has "…and how to land it" "gsdt-finish <branch>" "$WORK/out"
 git -C "$L" worktree remove --force "$LW/batch-$D-fix-a-2"
-PATH="$PKG/bin:$PATH" "$PKG/bin/gsd-doctor" --repo "$L" > "$WORK/out" 2>&1
-has "gsd-doctor: a batch branch with no worktree is W017" "branch(es) with no worktree: batch-$D-fix-a-2" "$WORK/out"
+PATH="$PKG/bin:$PATH" "$PKG/bin/gsdt-doctor" --repo "$L" > "$WORK/out" 2>&1
+has "gsdt-doctor: a batch branch with no worktree is W017" "branch(es) with no worktree: batch-$D-fix-a-2" "$WORK/out"
 hasnt "…an attached one is not" "no worktree:.*batch-$D-fix-a " "$WORK/out"
 
 section "the skill and the instructions"
@@ -361,8 +361,8 @@ has "it takes a brief in plain words" "OR any brief in plain words" "$SK"
 has "a brief gets an Opus helper (it decides what is real)" "a brief → \`model: opus\`" "$SK"
 has "recommended items are never built" "never built" "$SK"
 has "it prints the done line the report and the mod read" "gsdt-batch: done items=" "$SK"
-has "in the main checkout it stops and prints the gsd-batch command" "MAIN checkout: STOP" "$SK"
-has "it never lands the batch itself: it prints gsd-finish" "gsd-finish <batch-branch>" "$SK"
+has "in the main checkout it stops and prints the gsdt-batch command" "MAIN checkout: STOP" "$SK"
+has "it never lands the batch itself: it prints gsdt-finish" "gsdt-finish <batch-branch>" "$SK"
 hasnt "provider-neutral: no literal Skill() calls" "Skill(" "$SK"
 H2="$WORK/insthome"; mkdir -p "$H2"
 if HOME="$H2" bash "$PKG/lib/install.sh" --agent claude --no-user-hook > "$WORK/inst" 2>&1; then
@@ -373,7 +373,7 @@ fi
 # shellcheck source=../lib/provider.sh
 . "$PKG/lib/provider.sh"
 gsd_rules_text off > "$WORK/canon"
-has "the toolkit rules (gsd-rules) point at the gsd-batch script" "\`gsd-batch '<task list or brief>'\` in a terminal (the script, not the skill)" "$WORK/canon"
+has "the toolkit rules (gsdt-rules) point at the gsdt-batch script" "\`gsdt-batch '<task list or brief>'\` in a terminal (the script, not the skill)" "$WORK/canon"
 
 section "an enriched line is ONE quick-batch item"
 QB=""

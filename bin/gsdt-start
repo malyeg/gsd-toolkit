@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
-# gsd-start — start a GSD feature in ONE step: claim the phase, sync the claim,
+# gsdt-start — start a GSD feature in ONE step: claim the phase, sync the claim,
 # create the worktree, and open the session there (--no-launch prints it instead).
 #
 # Replaces the manual sequence:
-#   /gsd-phase "<desc>"  →  git push  →  scripts/gsd-new-worktree-feature.sh
+#   /gsd-phase "<desc>"  →  git push  →  scripts/gsdt-new-worktree-feature.sh
 #   →  cd worktree  →  <agent> /gsd-discuss-phase N
 #
 # Provider adapters choose the CLI argv. Default is to launch it, in a terminal.
@@ -16,11 +16,11 @@
 # distinct phase numbers.
 #
 # Usage (from anywhere inside a GSD-fitted repo or its worktrees):
-#   gsd-start -n "<phase description>" [--slug <slug>] [--repo <path>]
+#   gsdt-start -n "<phase description>" [--slug <slug>] [--repo <path>]
 #             [--agent <cmd>] [--launch] [--no-push]
-#   gsd-start --insert <N> "<phase description>" [--slug <slug>] [--repo <path>]
+#   gsdt-start --insert <N> "<phase description>" [--slug <slug>] [--repo <path>]
 #             [--agent <cmd>] [--launch] [--no-push]
-#   gsd-start -p <N> [--slug <slug>] [--repo <path>] [--agent <cmd>] [--launch]
+#   gsdt-start -p <N> [--slug <slug>] [--repo <path>] [--agent <cmd>] [--launch]
 #
 # Options:
 #   -p, --phase <N>  attach to ALREADY-CLAIMED phase N instead of claiming a
@@ -32,7 +32,7 @@
 #   --ticket <id>  the tracker ticket driving this phase (id, tk-<id> or URL).
 #                  Tags the phase title/slug with tk-<id>; with a tracker set
 #                  in .gsd.conf, moves the ticket to "in progress" (best-effort,
-#                  via gsd-tracker). --cu <id> is the old name, still accepted.
+#                  via gsdt-tracker). --cu <id> is the old name, still accepted.
 #   --slug <slug>  worktree/branch slug (default: slugified description)
 #   --repo <path>  main checkout of the target repo (default: derived from cwd)
 #   --provider <p> provider identity; --agent-command overrides its executable
@@ -64,21 +64,21 @@ GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 
 usage() {
   cat <<'HELP'
-gsd-start — start a GSD feature in ONE step
+gsdt-start — start a GSD feature in ONE step
 
 Claims the next phase, publishes the claim, creates the phase worktree, and
 opens a provider-valid phase-flow session there (--no-launch prints it).
 Replaces the manual sequence:
-  /gsd-phase "<desc>" → git push → scripts/gsd-new-worktree-feature.sh
+  /gsd-phase "<desc>" → git push → scripts/gsdt-new-worktree-feature.sh
   → cd <worktree> → <agent> "/gsd-discuss-phase N"
 
 Provider identity and executable are configured separately. Print-only is the
 default and works even when the selected CLI is unavailable.
 
 USAGE
-  gsd-start -n "<phase description>" [options]  claim a NEW phase
-  gsd-start --insert <N> "<desc>" [options]     claim a FRACTIONAL phase after N
-  gsd-start -p <N> [options]                    attach to an EXISTING phase
+  gsdt-start -n "<phase description>" [options]  claim a NEW phase
+  gsdt-start --insert <N> "<desc>" [options]     claim a FRACTIONAL phase after N
+  gsdt-start -p <N> [options]                    attach to an EXISTING phase
 
 Claiming a new phase is never the default: -n (or --insert) says so explicitly,
 so a bare description can't silently open a second phase for work the roadmap
@@ -102,7 +102,7 @@ OPTIONS
                   The phase title and slug get the tag tk-<id> at the end.
                   With `tracker = clickup|custom` in .gsd.conf the ticket is
                   moved to "in progress" with a comment (best-effort, via
-                  gsd-tracker); with the default `tracker = none` it is only
+                  gsdt-tracker); with the default `tracker = none` it is only
                   tagged. A tag already in the description (… tk-<id>) is
                   picked up the same way. --cu <id> is the old name.
                   With a tracker set, a new claim (-n, --insert) needs one.
@@ -129,47 +129,47 @@ OPTIONS
   -h, --help      show this help
 
 EXAMPLES
-  gsd-start -n "customer terms rework"
+  gsdt-start -n "customer terms rework"
       Claim the phase, push, create ../<repo>-worktrees/phase-<N>-customer-
       terms-rework, and print the configured provider command.
 
-  gsd-start --insert 11 "hotfix reset-email copy"
+  gsdt-start --insert 11 "hotfix reset-email copy"
       Claim phase 11.1 (the next free decimal after phase 11), push, create
       ../<repo>-worktrees/phase-11.1-hotfix-reset-email-copy.
 
-  gsd-start --after 11 "second hotfix"
+  gsdt-start --after 11 "second hotfix"
       Run after the previous example: phase 11.1 already exists, so this
       claims phase 11.2 (the decimal auto-increments). --after == --insert.
 
-  gsd-start --insert 11 "urgent db backfill" --slug db-backfill
+  gsdt-start --insert 11 "urgent db backfill" --slug db-backfill
       Insert phase 11.x after phase 11 but force the branch/worktree slug →
       phase-11.x-db-backfill (default would be slugified from the description).
 
-  gsd-start -p 11.1
+  gsdt-start -p 11.1
       Re-attach to the already-inserted phase 11.1 (e.g. after a failed run):
       no new claim, reuse/re-create its phase-11.1-* worktree. Idempotent.
 
-  gsd-start -p 7
+  gsdt-start -p 7
       Phase 7 is already in ROADMAP.md: don't claim anything — create or
       reuse its phase-7-* worktree and resume the flow at the first
-      unfinished step reported by gsd-flow-next. Idempotent.
+      unfinished step reported by gsdt-flow-next. Idempotent.
 
-  gsd-start -p 7 --no-flow
+  gsdt-start -p 7 --no-flow
       Reuse phase 7's worktree and open discuss-phase only.
 
-  gsd-start -n "fix invoice rounding" --slug invoice-fix
+  gsdt-start -n "fix invoice rounding" --slug invoice-fix
       Same, but the branch/worktree is phase-<N>-invoice-fix.
 
-  gsd-start -n "reporting exports"
+  gsdt-start -n "reporting exports"
       Prepare everything and open the configured session in the worktree.
 
-  gsd-start -n "reporting exports" --no-launch
+  gsdt-start -n "reporting exports" --no-launch
       Same, but print the command to run later instead.
 
-  gsd-start -n "reporting exports" --agent codex
+  gsdt-start -n "reporting exports" --agent codex
       Compatibility form: select Codex and launch it.
 
-  gsd-start -n "hotfix parsing" --repo ~/projects/acme/webshop
+  gsdt-start -n "hotfix parsing" --repo ~/projects/acme/webshop
       Start a phase in another repo without cd-ing into it first.
 
 PARALLEL SESSIONS
@@ -193,15 +193,15 @@ NOTES
     nothing). You don't pick the exact decimal — it auto-assigns the next free
     N.x. Everything downstream (worktree, guard, discuss/plan/execute) accepts
     decimal phase numbers.
-  - Requires a GSD-fitted repo (gsd-bootstrap-repo) with initialized
+  - Requires a GSD-fitted repo (gsdt-bootstrap-repo) with initialized
     .planning/ (/gsd-new-project or /gsd-ingest-docs).
   - The main checkout must be on the base branch with no uncommitted
     .planning/ changes.
 
 RELATED
-  gsd-finish            finish the phase (merge back, push, clean up)
-  gsd-init              set up GSD in a repo that doesn't have it yet
-  gsd-bootstrap-repo    just the file installation (what gsd-init wraps)
+  gsdt-finish            finish the phase (merge back, push, clean up)
+  gsdt-init              set up GSD in a repo that doesn't have it yet
+  gsdt-bootstrap-repo    just the file installation (what gsdt-init wraps)
 HELP
 }
 
@@ -240,7 +240,7 @@ while [ $# -gt 0 ]; do
     --launch)    LAUNCH_ASKED=1; shift ;;
     --no-launch) FORCE_NOLAUNCH=1; shift ;;
     --no-push)   PUSH=0;   shift ;;
-    -*) die "unknown flag: $1 (see gsd-start --help)" ;;
+    -*) die "unknown flag: $1 (see gsdt-start --help)" ;;
     *)  DESC="${DESC:+$DESC }$1"; shift ;;
   esac
 done
@@ -256,8 +256,8 @@ if [ -n "$ATTACH" ] && [ "$NEW" = 1 ]; then
   die "-n/--new and -p/--phase are mutually exclusive (-n claims a NEW phase; -p attaches to an existing one)"
 fi
 if [ -z "$DESC" ] && [ -z "$ATTACH" ]; then
-  [ -n "$INSERT" ] && die "--insert needs a phase description (e.g. gsd-start --insert 11 \"hotfix …\")"
-  [ "$NEW" = 1 ] && die "-n/--new needs a phase description (e.g. gsd-start -n \"customer terms rework\")"
+  [ -n "$INSERT" ] && die "--insert needs a phase description (e.g. gsdt-start --insert 11 \"hotfix …\")"
+  [ "$NEW" = 1 ] && die "-n/--new needs a phase description (e.g. gsdt-start -n \"customer terms rework\")"
   usage >&2; exit 1
 fi
 # Claiming a NEW phase must be explicit. A bare description used to claim, which
@@ -265,11 +265,11 @@ fi
 # second phase for work the roadmap already tracks. Now the intent is stated.
 if [ -n "$DESC" ] && [ -z "$ATTACH" ] && [ -z "$INSERT" ] && [ "$NEW" = 0 ]; then
   die "refusing to guess whether this is a new phase — say which:
-  gsd-start -n \"$DESC\"
+  gsdt-start -n \"$DESC\"
       claim a NEW phase
-  gsd-start -p <N>
-      attach to the EXISTING phase N (check gsd-list first)
-  gsd-start --insert <N> \"$DESC\"
+  gsdt-start -p <N>
+      attach to the EXISTING phase N (check gsdt-list first)
+  gsdt-start --insert <N> \"$DESC\"
       insert a decimal hotfix phase after phase N"
 fi
 if [ -n "$ATTACH" ]; then
@@ -293,6 +293,7 @@ else
     || die "not inside a git repo — cd into the target repo or pass --repo <path>"
   MAIN=$(gsd_main .)
 fi
+gsd_migrate_refuse "$MAIN"
 [ -f "$MAIN/.planning/ROADMAP.md" ] || die "$MAIN has no .planning/ROADMAP.md — initialize GSD first (/gsd-new-project)"
 if [ -z "$ATTACH" ]; then
   GSD_RUN=$(gsd_cli) || { gsd_cli_missing | sed '1s/^/✖ /' >&2; exit 1; }
@@ -307,7 +308,7 @@ gsd_start_mode_resolve "$MAIN" "$START_MODE_CLI" || exit $?
 gsd_compact_resolve "$MAIN" || exit $?
 
 # ── --ticket: normalize the id and tag the phase title/slug with tk-<id> ─────
-# The ROADMAP title is what gsd-finish and /gsdt-flow read the id back from.
+# The ROADMAP title is what gsdt-finish and /gsdt-flow read the id back from.
 TRACKER=$(gsd_tracker_which "$MAIN")
 if [ -n "$TICKET" ]; then
   norm_as=$TRACKER; [ "$TICKET_CU" = 0 ] || norm_as=clickup
@@ -337,7 +338,7 @@ if [ -z "$ATTACH" ]; then
   [ "$cur" = "$BASE" ] || die "main checkout is on '$cur', not '$BASE' — checkout $BASE first (claims serialize through $BASE)"
   [ -z "$(git -C "$MAIN" status --porcelain -- .planning)" ] \
     || die "main checkout has uncommitted .planning/ changes — commit or stash them first (the claim commit must be clean)" \
-           "if they are only recomputed counters (from the post-merge hook): gsd-planning-repair --commit"
+           "if they are only recomputed counters (from the post-merge hook): gsdt-planning-repair --commit"
 
   HAS_ORIGIN=0
   git -C "$MAIN" remote get-url origin >/dev/null 2>&1 && HAS_ORIGIN=1
@@ -357,12 +358,12 @@ fi
 # ── claim the phase (deterministic, no LLM) ──────────────────────────────────
 add_roadmap_rows() {  # GSD writes no checklist/Progress row for phase $N — add them
   perl "$GSD_PKG/lib/roadmap-rows.pl" "$MAIN/.planning/ROADMAP.md" "$N" \
-    || echo "⚠ could not add the ROADMAP rows for phase $N — gsd-doctor will list them (T022/T023)" >&2
+    || echo "⚠ could not add the ROADMAP rows for phase $N — gsdt-doctor will list them (T022/T023)" >&2
   # Recompute STATE.md's progress counters (total_phases, …) in the claim
   # commit itself. Left stale, the post-merge hook recomputes them on the next
   # plain `git pull` and leaves STATE.md modified — which then blocks the next
-  # gsd-start. Best effort: without python the counters simply stay as they were.
-  "$GSD_PKG/bin/gsd-planning-repair" --repo "$MAIN" >/dev/null 2>&1 || true
+  # gsdt-start. Best effort: without python the counters simply stay as they were.
+  "$GSD_PKG/bin/gsdt-planning-repair" --repo "$MAIN" >/dev/null 2>&1 || true
 }
 
 tdd_default() {  # TDD is the toolkit's default — turn GSD's tdd_mode on in the claim commit
@@ -370,7 +371,7 @@ tdd_default() {  # TDD is the toolkit's default — turn GSD's tdd_mode on in th
   # <behavior> block, so the cross-AI plan review sees them, and execute
   # writes each test before its code. Only an UNSET key is filled: a project
   # that chose false (/gsd-settings) keeps it. Needs the config.json that
-  # /gsd-new-project (or ingest) writes, so the first claim after gsd-init
+  # /gsd-new-project (or ingest) writes, so the first claim after gsdt-init
   # does it. Best effort, like the ROADMAP rows.
   [ -f "$MAIN/.planning/config.json" ] || return 0
   gsd_python >/dev/null || return 0   # cannot tell unset from false without it
@@ -485,8 +486,8 @@ else
         | while IFS= read -r h; do gsd_ticket_tagged "$h" "$TICKET" && printf '%s\n' "$h"; done \
         | head -1 | sed -E 's/^### Phase ([0-9]+(\.[0-9]+)?):.*/\1/' || true)
       [ -z "${tk_n:-}" ] \
-        || die "phase $tk_n already tracks ticket $TICKET — attach to it instead: gsd-start -p $tk_n
-  (to add a hotfix under it anyway: gsd-start --insert $tk_n \"<desc>\")"
+        || die "phase $tk_n already tracks ticket $TICKET — attach to it instead: gsdt-start -p $tk_n
+  (to add a hotfix under it anyway: gsdt-start --insert $tk_n \"<desc>\")"
     fi
 
     desc_lc=$(printf '%s' "$DESC" | tr '[:upper:]' '[:lower:]')
@@ -502,7 +503,7 @@ else
           fi
         done || true)
     [ -z "${dup_n:-}" ] \
-      || die "phase $dup_n already has this exact description — attach to it instead: gsd-start -p $dup_n"
+      || die "phase $dup_n already has this exact description — attach to it instead: gsdt-start -p $dup_n"
   fi
 
   if [ -n "$INSERT" ]; then
@@ -555,7 +556,7 @@ fi
 # the script re-detect it from HEAD (a commit landing in between would win).
 WT_ARGS=(--phase "$N")
 [ -n "$SLUG" ] && WT_ARGS+=("$SLUG")
-WT_OUT=$( cd "$MAIN" && GSD_LOCK_HELD=1 GSD_WT_NEW_SUPPRESS_NEXT=1 "$GSD_PKG/bin/gsd-wt-new" ${WT_ARGS[@]+"${WT_ARGS[@]}"} )
+WT_OUT=$( cd "$MAIN" && GSD_LOCK_HELD=1 GSD_WT_NEW_SUPPRESS_NEXT=1 "$GSD_PKG/bin/gsdt-wt-new" ${WT_ARGS[@]+"${WT_ARGS[@]}"} )
 printf '%s\n' "$WT_OUT"
 DEST=$(printf '%s\n' "$WT_OUT" | sed -n 's/^✅ worktree ready: \(.*\)   (phase.*/\1/p')
 if [ -z "$DEST" ] || [ ! -d "$DEST" ]; then
@@ -565,14 +566,14 @@ fi
 [ -n "$DEST" ] && [ -d "$DEST" ] || die "could not locate the new worktree for phase $N"
 gsd_compact_settings "$MAIN" "$DEST" "$GSD_COMPACT_RESOLVED"
 
-"$GSD_PKG/bin/gsd-worktree-guard" --command "gsd-${GSD_START_MODE_RESOLVED/discuss/discuss-phase}" --phase "$N" --repo "$DEST" || exit $?
+"$GSD_PKG/bin/gsdt-worktree-guard" --command "gsd-${GSD_START_MODE_RESOLVED/discuss/discuss-phase}" --phase "$N" --repo "$DEST" || exit $?
 if [ "$GSD_START_MODE_RESOLVED" = flow ]; then
   # Fresh claims may not have a phase directory yet. Existing phases must pass
   # the current step's checks before a session is printed or opened.
   phase_prefix=$N; case "$N" in *.*) ;; *) phase_prefix=$(printf '%02d' "$N") ;; esac
   for phase_dir in "$DEST/.planning/phases/$phase_prefix"-*; do
     [ -d "$phase_dir" ] || continue
-    "$GSD_PKG/bin/gsd-flow-next" "$N" --repo "$DEST" >/dev/null || exit $?
+    "$GSD_PKG/bin/gsdt-flow-next" "$N" --repo "$DEST" >/dev/null || exit $?
     break
   done
 fi
@@ -596,9 +597,9 @@ if [ -n "$TICKET_ID" ]; then
   if [ "$TRACKER" = none ]; then
     [ -z "$TICKET" ] || echo "• tracker = none — phase tagged tk-$TICKET_ID only (set tracker = clickup|custom in .gsd.conf to update the ticket)"
   else
-    "$GSD_PKG/bin/gsd-tracker" --repo "$MAIN" start "$TICKET_ID" \
+    "$GSD_PKG/bin/gsdt-tracker" --repo "$MAIN" start "$TICKET_ID" \
       "🚧 GSD phase $N started — branch \`$(basename "$DEST")\` in $(basename "$MAIN")." \
-      || echo "• ticket $TICKET_ID not updated (non-fatal) — check: gsd-tracker check"
+      || echo "• ticket $TICKET_ID not updated (non-fatal) — check: gsdt-tracker check"
   fi
 fi
 

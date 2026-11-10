@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# gsd-init — take a repo with NO GSD to "ready for gsd-start" in one command:
-# installs the worktree workflow (gsd-bootstrap-repo), then opens the agent
+# gsdt-init — take a repo with NO GSD to "ready for gsdt-start" in one command:
+# installs the worktree workflow (gsdt-bootstrap-repo), then opens the agent
 # session that makes the plan (/gsd-new-project or /gsd-ingest-docs) and, when
 # it closes, says whether the ROADMAP is there. --no-launch, or no terminal,
 # prints the command instead. Provider adapters choose the actual CLI argv.
@@ -11,35 +11,35 @@ die() { printf '✖ %s\n' "$@" >&2; exit 1; }
 
 usage() {
   cat <<'HELP'
-gsd-init — set up GSD in a repo that doesn't have it yet
+gsdt-init — set up GSD in a repo that doesn't have it yet
 
-Runs gsd-bootstrap-repo (shared scripts/config/instructions plus the selected
+Runs gsdt-bootstrap-repo (shared scripts/config/instructions plus the selected
 provider adapter), then opens the agent session that makes the plan:
 
   /gsd-new-project    when the repo has no planning docs (fresh interview)
   /gsd-ingest-docs    when ADRs/PRDs/SPECs are detected (bootstrap from them)
 
 The plan is a conversation with the agent (its questions are where the
-project context comes from), so gsd-init opens that session for you and,
+project context comes from), so gsdt-init opens that session for you and,
 when you close it, checks that .planning/ROADMAP.md was written. With no
 terminal (a script, an agent's shell) or --no-launch it prints the command.
 
 Safe to re-run: if the repo is already initialized (.planning/ROADMAP.md
 exists), the workflow files are still repaired/synced from the source, but the
-planning state is never touched — you're just pointed back to gsd-start.
+planning state is never touched — you're just pointed back to gsdt-start.
 
 USAGE
-  gsd-init [options]          # run from INSIDE the target repo
+  gsdt-init [options]          # run from INSIDE the target repo
 
 OPTIONS
   --new            force /gsd-new-project (skip docs detection)
   --ingest         force /gsd-ingest-docs
   --src <path>     deprecated compatibility flag; bootstrap ignores it
-  --base <branch>  base branch override (passed to gsd-bootstrap-repo)
+  --base <branch>  base branch override (passed to gsdt-bootstrap-repo)
   --no-commit      don't commit the bootstrap files (default: commit)
   --no-ui          the project has no screens (backend, CLI): ui_gates = off
   --tracker <t>    where the tickets live: none, clickup or custom. Without it,
-                   gsd-init asks (in a terminal) when .gsd.conf sets no tracker
+                   gsdt-init asks (in a terminal) when .gsd.conf sets no tracker
   --tracker-command <path>  with --tracker custom: the repo's tracker script
   --providers <list> comma-separated integrations to install, in default order
   --provider <p>   provider for the initialization session; when --providers
@@ -54,34 +54,34 @@ OPTIONS
   -h, --help       show this help
 
 EXAMPLES
-  cd ~/projects/acme/webshop && gsd-init
+  cd ~/projects/acme/webshop && gsdt-init
       Bootstrap + commit, then open the planning session; when it closes,
-      gsd-init says whether the ROADMAP is ready.
+      gsdt-init says whether the ROADMAP is ready.
 
-  cd ~/projects/acme/webshop && gsd-init --no-launch
+  cd ~/projects/acme/webshop && gsdt-init --no-launch
       Same, but print the session command to run later.
 
-  gsd-init --ingest --agent codex
+  gsdt-init --ingest --agent codex
       Force ingest mode and open the session with the codex CLI.
 
-  gsd-init --providers claude,codex --provider codex --no-launch
+  gsdt-init --providers claude,codex --provider codex --no-launch
       Install both integrations and print the Codex planning command.
 
-  gsd-init --providers claude,codex --provider-command codex=/opt/bin/codex
+  gsdt-init --providers claude,codex --provider-command codex=/opt/bin/codex
       Install Claude and Codex integrations with an explicit Codex executable.
 
-  gsd-init --base main --no-launch
+  gsdt-init --base main --no-launch
       Bootstrap against 'main', print the planning command to run later.
 
 AFTER INITIALIZATION
-  gsd-start -n "<description>"   begin each feature (claim + worktree + session).
+  gsdt-start -n "<description>"   begin each feature (claim + worktree + session).
                               The first claim also turns on GSD's TDD mode
                               (workflow.tdd_mode) unless the project set it.
-  gsd-finish                  land it (merge back, push, clean up)
+  gsdt-finish                  land it (merge back, push, clean up)
 
 RELATED
-  gsd-bootstrap-repo   just the file installation (what gsd-init wraps)
-  gsd-start, gsd-finish
+  gsdt-bootstrap-repo   just the file installation (what gsdt-init wraps)
+  gsdt-start, gsdt-finish
 HELP
 }
 
@@ -119,14 +119,14 @@ while [ $# -gt 0 ]; do
     --agent) [ $# -ge 2 ] || die "--agent needs a provider or executable"; case "$2" in claude|codex|gemini|custom) PROVIDER_CLI="$2" ;; *) PROVIDER_CLI=custom; AGENT_COMMAND_CLI="$2" ;; esac; LAUNCH_ASKED=1; shift 2 ;;
     --launch)    LAUNCH_ASKED=1; shift ;;
     --no-launch) FORCE_NOLAUNCH=1; shift ;;
-    *) die "unknown arg: $1 (see gsd-init --help)" ;;
+    *) die "unknown arg: $1 (see gsdt-init --help)" ;;
   esac
 done
 # --no-launch always wins, whatever order it appeared in.
 [ "$FORCE_NOLAUNCH" = 1 ] && LAUNCH=0
 DEST="$(git rev-parse --show-toplevel 2>/dev/null)" \
   || die "run this from inside the target git repo"
-command -v gsd-bootstrap-repo >/dev/null 2>&1 || die "gsd-bootstrap-repo not found on PATH"
+command -v gsdt-bootstrap-repo >/dev/null 2>&1 || die "gsdt-bootstrap-repo not found on PATH"
 
 SELF="$0"
 while [ -L "$SELF" ]; do
@@ -136,6 +136,7 @@ done
 GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 # shellcheck source=../lib/common.sh
 . "$GSD_PKG/lib/common.sh"
+gsd_migrate_refuse "$(gsd_main "$DEST")"
 # shellcheck source=../lib/provider.sh
 . "$GSD_PKG/lib/provider.sh"
 # shellcheck source=../lib/version.sh
@@ -191,7 +192,7 @@ ALREADY=0
 [ -f "$DEST/.planning/ROADMAP.md" ] && ALREADY=1
 
 # ── the ticket tracker ───────────────────────────────────────────────────────
-# With a tracker set, gsd-start claims a phase only with its ticket, so pick it
+# With a tracker set, gsdt-start claims a phase only with its ticket, so pick it
 # now. Asked only in a terminal and only while .gsd.conf names none; a script
 # passes --tracker, and without either the default (none) stays.
 ask_tracker() {
@@ -220,19 +221,19 @@ fi
 
 # ── step 1: install the workflow files (idempotent — also repairs/syncs) ─────
 [ "$COMMIT" = 1 ] && BOOT_ARGS+=(--commit)
-echo "▶ installing the GSD worktree workflow (gsd-bootstrap-repo)…"
+echo "▶ installing the GSD worktree workflow (gsdt-bootstrap-repo)…"
 echo ""
-gsd-bootstrap-repo ${BOOT_ARGS[@]+"${BOOT_ARGS[@]}"}
+gsdt-bootstrap-repo ${BOOT_ARGS[@]+"${BOOT_ARGS[@]}"}
 echo ""
 
 tracker_notice() {
   local t c; t=$(gsd_conf_get "$DEST" tracker)
   case "${t:-none}" in
-    none)    [ -n "$t" ] || echo "• no ticket tracker set — to link phases to tickets: gsd-init --tracker clickup|custom" ;;
-    clickup) echo "• tracker = clickup — check the login: gsd-tracker check   (gsd-start then needs --ticket <id>)" ;;
+    none)    [ -n "$t" ] || echo "• no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom" ;;
+    clickup) echo "• tracker = clickup — check the login: gsdt-tracker check   (gsdt-start then needs --ticket <id>)" ;;
     custom)  c=$(gsd_conf_get "$DEST" tracker_command)
-             [ -x "$DEST/$c" ] || [ -x "$c" ] || echo "• tracker = custom — write $c (see docs/trackers.md) before the first gsd-start"
-             echo "• gsd-start now needs --ticket <id> (or --no-ticket for a chore)" ;;
+             [ -x "$DEST/$c" ] || [ -x "$c" ] || echo "• tracker = custom — write $c (see docs/trackers.md) before the first gsdt-start"
+             echo "• gsdt-start now needs --ticket <id> (or --no-ticket for a chore)" ;;
   esac
 }
 
@@ -272,8 +273,8 @@ if [ "$ALREADY" = 1 ]; then
   ui_notice
   tracker_notice
   echo ""
-  echo "  Health check:  gsd-doctor"
-  echo "  Start features with:  gsd-start -n \"<description>\""
+  echo "  Health check:  gsdt-doctor"
+  echo "  Start features with:  gsdt-start -n \"<description>\""
   exit 0
 fi
 
@@ -289,7 +290,7 @@ if [ -z "$MODE" ]; then
     MODE=ingest
     echo "▶ found existing planning docs — will initialize by ingesting them:"
     printf '%s\n' "$DOCS" | sed "s|^$DEST/|    |"
-    echo "  (use 'gsd-init --new' instead if these shouldn't seed the plan)"
+    echo "  (use 'gsdt-init --new' instead if these shouldn't seed the plan)"
   else
     MODE=new
     echo "▶ no planning docs found — will initialize with the project interview"
@@ -318,13 +319,13 @@ if [ "$LAUNCH" = 1 ] && [ -t 0 ] && [ -t 1 ] && command -v "$GSD_AGENT_COMMAND_R
     echo "✔ plan ready: ${phases:-0} phase(s) in .planning/ROADMAP.md"
     ui_notice
     tracker_notice
-    if [ -n "$first" ]; then echo "Next:  gsd-start -p $first   (one per phase; each gets its own worktree and session)"
-    else echo "Next:  gsd-start -n \"<description>\"   (one per feature)"; fi
-    echo "TDD mode (tests first) turns on at the first gsd-start; turn it off with /gsd-settings."
+    if [ -n "$first" ]; then echo "Next:  gsdt-start -p $first   (one per phase; each gets its own worktree and session)"
+    else echo "Next:  gsdt-start -n \"<description>\"   (one per feature)"; fi
+    echo "TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings."
     exit 0
   fi
   echo "✖ the session closed before the plan was written (no .planning/ROADMAP.md)." >&2
-  echo "  Run gsd-init again to pick it up where it stopped." >&2
+  echo "  Run gsdt-init again to pick it up where it stopped." >&2
   exit "$(( rc == 0 ? 1 : rc ))"
 else
   echo ""
@@ -338,6 +339,6 @@ else
   ui_notice
   tracker_notice
   echo "Next:  $NEXT"
-  echo "Then per feature:  gsd-start -n \"<description>\"  →  work  →  gsd-finish"
-  echo "TDD mode (tests first) turns on at the first gsd-start; turn it off with /gsd-settings."
+  echo "Then per feature:  gsdt-start -n \"<description>\"  →  work  →  gsdt-finish"
+  echo "TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings."
 fi

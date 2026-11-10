@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 #
-# gsd-rules — print the GSD toolkit's rules for the INSTALLED release.
+# gsdt-rules — print the GSD toolkit's rules for the INSTALLED release.
 #
 # A set-up repo's .gsd/INSTRUCTIONS.md holds only its values and a short
 # core; the rules themselves come from here, so a release changes them in
-# every repo through gsd-update, with no step in each repo.
+# every repo through gsdt-update, with no step in each repo.
 #
 #   Claude Code: a user-level SessionStart hook (lib/install.sh) runs
-#                `gsd-rules --hook`, which loads the output into the session.
-#   Codex, custom: the AGENTS.md entry says to run `gsd-rules` first.
+#                `gsdt-rules --hook`, which loads the output into the session.
+#   Codex, custom: the AGENTS.md entry says to run `gsdt-rules` first.
 #
 # Usage:
-#   gsd-rules [--repo DIR]   the rules; in a repo with .gsd.conf also its
+#   gsdt-rules [--repo DIR]   the rules; in a repo with .gsd.conf also its
 #                            values, and the screens paragraph only when
 #                            ui_gates is not off. Outside one: all the rules.
-#   gsd-rules --hook         for the Claude hook: reads (and ignores) the
+#   gsdt-rules --hook         for the Claude hook: reads (and ignores) the
 #                            hook's stdin, prints the rules with a header in
 #                            a repo with .gsd.conf, nothing elsewhere; always
 #                            exits 0.
@@ -33,10 +33,10 @@ GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 REPO=""; HOOK=0
 while [ $# -gt 0 ]; do
   case "$1" in
-    --repo) [ $# -ge 2 ] || { echo "gsd-rules: --repo needs a directory" >&2; exit 2; }; REPO=$2; shift 2 ;;
+    --repo) [ $# -ge 2 ] || { echo "gsdt-rules: --repo needs a directory" >&2; exit 2; }; REPO=$2; shift 2 ;;
     --hook) HOOK=1; shift ;;
     -h|--help) usage; exit 0 ;;
-    *) echo "gsd-rules: unknown argument: $1 (see --help)" >&2; exit 2 ;;
+    *) echo "gsdt-rules: unknown argument: $1 (see --help)" >&2; exit 2 ;;
   esac
 done
 
@@ -60,7 +60,7 @@ MAIN=$(gsd_main "${REPO:-.}")
 [ -n "$MAIN" ] && [ -f "$MAIN/.gsd.conf" ] || MAIN=""
 if [ -z "$MAIN" ]; then
   [ "$HOOK" = 1 ] && exit 0
-  [ -z "$REPO" ] || [ -d "$REPO" ] || { echo "gsd-rules: no such directory: $REPO" >&2; exit 2; }
+  [ -z "$REPO" ] || [ -d "$REPO" ] || { echo "gsdt-rules: no such directory: $REPO" >&2; exit 2; }
   gsd_rules_text on
   exit 0
 fi
@@ -69,7 +69,7 @@ ui=$(gsd_ui_gates "$MAIN"); ui_on=on; [ "$ui" != off ] || ui_on=off
 providers=$(gsd_conf_providers "$MAIN")
 out=$(gsd_rules_text "$ui_on"; gsd_repo_values "$providers" "${providers%%,*}" "$(gsd_base "$MAIN")" "$(gsd_wtdir "$MAIN")" "$ui" "$(gsd_flow_mode "$MAIN")")
 if [ "$HOOK" = 1 ]; then
-  printf 'GSD toolkit rules (gsd-rules, gsd-toolkit %s) — follow them in this repo; .gsd/INSTRUCTIONS.md has its settings.\n\n' "$(gsd_version)"
+  printf 'GSD toolkit rules (gsdt-rules, gsd-toolkit %s) — follow them in this repo; .gsd/INSTRUCTIONS.md has its settings.\n\n' "$(gsd_version)"
 fi
 printf '%s\n' "$out"
 exit 0

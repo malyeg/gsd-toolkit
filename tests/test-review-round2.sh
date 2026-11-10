@@ -27,39 +27,39 @@ commit() { git -C "$1" add -A; git -C "$1" commit -qm "${2:-c}"; }
 section "R01 — install/test values are shell commands, not word lists"
 R="$WORK/r01"; repo "$R"
 printf 'install = echo one > a.txt && echo two > b.txt\n' > "$R/.gsd.conf"; commit "$R"
-(cd "$R" && gsd-wt-new --phase 1 --install) > "$WORK/out" 2>&1
+(cd "$R" && gsdt-wt-new --phase 1 --install) > "$WORK/out" 2>&1
 WT="$WORK/r01-worktrees/phase-1-first"
 check "foreground install runs every part of a compound command" \
   '[ -f "$WT/a.txt" ] && [ -f "$WT/b.txt" ] && [ "$(cat "$WT/a.txt")" = one ]'
 check "foreground install records ok" '[ "$(cat "$WT/.gsd-install.status")" = ok ]'
 printf 'install = true && false\n' > "$R/.gsd.conf"; commit "$R"
-(cd "$R" && gsd-wt-new --phase 2) > "$WORK/out" 2>&1
+(cd "$R" && gsdt-wt-new --phase 2) > "$WORK/out" 2>&1
 WT2="$WORK/r01-worktrees/phase-2-second"
 for _ in 1 2 3 4 5 6 7 8 9 10; do [ "$(cat "$WT2/.gsd-install.status")" = running ] || break; sleep 1; done
 check "background install: a failing second command records fail, not ok" \
   '[ "$(cat "$WT2/.gsd-install.status")" = fail ]'
 printf '### Phase 3: third\n' >> "$R/.planning/ROADMAP.md"
 printf 'install = sleep 8\n' > "$R/.gsd.conf"; commit "$R"
-t0=$(date +%s); out=$(cd "$R" && gsd-wt-new --phase 3 2>&1); t1=$(date +%s)
-check "background install does not hold a \$( … ) caller open (gsd-start hang)" \
+t0=$(date +%s); out=$(cd "$R" && gsdt-wt-new --phase 3 2>&1); t1=$(date +%s)
+check "background install does not hold a \$( … ) caller open (gsdt-start hang)" \
   '[ $((t1 - t0)) -lt 5 ] && [ "$(cat "$WORK/r01-worktrees/phase-3-third/.gsd-install.status")" = running ]'
 
 R="$WORK/r01t"; repo "$R"
 printf 'test = true && false\n' > "$R/.gsd.conf"; commit "$R"
 git -C "$R" worktree add -qb phase-1-x "$WORK/r01t-wt"
 touch "$WORK/r01t-wt/feature"; commit "$WORK/r01t-wt"
-if (cd "$R" && gsd-wt-finish 1) > "$WORK/out" 2>&1; then bad "a failing compound test command blocks the finish"
+if (cd "$R" && gsdt-wt-finish 1) > "$WORK/out" 2>&1; then bad "a failing compound test command blocks the finish"
 else check "a failing compound test command blocks the finish" 'grep -q "tests failed" "$WORK/out" && [ -d "$WORK/r01t-wt" ]'; fi
 
 section "R02 — a non-executable pre-merge check is refused, not skipped"
 R="$WORK/r02"; repo "$R"; mkdir -p "$R/scripts"
 printf 'test = none\n' > "$R/.gsd.conf"
-printf '#!/bin/sh\nexit 1\n' > "$R/scripts/gsd-premerge-check.sh"; chmod -x "$R/scripts/gsd-premerge-check.sh"
+printf '#!/bin/sh\nexit 1\n' > "$R/scripts/gsdt-premerge-check.sh"; chmod -x "$R/scripts/gsdt-premerge-check.sh"
 commit "$R"
 git -C "$R" worktree add -qb phase-1-x "$WORK/r02-wt"
 touch "$WORK/r02-wt/feature"; commit "$WORK/r02-wt"
 before=$(git -C "$R" rev-parse HEAD)
-if (cd "$R" && gsd-wt-finish 1) > "$WORK/out" 2>&1; then bad "finish refuses a non-executable pre-merge check"
+if (cd "$R" && gsdt-wt-finish 1) > "$WORK/out" 2>&1; then bad "finish refuses a non-executable pre-merge check"
 else check "finish refuses a non-executable pre-merge check" 'grep -q "not executable" "$WORK/out"'; fi
 check "nothing merged, worktree kept" '[ "$before" = "$(git -C "$R" rev-parse HEAD)" ] && [ -d "$WORK/r02-wt" ]'
 
@@ -73,10 +73,10 @@ GSD_AGENT=my-legacy-agent gsd_provider_resolve "$R" "" ""
 check "GSD_AGENT alone still selects a custom executable" \
   '[ "$GSD_PROVIDER_RESOLVED" = custom ] && [ "$GSD_AGENT_COMMAND_RESOLVED" = my-legacy-agent ]'
 
-section "R05 — concurrent gsd-wt-new runs for one phase reuse, not crash"
+section "R05 — concurrent gsdt-wt-new runs for one phase reuse, not crash"
 R="$WORK/r05"; repo "$R"; printf 'install = none\n' > "$R/.gsd.conf"; commit "$R"
-(cd "$R" && gsd-wt-new --phase 1) > "$WORK/a" 2>&1 & a=$!
-(cd "$R" && gsd-wt-new --phase 1) > "$WORK/b" 2>&1 & b=$!
+(cd "$R" && gsdt-wt-new --phase 1) > "$WORK/a" 2>&1 & a=$!
+(cd "$R" && gsdt-wt-new --phase 1) > "$WORK/b" 2>&1 & b=$!
 wait $a; ra=$?; wait $b; rb=$?
 check "both runs succeed" '[ "$ra" = 0 ] && [ "$rb" = 0 ]' || cat "$WORK/a" "$WORK/b"
 check "exactly one phase-1 branch" '[ "$(git -C "$R" for-each-ref "refs/heads/phase-1-*" | wc -l | tr -d " ")" = 1 ]'
@@ -99,15 +99,15 @@ check "two racing lock holders never overlap (20 rounds)" '[ "$over" = 0 ]'
 
 section "R06 — planning-repair --check: no roadmap is not damage"
 R="$WORK/r06"; mkdir -p "$R/.planning"; git -C "$R" init -qb main
-gsd-planning-repair --check --repo "$R" > "$WORK/out" 2>&1; rc=$?
+gsdt-planning-repair --check --repo "$R" > "$WORK/out" 2>&1; rc=$?
 check "exit 0 when .planning/ROADMAP.md is missing" '[ "$rc" = 0 ]'
 
 section "R07 — doctor JSON says whether the repo uses GSD"
 R="$WORK/r07"; mkdir -p "$R"; git -C "$R" init -qb main
-out=$(gsd-doctor --repo "$R" --json 2>/dev/null || true)
+out=$(gsdt-doctor --repo "$R" --json 2>/dev/null || true)
 check "plain repo → gsd_repo false" 'printf "%s" "$out" | grep -q "\"gsd_repo\":false"'
 check "JSON stays one parseable object" 'printf "%s" "$out" | python3 -c "import json,sys; json.load(sys.stdin)"'
-out=$(gsd-doctor --repo "$WORK/r05" --json 2>/dev/null || true)
+out=$(gsdt-doctor --repo "$WORK/r05" --json 2>/dev/null || true)
 check "GSD repo → gsd_repo true" 'printf "%s" "$out" | grep -q "\"gsd_repo\":true"'
 
 section "R09 — npm test detection reads scripts.test only"
@@ -117,8 +117,8 @@ check "a dependency named test is not a test script" '[ -z "$(gsd_test_cmd "$R")
 printf '{\n  "scripts": { "build": "tsc", "test": "jest" }\n}\n' > "$R/package.json"
 check "scripts.test → npm test" '[ "$(gsd_test_cmd "$R")" = "npm test" ]'
 
-section "R12 — gsd-start -p says when it ignores a description"
-gsd-start -p 1 "some text" --repo "$WORK/r05" --no-launch > "$WORK/out" 2>&1 || true
+section "R12 — gsdt-start -p says when it ignores a description"
+gsdt-start -p 1 "some text" --repo "$WORK/r05" --no-launch > "$WORK/out" 2>&1 || true
 check "warning names the ignored text" 'grep -q "ignoring \"some text\"" "$WORK/out"'
 
 section "R15 — two sessions claiming at once: the loser renumbers, nobody's claim is lost"
@@ -149,7 +149,7 @@ commit "$WORK/r15-rival" "docs(gsd): claim phase 2 — user login"
 printf '#!/bin/sh\n[ -f "$RIVAL_DONE" ] && exit 0\ntouch "$RIVAL_DONE"\ngit -C "$RIVAL" push -q origin main\n' > "$R/.git/hooks/pre-push"
 chmod +x "$R/.git/hooks/pre-push"
 (cd "$R" && RIVAL="$WORK/r15-rival" RIVAL_DONE="$WORK/r15-done" PATH="$WORK/stub:$PATH" \
-   gsd-start -n "shopping cart" --no-launch) > "$WORK/out" 2>&1; rc=$?
+   gsdt-start -n "shopping cart" --no-launch) > "$WORK/out" 2>&1; rc=$?
 ORIGIN_RM=$(git --git-dir="$WORK/r15.git" show main:.planning/ROADMAP.md)
 check "claim succeeds" '[ "$rc" = 0 ]' || cat "$WORK/out"
 check "the race was detected and renumbered" 'grep -q "renumbering" "$WORK/out"'
@@ -161,7 +161,7 @@ check "worktree branch is phase-3" 'git -C "$R" show-ref --verify --quiet refs/h
 section "R17 — the claim commit carries correct STATE.md counters"
 check "origin STATE.md counts all 3 phases" \
   'git --git-dir="$WORK/r15.git" show main:.planning/STATE.md | grep -q "total_phases: 3"'
-gsd-planning-repair --repo "$R" > /dev/null 2>&1
+gsdt-planning-repair --repo "$R" > /dev/null 2>&1
 check "a later repair (the post-merge hook) leaves main clean" '[ -z "$(git -C "$R" status --porcelain -- .planning)" ]' \
   || git -C "$R" diff -- .planning
 

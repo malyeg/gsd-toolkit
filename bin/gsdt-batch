@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 #
-# gsd-batch — run several quick tasks as one batch, in a FRESH session with
+# gsdt-batch — run several quick tasks as one batch, in a FRESH session with
 # the gsdt-batch skill already running. On Claude the session runs on Sonnet:
 # a small, fresh context makes every coordinator turn cheaper. The planners
 # keep the model gsd-core gives them (it never follows the session's model
 # unless GSD's settings say `inherit` — the skill checks that first).
 #
 # Usage (from anywhere inside the repo):
-#   gsd-batch [options] [--] <task list | brief | --file <path>> [gsd-quick-batch flags]
+#   gsdt-batch [options] [--] <task list | brief | --file <path>> [gsd-quick-batch flags]
 #
 #   A task list is what /gsd-quick-batch takes: one item per bulleted or
 #   numbered line ("- fix …"), quoted as one argument, or --file <path>.
 #   A brief is anything else, in your own words, quoted:
-#     gsd-batch "Read plan/FIX-BRIEF-7.md. Validate every item, fix only the
+#     gsdt-batch "Read plan/FIX-BRIEF-7.md. Validate every item, fix only the
 #     real ones, recommend the owner calls."
 #   Everything that is not an option below goes to the skill unchanged.
 #
@@ -26,15 +26,15 @@
 #   --repo <path>       the repo (default: the main checkout of the cwd)
 #   --print             print the worktree and command; make nothing
 #
-# The batch runs in its OWN worktree: gsd-batch makes a
+# The batch runs in its OWN worktree: gsdt-batch makes a
 # batch-<YYYY-MM-DD>-<slug> branch + worktree off the base branch (next to the
 # phase worktrees), then starts the session there. Its commits land on that
-# branch, never on the base branch; `gsd-finish batch-…` merges it (tests →
+# branch, never on the base branch; `gsdt-finish batch-…` merges it (tests →
 # merge → push → cleanup, like a phase). Run from inside a batch-* worktree,
 # it starts the session there instead. A taken name gets -2, -3, … (unless
 # --name named it: then that worktree is reused). Without a terminal the
 # worktree is made and the command printed. The Sonnet switch is Claude-only:
-# other providers launch with their usual model, and gsd-batch says so.
+# other providers launch with their usual model, and gsdt-batch says so.
 set -uo pipefail
 
 SELF=$0
@@ -46,8 +46,8 @@ GSD_PKG=$(cd "$(dirname "$SELF")/.." && pwd)
 . "$GSD_PKG/lib/provider.sh"
 
 usage() { awk 'NR>1 && /^set -uo/{exit} NR>1 {sub(/^# ?/,""); print}' "$0"; }
-die() { echo "gsd-batch: $1" >&2; exit "${2:-64}"; }
-say() { echo "gsd-batch: $1" >&2; }
+die() { echo "gsdt-batch: $1" >&2; exit "${2:-64}"; }
+say() { echo "gsdt-batch: $1" >&2; }
 
 PROVIDER=""; COMMAND=""; MODEL=""; MODEL_SET=0; REPO=""; PRINT=0; REST=()
 NAME=""; FILE=""; FILE_AT=-1
@@ -67,8 +67,8 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
-[ ${#REST[@]} -gt 0 ] || die "nothing to run: gsd-batch \"- task one
-- task two\", or gsd-batch --file <path>"
+[ ${#REST[@]} -gt 0 ] || die "nothing to run: gsdt-batch \"- task one
+- task two\", or gsdt-batch --file <path>"
 
 MAIN=$(gsd_main "${REPO:-$PWD}")
 [ -n "$MAIN" ] || die "not inside a git repository${REPO:+: $REPO}"
@@ -172,7 +172,7 @@ if [ "$PRINT" = 1 ]; then
   exit 0
 fi
 if [ "$MAKE" = 1 ]; then
-  ( cd "$MAIN" && GSD_WT_NEW_SUPPRESS_NEXT=1 "$GSD_PKG/bin/gsd-wt-new" --batch "$BR" ) >&2 \
+  ( cd "$MAIN" && GSD_WT_NEW_SUPPRESS_NEXT=1 "$GSD_PKG/bin/gsdt-wt-new" --batch "$BR" ) >&2 \
     || die "could not make the batch worktree $BR" 1
 fi
 if [ ! -t 0 ] || [ ! -t 1 ]; then
@@ -181,6 +181,6 @@ if [ ! -t 0 ] || [ ! -t 1 ]; then
 fi
 command -v "$GSD_AGENT_COMMAND_RESOLVED" >/dev/null 2>&1 || die "$GSD_AGENT_COMMAND_RESOLVED not found on PATH" 69
 echo "▶ opening a $P batch session${MODEL:+ on $MODEL} in ${DEST}…"
-echo "  land it afterwards: gsd-finish $BR"
+echo "  land it afterwards: gsdt-finish $BR"
 cd "$DEST" || die "cannot enter $DEST" 1
 exec "${GSD_LAUNCH_ARGV[@]}"

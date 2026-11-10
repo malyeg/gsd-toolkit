@@ -1,32 +1,32 @@
 #!/usr/bin/env bash
 #
-# gsd-update — update gsd-toolkit to the latest GitHub release, and GSD
+# gsdt-update — update gsd-toolkit to the latest GitHub release, and GSD
 # itself (gsd-core) to its latest version.
 #
 # Usage:
-#   gsd-update                   install the latest release, if it is newer;
+#   gsdt-update                   install the latest release, if it is newer;
 #                                then gsd-core for each installed agent
-#   gsd-update --check           print the installed and latest versions only
-#   gsd-update --version <X.Y.Z> install that release (also to go back)
-#   gsd-update --no-core         leave gsd-core as it is
+#   gsdt-update --check           print the installed and latest versions only
+#   gsdt-update --version <X.Y.Z> install that release (also to go back)
+#   gsdt-update --no-core         leave gsd-core as it is
 #
 # gsd-core is updated for each agent the install chose (claude, codex), with
 # the full skill profile; an agent without it gets it.
 #
 # Commands and skills are replaced in place; the agents you installed for are
 # kept (install manifest). The release you had before stays on disk, so
-# going back is `gsd-update --version <old>`.
+# going back is `gsdt-update --version <old>`.
 #
 # Run from a git checkout, it updates nothing: the checkout is pulled with
 # git, and ./install.sh installs the release.
 #
-# Other commands (gsd-start, gsd-list) print one line when a newer release is
-# out, at most one GitHub call a day; gsd-doctor reports it too.
+# Other commands (gsdt-start, gsdt-list) print one line when a newer release is
+# out, at most one GitHub call a day; gsdt-doctor reports it too.
 # Env: GSD_NO_UPDATE_CHECK=1 turns those checks off; GSD_UPDATE_REPO=owner/name;
 #      GSD_NO_CORE=1 same as --no-core (tests).
 set -euo pipefail
 
-die() { printf 'gsd-update: %s\n' "$*" >&2; exit 1; }
+die() { printf 'gsdt-update: %s\n' "$*" >&2; exit 1; }
 usage() { awk 'NR>1 && /^set -euo/{exit} NR>1 {sub(/^# ?/,""); print}' "$0"; }
 
 CHECK=0; WANT=""; CORE=1
@@ -37,7 +37,7 @@ while [ $# -gt 0 ]; do
     --version) [ $# -ge 2 ] || die "--version needs X.Y.Z"; WANT=${2#v}; shift 2 ;;
     --no-core) CORE=0; shift ;;
     -h|--help) usage; exit 0 ;;
-    *) die "unknown option: $1 (see gsd-update --help)" ;;
+    *) die "unknown option: $1 (see gsdt-update --help)" ;;
   esac
 done
 
@@ -91,7 +91,7 @@ fi
 TOOLKIT_NEW=0
 [ -n "$LATEST" ] && gsd_version_gt "$LATEST" "$CUR" && TOOLKIT_NEW=1
 [ "$CHECK" = 0 ] || {
-  if [ "$TOOLKIT_NEW" = 1 ] || [ "$CORE_BEHIND" = 1 ]; then echo "▶ update available: gsd-update"
+  if [ "$TOOLKIT_NEW" = 1 ] || [ "$CORE_BEHIND" = 1 ]; then echo "▶ update available: gsdt-update"
   else echo "✔ up to date"; fi
   exit 0
 }

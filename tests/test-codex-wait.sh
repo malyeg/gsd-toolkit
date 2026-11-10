@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# test-codex-wait.sh — gsd-codex-wait waits out a Codex usage limit, and a
+# test-codex-wait.sh — gsdt-codex-wait waits out a Codex usage limit, and a
 # REVIEWS.md whose reviewer hit it never passes the review gate.
 #
 # A fake clock (GSD_CODEX_WAIT_CLOCK) makes hours of waiting take no time;
 # stub commands stand in for Codex; CODEX_HOME points at a throwaway folder.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; PKG="$(cd "$HERE/.." && pwd)"
-CW="$PKG/bin/gsd-codex-wait"
+CW="$PKG/bin/gsdt-codex-wait"
 PASS=0; FAIL=0; WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
 ok()  { PASS=$((PASS + 1)); printf '  ✔ %s\n' "$1"; }
 bad() { FAIL=$((FAIL + 1)); printf '  ✘ %s\n' "$1"; [ $# -gt 1 ] && printf '      %s\n' "$2"; }

@@ -2,7 +2,7 @@
 # test-flow-next.sh — the /gsdt-flow step engine walks the agreed order.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; PKG="$(cd "$HERE/.." && pwd)"
-NEXT="$PKG/bin/gsd-flow-next"
+NEXT="$PKG/bin/gsdt-flow-next"
 PASS=0; FAIL=0; WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
 ok()  { PASS=$((PASS + 1)); printf '  ✔ %s\n' "$1"; }
 bad() { FAIL=$((FAIL + 1)); printf '  ✘ %s\n' "$1"; [ $# -gt 1 ] && printf '      %s\n' "$2"; }
@@ -46,7 +46,7 @@ rm -f "$PD/07-RESEARCH.md"
 is "plan: never --auto (it would skip the review gate)" "$("$NEXT" 7 --repo "$REPO" | grep -c -- '--auto')" 0
 : > "$PD/07-01-PLAN.md"; : > "$PD/07-02-PLAN.md"
 is "plans → review"                   "$(step)" review
-is "review note (codex): gsd-codex-wait on a usage limit" "$("$NEXT" 7 --repo "$REPO" | grep -c 'gsd-codex-wait --wait-only')" 1
+is "review note (codex): gsdt-codex-wait on a usage limit" "$("$NEXT" 7 --repo "$REPO" | grep -c 'gsdt-codex-wait --wait-only')" 1
 printf '## Codex Review\n\nYou\342\200\231ve hit your usage limit. Try again at Oct 11th, 2026 1:22 AM.\n' > "$PD/07-REVIEWS.md"
 is "REVIEWS whose Codex hit the limit → review again" "$(step)" review
 is "…and the note says why" "$("$NEXT" 7 --repo "$REPO" | grep -c 'not a usable review (Codex Review — usage limit hit)')" 1
@@ -103,7 +103,7 @@ fm SECURITY.md verified "threats_open: 2"; is "2 open threats → secure" "$(ste
 fm SECURITY.md verified "threats_open: 0"; is "0 open → done"  "$(step)" "done"
 
 section "details"
-is "done run= is gsd-finish" "$("$NEXT" 7 --repo "$REPO" | sed -n 's/^run=//p')" gsd-finish
+is "done run= is gsdt-finish" "$("$NEXT" 7 --repo "$REPO" | sed -n 's/^run=//p')" gsdt-finish
 is "--all lists every remaining step" "$("$NEXT" 7 --repo "$REPO" --all | grep -c '^step=')" 1
 rm "$PD/07-REVIEWS.md" "$PD/07-UI-REVIEW.md"
 is "--all with two gaps lists 3 (review, ui-review, done)" "$("$NEXT" 7 --repo "$REPO" --all | grep -c '^step=')" 3
@@ -120,7 +120,7 @@ git -C "$REPO" checkout -q -b phase-11-cart
 mkdir -p "$REPO/.planning/phases/11-cart-tk-proj-42"
 printf '# Roadmap\n\n### Phase 11: cart tk-PROJ-42\n' > "$REPO/.planning/ROADMAP.md"
 is "tagged title → run= snapshot (id case from the title)" "$("$NEXT" 11 --repo "$REPO" | sed -n 's/^run=//p')" \
-  "gsd-tracker snapshot PROJ-42 --out .planning/phases/11-cart-tk-proj-42/11-TICKET.md"
+  "gsdt-tracker snapshot PROJ-42 --out .planning/phases/11-cart-tk-proj-42/11-TICKET.md"
 : > "$REPO/.planning/phases/11-cart-tk-proj-42/11-STORY.md"
 is "legacy STORY.md counts as the ticket" "$("$NEXT" 11 --repo "$REPO" | sed -n 's/^step=//p')" discuss
 git -C "$REPO" checkout -q -b phase-9-missing
@@ -145,15 +145,15 @@ git -C "$U" checkout -q -b phase-5-shop
 ustep() { "$NEXT" 5 --repo "$U" "$@" | sed -n 's/^step=//p'; }
 urun()  { "$NEXT" 5 --repo "$U" "$@" | sed -n 's/^run=//p'; }
 is "--ui, no DESIGN.md → design-system"        "$(ustep --ui)" design-system
-is "…run= gsd-ui design"                        "$(urun --ui)" "gsd-ui design"
+is "…run= gsdt-ui design"                        "$(urun --ui)" "gsdt-ui design"
 is "…stop= offers real design systems"          "$("$NEXT" 5 --repo "$U" --ui | grep -c '^stop=.*styles.refero.design')" 1
-PATH="$PKG/bin:$PATH" gsd-ui design --repo "$U" >/dev/null
+PATH="$PKG/bin:$PATH" gsdt-ui design --repo "$U" >/dev/null
 is "stub DESIGN.md → still design-system"       "$(ustep --ui)" design-system
 sed -i.bak '/gsd:design-stub/d' "$U/.planning/design/DESIGN.md"
 is "filled DESIGN.md → layout"                  "$(ustep --ui)" layout
-is "…run= gsd-ui layout 5"                      "$(urun --ui)" "gsd-ui layout 5"
+is "…run= gsdt-ui layout 5"                      "$(urun --ui)" "gsdt-ui layout 5"
 is "…then= /gsd-sketch"                         "$("$NEXT" 5 --repo "$U" --ui | sed -n 's/^then=//p' | cut -c1-11)" "/gsd-sketch"
-PATH="$PKG/bin:$PATH" gsd-ui layout 5 --repo "$U" >/dev/null
+PATH="$PKG/bin:$PATH" gsdt-ui layout 5 --repo "$U" >/dev/null
 is "LAYOUT settles screens (no --ui needed)"    "$(ustep)" layout
 is "empty sketch: → run= /gsd-sketch"           "$(urun | cut -c1-11)" "/gsd-sketch"
 sed -i.bak 's#^sketch:.*#sketch: .planning/sketches/001-shop#' "$UPD/05-LAYOUT.md"
@@ -179,7 +179,7 @@ is "ui_gates = off → no ui-check step"          "$(ustep)" ui-review
 rm "$U/.gsd.conf"
 unote() { "$NEXT" 5 --repo "$U" | sed -n 's/^note=//p'; }
 is "warn (default) → ui-check before ui-review" "$(ustep)" ui-check
-is "…run= gsd-ui check 5"                       "$(urun)" "gsd-ui check 5"
+is "…run= gsdt-ui check 5"                       "$(urun)" "gsdt-ui check 5"
 is "…--all lists check, look, approve, review"  "$("$NEXT" 5 --repo "$U" --all | sed -n 's/^step=//p' | tr '\n' ' ')" "ui-check ui-look ui-approve ui-review validate secure done "
 printf -- '---\nstatus: error\nerror: nothing answers at http://localhost:3005\n---\n' > "$UPD/05-UI-CHECK.md"
 is "a run that could not finish → ui-check"     "$(ustep)" ui-check
@@ -192,7 +192,7 @@ is "…the note says the code changed"            "$(unote | grep -c 'the code o
 . "$PKG/lib/common.sh"; . "$PKG/lib/ui.sh"
 ui_fix_check "$UPD" 05 passed cap1 "$(gsd_ui_code_state "$U")"
 is "check made on this code → ui-look"          "$(ustep)" ui-look
-is "…run= gsd-ui look 5"                        "$(urun)" "gsd-ui look 5"
+is "…run= gsdt-ui look 5"                        "$(urun)" "gsdt-ui look 5"
 git -C "$U" add -A >/dev/null; git -C "$U" -c user.name=t -c user.email=t@t commit -qm "ui check"
 is "a commit of .planning files keeps it fresh" "$(ustep)" ui-look
 echo code > "$U/app.js"
@@ -210,7 +210,7 @@ is "an answer without its text → ui-look"       "$(ustep)" ui-look
 ui_fix_look "$UPD" 05 cap1
 is "every picture and rule answered → ui-approve" "$(ustep)" ui-approve
 is "…stop= asks the user first"                 "$("$NEXT" 5 --repo "$U" | grep -c '^stop=show the user the sheet')" 1
-is "…then= gsd-ui approve 5"                    "$("$NEXT" 5 --repo "$U" | sed -n 's/^then=//p')" "gsd-ui approve 5"
+is "…then= gsdt-ui approve 5"                    "$("$NEXT" 5 --repo "$U" | sed -n 's/^then=//p')" "gsdt-ui approve 5"
 ui_fix_approval "$UPD" 05 cap0
 is "an approval of older pictures → ui-approve" "$(ustep)" ui-approve
 ui_fix_approval "$UPD" 05 cap1

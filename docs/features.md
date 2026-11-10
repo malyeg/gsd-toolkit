@@ -7,150 +7,150 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 
 | Feature | Where |
 |---|---|
-| One-command setup of a repo from zero: bootstrap, then open the `/gsd-new-project` or `/gsd-ingest-docs` session (the default in a terminal; `--no-launch` prints it), and when it closes check that `.planning/ROADMAP.md` exists (exit 1 if not, "run gsd-init again") | `gsd-init` |
-| Auto-picks new-project vs ingest by scanning for ADR/PRD/RFC/spec/architecture docs (`--new` / `--ingest` force it) | `gsd-init` |
-| Idempotent re-run: with an existing `.planning/ROADMAP.md` it only repairs workflow files, never planning state | `gsd-init` |
-| Writes `.gsd.conf` (base, wtdir, install, providers, per-provider commands); migrates legacy `provider` / `agent_command` keys | `gsd-bootstrap-repo` |
-| Installs the frozen shims into `scripts/` and `scripts/hooks/`, self-checked with `bash -n` | `gsd-bootstrap-repo` |
-| Generated instructions: a small canonical `.gsd/INSTRUCTIONS.md` (repo values, a core that holds without the toolkit, a pointer to `gsd-rules`) + marked entrypoints in `CLAUDE.md` / `AGENTS.md`; text outside markers preserved; markers validated before any write | `gsd-bootstrap-repo`, `lib/provider.sh` |
-| The workflow rules come from the installed toolkit: `gsd-rules` prints them (+ the repo's values; the screens paragraph unless `ui_gates = off`), so an update changes them in every repo with no step there. Claude loads them with a user-level `SessionStart` hook (`gsd-rules --hook`: startup, resume, `/clear`, compaction; nothing outside a set-up repo); Codex/custom run it from the `AGENTS.md` line | `gsd-rules`, `lib/install.sh`, `lib/provider.sh` (`gsd_rules_text`) |
-| Registers native guard hooks (Claude `.claude/settings.json`) via a `jq` merge; skips cleanly without `jq` | `gsd-bootstrap-repo` |
+| One-command setup of a repo from zero: bootstrap, then open the `/gsd-new-project` or `/gsd-ingest-docs` session (the default in a terminal; `--no-launch` prints it), and when it closes check that `.planning/ROADMAP.md` exists (exit 1 if not, "run gsdt-init again") | `gsdt-init` |
+| Auto-picks new-project vs ingest by scanning for ADR/PRD/RFC/spec/architecture docs (`--new` / `--ingest` force it) | `gsdt-init` |
+| Idempotent re-run: with an existing `.planning/ROADMAP.md` it only repairs workflow files, never planning state | `gsdt-init` |
+| Writes `.gsd.conf` (base, wtdir, install, providers, per-provider commands); migrates legacy `provider` / `agent_command` keys | `gsdt-bootstrap-repo` |
+| Installs the frozen shims into `scripts/` and `scripts/hooks/`, self-checked with `bash -n` | `gsdt-bootstrap-repo` |
+| Generated instructions: a small canonical `.gsd/INSTRUCTIONS.md` (repo values, a core that holds without the toolkit, a pointer to `gsdt-rules`) + marked entrypoints in `CLAUDE.md` / `AGENTS.md`; text outside markers preserved; markers validated before any write | `gsdt-bootstrap-repo`, `lib/provider.sh` |
+| The workflow rules come from the installed toolkit: `gsdt-rules` prints them (+ the repo's values; the screens paragraph unless `ui_gates = off`), so an update changes them in every repo with no step there. Claude loads them with a user-level `SessionStart` hook (`gsdt-rules --hook`: startup, resume, `/clear`, compaction; nothing outside a set-up repo); Codex/custom run it from the `AGENTS.md` line | `gsdt-rules`, `lib/install.sh`, `lib/provider.sh` (`gsd_rules_text`) |
+| Registers native guard hooks (Claude `.claude/settings.json`) via a `jq` merge; skips cleanly without `jq` | `gsdt-bootstrap-repo` |
 | `.planning` merge safety: `.gitattributes` `merge=gsd-planning`, driver registration in git config, `post-merge` hook (husky-aware) | `lib/common.sh` (`gsd_planning_status` / `gsd_planning_apply`) |
-| `--commit` stages only installed files; skipped if the repo was already dirty | `gsd-bootstrap-repo` |
+| `--commit` stages only installed files; skipped if the repo was already dirty | `gsdt-bootstrap-repo` |
 
 ## 2. Starting work
 
 | Feature | Where |
 |---|---|
-| Claim a new phase in one step: claim → push → worktree → session (`-n "desc"`; a bare description is refused) | `gsd-start` |
-| Attach to an existing phase, reusing its worktree (`-p N`, idempotent) | `gsd-start` |
-| Claim a decimal hotfix phase (`--insert N`) | `gsd-start` |
-| Deterministic claim via `gsd_run query phase.add` / `phase.insert` (gsd-core; no LLM call) | `gsd-start` |
-| Parallel-safe claim: pull, push with rebase-and-retry, auto-renumber the loser | `gsd-start` |
-| Duplicate-description guard (case-insensitive) | `gsd-start` |
-| Claim bookkeeping: checklist + Progress rows and STATE.md counters land in the claim commit | `gsd-start`, `lib/roadmap-rows.pl` |
-| TDD by default: the claim commit sets `workflow.tdd_mode: true` in `.planning/config.json` when the key is unset (a project's own `false` is kept), so plans list their test cases for the plan review | `gsd-start` |
-| Ticket link (`--ticket <id|url>`, old `--cu`): `tk-<id>` at the end of title/slug, duplicate-ticket guard, ticket → "in progress" when a tracker is set. With a tracker set a new claim needs a ticket (`--no-ticket` to skip); `gsd-init` asks for the tracker (`--tracker`) | `gsd-start`, `gsd-tracker` |
-| Opens the session in the worktree by default (in a terminal); `--no-launch` prints the command instead, as does a run with no terminal | `gsd-start` |
-| `--flow` / `--no-flow` / `start_mode`: resume the full flow (default), or open discuss-phase only | `gsd-start`, `lib/provider.sh` |
-| `compact_at` (default 300000 tokens): launched Claude/Codex sessions compact early instead of re-sending a near-full window every turn; the phase worktree's `.claude/settings.local.json` carries it for a plain `claude` | `gsd-start`, `gsd-init`, `lib/provider.sh` (`gsd_compact_resolve`, `gsd_compact_settings`), `lib/gsd_claude_env.py` |
-| Guard check before a session is printed or launched | `gsd-start` |
-| Worktree creation off the base branch, `phase-<N>-<slug>`; reuse if it exists | `gsd-wt-new` |
-| Copies gitignored local config into the worktree (`.env.local`, `.mcp.json`, `.claude/settings.local.json`) | `gsd-wt-new` |
-| Sets gsd-core's `worktree.baseRef = "head"` in each worktree's (and the main checkout's) gitignored `.claude/settings.local.json`, keeping its other keys, so `/gsd-execute-phase` runs a wave's plans in parallel — without it gsd-core's base-check sees the phase branch ahead of `origin/HEAD` and runs them one at a time. A different value you set is kept; a tracked or non-JSON file is left alone, with a note | `gsd-wt-new`, `gsd-bootstrap-repo`, `lib/common.sh` (`gsd_baseref`) |
-| Dependency install in background / foreground / none, with `.gsd-install.status` + `.gsd-install.log` | `gsd-wt-new`, `lib/common.sh` (`gsd_install_cmd`) |
-| Per-worktree dev port: base + phase number | `gsd-derive-port` |
+| Claim a new phase in one step: claim → push → worktree → session (`-n "desc"`; a bare description is refused) | `gsdt-start` |
+| Attach to an existing phase, reusing its worktree (`-p N`, idempotent) | `gsdt-start` |
+| Claim a decimal hotfix phase (`--insert N`) | `gsdt-start` |
+| Deterministic claim via `gsd_run query phase.add` / `phase.insert` (gsd-core; no LLM call) | `gsdt-start` |
+| Parallel-safe claim: pull, push with rebase-and-retry, auto-renumber the loser | `gsdt-start` |
+| Duplicate-description guard (case-insensitive) | `gsdt-start` |
+| Claim bookkeeping: checklist + Progress rows and STATE.md counters land in the claim commit | `gsdt-start`, `lib/roadmap-rows.pl` |
+| TDD by default: the claim commit sets `workflow.tdd_mode: true` in `.planning/config.json` when the key is unset (a project's own `false` is kept), so plans list their test cases for the plan review | `gsdt-start` |
+| Ticket link (`--ticket <id|url>`, old `--cu`): `tk-<id>` at the end of title/slug, duplicate-ticket guard, ticket → "in progress" when a tracker is set. With a tracker set a new claim needs a ticket (`--no-ticket` to skip); `gsdt-init` asks for the tracker (`--tracker`) | `gsdt-start`, `gsdt-tracker` |
+| Opens the session in the worktree by default (in a terminal); `--no-launch` prints the command instead, as does a run with no terminal | `gsdt-start` |
+| `--flow` / `--no-flow` / `start_mode`: resume the full flow (default), or open discuss-phase only | `gsdt-start`, `lib/provider.sh` |
+| `compact_at` (default 300000 tokens): launched Claude/Codex sessions compact early instead of re-sending a near-full window every turn; the phase worktree's `.claude/settings.local.json` carries it for a plain `claude` | `gsdt-start`, `gsdt-init`, `lib/provider.sh` (`gsd_compact_resolve`, `gsd_compact_settings`), `lib/gsd_claude_env.py` |
+| Guard check before a session is printed or launched | `gsdt-start` |
+| Worktree creation off the base branch, `phase-<N>-<slug>`; reuse if it exists | `gsdt-wt-new` |
+| Copies gitignored local config into the worktree (`.env.local`, `.mcp.json`, `.claude/settings.local.json`) | `gsdt-wt-new` |
+| Sets gsd-core's `worktree.baseRef = "head"` in each worktree's (and the main checkout's) gitignored `.claude/settings.local.json`, keeping its other keys, so `/gsd-execute-phase` runs a wave's plans in parallel — without it gsd-core's base-check sees the phase branch ahead of `origin/HEAD` and runs them one at a time. A different value you set is kept; a tracked or non-JSON file is left alone, with a note | `gsdt-wt-new`, `gsdt-bootstrap-repo`, `lib/common.sh` (`gsd_baseref`) |
+| Dependency install in background / foreground / none, with `.gsd-install.status` + `.gsd-install.log` | `gsdt-wt-new`, `lib/common.sh` (`gsd_install_cmd`) |
+| Per-worktree dev port: base + phase number | `gsdt-derive-port` |
 
 ## 3. Finishing work
 
 | Feature | Where |
 |---|---|
-| Finish from anywhere: no argument inside the worktree, `<N>` / `phase-N-slug` elsewhere, `--repo` outside | `gsd-finish` |
-| Land a `gsd-batch` worktree: `gsd-finish batch-…` (or no argument inside it; `--pr` too) — same tests → merge → repair → push → cleanup, no UI / test-audit gates, no ticket | `gsd-finish`, `gsd-wt-finish` |
-| Auto-returns a clean main checkout to the base branch; safe to run inside the worktree being removed | `gsd-finish` |
-| Sync base with origin first; abort (worktree kept) if that fails | `gsd-wt-finish` |
-| Validation before merge and on the combined tree after: `scripts/gsd-premerge-check.sh` (or `premerge =`), else the project's tests (`test =` or detection: xcodebuild / make / just / cargo / go / npm / pytest) | `gsd-wt-finish`, `lib/common.sh` (`gsd_test_cmd`) |
-| `--no-ff` merge; a conflict aborts and leaves the base branch clean with resolution steps | `gsd-wt-finish` |
-| Planning repair after every merge point; never pushes contradictory `.planning` | `gsd-wt-finish` |
-| Push with up to 3 retries (pull + repair + re-validate between) | `gsd-wt-finish` |
-| Removes worktree + branch; ticket → "in testing" when a tracker is set (also on `--pr`) | `gsd-wt-finish`, `gsd-finish`, `gsd-tracker` |
-| `--pr [--draft]`: push (prefers the `*-pr` branch) and open a GitHub PR instead of merging | `gsd-finish` |
-| UI gate for a phase with screens: the check of the rendered pages, the look file and the user's approval must be current. `ui_gates = strict` refuses (nothing merged, no PR), `warn` prints a warning; `GSD_SKIP_GUARD=1` escapes | `gsd-wt-finish`, `gsd-finish`, `lib/ui.sh` (`gsd_ui_finish_gate`) |
-| Test-audit gate: with `flow = strict`, a phase whose `<P>-VALIDATION.md` is missing or still the plan's draft is refused (nothing merged, no PR); `GSD_SKIP_GUARD=1` escapes | `gsd-wt-finish`, `gsd-finish`, `lib/common.sh` (`gsd_flow_finish_gate`) |
-| Post-finish warning if the roadmap ticks look wrong | `gsd-finish` |
+| Finish from anywhere: no argument inside the worktree, `<N>` / `phase-N-slug` elsewhere, `--repo` outside | `gsdt-finish` |
+| Land a `gsdt-batch` worktree: `gsdt-finish batch-…` (or no argument inside it; `--pr` too) — same tests → merge → repair → push → cleanup, no UI / test-audit gates, no ticket | `gsdt-finish`, `gsdt-wt-finish` |
+| Auto-returns a clean main checkout to the base branch; safe to run inside the worktree being removed | `gsdt-finish` |
+| Sync base with origin first; abort (worktree kept) if that fails | `gsdt-wt-finish` |
+| Validation before merge and on the combined tree after: `scripts/gsdt-premerge-check.sh` (or `premerge =`), else the project's tests (`test =` or detection: xcodebuild / make / just / cargo / go / npm / pytest) | `gsdt-wt-finish`, `lib/common.sh` (`gsd_test_cmd`) |
+| `--no-ff` merge; a conflict aborts and leaves the base branch clean with resolution steps | `gsdt-wt-finish` |
+| Planning repair after every merge point; never pushes contradictory `.planning` | `gsdt-wt-finish` |
+| Push with up to 3 retries (pull + repair + re-validate between) | `gsdt-wt-finish` |
+| Removes worktree + branch; ticket → "in testing" when a tracker is set (also on `--pr`) | `gsdt-wt-finish`, `gsdt-finish`, `gsdt-tracker` |
+| `--pr [--draft]`: push (prefers the `*-pr` branch) and open a GitHub PR instead of merging | `gsdt-finish` |
+| UI gate for a phase with screens: the check of the rendered pages, the look file and the user's approval must be current. `ui_gates = strict` refuses (nothing merged, no PR), `warn` prints a warning; `GSD_SKIP_GUARD=1` escapes | `gsdt-wt-finish`, `gsdt-finish`, `lib/ui.sh` (`gsd_ui_finish_gate`) |
+| Test-audit gate: with `flow = strict`, a phase whose `<P>-VALIDATION.md` is missing or still the plan's draft is refused (nothing merged, no PR); `GSD_SKIP_GUARD=1` escapes | `gsdt-wt-finish`, `gsdt-finish`, `lib/common.sh` (`gsd_flow_finish_gate`) |
+| Post-finish warning if the roadmap ticks look wrong | `gsdt-finish` |
 
 ## 4. Planning-file integrity
 
 | Feature | Where |
 |---|---|
-| Git merge driver: union, then reconcile single-value lines | `gsd-planning-merge`, `lib/gsd_planning.py reconcile` |
+| Git merge driver: union, then reconcile single-value lines | `gsdt-planning-merge`, `lib/gsd_planning.py reconcile` |
 | Keyed lines keep first position + best content (`[x]` beats `[ ]`, real status beats "Not started", longer wins) | `lib/gsd_planning.py` |
 | Section-scoped dedupe; STATE.md `## Session Continuity` never touched | `lib/gsd_planning.py` |
-| Counter recompute from ground truth (ROADMAP headings/checklist, `*-PLAN.md`, `*-SUMMARY.md`) | `gsd-planning-repair`, `lib/gsd_planning.py repair` |
-| `--check` CI guard (fails on merge damage; drift is advisory) / `--commit` | `gsd-planning-repair` |
-| Falls back to plain union with a warning when Python 3.7+ is missing | `gsd-planning-merge`, `lib/common.sh` (`gsd_python`) |
+| Counter recompute from ground truth (ROADMAP headings/checklist, `*-PLAN.md`, `*-SUMMARY.md`) | `gsdt-planning-repair`, `lib/gsd_planning.py repair` |
+| `--check` CI guard (fails on merge damage; drift is advisory) / `--commit` | `gsdt-planning-repair` |
+| Falls back to plain union with a warning when Python 3.7+ is missing | `gsdt-planning-merge`, `lib/common.sh` (`gsd_python`) |
 | Audit for two upstream `gsd_run` (gsd-core) bugs: missing checklist row, tick landing on the wrong phase | `lib/roadmap-audit.pl` |
 
 ## 5. Enforcement (the guard)
 
 | Feature | Where |
 |---|---|
-| Provider-neutral guard API: `--command --args --phase --repo` | `gsd-worktree-guard` |
-| Rule 0b (set-up repos): `/gsd-autonomous`, `/gsd-manager`, `/gsd-workspace`, `/gsd-workstreams`, `/gsd-phase` add / `--insert` / `--remove` are blocked, naming the toolkit command to use; `/gsd-phase --edit` passes | `gsd-worktree-guard` |
-| Rule 1: `/gsd-phase` only on the base branch | `gsd-worktree-guard` |
-| Rule 2: per-phase commands only inside the matching `phase-<N>-*` worktree (nested agent worktrees inherit identity) | `gsd-worktree-guard` |
-| Rule 3: `/gsd-execute-phase` blocked while the install is `running` / `fail` | `gsd-worktree-guard` |
-| Rule 4 (`flow = strict`): plan needs CONTEXT, execute needs REVIEWS, secure needs REVIEW (+ UI-REVIEW when a UI-SPEC exists) and the test audit (`<P>-VALIDATION.md` compliant or audited); `--prd` / `--gaps-only` exemptions | `gsd-worktree-guard` |
-| Rule 5 (`ui_gates = strict`): ui-phase needs a filled DESIGN.md + a LAYOUT with a chosen sketch and pages; ui-review needs a passed, current UI check, a complete look file and the user's approval (a phase whose UI review is already on the base branch is exempt) | `gsd-worktree-guard`, `lib/ui.sh` (`gsd_ui_gate`) |
-| Native hooks: Claude `UserPromptExpansion` + `PreToolUse(Skill)` (skill calls and typed slash commands; the plugin form `gsd-core:gsd-plan-phase` counts as `gsd-plan-phase`) | `gsd-worktree-guard`, `lib/gsd_hook_payload.py` |
-| Rule 0: `/gsd-new-project` / `/gsd-ingest-docs` only in a repo `gsd-init` set up (`.gsd.conf`). Enforced by a user-level hook `install.sh` adds to `~/.claude/settings.json` (`PreToolUse(Skill)` + `UserPromptExpansion`): `gsd-worktree-guard --global` applies rule 0 only in a repo without `.gsd.conf` (every rule in a set-up repo, where it is the only hook that sees typed slash commands) and fails open on an unreadable payload. `--no-user-hook` opts out of it and of the `gsd-rules` session hook (remembered); Codex: the skill's written rule only | `install.sh`, `gsd-worktree-guard`, `skills/gsdt-worktrees` |
+| Provider-neutral guard API: `--command --args --phase --repo` | `gsdt-worktree-guard` |
+| Rule 0b (set-up repos): `/gsd-autonomous`, `/gsd-manager`, `/gsd-workspace`, `/gsd-workstreams`, `/gsd-phase` add / `--insert` / `--remove` are blocked, naming the toolkit command to use; `/gsd-phase --edit` passes | `gsdt-worktree-guard` |
+| Rule 1: `/gsd-phase` only on the base branch | `gsdt-worktree-guard` |
+| Rule 2: per-phase commands only inside the matching `phase-<N>-*` worktree (nested agent worktrees inherit identity) | `gsdt-worktree-guard` |
+| Rule 3: `/gsd-execute-phase` blocked while the install is `running` / `fail` | `gsdt-worktree-guard` |
+| Rule 4 (`flow = strict`): plan needs CONTEXT, execute needs REVIEWS, secure needs REVIEW (+ UI-REVIEW when a UI-SPEC exists) and the test audit (`<P>-VALIDATION.md` compliant or audited); `--prd` / `--gaps-only` exemptions | `gsdt-worktree-guard` |
+| Rule 5 (`ui_gates = strict`): ui-phase needs a filled DESIGN.md + a LAYOUT with a chosen sketch and pages; ui-review needs a passed, current UI check, a complete look file and the user's approval (a phase whose UI review is already on the base branch is exempt) | `gsdt-worktree-guard`, `lib/ui.sh` (`gsd_ui_gate`) |
+| Native hooks: Claude `UserPromptExpansion` + `PreToolUse(Skill)` (skill calls and typed slash commands; the plugin form `gsd-core:gsd-plan-phase` counts as `gsd-plan-phase`) | `gsdt-worktree-guard`, `lib/gsd_hook_payload.py` |
+| Rule 0: `/gsd-new-project` / `/gsd-ingest-docs` only in a repo `gsdt-init` set up (`.gsd.conf`). Enforced by a user-level hook `install.sh` adds to `~/.claude/settings.json` (`PreToolUse(Skill)` + `UserPromptExpansion`): `gsdt-worktree-guard --global` applies rule 0 only in a repo without `.gsd.conf` (every rule in a set-up repo, where it is the only hook that sees typed slash commands) and fails open on an unreadable payload. `--no-user-hook` opts out of it and of the `gsdt-rules` session hook (remembered); Codex: the skill's written rule only | `install.sh`, `gsdt-worktree-guard`, `skills/gsdt-worktrees` |
 | Hook JSON parsed without `jq` (Python fallback) | `lib/gsd_hook_payload.py` |
-| Escape hatch `GSD_SKIP_GUARD=1`; shim fails open when the toolkit is not installed | `gsd-worktree-guard`, `shims/` |
+| Escape hatch `GSD_SKIP_GUARD=1`; shim fails open when the toolkit is not installed | `gsdt-worktree-guard`, `shims/` |
 
 ## 6. Phase flow
 
 | Feature | Where |
 |---|---|
-| Resumable step engine: ticket (only with a tracker) → discuss → ui-decision → design-system → layout → ui-phase → plan → review → replan → execute → verifier → gaps → verify-work → code-review → ui-check → ui-look → ui-approve → ui-review → validate → secure → done | `gsd-flow-next` |
-| Reads artifacts only, so it survives crashes and `/clear` | `gsd-flow-next` |
-| Detects an unfolded review (`replan`) from commit times of REVIEWS vs PLAN | `gsd-flow-next` |
-| `--all` preview, `--json`, `--ui` / `--no-ui` | `gsd-flow-next` |
-| Guard check before every step it returns | `gsd-flow-next` |
-| Configurable cross-AI reviewer (`review_provider`, default `codex`) | `gsd-flow-next`, `lib/provider.sh` |
-| A `REVIEWS.md` whose configured reviewer failed (empty section, Codex usage limit) passes neither the review step nor the guard's execute rule | `gsd-flow-next`, `gsd-worktree-guard`, `lib/common.sh` (`gsd_reviews_problem`; gsd-core reviewer-instance headings such as `## Codex Review (fast)` count) |
-| Wait out a Codex usage limit: wrap a command (re-run after the reset) or `--wait-only`; reset time from Codex's message or session log, `--interval` fallback, `--max-wait` cap (exit 75, never a pass); never calls Codex; keeps a Mac awake | `gsd-codex-wait`, `lib/gsd_codex_limit.py` |
+| Resumable step engine: ticket (only with a tracker) → discuss → ui-decision → design-system → layout → ui-phase → plan → review → replan → execute → verifier → gaps → verify-work → code-review → ui-check → ui-look → ui-approve → ui-review → validate → secure → done | `gsdt-flow-next` |
+| Reads artifacts only, so it survives crashes and `/clear` | `gsdt-flow-next` |
+| Detects an unfolded review (`replan`) from commit times of REVIEWS vs PLAN | `gsdt-flow-next` |
+| `--all` preview, `--json`, `--ui` / `--no-ui` | `gsdt-flow-next` |
+| Guard check before every step it returns | `gsdt-flow-next` |
+| Configurable cross-AI reviewer (`review_provider`, default `codex`) | `gsdt-flow-next`, `lib/provider.sh` |
+| A `REVIEWS.md` whose configured reviewer failed (empty section, Codex usage limit) passes neither the review step nor the guard's execute rule | `gsdt-flow-next`, `gsdt-worktree-guard`, `lib/common.sh` (`gsd_reviews_problem`; gsd-core reviewer-instance headings such as `## Codex Review (fast)` count) |
+| Wait out a Codex usage limit: wrap a command (re-run after the reset) or `--wait-only`; reset time from Codex's message or session log, `--interval` fallback, `--max-wait` cap (exit 75, never a pass); never calls Codex; keeps a Mac awake | `gsdt-codex-wait`, `lib/gsd_codex_limit.py` |
 | Agent-facing driver skill with human stop points (discuss, design system + sketch, screens, review, UI approval) | `skills/gsdt-flow` |
-| Doctor report of merged phases that skipped a mandatory step (T040: flow steps with `flow = strict`, `ui-check` / `ui-approve` with `ui_gates = strict`; `flow_since` cutoff, `flow_skip` single phases shown as a note) | `gsd-doctor` |
+| Doctor report of merged phases that skipped a mandatory step (T040: flow steps with `flow = strict`, `ui-check` / `ui-approve` with `ui_gates = strict`; `flow_since` cutoff, `flow_skip` single phases shown as a note) | `gsdt-doctor` |
 
 ## 6b. UI quality gates ([ui-quality-plan.md](ui-quality-plan.md))
 
 | Feature | Where |
 |---|---|
-| One design system per project: `.planning/design/DESIGN.md` (stub marker until filled) + `refs/` | `gsd-ui design`, `lib/ui.sh` |
-| Per phase with screens: `<P>-LAYOUT.md` — chosen `/gsd-sketch` (`sketch:`, winner read from the sketch README) + `pages:`; `sketch: skip <reason>` | `gsd-ui layout`, `gsd-flow-next` |
-| **Check of the rendered pages** ([plan-ui-check.md](plan-ui-check.md)): every `pages:` entry at 375 / 768 / 1440 px in the project's own Playwright; writes `<P>-UI-CHECK.md`, the pictures and a sheet (`<P>-SHOTS/index.html`, not committed). Exit 0 passed / 1 failed / 2 could not run; `--skip "<reason>"` | `gsd-ui check`, `lib/ui-check.mjs` |
+| One design system per project: `.planning/design/DESIGN.md` (stub marker until filled) + `refs/` | `gsdt-ui design`, `lib/ui.sh` |
+| Per phase with screens: `<P>-LAYOUT.md` — chosen `/gsd-sketch` (`sketch:`, winner read from the sketch README) + `pages:`; `sketch: skip <reason>` | `gsdt-ui layout`, `gsdt-flow-next` |
+| **Check of the rendered pages** ([plan-ui-check.md](plan-ui-check.md)): every `pages:` entry at 375 / 768 / 1440 px in the project's own Playwright; writes `<P>-UI-CHECK.md`, the pictures and a sheet (`<P>-SHOTS/index.html`, not committed). Exit 0 passed / 1 failed / 2 could not run; `--skip "<reason>"` | `gsdt-ui check`, `lib/ui-check.mjs` |
 | Checks: C1 sideways scroll, C2 possible clipped text (a question), C3 contrast (pinned axe-core; "could not measure" = a question), C4 text under `ui_min_font`, C5 broken `<img>`, C6 uncaught page errors (console errors are listed), C7 the page's main button (one match, on the first screen, not covered), C8 failed load / another page / missing `expect:` text | `lib/ui-check.mjs`, `lib/vendor/axe-core/` |
-| Per page in `<P>-LAYOUT.md`: `main_button:` (text, `css=<selector>`, `none`), `expect:`; `app:` = the folder with Playwright; `waive: <check> \| <page> \| <width> \| <target> \| <reason>` lists a finding without counting it. A page without `main_button:` is "not checked" — a failure under `strict` | `gsd-ui check` |
+| Per page in `<P>-LAYOUT.md`: `main_button:` (text, `css=<selector>`, `none`), `expect:`; `app:` = the folder with Playwright; `waive: <check> \| <page> \| <width> \| <target> \| <reason>` lists a finding without counting it. A page without `main_button:` is "not checked" — a failure under `strict` | `gsdt-ui check` |
 | Playwright lookup with `createRequire`: `GSD_PLAYWRIGHT_ROOT`, `app:`, the repo root, `apps/*` and `packages/*`, then the global npm folder (`npm i -g playwright`, once per machine; `GSD_NPM_GLOBAL_ROOT` overrides); several installs and no `app:` → refuses. Never loads a Playwright config | `lib/ui-check.mjs`, `lib/ui.sh` (`gsd_ui_global_root`) |
 | One run = one capture (id = hash of the pictures). `<P>-UI-CHECK.md` also records a hash of the code outside `.planning/` and of `<P>-LAYOUT.md`; a later change to either makes the check stale. Same pictures → same id, so look and approval stay valid | `lib/ui.sh` (`gsd_ui_inputs_state`, `gsd_ui_check_state`) |
-| Staged output: a run that cannot finish records `status: error` and removes the old pictures — an old pass never stays | `gsd-ui check` |
-| Look file `<P>-UI-LOOK.md`: one answer (`ok` / `fixed` / `bad` / `n/a` + text) per picture and layout rule (R1–R10, or the project's `- R<n>:` lines in DESIGN.md) and per question; the expected set comes from the check, not the look file | `gsd-ui look`, `lib/ui.sh` (`gsd_ui_look_state`) |
-| Approval `<P>-UI-APPROVAL.md` names the capture; `--waive "<reason>"` records that the user chose not to look | `gsd-ui approve`, `gsd-ui sheet` |
-| Screenshots only, with the Playwright CLI (no checks), recorded in `<P>-SHOTS.md`; `--skip "<reason>"` | `gsd-ui shots` |
-| App address: `url:` in `<P>-LAYOUT.md` (per phase — projects with several apps), else `ui_url` in `.gsd.conf`, else `http://localhost:{port}`; `{port}` = the phase's derived port, base from the `gsd-derive-port.sh <base>` dev script or `{port:<base>}` | `gsd-ui check`, `gsd-ui shots` |
+| Staged output: a run that cannot finish records `status: error` and removes the old pictures — an old pass never stays | `gsdt-ui check` |
+| Look file `<P>-UI-LOOK.md`: one answer (`ok` / `fixed` / `bad` / `n/a` + text) per picture and layout rule (R1–R10, or the project's `- R<n>:` lines in DESIGN.md) and per question; the expected set comes from the check, not the look file | `gsdt-ui look`, `lib/ui.sh` (`gsd_ui_look_state`) |
+| Approval `<P>-UI-APPROVAL.md` names the capture; `--waive "<reason>"` records that the user chose not to look | `gsdt-ui approve`, `gsdt-ui sheet` |
+| Screenshots only, with the Playwright CLI (no checks), recorded in `<P>-SHOTS.md`; `--skip "<reason>"` | `gsdt-ui shots` |
+| App address: `url:` in `<P>-LAYOUT.md` (per phase — projects with several apps), else `ui_url` in `.gsd.conf`, else `http://localhost:{port}`; `{port}` = the phase's derived port, base from the `gsdt-derive-port.sh <base>` dev script or `{port:<base>}` | `gsdt-ui check`, `gsdt-ui shots` |
 | `ui_gates = warn` (default: flow steps, a warning at finish, doctor notes) / `strict` (guard blocks ui-phase and ui-review, finish refuses, doctor T080 / T081 / T040 `ui-check`, `ui-approve`) / `off` | `lib/ui.sh`, guard, finish, doctor |
-| `gsd-init --no-ui` for projects without screens (`ui_gates = off`) | `gsd-init`, `gsd-bootstrap-repo` |
-| Optional provider tools printed by `gsd-init` (Claude: `frontend-design` plugin, Playwright MCP) — never required | `lib/provider.sh` |
+| `gsdt-init --no-ui` for projects without screens (`ui_gates = off`) | `gsdt-init`, `gsdt-bootstrap-repo` |
+| Optional provider tools printed by `gsdt-init` (Claude: `frontend-design` plugin, Playwright MCP) — never required | `lib/provider.sh` |
 
 ## 7. AI providers
 
 | Feature | Where |
 |---|---|
-| Providers: `claude`, `codex`, `custom` (`gemini` is refused with a reason; `gsd-init --no-launch` removes an older release's Gemini setup); ordered `providers =` list, first is default | `lib/provider.sh` |
+| Providers: `claude`, `codex`, `custom` (`gemini` is refused with a reason; `gsdt-init --no-launch` removes an older release's Gemini setup); ordered `providers =` list, first is default | `lib/provider.sh` |
 | Precedence chains for provider, executable, model, start mode (CLI > env > repo > legacy > default) | `lib/provider.sh` |
 | Safe argv rendering (arrays, no `eval`); positional prompts | `lib/provider.sh` |
 | Per-session model (`--model`, `GSD_MODEL`, `GSD_<P>_MODEL`, `<p>_model`, `default`) | `lib/provider.sh` |
-| Sequential cross-provider handoff on one phase (`gsd-start -p N --provider X`) | `gsd-start` |
+| Sequential cross-provider handoff on one phase (`gsdt-start -p N --provider X`) | `gsdt-start` |
 | Skills installed per agent (`install.sh --agent …` / `--all-agents`) | `lib/install.sh`, `lib/provider.sh` |
 
 ## 8. Visibility and diagnostics
 
 | Feature | Where |
 |---|---|
-| Phase table: number, title, plans done/total, stage, worktree; wraps to the terminal (`--compact` for one line); under it, the `batch-*` branches not landed yet (● = worktree attached) | `gsd-list` |
-| Read-only health check, every finding names its fix command; `--quiet`, `--json` | `gsd-doctor` |
-| `--fix` (asks y/N, `--yes` for scripts): runs only the safe fixes — gsd-init (T010–T014, T016, T052, T058), gsd-planning-repair (T020, stale counters), `git branch --track` (T015), `chmod +x` pre-merge (T019), dead lock (T030), `worktree.baseRef = "head"` (T034) — then checks again; never commits | `gsd-doctor` |
-| Finding codes: T001–T009 toolkit (incl. T005 no gsd-core, T006 no perl, T007 stale skills, T009 a gsd-core skill the phase flow runs is missing (a set trimmed with `/gsd-surface` passes while they are there; the profile name decides only where the skills are not found), T008 a GSD hook runs a file that is gone, e.g. a node path an nvm/Volta/fnm upgrade moved; the fix is to re-run the gsd-core installer — also a one-line warning in `gsd-start`/`gsd-list`), T010–T019 repo setup (T015 base branch, T016 instructions older than the toolkit, T017 unknown `.gsd.conf` key, T018 bad value, T019 pre-merge gate), T020–T026 planning (T025 duplicate phase heading, T026 `phase_id_convention: bracket` is unsupported), T030–T034 hygiene (T032 failed worktree install, T033 a lock with no pid — never removed for you, T034 `worktree.baseRef` not `"head"` in the main checkout or a phase or batch worktree, so a wave's plans (a batch's items) run one at a time), T040 flow debt, T050–T062 providers (T061 Gemini setup left from an older release, T062 Claude sessions cannot load `gsd-rules`: not on PATH or no user `SessionStart` hook; a note after `--no-user-hook`), T070–T073 tracker (T073 no ClickUp token), T080 no design system and T081 committed pictures (`ui_gates = strict`; notes otherwise), W017 (a phase or batch branch with no worktree) / W027 shared with `/gsd-health` | `gsd-doctor` |
-| `--json` lists the notes too (`"notes"`) and the safe fixes (`"safe"`) | `gsd-doctor` |
-| Context section (notes, never findings): what gsd-core's skill and agent descriptions cost every session (the skill groups the flow never runs are in `--json` only: hiding them saves too little to suggest); `ROADMAP.md` / `REQUIREMENTS.md` / `STATE.md` / `PROJECT.md` over 32 KiB (`/gsd-complete-milestone`); a Codex `AGENTS.md` over 32 KiB; a pointer to Claude's `/doctor`, `/skill-doctor`, `/context`. `--json`: `context` | `gsd-doctor`, `lib/context.sh` |
-| Agent skill: run `gsd-doctor --json` and fix what it finds, one item at a time on the user's yes (safe fixes, `gsd-complete-milestone` once a milestone shipped; it does not offer to hide skill groups). With Claude it also runs `claude -p "/skill-doctor"` and `claude -p "/context"` (free) and, last and only on a yes, `claude -p "/doctor"`, which applies its own fixes | `skills/gsdt-doctor` |
-| Optional add-on notes for projects with screens, per provider and stack (files only): Impeccable design skill; shadcn MCP for Tailwind / shadcn | `gsd-doctor`, `lib/ui.sh` (`gsd_ui_stack`), `lib/provider.sh` (`gsd_provider_ui_addon`) |
-| Checks for a newer GSD on npm and branches whose upstream is gone | `gsd-doctor` |
-| Several quick tasks at once, cheaper than `/gsd-quick-batch`: takes its task list (inline or `--file`) or any brief in plain words — then ONE Opus helper does the brief's checks first (validate, write the tables it names) and splits it into build / recommend-only / dropped; for a plain list ONE Sonnet helper scouts each item's likely files, test and "done when"; tiny items (gsd-fast's limits) run last via `gsd-fast`, real ones via `gsd-quick-batch --file .planning/batch-inputs/<date>-<slug>.md` (1 item: `gsd-quick`); waits for the user's OK on the sorted list; refuses a dirty tree; ends with the line `gsdt-batch: done items=N real=N tiny=N` and `gsd-batch-report` | `skills/gsdt-batch` |
-| Start that batch in a FRESH session; on Claude on Sonnet (`--model` to change): `claude --model sonnet "/gsdt-batch …"`; other providers launch with their usual model; `--print` | `gsd-batch`, `lib/provider.sh` (`gsd_provider_prompt … batch`) |
-| The batch runs in its OWN worktree: `batch-<date>-<slug>` off the base branch (slug from the list, the `--file` name or `--name`; a taken derived name gets `-2`; run inside a `batch-*` worktree it uses that one), with the phase worktree's setup (local config, `worktree.baseRef = "head"`, install); `--file` made absolute (a committed file: the worktree's copy); refuses when `.planning/` is not committed; `/gsdt-batch` in the main checkout stops and prints the `gsd-batch` command | `gsd-batch`, `gsd-wt-new --batch`, `skills/gsdt-batch` |
+| Phase table: number, title, plans done/total, stage, worktree; wraps to the terminal (`--compact` for one line); under it, the `batch-*` branches not landed yet (● = worktree attached) | `gsdt-list` |
+| Read-only health check, every finding names its fix command; `--quiet`, `--json` | `gsdt-doctor` |
+| `--fix` (asks y/N, `--yes` for scripts): runs only the safe fixes — gsdt-init (T010–T014, T016, T052, T058), gsdt-planning-repair (T020, stale counters), `git branch --track` (T015), `chmod +x` pre-merge (T019), dead lock (T030), `worktree.baseRef = "head"` (T034) — then checks again; never commits | `gsdt-doctor` |
+| Finding codes: T001–T009 toolkit (incl. T005 no gsd-core, T006 no perl, T007 stale skills, T009 a gsd-core skill the phase flow runs is missing (a set trimmed with `/gsd-surface` passes while they are there; the profile name decides only where the skills are not found), T008 a GSD hook runs a file that is gone, e.g. a node path an nvm/Volta/fnm upgrade moved; the fix is to re-run the gsd-core installer — also a one-line warning in `gsdt-start`/`gsdt-list`), T010–T019 repo setup (T015 base branch, T016 instructions older than the toolkit, T017 unknown `.gsd.conf` key, T018 bad value, T019 pre-merge gate), T020–T026 planning (T025 duplicate phase heading, T026 `phase_id_convention: bracket` is unsupported), T030–T034 hygiene (T032 failed worktree install, T033 a lock with no pid — never removed for you, T034 `worktree.baseRef` not `"head"` in the main checkout or a phase or batch worktree, so a wave's plans (a batch's items) run one at a time), T040 flow debt, T050–T062 providers (T061 Gemini setup left from an older release, T062 Claude sessions cannot load `gsdt-rules`: not on PATH or no user `SessionStart` hook; a note after `--no-user-hook`), T070–T073 tracker (T073 no ClickUp token), T080 no design system and T081 committed pictures (`ui_gates = strict`; notes otherwise), T090 old `gsd-*` command names (before 0.10.0; fix `gsdt-migrate --apply`), W017 (a phase or batch branch with no worktree) / W027 shared with `/gsd-health` | `gsdt-doctor` |
+| `--json` lists the notes too (`"notes"`) and the safe fixes (`"safe"`) | `gsdt-doctor` |
+| Context section (notes, never findings): what gsd-core's skill and agent descriptions cost every session (the skill groups the flow never runs are in `--json` only: hiding them saves too little to suggest); `ROADMAP.md` / `REQUIREMENTS.md` / `STATE.md` / `PROJECT.md` over 32 KiB (`/gsd-complete-milestone`); a Codex `AGENTS.md` over 32 KiB; a pointer to Claude's `/doctor`, `/skill-doctor`, `/context`. `--json`: `context` | `gsdt-doctor`, `lib/context.sh` |
+| Agent skill: run `gsdt-doctor --json` and fix what it finds, one item at a time on the user's yes (safe fixes, `gsd-complete-milestone` once a milestone shipped; it does not offer to hide skill groups). With Claude it also runs `claude -p "/skill-doctor"` and `claude -p "/context"` (free) and, last and only on a yes, `claude -p "/doctor"`, which applies its own fixes | `skills/gsdt-doctor` |
+| Optional add-on notes for projects with screens, per provider and stack (files only): Impeccable design skill; shadcn MCP for Tailwind / shadcn | `gsdt-doctor`, `lib/ui.sh` (`gsd_ui_stack`), `lib/provider.sh` (`gsd_provider_ui_addon`) |
+| Checks for a newer GSD on npm and branches whose upstream is gone | `gsdt-doctor` |
+| Several quick tasks at once, cheaper than `/gsd-quick-batch`: takes its task list (inline or `--file`) or any brief in plain words — then ONE Opus helper does the brief's checks first (validate, write the tables it names) and splits it into build / recommend-only / dropped; for a plain list ONE Sonnet helper scouts each item's likely files, test and "done when"; tiny items (gsd-fast's limits) run last via `gsd-fast`, real ones via `gsd-quick-batch --file .planning/batch-inputs/<date>-<slug>.md` (1 item: `gsd-quick`); waits for the user's OK on the sorted list; refuses a dirty tree; ends with the line `gsdt-batch: done items=N real=N tiny=N` and `gsdt-batch-report` | `skills/gsdt-batch` |
+| Start that batch in a FRESH session; on Claude on Sonnet (`--model` to change): `claude --model sonnet "/gsdt-batch …"`; other providers launch with their usual model; `--print` | `gsdt-batch`, `lib/provider.sh` (`gsd_provider_prompt … batch`) |
+| The batch runs in its OWN worktree: `batch-<date>-<slug>` off the base branch (slug from the list, the `--file` name or `--name`; a taken derived name gets `-2`; run inside a `batch-*` worktree it uses that one), with the phase worktree's setup (local config, `worktree.baseRef = "head"`, install); `--file` made absolute (a committed file: the worktree's copy); refuses when `.planning/` is not committed; `/gsdt-batch` in the main checkout stops and prints the `gsdt-batch` command | `gsdt-batch`, `gsdt-wt-new --batch`, `skills/gsdt-batch` |
 | Claude Code mod: while `/gsdt-batch` runs, the main session's requests go to Sonnet, subagents keep theirs; off at the done line, a cancelled turn, session end or `/gsdt-batch-off`; status line `batch: sonnet`. Not installed yet: `claude --plugin-dir mods/gsdt-batch-sonnet` | `mods/gsdt-batch-sonnet` |
-| Token report for quick-task batches (`/gsd-quick-batch`, `/gsdt-batch`) from Claude Code transcripts: from the batch's start to its end (not the whole session), per role (agent type × model): agents, turns, Bash calls per helper, fresh input / cache write / cache read, output, a cache-weighted input; per item next to the baseline or a saved `--json` run (`--baseline`); `--last` / `--days` / `--session`; never prints transcript text; Codex: "not supported yet" | `gsd-batch-report`, `lib/gsd_batch_report.py` |
+| Token report for quick-task batches (`/gsd-quick-batch`, `/gsdt-batch`) from Claude Code transcripts: from the batch's start to its end (not the whole session), per role (agent type × model): agents, turns, Bash calls per helper, fresh input / cache write / cache read, output, a cache-weighted input; per item next to the baseline or a saved `--json` run (`--baseline`); `--last` / `--days` / `--session`; never prints transcript text; Codex: "not supported yet" | `gsdt-batch-report`, `lib/gsd_batch_report.py` |
 
 ## 9. Install and maintenance
 
@@ -161,8 +161,9 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | Install manifest + `--reuse-install-config` | `lib/install.sh` |
 | One-line install of a GitHub release, SHA256-checked, one folder per release (`--version`, `--agent`) | `install.sh` |
 | Install adds gsd-core (`--profile=full`) for each chosen agent that has none, after our skills; never on an update; `--no-core` / `GSD_NO_CORE=1` skip it; a failure only prints the command | `lib/install.sh`, `install.sh` |
-| Update / go back: `gsd-update [--check \| --version X.Y.Z \| --no-core]`; keeps the previous release, prunes older ones; then gsd-core to its latest (`--profile=full`) for each installed agent | `gsd-update`, `lib/core.sh` |
-| "Newer version" notice for gsd-toolkit and gsd-core (npm) in `gsd-start` / `gsd-list` / `gsd-init` (terminal only) and `gsd-doctor` (also `--quiet`, `updates` in `--json`); day-long cache, background refresh; `GSD_NO_UPDATE_CHECK=1` | `lib/version.sh`, `gsd-doctor` |
+| Update / go back: `gsdt-update [--check \| --version X.Y.Z \| --no-core]`; keeps the previous release, prunes older ones; then gsd-core to its latest (`--profile=full`) for each installed agent | `gsdt-update`, `lib/core.sh` |
+| Commands are `gsdt-*` since 0.10.0 (`gsd-*` is gsd-core's): install prunes the old links and replaces the old user hooks; `gsdt-migrate` (dry run / `--apply` / `--check`) moves a repo's shims, pre-merge script, path references, repo hook, marked blocks and this clone's driver, tracker section and post-merge hook; start/finish/flow-next/init refuse an unmigrated repo; doctor T090 (`--fix` runs it) | `gsdt-migrate`, `gsd_migrate_needed` (`lib/common.sh`), `lib/install.sh` |
+| "Newer version" notice for gsd-toolkit and gsd-core (npm) in `gsdt-start` / `gsdt-list` / `gsdt-init` (terminal only) and `gsdt-doctor` (also `--quiet`, `updates` in `--json`); day-long cache, background refresh; `GSD_NO_UPDATE_CHECK=1` | `lib/version.sh`, `gsdt-doctor` |
 | Reinstall replaces the toolkit's own links and skills in place (no `.bak` on PATH or in skill dirs) | `lib/install.sh` |
 | Releases from `main`: a push that changes `VERSION` → check → tests → tag + tarball + `SHA256SUMS` → GitHub release; `tools/release.sh X.Y.Z --push` is a helper | `.github/workflows/release.yml`, `tools/release-check.sh`, `tools/release.sh` |
 
@@ -170,17 +171,17 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 
 | Feature | Where |
 |---|---|
-| `start` / `finish` / `comment` / `status` / `snapshot [--out]` / `extract` / `check` / `which` | `gsd-tracker` |
-| `tracker = none` (default in a GSD repo) / `clickup` / `custom`; settings from env > git config `gsd-tracker.*` > `.gsd.conf`; `gsd-tracker config` shows them | `gsd-tracker`, `lib/tracker/config.sh` |
-| Standalone: `gsd-tracker` works in any folder and uses no GSD code; GSD runs it as a command | `bin/gsd-tracker`, `lib/tracker/` |
+| `start` / `finish` / `comment` / `status` / `snapshot [--out]` / `extract` / `check` / `which` | `gsdt-tracker` |
+| `tracker = none` (default in a GSD repo) / `clickup` / `custom`; settings from env > git config `gsdt-tracker.*` > `.gsd.conf`; `gsdt-tracker config` shows them | `gsdt-tracker`, `lib/tracker/config.sh` |
+| Standalone: `gsdt-tracker` works in any folder and uses no GSD code; GSD runs it as a command | `bin/gsdt-tracker`, `lib/tracker/` |
 | Id parsing: bare, `tk-<id>`, `#<id>`, URL; tags read back from title, then branch | `lib/ticket.sh`, `lib/tracker/ids.sh` |
-| Status names from `tracker_status_start` / `_finish` (env `GSD_TRACKER_STATUS_*` wins) | `gsd-tracker` |
-| ClickUp: status matched per list, subtask cascade, idempotent, markdown snapshot; token from `CLICKUP_API_TOKEN`, else `~/.config/gsd/clickup-<profile>.env` with `tracker_profile`, else `~/.config/gsd/clickup.env`; `gsd-tracker login` (any folder) saves a token — or reuses the saved one — and sets `git config gsd-tracker.profile` in one step | `lib/tracker/clickup.sh` |
+| Status names from `tracker_status_start` / `_finish` (env `GSD_TRACKER_STATUS_*` wins) | `gsdt-tracker` |
+| ClickUp: status matched per list, subtask cascade, idempotent, markdown snapshot; token from `CLICKUP_API_TOKEN`, else `~/.config/gsd/clickup-<profile>.env` with `tracker_profile`, else `~/.config/gsd/clickup.env`; `gsdt-tracker login` (any folder) saves a token — or reuses the saved one — and sets `git config gsdt-tracker.profile` in one step | `lib/tracker/clickup.sh` |
 | Custom: `tracker_command` gets `start` / `finish` / `comment` / `status` / `snapshot` / `check` + `<id> [text]` | `lib/tracker/custom.sh` |
-| Snapshot `--out` writes only on success (the file marks the flow step done) | `gsd-tracker` |
-| Shared verbs `create` / `update` / `tasks` for every tracker (options passed to the connector; `none` fails them); a connector's own commands via `TRACKER_EXTRA` | `gsd-tracker` |
+| Snapshot `--out` writes only on success (the file marks the flow step done) | `gsdt-tracker` |
+| Shared verbs `create` / `update` / `tasks` for every tracker (options passed to the connector; `none` fails them); a connector's own commands via `TRACKER_EXTRA` | `gsdt-tracker` |
 | ClickUp connector: `create` / `update` (name, markdown description, assignees by me/id/email/username, status, priority, tags, parent) / `tasks` (filters, `--match` name search); own commands `lists` / `members` / `api` (any v2 call); workspace from `CLICKUP_TEAM_ID` or the token's only one | `lib/tracker/clickup.sh` |
-| Agent skill: read and write the repo's tickets through `gsd-tracker` (checks `which` first) | `skills/gsdt-tracker` |
+| Agent skill: read and write the repo's tickets through `gsdt-tracker` (checks `which` first) | `skills/gsdt-tracker` |
 | Install removes a toolkit skill no longer shipped (renamed or retired) | `lib/install.sh` |
 | Legacy read-only: `--cu`, `cu_<id>` tags, `STORY.md` | `lib/ticket.sh` |
 
@@ -192,12 +193,12 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | `lib/provider.sh` | provider identity/validation, instruction file + skill root per provider, native-hook capability + state, resolution chains, argv rendering, owned-marker block helpers |
 | `lib/gsd_planning.py` | `reconcile` and `repair` engines for ROADMAP.md / STATE.md |
 | `lib/gsd_hook_payload.py` | Claude hook JSON → guard input |
-| `lib/gsd_codex_limit.py` | Codex usage-limit message parsing and session-log scan, for `gsd-codex-wait` |
-| `lib/gsd_batch_report.py` | batch boundaries and token counts from Claude Code transcripts, for `gsd-batch-report` |
+| `lib/gsd_codex_limit.py` | Codex usage-limit message parsing and session-log scan, for `gsdt-codex-wait` |
+| `lib/gsd_batch_report.py` | batch boundaries and token counts from Claude Code transcripts, for `gsdt-batch-report` |
 | `lib/roadmap-audit.pl` | read-only ROADMAP bookkeeping audit |
 | `lib/roadmap-rows.pl` | adds a claimed phase's missing checklist + Progress rows (the ones gsd-core leaves out) |
 | `lib/version.sh` | this package's version, version compare, the cached latest-release check and notice |
 | `lib/ticket.sh` | GSD side of tickets: `tk-<id>` tags (parse, extract, match), `gsd_tracker_which` |
-| `lib/tracker/config.sh`, `lib/tracker/ids.sh` | gsd-tracker's own settings and id parsing (standalone) |
-| `lib/tracker/clickup.sh`, `lib/tracker/custom.sh` | one adapter per tracker, sourced by `gsd-tracker` |
+| `lib/tracker/config.sh`, `lib/tracker/ids.sh` | gsdt-tracker's own settings and id parsing (standalone) |
+| `lib/tracker/clickup.sh`, `lib/tracker/custom.sh` | one adapter per tracker, sourced by `gsdt-tracker` |
 | `lib/ui.sh` | UI gates: `ui_gates`, DESIGN.md / LAYOUT / SHOTS state, sketch winner, Playwright lookup, the DESIGN and LAYOUT templates |

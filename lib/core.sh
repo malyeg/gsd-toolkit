@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # lib/core.sh — install or update GSD itself (gsd-core) for one agent, with
 # its own installer (npx). lib/install.sh installs it where it is missing;
-# gsd-update also brings it to the latest version. Always the full skill
+# gsdt-update also brings it to the latest version. Always the full skill
 # profile: the phase flow runs skills only it has (doctor T009). Needs
 # lib/common.sh (GSD_CORE_INSTALL); update mode needs lib/version.sh.
 

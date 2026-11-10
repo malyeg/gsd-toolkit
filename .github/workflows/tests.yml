@@ -53,7 +53,7 @@ jobs:
         run: tests/test-install-copy.sh
       - name: fresh-review regression suite
         run: bash tests/test-review-fixes.sh
-      - name: gsd-list suite
+      - name: gsdt-list suite
         run: tests/test-list.sh
       - name: full-review regression suite (2026-09-25)
         run: tests/test-review-round2.sh
@@ -71,8 +71,10 @@ jobs:
         run: tests/test-codex-wait.sh
       - name: batch report suite
         run: tests/test-batch.sh
+      - name: gsdt-migrate suite
+        run: tests/test-migrate.sh
       - name: a browser for the UI check suite
-        # The runner behind `gsd-ui check` is only tested when it drives a real
+        # The runner behind `gsdt-ui check` is only tested when it drives a real
         # browser: a pinned Playwright and its Chromium, outside the checkout.
         run: |
           mkdir -p "$RUNNER_TEMP/pw" && cd "$RUNNER_TEMP/pw"

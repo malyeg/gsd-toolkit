@@ -706,7 +706,7 @@ def cmd_repair(args):
         for message in advisory:
             print(f"  - {message}")
     if args.check and changed and not corrupt:
-        # gsd-doctor offers --fix only on this line: some advisories need a hand edit
+        # gsdt-doctor offers --fix only on this line: some advisories need a hand edit
         print(f"• a repair would update: {', '.join(changed)}")
     return 1 if (args.check and corrupt) else 0
 

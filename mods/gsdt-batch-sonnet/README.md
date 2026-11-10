@@ -11,7 +11,7 @@ it.
   (Esc), the session ends, or you type `/gsdt-batch-off`.
 - The status line shows `batch: sonnet` while it is on.
 
-The other way in needs no mod: `gsd-batch <task list>` starts a fresh session
+The other way in needs no mod: `gsdt-batch <task list>` starts a fresh session
 on Sonnet with the skill running. That is cheaper too: switching an Opus
 session to Sonnet mid-way writes the prompt cache again once (Sonnet has its
 own cache), and a fresh session starts small.

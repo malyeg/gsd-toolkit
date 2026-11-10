@@ -1,6 +1,6 @@
 ---
 name: gsdt-batch
-description: "Run several quick tasks at once, cheaper: use this INSTEAD of /gsd-quick-batch. Start it with the gsd-batch shell command (gsd-batch '<list or brief>'), not by typing /gsdt-batch in the main checkout: there it only prints that command. Takes a task list (inline or --file) OR any brief in plain words (\"Read FIX-BRIEF.md, validate each item, fix the real ones, recommend the owner calls\"). A helper checks and scouts each item first so the planners search less, tiny items go to gsd-fast instead of a planner, and gsd-batch-report shows what it cost. Use when asked to batch, fix or do several small tasks/bugs together, or to work through a fix brief."
+description: "Run several quick tasks at once, cheaper: use this INSTEAD of /gsd-quick-batch. Start it with the gsdt-batch shell command (gsdt-batch '<list or brief>'), not by typing /gsdt-batch in the main checkout: there it only prints that command. Takes a task list (inline or --file) OR any brief in plain words (\"Read FIX-BRIEF.md, validate each item, fix the real ones, recommend the owner calls\"). A helper checks and scouts each item first so the planners search less, tiny items go to gsd-fast instead of a planner, and gsdt-batch-report shows what it cost. Use when asked to batch, fix or do several small tasks/bugs together, or to work through a fix brief."
 ---
 
 # gsdt-batch — scout, sort, then run the batch
@@ -11,11 +11,11 @@ items sent to `gsd-fast` instead of a planner, and a token report at the end.
 Start it through the active provider's skill mechanism (Claude:
 `/gsdt-batch`; Codex: `$gsdt-batch`).
 
-**Start it with `gsd-batch <task list or --file …>`** in a terminal. It
+**Start it with `gsdt-batch <task list or --file …>`** in a terminal. It
 makes the batch its own worktree (`batch-<date>-<slug>`, off the base
 branch) and opens a FRESH session there with this skill running — on Claude,
 on Sonnet (a small context makes every coordinator turn cheaper). Every
-commit of the batch lands on that branch; `gsd-finish` merges it later.
+commit of the batch lands on that branch; `gsdt-finish` merges it later.
 Typing `/gsdt-batch` in a session inside a batch worktree works too; it runs
 on that session's model unless the `gsdt-batch-sonnet` mod is on. Planners
 keep the model gsd-core gives them.
@@ -32,7 +32,7 @@ no review. Print the command to run in a terminal instead, with the user's
 input as they gave it (shell-quoted; a `--file` path made absolute):
 
 ```
-gsd-batch '<the task list or brief>'      or      gsd-batch --file /abs/path.md
+gsdt-batch '<the task list or brief>'      or      gsdt-batch --file /abs/path.md
 ```
 
 It makes the batch worktree and starts this skill there. Then print
@@ -60,7 +60,7 @@ Bash: gsd_run query resolve-model gsd-planner --raw
 ```
 
 If it prints `inherit` or nothing, say so: the planners would run on THIS
-session's model (Sonnet when started with `gsd-batch`). Ask whether to go on
+session's model (Sonnet when started with `gsdt-batch`). Ask whether to go on
 or stop and set the planner model in GSD's settings first.
 
 ## 2. Scout — ONE helper agent
@@ -191,7 +191,7 @@ gsdt-batch: done items=<all> real=<real> tiny=<tiny>
 Then:
 
 ```
-Bash: gsd-batch-report
+Bash: gsdt-batch-report
 ```
 
 Show its per-item table and a one-line summary: items done, items failed or
@@ -205,7 +205,7 @@ lands it (tests → merge → push → remove the worktree), with this
 worktree's branch (`git branch --show-current`):
 
 ```
-gsd-finish <batch-branch>
+gsdt-finish <batch-branch>
 ```
 
-or `gsd-finish <batch-branch> --pr` to open a pull request instead.
+or `gsdt-finish <batch-branch> --pr` to open a pull request instead.
