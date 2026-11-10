@@ -24,8 +24,14 @@
 # counters resolve to the most-advanced candidate and `gsdt-planning-repair`
 # (run by gsdt-finish and the post-merge hook) recomputes them from ground truth.
 #
-# Degrades safely: with no python3 available it does the plain union and warns,
-# which is exactly today's behaviour, never worse.
+# Degrades safely: with no usable node (>= 24) it does the plain union in bash
+# and warns, which is exactly the old no-python behaviour, never worse.
+#
+# Launcher: the union and the no-node fallback stay in bash on purpose (a
+# merge driver must never exit nonzero — git would take it for a conflict —
+# and the union must land even if node dies); the reconcile is the engine
+# src/planning.ts (it replaced lib/gsd_planning.py), run by Node >= 24 as
+# `src/launch.mjs planning reconcile`. See docs/ts-port-progress.md.
 set -euo pipefail
 
 O="${1:?merge driver needs %O}"
@@ -39,19 +45,19 @@ while [ -L "$SELF" ]; do
   case "$tgt" in /*) SELF="$tgt" ;; *) SELF="$(dirname "$SELF")/$tgt" ;; esac
 done
 GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
-# shellcheck source=../lib/common.sh
-. "$GSD_PKG/lib/common.sh"
 
-# Union first: same result git's built-in union driver produces, written to %A.
+# Union first, in bash: same result git's built-in union driver produces,
+# written to %A. Whatever happens to node after this, the union is in place.
 git merge-file -q --union "$A" "$O" "$B" || true
 
-if ! PY=$(gsd_python); then
-  echo "⚠ gsdt-planning-merge: no python 3.7+ (tried python3, python) — left the plain union result in ${P:-$A}." >&2
+if ! command -v node >/dev/null 2>&1 \
+   || ! node -e 'process.exit(Number(process.versions.node.split(".")[0]) >= 24 ? 0 : 1)' 2>/dev/null; then
+  echo "⚠ gsdt-planning-merge: no usable node (needs Node.js >= 24) — left the plain union result in ${P:-$A}." >&2
   echo "  It may contain both sides of single-value lines; run gsdt-planning-repair after the merge." >&2
   exit 0
 fi
 
-"$PY" "$GSD_PKG/lib/gsd_planning.py" reconcile "$A" ${P:+--path "$P"} \
+node "$GSD_PKG/src/launch.mjs" planning reconcile "$A" ${P:+--path "$P"} \
   || echo "⚠ gsdt-planning-merge: reconcile failed on ${P:-$A} — plain union result kept; run gsdt-planning-repair." >&2
 
 exit 0

@@ -131,7 +131,7 @@ grep -q "^codex_skills	$(cd "$CH/.agents/skills" && pwd -P)\$" "$CB/.gsd-install
 # copy of the package, then remove only that temporary fixture.
 FIXTURE="$WORK/source"
 mkdir -p "$FIXTURE"
-cp -R "$PKG/bin" "$PKG/lib" "$PKG/shims" "$PKG/skills" "$FIXTURE/"
+cp -R "$PKG/bin" "$PKG/lib" "$PKG/shims" "$PKG/skills" "$PKG/src" "$FIXTURE/"
 cp "$PKG/install.sh" "$FIXTURE/install.sh"
 printf '#!/bin/sh\nexit 0\n' > "$FIXTURE/bin/gsd-obsolete"
 chmod +x "$FIXTURE/bin/gsd-obsolete"

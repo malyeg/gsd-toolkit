@@ -21,6 +21,10 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 PKG="$(cd "$HERE/.." && pwd)"
 FIX="$HERE/fixtures"
 ENGINE="$PKG/lib/gsd_planning.py"
+# The engine the commands now run is src/planning.ts, through the launcher.
+# lib/gsd_planning.py stays as the parity oracle (tests/ts/p2-planning.test.ts)
+# and is what the "python interpreter fallback" section below still exercises.
+engine() { node "$PKG/src/launch.mjs" planning "$@"; }
 
 PASS=0
 FAIL=0
@@ -64,7 +68,7 @@ section() { printf '\n%s\n' "$1"; }
 # ── 1. the phase-11 merge: counters must be RECOMPUTED, not picked ───────────
 section "phase-11 merge — counters recomputed from ground truth"
 stage phase-11-merge "$WORK/a"
-python3 "$ENGINE" repair "$WORK/a/.planning" > "$WORK/a.log" 2>&1
+engine repair "$WORK/a/.planning" > "$WORK/a.log" 2>&1
 FM="$(sed -n '/^---$/,/^---$/p' "$WORK/a/.planning/STATE.md")"
 is "total_phases is 30"     "$(grep -c 'total_phases: 30' <<<"$FM")"     1
 is "completed_phases is 13" "$(grep -c 'completed_phases: 13' <<<"$FM")" 1
@@ -104,7 +108,7 @@ section "history is never damaged (trap 1)"
 for fixture in phase-11-merge 2026-08-02; do
   stage "$fixture" "$WORK/h-$fixture"
   before="$(awk '/^## Session Continuity/,0' "$FIX/$fixture/STATE.md")"
-  python3 "$ENGINE" repair "$WORK/h-$fixture/.planning" >/dev/null 2>&1
+  engine repair "$WORK/h-$fixture/.planning" >/dev/null 2>&1
   after="$(awk '/^## Session Continuity/,0' "$WORK/h-$fixture/.planning/STATE.md")"
   if [ "$before" = "$after" ]; then
     ok "$fixture: ## Session Continuity is byte-identical"
@@ -118,31 +122,31 @@ done
 # ── 3. idempotence + the check gate ──────────────────────────────────────────
 section "idempotence and --check"
 stage phase-11-merge "$WORK/i"
-python3 "$ENGINE" repair --check "$WORK/i/.planning" >/dev/null 2>&1
+engine repair --check "$WORK/i/.planning" >/dev/null 2>&1
 is "--check on a corrupt tree exits 1" "$?" 1
-python3 "$ENGINE" repair "$WORK/i/.planning" >/dev/null 2>&1
+engine repair "$WORK/i/.planning" >/dev/null 2>&1
 cp "$WORK/i/.planning/ROADMAP.md" "$WORK/i-road" && cp "$WORK/i/.planning/STATE.md" "$WORK/i-state"
-python3 "$ENGINE" repair "$WORK/i/.planning" >/dev/null 2>&1
+engine repair "$WORK/i/.planning" >/dev/null 2>&1
 if diff -q "$WORK/i-road" "$WORK/i/.planning/ROADMAP.md" >/dev/null \
    && diff -q "$WORK/i-state" "$WORK/i/.planning/STATE.md" >/dev/null; then
   ok "a second repair changes nothing"
 else
   bad "a second repair changed the files"
 fi
-python3 "$ENGINE" repair --check "$WORK/i/.planning" >/dev/null 2>&1
+engine repair --check "$WORK/i/.planning" >/dev/null 2>&1
 is "--check on a repaired tree exits 0" "$?" 0
 
 # ── 4. the 2026-08-02 corruption, including the row past EOF ─────────────────
 section "2026-08-02 corruption"
 stage 2026-08-02 "$WORK/b"
-out="$(python3 "$ENGINE" repair --check "$WORK/b/.planning" 2>&1)"
+out="$(engine repair --check "$WORK/b/.planning" 2>&1)"
 for n in 5 6 7 8; do
   is "Phase $n duplicate checklist entry found" \
      "$(grep -c "duplicate checklist entry for Phase $n\$" <<<"$out")" 1
 done
 is "the row /gsd-fast left past EOF is reported" \
    "$(grep -c 'table row outside any table' <<<"$out")" 1
-python3 "$ENGINE" repair "$WORK/b/.planning" >/dev/null 2>&1
+engine repair "$WORK/b/.planning" >/dev/null 2>&1
 is "the stray row is preserved, not silently re-homed" \
    "$(grep -c 'gitignore apps/mobile/design/verification' "$WORK/b/.planning/STATE.md")" 1
 for n in 5 6 7 8; do
@@ -273,13 +277,13 @@ is "driver left one '**Current focus:**'"    "$(grep -c '^\*\*Current focus:\*\*
 is "driver left one 'Phase:' in position"    "$(awk '/^## Current Position/,/^## S/' "$S" | grep -c '^Phase:')" 1
 is "driver kept both history entries"        "$(grep -c '^Resume file:' "$S")" 2
 
-python3 "$ENGINE" repair "$E2E/.planning" >/dev/null 2>&1
+engine repair "$E2E/.planning" >/dev/null 2>&1
 is "repair recomputes total_phases from the roadmap"  "$(grep -c '  total_phases: 2' "$S")" 1
 is "repair recomputes completed_phases"               "$(grep -c '  completed_phases: 2' "$S")" 1
 is "repair recomputes total_plans from disk"          "$(grep -c '  total_plans: 2' "$S")" 1
 is "repair recomputes completed_plans from disk"      "$(grep -c '  completed_plans: 1' "$S")" 1
 is "repair recomputes percent"                        "$(grep -c '  percent: 100' "$S")" 1
-python3 "$ENGINE" repair --check "$E2E/.planning" >/dev/null 2>&1
+engine repair --check "$E2E/.planning" >/dev/null 2>&1
 is "the merged tree passes --check" "$?" 0
 
 # ── 6. the same merge WITHOUT the driver — repair still fixes it ─────────────
@@ -292,12 +296,12 @@ git -C "$E2E" reset -q --hard diverged
 git -C "$E2E" merge -q --no-ff phase-1 -m "Merge phase-1 (plain union)" >/dev/null 2>&1
 is "plain union DOES duplicate the checklist entry" "$(grep -c '^- \[.\] \*\*Phase 1:' "$R")" 2
 is "plain union DOES duplicate the frontmatter"     "$(grep -c '^status:' "$S")" 2
-python3 "$ENGINE" repair "$E2E/.planning" >/dev/null 2>&1
+engine repair "$E2E/.planning" >/dev/null 2>&1
 is "repair alone fixes the checklist"    "$(grep -c '^- \[.\] \*\*Phase 1:' "$R")" 1
 is "repair alone keeps both [x] marks"   "$(grep -c '^- \[x\] \*\*Phase' "$R")" 2
 is "repair alone collapses frontmatter"  "$(grep -c '^status:' "$S")" 1
 is "repair alone keeps history intact"   "$(grep -c '^Resume file:' "$S")" 2
-python3 "$ENGINE" repair --check "$E2E/.planning" >/dev/null 2>&1
+engine repair --check "$E2E/.planning" >/dev/null 2>&1
 is "the repaired tree passes --check" "$?" 0
 
 # ── 7. the real gsdt-finish path ──────────────────────────────────────────────
@@ -371,7 +375,7 @@ doc = doc.replace("### Phase 21: Branch self-service and admin queue\n",
 open(dst, "w").write(doc)
 INJECT
 cp "$FIX/phase-11-merge/STATE.md" "$COLL/.planning/"
-python3 "$ENGINE" repair "$COLL/.planning" >/dev/null 2>&1
+engine repair "$COLL/.planning" >/dev/null 2>&1
 is "a phase detail's numbered row survives"        "$(grep -c '^| 1\. Scan the QR code' "$COLL/.planning/ROADMAP.md")" 1
 is "the same number in another phase survives too" "$(grep -c '^| 1\. Open the queue' "$COLL/.planning/ROADMAP.md")" 1
 is "the real progress table is still deduped"      "$(grep -c '^| 11\. Catalogs' "$COLL/.planning/ROADMAP.md")" 1
@@ -402,7 +406,7 @@ status: executing
 
 Phase: 1
 EOF
-python3 "$ENGINE" repair "$FM/.planning" >/dev/null 2>&1
+engine repair "$FM/.planning" >/dev/null 2>&1
 is "a YAML list item survives"        "$(grep -c '^  - alpha' "$FM/.planning/STATE.md")" 1
 is "every list item survives"         "$(grep -c '^  - beta' "$FM/.planning/STATE.md")" 1
 is "a comment survives"               "$(grep -c '^# a comment' "$FM/.planning/STATE.md")" 1
@@ -679,19 +683,19 @@ G="$WORK/gsdform/.planning"; mkdir -p "$G/phases"
 printf '# Roadmap\n\n- [ ] **Phase 1: A**\n- [ ] **Phase 2: B**\n\n### Phase 1: A\n\n### Phase 2: B\n' > "$G/ROADMAP.md"
 gstate() { printf '# Project State\n\n## Current Position\n\nPhase: 1 of 2 (A)\n%s\n' "$1" > "$G/STATE.md"; }
 gstate 'Progress: [░░░░░░░░░░] 0%'
-out=$(python3 "$ENGINE" repair --check "$G")
+out=$(engine repair --check "$G")
 is "a new project's STATE.md (no frontmatter, bar without a count) → consistent" "$out" "✔ .planning/ is consistent"
 gstate 'Progress: [█████░░░░░] 50%'
-out=$(python3 "$ENGINE" repair --check "$G")
+out=$(engine repair --check "$G")
 is "…a stale percent is still caught" "$(grep -c 'progress bar recomputed to 0%' <<<"$out")" 1
 is "…and offered as an update" "$(grep -c '^• a repair would update: STATE.md' <<<"$out")" 1
-python3 "$ENGINE" repair "$G" >/dev/null
+engine repair "$G" >/dev/null
 is "…the repair keeps GSD's form (no count added)" "$(grep '^Progress:' "$G/STATE.md")" "Progress: [░░░░░░░░░░] 0%"
 gstate 'Progress: [█████░░░░░] 50% (1 of 2 phases complete)'
-python3 "$ENGINE" repair "$G" >/dev/null
+engine repair "$G" >/dev/null
 is "a line with a count keeps it, recomputed" "$(grep '^Progress:' "$G/STATE.md")" "Progress: [░░░░░░░░░░] 0% (0 of 2 phases complete)"
 printf '# Project State\n\ntext\n| stray | row |\ntext\n' > "$G/STATE.md"
-out=$(python3 "$ENGINE" repair --check "$G")
+out=$(engine repair --check "$G")
 is "a hand-edit advisory is still reported" "$(grep -c 'table row outside any table' <<<"$out")" 1
 is "…but offers no repair" "$(grep -c 'a repair would update' <<<"$out")" 0
 

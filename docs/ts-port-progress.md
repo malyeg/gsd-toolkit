@@ -31,7 +31,7 @@ clear "needs Node ≥ 24" message instead of a syntax error (see Notes).
 
 ## Next
 
-**P2** — planning: `lib/gsd_planning.py` (reconcile + repair) → `src/planning.ts`, `lib/roadmap-audit.pl` + `lib/roadmap-rows.pl` → `src/roadmap.ts`, then `gsdt-planning-repair` and `gsdt-planning-merge` through the launcher. Suites: `test-planning-reconcile`, `test-review-round2` (+ add P2 parity tests under `tests/ts/`).
+**P3** — guard + flow: `bin/gsdt-worktree-guard` (+ `lib/gsd_hook_payload.py`: parse the hook JSON natively, no NUL protocol) → `src/guard.ts`, `bin/gsdt-flow-next` → `src/commands/flow-next.ts`, both through the launcher. Suites: `test-worktree-guard`, `test-flow-next` (+ add P3 parity tests under `tests/ts/`). Mind: the guard runs as a Claude hook — exit 2 = block, fails open on a payload it cannot read, `--global` applies rule 0 only outside a set-up repo.
 
 ## Phases
 
@@ -39,7 +39,7 @@ clear "needs Node ≥ 24" message instead of a syntax error (see Notes).
 |---|---|---|---|
 | [x] | P0 Decisions + scaffold | Ask the plan's Open questions (one AskUserQuestion each, context in the question); record answers below. `package.json`, `tsconfig` (TS 7, `erasableSyntaxOnly`, Node ≥ 24), `src/`, launcher pattern, `tsc --noEmit` in CI, one trivial command (`gsdt-derive-port`) through the launcher. | `tests/test-commands.sh` (derive-port part) + all suites still green |
 | [x] | P1 Core libs | `lib/common.sh` → `src/common.ts`, `lib/provider.sh` → `src/provider.ts`, `gsdt-rules` | `test-providers` (rules/blocks parts), `test-commands` |
-| [ ] | P2 Planning | `gsd_planning.py`, `roadmap-*.pl`, `gsdt-planning-repair`, `gsdt-planning-merge` | `test-planning-reconcile`, `test-review-round2` |
+| [x] | P2 Planning | `gsd_planning.py`, `roadmap-*.pl`, `gsdt-planning-repair`, `gsdt-planning-merge` | `test-planning-reconcile`, `test-review-round2` |
 | [ ] | P3 Guard + flow | `gsdt-worktree-guard` (+ hook payload), `gsdt-flow-next` | `test-worktree-guard`, `test-flow-next` |
 | [ ] | P4 UI | `lib/ui.sh`, `gsdt-ui`, `ui-check.mjs` → TS | `test-ui`, `test-ui-browser` (if Playwright available) |
 | [ ] | P5 List + doctor | `gsdt-list`, `gsdt-doctor` (+ `context.sh`, hook paths) | `test-list`, `test-doctor` |
@@ -57,6 +57,7 @@ clear "needs Node ≥ 24" message instead of a syntax error (see Notes).
 <!-- one line per finished phase: P<n> · date · commit · suites passed · notes -->
 - P0 · 2026-11-10 · (this commit: `git log --grep "ts-port P0"`) · all 17 runnable suites green locally on macOS + shellcheck + `tsc --noEmit` (test-ui-browser skipped: no `GSD_PLAYWRIGHT_ROOT`; test-e2e ran with real gsd-core, 38 passed) · decisions recorded; scaffold + launcher; `gsdt-derive-port` ported. CI changes (setup-node 24, `npm ci` + `tsc`) not yet seen running on GitHub — check the first push's run.
 - P1 · 2026-11-10 · (this commit: `git log --grep "ts-port P1"`) · all 17 runnable bash suites green on macOS (test-e2e 38 with real gsd-core; test-ui-browser skipped) + new `node --test 'tests/ts/*.test.ts'` 31/31 + `tsc` · `src/common.ts`, `src/provider.ts` (every function), `src/version.ts`, `src/ui.ts` (`uiGates` only), `gsdt-rules` ported; old vs new `gsdt-rules` byte-identical in 25 cases (stdout, stderr, exit). No legacy read dropped.
+- P2 · 2026-11-10 · (this commit: `git log --grep "ts-port P2"`) · all 17 runnable bash suites green on macOS (test-planning-reconcile 149, test-review-round2 39, test-e2e 38 with real gsd-core; test-ui-browser skipped) + `node --test 'tests/ts/*.test.ts'` 127/127 + `tsc` + shellcheck · `src/planning.ts` (engine; CLI `launch.mjs planning reconcile|repair`, same argv/output as `gsd_planning.py`), `src/commands/planning-repair.ts`, `src/roadmap.ts` + `roadmap-audit`/`roadmap-rows` entries (not wired yet: doctor/start still call perl until P5/P6). `gsdt-planning-repair` + `gsdt-planning-merge` are launchers. `test-planning-reconcile` now drives the TS engine; `test-install-copy`'s fixture copies `src/`. No legacy read dropped.
 
 ## Decisions (from P0)
 
@@ -125,8 +126,31 @@ logic goes in exported functions next to `main` (e.g. `derivePort`).
   block; `gsd_planning_apply` glues its line onto a `.gitattributes` with no
   final newline; unknown provider → empty default command / skill root, rc 0.
   `shellQuote` matches bash 5, not bash 3.2's mangling of non-Latin-1.
-- `tests/test-install-copy.sh` prints `find: …/source/src: No such file` (its
-  fixture copies bin/lib/shims/skills, not `src/`); harmless, passes. P11
-  reworks that suite anyway.
+- `tests/test-install-copy.sh`'s fixture now copies `src/` too (a launcher in
+  the isolated runtime needs it). P11 reworks that suite anyway.
+- **P2 notes.** `bin/gsdt-planning-merge` is NOT the plain launcher shape: the
+  `${1:?}` checks, the `git merge-file --union` and the no-node fallback stay
+  in bash, then it runs `launch.mjs planning reconcile "$A" --path "$P"` — so
+  the union lands even if node dies, and it always exits 0 (git reads nonzero
+  as a conflict). There is no `src/commands/planning-merge.ts` on purpose.
+- `lib/gsd_planning.py` and `lib/roadmap-*.pl` stay as parity oracles (the
+  perl is still live for gsdt-doctor T021–T023 and gsdt-start's rows). When
+  P5/P6 switch those callers to `src/roadmap.ts`, keep `test-review-round2`'s
+  perl lines as the oracle or move them to `tests/ts/p2-roadmap.test.ts`.
+  `gsd_python` stays while any bash caller uses it.
+- `tests/fixtures/p2-old-bins/` holds the old bash `gsdt-planning-*` bins
+  (HEAD has the launchers now); `p2-planning.test.ts` diffs old vs new.
+- Python quirks kept in `src/planning.ts`: half-to-even `round` (`pyRound`),
+  code-point `len`, Unicode `\d\s\w\b`, `splitlines` + newline translation
+  (a rewritten CRLF file comes back LF). Not reproduced (stderr only, rc
+  matches): tracebacks → one `gsd_planning: …` line; argparse `--help` width
+  fixed at 80; argparse's "maybe you meant" text (matches Python 3.14+);
+  hash-order ties ("02" vs "2") use insertion order.
+- Perl quirks kept in `src/roadmap.ts`: bytes as latin1 (40-byte cut can split
+  a UTF-8 char), ASCII `\s` and `/i`, `.` matches `\r`, missing file rc 2,
+  usage/no-heading rc 255 (perl's "no heading" rc is errno, may be 25 on
+  Linux — the test accepts perl's rc only for that case). A non-numeric phase
+  arg (`1+`) gives no perl-style warning.
+- The node parity glob now takes ~2 minutes (p2-planning ~70 s).
 - `gsdt-derive-port` parity note: a base with leading zeros (`0300`) is now
   decimal; bash read it as octal. Nobody passes that; not tested.

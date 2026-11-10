@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#
+# gsdt-planning-merge — git merge driver for the union-merged GSD planning files
+# (.planning/ROADMAP.md, .planning/STATE.md). Union-then-reconcile: take the
+# both-sides result git's built-in `union` driver would have produced, then
+# collapse every line that is a single source of truth back to one value, so
+# the contradiction never lands on the branch in the first place.
+#
+# Registered per clone (merge drivers live in git config, which is not
+# versioned) by gsdt-bootstrap-repo, and re-asserted by gsdt-wt-finish on every
+# run — see gsd_register_merge_driver in lib/common.sh. Paired with
+# `.planning/... merge=gsd-planning` in the repo's .gitattributes.
+#
+# Usage (git calls it; you should not):
+#   gsdt-planning-merge %O %A %B %P
+#     %O  common-ancestor version
+#     %A  OUR version — the driver must leave the merged result here
+#     %B  THEIR (incoming) version
+#     %P  the file's path in the repo
+#
+# Always exits 0: union never conflicts, and a reconciliation that finds nothing
+# to do is a no-op. Counters are NOT recomputed here — a merge driver runs
+# mid-merge, when the rest of the tree is not yet consistent — so conflicting
+# counters resolve to the most-advanced candidate and `gsdt-planning-repair`
+# (run by gsdt-finish and the post-merge hook) recomputes them from ground truth.
+#
+# Degrades safely: with no python3 available it does the plain union and warns,
+# which is exactly today's behaviour, never worse.
+set -euo pipefail
+
+O="${1:?merge driver needs %O}"
+A="${2:?merge driver needs %A}"
+B="${3:?merge driver needs %B}"
+P="${4:-}"
+
+SELF="$0"
+while [ -L "$SELF" ]; do
+  tgt=$(readlink "$SELF")
+  case "$tgt" in /*) SELF="$tgt" ;; *) SELF="$(dirname "$SELF")/$tgt" ;; esac
+done
+GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
+# shellcheck source=../lib/common.sh
+. "$GSD_PKG/lib/common.sh"
+
+# Union first: same result git's built-in union driver produces, written to %A.
+git merge-file -q --union "$A" "$O" "$B" || true
+
+if ! PY=$(gsd_python); then
+  echo "⚠ gsdt-planning-merge: no python 3.7+ (tried python3, python) — left the plain union result in ${P:-$A}." >&2
+  echo "  It may contain both sides of single-value lines; run gsdt-planning-repair after the merge." >&2
+  exit 0
+fi
+
+"$PY" "$GSD_PKG/lib/gsd_planning.py" reconcile "$A" ${P:+--path "$P"} \
+  || echo "⚠ gsdt-planning-merge: reconcile failed on ${P:-$A} — plain union result kept; run gsdt-planning-repair." >&2
+
+exit 0
