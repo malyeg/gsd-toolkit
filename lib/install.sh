@@ -175,7 +175,7 @@ if [ -f "$COPY_DIR/.gsd-owned-commands" ]; then
     if [ -L "$BIN_DIR/$old" ] && [ "$(readlink "$BIN_DIR/$old")" = "$COPY_DIR/bin/$old" ]; then rm -f "$BIN_DIR/$old"; fi
   done < "$COPY_DIR/.gsd-owned-commands"
 fi
-for component in bin lib shims skills; do copy_tree "$REPO/$component" "$COPY_DIR/$component"; done
+for component in bin lib shims skills src; do copy_tree "$REPO/$component" "$COPY_DIR/$component"; done
 # A skill an older release shipped (renamed gsd-flow → gsdw-flow → gsdt-flow) would
 # stay in the runtime's skills/, which is only ever ours: doctor would
 # compare it against the installed ones. Remove it.

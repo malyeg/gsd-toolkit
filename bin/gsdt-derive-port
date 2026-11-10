@@ -1,22 +1,15 @@
 #!/usr/bin/env bash
 #
 # gsdt-derive-port <base> — print <base> plus this worktree's phase number, so
-# a per-app `dev` script can pick a per-worktree port automatically (via the
-# per-repo shim scripts/gsdt-derive-port.sh):
+# a per-app `dev` script can pick a per-worktree port (phase-8 -> base+8; any
+# other branch, or outside git -> the bare base).
 #
-#   "dev": "PORT=$(bash ../../scripts/gsdt-derive-port.sh 3000) next dev"
-#
-# GSD names worktrees `phase-<N>-<slug>` and N is unique across concurrent
-# worktrees, so N is a collision-free offset (phase-8 -> base+8). Non-phase
-# branches (a base branch, ad-hoc) and non-git contexts (a CI build tarball)
-# resolve to N=0 -> the bare base, so nothing outside a worktree changes.
-# Fractional/insert phases (phase-11.1) use the integer part.
-set -euo pipefail
-
-base="${1:?usage: gsdt-derive-port <base-port>}"
-case "$base" in ''|*[!0-9]*) echo "gsdt-derive-port: base must be an integer: $base" >&2; exit 1 ;; esac
-
-branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
-n="$(printf '%s' "$branch" | sed -n 's/^phase-\([0-9]\{1,\}\).*/\1/p')"
-# 10#: GSD pads inserted phases (phase-08.1-*); a bare 08 is invalid octal.
-echo "$((base + 10#${n:-0}))"
+# Launcher: the command is src/commands/derive-port.ts (TypeScript, run by
+# Node >= 24 through src/launch.mjs). See docs/ts-port-progress.md.
+SELF="$0"
+while [ -L "$SELF" ]; do
+  tgt=$(readlink "$SELF")
+  case "$tgt" in /*) SELF="$tgt" ;; *) SELF="$(dirname "$SELF")/$tgt" ;; esac
+done
+command -v node >/dev/null 2>&1 || { echo "gsdt-derive-port: needs Node.js >= 24 (node not found on PATH)" >&2; exit 1; }
+exec node "$(cd "$(dirname "$SELF")/.." && pwd)/src/launch.mjs" derive-port "$@"

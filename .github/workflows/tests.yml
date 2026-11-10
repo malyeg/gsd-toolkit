@@ -20,8 +20,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0   # tags: test-update.sh installs the real v0.7.0 (the move to gsd-toolkit)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24   # ported commands run src/*.ts by type stripping (TS port)
+      - name: TypeScript (tsc --noEmit)
+        run: npm ci --no-audit --no-fund && npx tsc --noEmit
       - name: versions
         run: |
+          node --version
           bash --version | head -1
           git --version
           python3 --version
@@ -33,6 +39,7 @@ jobs:
           python3 -c "import ast, pathlib; ast.parse(pathlib.Path('lib/gsd_planning.py').read_text())"
           python3 -c "import ast, pathlib; ast.parse(pathlib.Path('lib/gsd_hook_payload.py').read_text())"
           node --check lib/ui-check.mjs
+          node --check src/launch.mjs
       - name: shellcheck
         # Ubuntu only: shellcheck is static analysis, so its verdict does not
         # differ per platform, and the macOS runner has no shellcheck (a brew

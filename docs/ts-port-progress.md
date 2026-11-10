@@ -25,17 +25,19 @@ The bash version keeps working the whole time. When a command is ported, its
 (`node "$GSD_PKG/src/…ts"`, type stripping, no build). Unported commands stay
 bash. So **every bash suite runs at every step**, and each phase proves
 parity for what it ported without breaking the rest. P11 flips the launchers
-to `package.json` `bin` + `dist/`. (P0 may refine this; if so, say why here.)
+to `package.json` `bin` + `dist/`. P0 refinement: the launcher runs
+`node src/launch.mjs <name>`, not the `.ts` directly, so an old Node gets a
+clear "needs Node ≥ 24" message instead of a syntax error (see Notes).
 
 ## Next
 
-**P0** — decisions + scaffold.
+**P1** — core libs: `lib/common.sh` → `src/common.ts`, `lib/provider.sh` → `src/provider.ts`, then `gsdt-rules` through the launcher (`gsdt-rules` output must stay byte-identical).
 
 ## Phases
 
 | | Phase | Ports | Suites that must pass |
 |---|---|---|---|
-| [ ] | P0 Decisions + scaffold | Ask the plan's Open questions (one AskUserQuestion each, context in the question); record answers below. `package.json`, `tsconfig` (TS 7, `erasableSyntaxOnly`, Node ≥ 24), `src/`, launcher pattern, `tsc --noEmit` in CI, one trivial command (`gsdt-derive-port`) through the launcher. | `tests/test-commands.sh` (derive-port part) + all suites still green |
+| [x] | P0 Decisions + scaffold | Ask the plan's Open questions (one AskUserQuestion each, context in the question); record answers below. `package.json`, `tsconfig` (TS 7, `erasableSyntaxOnly`, Node ≥ 24), `src/`, launcher pattern, `tsc --noEmit` in CI, one trivial command (`gsdt-derive-port`) through the launcher. | `tests/test-commands.sh` (derive-port part) + all suites still green |
 | [ ] | P1 Core libs | `lib/common.sh` → `src/common.ts`, `lib/provider.sh` → `src/provider.ts`, `gsdt-rules` | `test-providers` (rules/blocks parts), `test-commands` |
 | [ ] | P2 Planning | `gsd_planning.py`, `roadmap-*.pl`, `gsdt-planning-repair`, `gsdt-planning-merge` | `test-planning-reconcile`, `test-review-round2` |
 | [ ] | P3 Guard + flow | `gsdt-worktree-guard` (+ hook payload), `gsdt-flow-next` | `test-worktree-guard`, `test-flow-next` |
@@ -53,11 +55,47 @@ to `package.json` `bin` + `dist/`. (P0 may refine this; if so, say why here.)
 ## Log
 
 <!-- one line per finished phase: P<n> · date · commit · suites passed · notes -->
+- P0 · 2026-11-10 · (this commit: `git log --grep "ts-port P0"`) · all 17 runnable suites green locally on macOS + shellcheck + `tsc --noEmit` (test-ui-browser skipped: no `GSD_PLAYWRIGHT_ROOT`; test-e2e ran with real gsd-core, 38 passed) · decisions recorded; scaffold + launcher; `gsdt-derive-port` ported. CI changes (setup-node 24, `npm ci` + `tsc`) not yet seen running on GitHub — check the first push's run.
 
 ## Decisions (from P0)
 
-<!-- npm name · legacy reads · bash maintenance line · gsdt-setup vs gsdt-init -->
+Asked 2026-11-10; all four took the plan's proposal.
+
+- **npm name:** `gsd-toolkit` (unscoped). Reserve it before the first release.
+- **Legacy reads:** 1.0.0 needs a migrated repo (doctor T090 clean on 0.10.x
+  first). Drop the **machine-level** legacy (old install paths
+  `share/gsd-worktrees`, `gsdw-*` skills, `gsd-worktrees` markers/tarball
+  names, pre-0.10 `gsd-*` command names). Keep the **config** legacy
+  (`provider`, `agent_command`, `--agent`, `GSD_AGENT`) — it is a CLAUDE.md
+  invariant. `gsdt-migrate` is ported as-is (backs T090). When a ported
+  command drops a legacy read, its bash test for that read goes too — say so
+  in the log line.
+- **Bash line:** freeze at the last 0.10.x release; after 1.0.0 only
+  data-loss fixes. That last release points users to npm.
+- **Machine setup:** a separate `gsdt-setup [--agent …]` (skills + user
+  hooks, moves 0.10.x users off `~/.local/bin`). No npm postinstall.
+  `gsdt-init` stays repo-only. That makes 22 commands in `bin`.
 
 ## Notes for the next session
 
-<!-- gotchas, half-done work, anything not obvious from the code -->
+**Launcher pattern (P0, keep it):** a ported `bin/gsdt-X` is a ~15-line bash
+file: short help comment, the usual symlink walk, `command -v node` check,
+then `exec node "$PKG/src/launch.mjs" X "$@"`. `src/launch.mjs` checks Node
+≥ 24 and imports `src/commands/X.ts`, which must export
+`main(argv: string[]): number | Promise<number>` (no work at import time; it
+returns the exit code — so a later `node --test` can call it directly). Pure
+logic goes in exported functions next to `main` (e.g. `derivePort`).
+
+- Imports between `.ts` files use the `.ts` extension
+  (`allowImportingTsExtensions` + `rewriteRelativeImportExtensions`, so P11's
+  `tsc` emits `.js` paths). Only erasable syntax (`erasableSyntaxOnly`).
+- Run git/providers with `execFileSync`/`execFile` (argv array, no shell).
+- `npm install` once in a fresh checkout (dev deps: `typescript` 7,
+  `@types/node`), then `npx tsc --noEmit`. CI does `npm ci` + `tsc` and pins
+  Node 24 with `actions/setup-node` before all suites.
+- `lib/install.sh` now copies `src/` into the release runtime too, so a
+  release made from this branch would still run its launchers.
+- `package.json` is `"private": true` on purpose (rule 5: no npm publish).
+  P11 removes that, adds `bin`, `files`, and the build.
+- `gsdt-derive-port` parity note: a base with leading zeros (`0300`) is now
+  decimal; bash read it as octal. Nobody passes that; not tested.

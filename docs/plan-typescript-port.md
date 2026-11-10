@@ -218,6 +218,8 @@ is checking and trying it, not writing it.
 
 ## Open questions (decide at start)
 
+Decided 2026-11-10 (P0): all four as proposed — see `docs/ts-port-progress.md` → Decisions.
+
 - npm package name: `gsd-toolkit` (free on 2026-11-10) or a scope, e.g.
   `@malyeg/gsd-toolkit`. Proposal: `gsd-toolkit`, reserve it early.
 - Drop the machine-level legacy reads in 1.0.0 (proposal above), or carry
