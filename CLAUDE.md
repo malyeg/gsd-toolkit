@@ -41,6 +41,7 @@ tests/test-doctor.sh                  # doctor checks T005–T008, T015–T019, 
 tests/test-codex-wait.sh              # gsdt-codex-wait (fake clock via GSD_CODEX_WAIT_CLOCK, stub Codex, CODEX_HOME), gsd_reviews_problem
 tests/test-batch.sh                   # gsdt-batch-report against generated transcripts (boundaries, dedupe by message/tool id, missing meta, nested helpers, cache split, --baseline, never echoes text); gsdt-batch --print per provider, its batch-* worktree (made, -2, --name reuse, --file paths, refused without committed .planning/), the guard/gsdt-list/doctor on it; gsdt-batch skill + install mark; enriched lines = one item each (gsd-core's parser, skips without it)
 tests/test-migrate.sh                 # gsdt-migrate: a 0.9.0 repo (aged fixture + the real v0.9.0 bootstrap) → dry run, refusals, --apply, --check, idempotent, open worktree merge, edited shim, doctor T090 + --fix
+node --test 'tests/ts/*.test.ts'      # TS port parity (Node >= 24): src/common.ts + src/provider.ts + gsdt-rules against lib/*.sh, same inputs side by side (`node --test tests/ts/` fails: Node 24 reads a directory as a module)
 tests/test-e2e.sh                     # END-TO-END: fake project + real gsd-core `gsd_run` (skips without it; `GSD_TEST_REQUIRE_GSD=1` makes the skip a failure), ~15s.
                                       # Run it after ANY change to start/finish/guard/flow/planning code —
                                       # it caught 4 bugs the unit suites missed (fix-plan R15–R18).

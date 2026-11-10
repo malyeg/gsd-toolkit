@@ -31,14 +31,14 @@ clear "needs Node ≥ 24" message instead of a syntax error (see Notes).
 
 ## Next
 
-**P1** — core libs: `lib/common.sh` → `src/common.ts`, `lib/provider.sh` → `src/provider.ts`, then `gsdt-rules` through the launcher (`gsdt-rules` output must stay byte-identical).
+**P2** — planning: `lib/gsd_planning.py` (reconcile + repair) → `src/planning.ts`, `lib/roadmap-audit.pl` + `lib/roadmap-rows.pl` → `src/roadmap.ts`, then `gsdt-planning-repair` and `gsdt-planning-merge` through the launcher. Suites: `test-planning-reconcile`, `test-review-round2` (+ add P2 parity tests under `tests/ts/`).
 
 ## Phases
 
 | | Phase | Ports | Suites that must pass |
 |---|---|---|---|
 | [x] | P0 Decisions + scaffold | Ask the plan's Open questions (one AskUserQuestion each, context in the question); record answers below. `package.json`, `tsconfig` (TS 7, `erasableSyntaxOnly`, Node ≥ 24), `src/`, launcher pattern, `tsc --noEmit` in CI, one trivial command (`gsdt-derive-port`) through the launcher. | `tests/test-commands.sh` (derive-port part) + all suites still green |
-| [ ] | P1 Core libs | `lib/common.sh` → `src/common.ts`, `lib/provider.sh` → `src/provider.ts`, `gsdt-rules` | `test-providers` (rules/blocks parts), `test-commands` |
+| [x] | P1 Core libs | `lib/common.sh` → `src/common.ts`, `lib/provider.sh` → `src/provider.ts`, `gsdt-rules` | `test-providers` (rules/blocks parts), `test-commands` |
 | [ ] | P2 Planning | `gsd_planning.py`, `roadmap-*.pl`, `gsdt-planning-repair`, `gsdt-planning-merge` | `test-planning-reconcile`, `test-review-round2` |
 | [ ] | P3 Guard + flow | `gsdt-worktree-guard` (+ hook payload), `gsdt-flow-next` | `test-worktree-guard`, `test-flow-next` |
 | [ ] | P4 UI | `lib/ui.sh`, `gsdt-ui`, `ui-check.mjs` → TS | `test-ui`, `test-ui-browser` (if Playwright available) |
@@ -56,6 +56,7 @@ clear "needs Node ≥ 24" message instead of a syntax error (see Notes).
 
 <!-- one line per finished phase: P<n> · date · commit · suites passed · notes -->
 - P0 · 2026-11-10 · (this commit: `git log --grep "ts-port P0"`) · all 17 runnable suites green locally on macOS + shellcheck + `tsc --noEmit` (test-ui-browser skipped: no `GSD_PLAYWRIGHT_ROOT`; test-e2e ran with real gsd-core, 38 passed) · decisions recorded; scaffold + launcher; `gsdt-derive-port` ported. CI changes (setup-node 24, `npm ci` + `tsc`) not yet seen running on GitHub — check the first push's run.
+- P1 · 2026-11-10 · (this commit: `git log --grep "ts-port P1"`) · all 17 runnable bash suites green on macOS (test-e2e 38 with real gsd-core; test-ui-browser skipped) + new `node --test 'tests/ts/*.test.ts'` 31/31 + `tsc` · `src/common.ts`, `src/provider.ts` (every function), `src/version.ts`, `src/ui.ts` (`uiGates` only), `gsdt-rules` ported; old vs new `gsdt-rules` byte-identical in 25 cases (stdout, stderr, exit). No legacy read dropped.
 
 ## Decisions (from P0)
 
@@ -97,5 +98,35 @@ logic goes in exported functions next to `main` (e.g. `derivePort`).
   release made from this branch would still run its launchers.
 - `package.json` is `"private": true` on purpose (rule 5: no npm publish).
   P11 removes that, adds `bin`, `files`, and the build.
+- **P1 conventions** (top of `src/common.ts`): camelCase, no `gsd_` prefix,
+  bash name in each doc comment (`gsd_main` → `findMain`). Bash globals →
+  returned objects (`phaseDir` → `{pd,p,n}|null`, `planningStatus`,
+  `gateTree`). Resolvers return `Result<T>` (`{ok:false,code,message}`, caller
+  prints); validators `Failure|null`; `reviewsProblem`/`validationProblem`
+  return the reason or null. A bash `exit` → throw `GsdExit(code,msg)`.
+  Printing functions return their lines; `acquireLock` (sync, same
+  `.git/gsd-cmd.lock/pid` format, interlocks with bash) prints itself.
+- **Rules text lives twice until P5/P8:** `src/rules-text.ts` (TS
+  `gsdt-rules`) and `lib/provider.sh` (bash bootstrap + doctor T016). Edit
+  both; the parity suite fails if they drift.
+- **TODOs left in TS:** `finishGates` calls bash `gsd_ui_finish_gate` (P4);
+  `staleHooks` runs `gsd_hook_paths.py` (P5); `providerHookState` still uses
+  `jq` (P5 may drop); `compactSettings` runs `gsd_claude_env.py` (P8); the
+  baseref python (`src/baseref-py.ts`) runs verbatim (P8).
+- **Parity tests:** `node --test 'tests/ts/*.test.ts'` (not `tests/ts/` —
+  Node 24 reads a dir as a module). `tests/ts/helpers.ts` clears `GSD_*`,
+  `CLAUDE_*`, `CODEX_*` and runs bash vs TS side by side; ~90 s. Add one file
+  per phase.
+- `gsdt-rules --hook` must never fail: `bin/gsdt-rules` exits 0 silently
+  without node, and `src/launch.mjs` does too on old Node / import error
+  (only for `rules … --hook`).
+- Bash quirks kept for parity (fix later, both sides, if wanted):
+  `gsd_replace_owned_block` on a missing file makes an empty 0600 file with no
+  block; `gsd_planning_apply` glues its line onto a `.gitattributes` with no
+  final newline; unknown provider → empty default command / skill root, rc 0.
+  `shellQuote` matches bash 5, not bash 3.2's mangling of non-Latin-1.
+- `tests/test-install-copy.sh` prints `find: …/source/src: No such file` (its
+  fixture copies bin/lib/shims/skills, not `src/`); harmless, passes. P11
+  reworks that suite anyway.
 - `gsdt-derive-port` parity note: a base with leading zeros (`0300`) is now
   decimal; bash read it as octal. Nobody passes that; not tested.

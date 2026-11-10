@@ -25,6 +25,8 @@ jobs:
           node-version: 24   # ported commands run src/*.ts by type stripping (TS port)
       - name: TypeScript (tsc --noEmit)
         run: npm ci --no-audit --no-fund && npx tsc --noEmit
+      - name: TypeScript parity suites (node --test)
+        run: node --test 'tests/ts/*.test.ts'
       - name: versions
         run: |
           node --version
