@@ -41,6 +41,7 @@ import {
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { BASEREF_PY } from './baseref-py.ts';
+import { uiFinishGate } from './ui.ts'; // import cycle: ui.ts uses common.ts too; both only call at run time
 
 /** A bash `exit N` inside a library function. */
 export class GsdExit extends Error {
@@ -503,14 +504,9 @@ export function finishGates(mainCheckout: string, branch: string, worktree: stri
     stderr += `⚠ could not check out '${branch}' to check its files — the finish gates see only what is on disk\n`;
   }
   let ok = false;
-  // TODO(P4): gsd_ui_finish_gate lives in lib/ui.sh until the UI port; call it from bash.
-  const ui = run(
-    'bash',
-    ['-c', '. "$GSD_PKG/lib/common.sh"; . "$GSD_PKG/lib/ui.sh"; gsd_ui_finish_gate "$@"', '_', mainCheckout, branch, g.wt],
-    { env: { ...process.env, GSD_PKG: gsdPkg() } },
-  );
+  const ui = uiFinishGate(mainCheckout, branch, g.wt);
   stderr += ui.stderr;
-  if (ui.status === 0) {
+  if (ui.ok) {
     const f = flowFinishGate(mainCheckout, branch, g.wt);
     stderr += f.stderr;
     ok = f.ok;

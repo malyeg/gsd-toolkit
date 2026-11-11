@@ -40,7 +40,6 @@ jobs:
           done
           python3 -c "import ast, pathlib; ast.parse(pathlib.Path('lib/gsd_planning.py').read_text())"
           python3 -c "import ast, pathlib; ast.parse(pathlib.Path('lib/gsd_hook_payload.py').read_text())"
-          node --check lib/ui-check.mjs
           node --check src/launch.mjs
       - name: shellcheck
         # Ubuntu only: shellcheck is static analysis, so its verdict does not

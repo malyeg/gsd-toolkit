@@ -152,7 +152,7 @@ has "status: screenshots" "screenshots skip" "$OUT"
 (cd "$R" && gsdt-ui shots 5 --skip) > "$OUT" 2>&1; is "--skip needs a reason" "$?" 1
 
 section "gsdt-ui check — with a stub runner"
-# The stub stands in for lib/ui-check.mjs: it reads the job file and writes
+# The stub stands in for src/ui-check.ts: it reads the job file and writes
 # what a run writes (test-ui-browser.sh runs the real one in a browser).
 cat > "$STUB/runner" <<'EOF'
 #!/bin/sh

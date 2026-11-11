@@ -41,7 +41,7 @@ mkdir -p "$COPY/skills/gsd-flow"; printf 'old\n' > "$COPY/skills/gsd-flow/SKILL.
 install_copy
 [ ! -e "$COPY/skills/gsd-flow" ]
 # the page checker travels with the runtime: the Node script and the pinned axe-core
-[ -f "$COPY/lib/ui-check.mjs" ]
+[ -f "$COPY/src/commands/ui-check.ts" ]
 [ -f "$COPY/lib/vendor/axe-core/axe.min.js" ]
 [ -f "$COPY/lib/vendor/axe-core/LICENSE" ]
 [ -f "$COPY/lib/vendor/axe-core/VERSION" ]

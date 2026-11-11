@@ -13,14 +13,13 @@
 //    (sed does not substitute), which then fails the "invalid phase number" check;
 //  - globs ($pd/$P-[0-9]*-PLAN.md, $P-*UAT.md, $P-*) list in BYTE order here; bash
 //    sorts by the locale's collation (same order for the usual 07-01-PLAN.md names).
-// TODO(P4): gsd_ui_* are called through bash (src/bash-bridge.ts).
 // TODO(P9): gsd_tracker_which / gsd_ticket_extract are called through bash.
 import { readdirSync, readFileSync, realpathSync } from 'node:fs';
 import { bashLib } from '../bash-bridge.ts';
 import { chomp, confGet, findMain, git, GsdExit, isDir, isFile, migrateRefuse, reviewsProblem, validationProblem, workflowFlag } from '../common.ts';
 import { guardArgv } from '../guard.ts';
 import { GSD_GEMINI_GONE, providerGone, providerKnown, providerReviewFlag } from '../provider.ts';
-import { uiGates } from '../ui.ts';
+import { uiCheckState, uiDesignState, uiExempt, uiGate, uiGates, uiLayoutState } from '../ui.ts';
 
 export const HELP = `
 gsdt-flow-next — which phase-flow step comes next, read from the phase folder.
@@ -336,11 +335,11 @@ function flowNextRun(argv: string[], env: NodeJS.ProcessEnv, cwd: string, so: st
   // 3b design system + layout — decided before the UI-SPEC, so the spec (and
   // ui-review, which checks code against it) has a layout to hold the screens to.
   if (UI === 'yes' && GATES !== 'off' && !has('UI-SPEC.md')) {
-    if (lib('gsd_ui_design_state', [REPO]).out !== 'ok') { // TODO(P4)
+    if (uiDesignState(REPO) !== 'ok') {
       emit('design-system', 'gsdt-ui design', '', 'agree the design system with the user and fill .planning/design/DESIGN.md (references, tokens, components, page templates), then delete its stub line. Start from real systems: offer the user the 3 closest from styles.refero.design, and chosen fonts, not the default', 'one design system for every phase with screens; it is filled once, usually by the first such phase. ui_gates = off in .gsd.conf turns the UI gates off');
     }
     const lrel = `${relPd}/${P}-LAYOUT.md`;
-    switch (lib('gsd_ui_layout_state', [REPO, pd, P]).out) { // TODO(P4)
+    switch (uiLayoutState(REPO, pd, P)) {
       case 'missing':
         emit('layout', `gsdt-ui layout ${N}`, "/gsd-sketch <this phase's main screen>", `the user picks the winning sketch variant; then write its folder in sketch:, the pages (URL paths) in pages:, and each page's main button in main_button: of ${lrel}`, 'sketch: skip <reason> only when the user agrees (e.g. a small change on an existing page)');
         break;
@@ -456,14 +455,10 @@ function flowNextRun(argv: string[], env: NodeJS.ProcessEnv, cwd: string, so: st
     }
   }
   // 11 the rendered pages: check → look → approve, then ui-review. gsd_ui_gate
-  // (lib/ui.sh) names the first open one; the guard and gsdt-finish ask it too.
-  // TODO(P4): gsd_ui_exempt / gsd_ui_gate / gsd_ui_check_state
+  // (src/ui.ts uiGate) names the first open one; the guard and gsdt-finish ask it too.
   if (UI === 'yes' && GATES !== 'off') {
-    const ex = bashLib('gsd_ui_exempt', [REPO, pd, P], env); // not in `$( )`: its stdout is ours
-    so.push(ex.stdout);
-    se.push(ex.stderr);
-    if (ex.rc !== 0) {
-      const gate = lib('gsd_ui_gate', [REPO, pd, P]).out;
+    if (!uiExempt(REPO, pd, P)) {
+      const gate = uiGate(REPO, pd, P);
       const gstep = gate.includes('|') ? gate.slice(0, gate.indexOf('|')) : gate;
       let gwhy = gate.slice(gate.lastIndexOf('|') + 1);
       let gstate = gate.includes('|') ? gate.slice(gate.indexOf('|') + 1) : gate;
@@ -493,7 +488,7 @@ function flowNextRun(argv: string[], env: NodeJS.ProcessEnv, cwd: string, so: st
   }
   if (UI === 'yes' && !has('UI-REVIEW.md')) {
     let rvNote = 'phase has screens';
-    if (GATES !== 'off' && lib('gsd_ui_check_state', [REPO, pd, P, 'nostale']).out === 'passed') {
+    if (GATES !== 'off' && uiCheckState(REPO, pd, P, 'nostale') === 'passed') {
       rvNote = `phase has screens: hold the pictures in ${P}-SHOTS/ and ${P}-UI-LOOK.md against the chosen sketch and the layout rules in ${P}-LAYOUT.md / DESIGN.md, not only the code`;
     }
     emit('ui-review', `/gsd-ui-review ${N}`, '', '', rvNote);

@@ -8,9 +8,8 @@
 // `.command_args // .tool_input.args`, `.cwd`.
 import { readFileSync, readdirSync, realpathSync } from 'node:fs';
 import path from 'node:path';
-import { bashLib } from './bash-bridge.ts';
 import { chomp, confGet, findMain, git, installCmd, isDir, isFile, reviewsProblem, validationProblem } from './common.ts';
-import { uiGates } from './ui.ts';
+import { uiDesignState, uiExempt, uiGate, uiGates, uiLayoutState, uiStepCmd } from './ui.ts';
 
 export type GuardResult = { rc: number; stdout: string; stderr: string };
 export type GuardOpts = {
@@ -328,26 +327,20 @@ export function guard(opts: GuardOpts): GuardResult {
   };
   const uiBlock = (what: string, fix: string): GuardResult =>
     block(`BLOCKED (ui_gates = strict): /${cmd} ${N} needs ${what}.`, `Run: ${fix}   (or GSD_SKIP_GUARD=1 if the user asked to skip it)`);
-  // TODO(P4): lib/ui.sh is called through bash until the UI port.
-  const lib = (fn: string, a: string[]): { rc: number; out: string } => {
-    const r = bashLib(fn, a, env);
-    out.push(r.stderr); // `$( )` lets the function's stderr through
-    return { rc: r.rc, out: chomp(r.stdout) };
-  };
   if (UI_STRICT) {
     if (cmd === 'gsd-ui-phase') {
-      if (lib('gsd_ui_design_state', [dir]).out !== 'ok') return uiBlock('a filled .planning/design/DESIGN.md (the design system)', 'gsdt-ui design, then fill it with the user');
-      const ls = pdir !== '' ? lib('gsd_ui_layout_state', [dir, pdir, P]).out : '';
+      if (uiDesignState(dir) !== 'ok') return uiBlock('a filled .planning/design/DESIGN.md (the design system)', 'gsdt-ui design, then fill it with the user');
+      const ls = pdir !== '' ? uiLayoutState(dir, pdir, P) : '';
       if (ls !== 'ok' && ls !== 'skip') return uiBlock(`${P}-LAYOUT.md with a chosen sketch and pages`, `gsdt-ui layout ${N}, /gsd-sketch, then fill sketch: and pages:`);
     } else if (cmd === 'gsd-ui-review') {
       // check → look → approval, each for the pages as they are now. A phase
       // whose UI review is already on the base branch predates these steps.
       if (pdir === '') return uiBlock('a phase folder with the UI check of the built pages', `gsdt-ui check ${N}`);
-      if (lib('gsd_ui_exempt', [dir, pdir, P]).rc !== 0) {
-        const gate = lib('gsd_ui_gate', [dir, pdir, P]).out;
+      if (!uiExempt(dir, pdir, P)) {
+        const gate = uiGate(dir, pdir, P);
         if (gate !== '') {
           const step = gate.slice(0, gate.includes('|') ? gate.indexOf('|') : undefined);
-          return uiBlock(`the UI steps before it — ${gate.slice(gate.lastIndexOf('|') + 1)}`, lib('gsd_ui_step_cmd', [step, N]).out);
+          return uiBlock(`the UI steps before it — ${gate.slice(gate.lastIndexOf('|') + 1)}`, uiStepCmd(step, N));
         }
       }
     }

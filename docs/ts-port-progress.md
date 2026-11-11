@@ -31,7 +31,7 @@ clear "needs Node ≥ 24" message instead of a syntax error (see Notes).
 
 ## Next
 
-**P4** — UI: `lib/ui.sh` → `src/ui.ts` (all of it), `bin/gsdt-ui` → `src/commands/ui.ts`, `lib/ui-check.mjs` → TS, through the launcher. Then drop the `bashLib` UI calls (`src/bash-bridge.ts`, `TODO(P4)` in `src/guard.ts`, `src/commands/flow-next.ts`, and `finishGates` in `src/common.ts`). Suites: `test-ui`, `test-ui-browser` (if Playwright available) (+ P4 parity tests under `tests/ts/`).
+**P5** — List + doctor: `bin/gsdt-list` → `src/commands/list.ts`, `bin/gsdt-doctor` → `src/commands/doctor.ts` (+ `lib/context.sh`, `lib/gsd_hook_paths.py` → `staleHooks` in TS, `providerHookState` without `jq` if easy), through the launcher. Doctor's T021–T023 switch from `roadmap-audit.pl` to `src/roadmap.ts` (keep the perl as the parity oracle). Doctor stays read-only; `--fix` dispatches by name. Also: thread the guard's `opts.env` into rule 5's UI helpers (see P4 notes). Suites: `test-list`, `test-doctor` (+ P5 parity tests under `tests/ts/`).
 
 ## Phases
 
@@ -41,7 +41,7 @@ clear "needs Node ≥ 24" message instead of a syntax error (see Notes).
 | [x] | P1 Core libs | `lib/common.sh` → `src/common.ts`, `lib/provider.sh` → `src/provider.ts`, `gsdt-rules` | `test-providers` (rules/blocks parts), `test-commands` |
 | [x] | P2 Planning | `gsd_planning.py`, `roadmap-*.pl`, `gsdt-planning-repair`, `gsdt-planning-merge` | `test-planning-reconcile`, `test-review-round2` |
 | [x] | P3 Guard + flow | `gsdt-worktree-guard` (+ hook payload), `gsdt-flow-next` | `test-worktree-guard`, `test-flow-next` |
-| [ ] | P4 UI | `lib/ui.sh`, `gsdt-ui`, `ui-check.mjs` → TS | `test-ui`, `test-ui-browser` (if Playwright available) |
+| [x] | P4 UI | `lib/ui.sh`, `gsdt-ui`, `ui-check.mjs` → TS | `test-ui`, `test-ui-browser` (if Playwright available) |
 | [ ] | P5 List + doctor | `gsdt-list`, `gsdt-doctor` (+ `context.sh`, hook paths) | `test-list`, `test-doctor` |
 | [ ] | P6 Start | `gsdt-start`, `gsdt-wt-new` | `test-commands`, `test-e2e` |
 | [ ] | P7 Finish | `gsdt-finish`, `gsdt-wt-finish` | `test-commands`, `test-review-fixes`, `test-e2e` |
@@ -59,6 +59,7 @@ clear "needs Node ≥ 24" message instead of a syntax error (see Notes).
 - P1 · 2026-11-10 · (this commit: `git log --grep "ts-port P1"`) · all 17 runnable bash suites green on macOS (test-e2e 38 with real gsd-core; test-ui-browser skipped) + new `node --test 'tests/ts/*.test.ts'` 31/31 + `tsc` · `src/common.ts`, `src/provider.ts` (every function), `src/version.ts`, `src/ui.ts` (`uiGates` only), `gsdt-rules` ported; old vs new `gsdt-rules` byte-identical in 25 cases (stdout, stderr, exit). No legacy read dropped.
 - P2 · 2026-11-10 · (this commit: `git log --grep "ts-port P2"`) · all 17 runnable bash suites green on macOS (test-planning-reconcile 149, test-review-round2 39, test-e2e 38 with real gsd-core; test-ui-browser skipped) + `node --test 'tests/ts/*.test.ts'` 127/127 + `tsc` + shellcheck · `src/planning.ts` (engine; CLI `launch.mjs planning reconcile|repair`, same argv/output as `gsd_planning.py`), `src/commands/planning-repair.ts`, `src/roadmap.ts` + `roadmap-audit`/`roadmap-rows` entries (not wired yet: doctor/start still call perl until P5/P6). `gsdt-planning-repair` + `gsdt-planning-merge` are launchers. `test-planning-reconcile` now drives the TS engine; `test-install-copy`'s fixture copies `src/`. No legacy read dropped.
 - P3 · 2026-11-11 · (this commit: `git log --grep "ts-port P3"`) · all 17 runnable bash suites green on macOS (test-worktree-guard 123, test-flow-next 116, test-review-fixes 27, test-e2e 38 with real gsd-core; test-ui-browser skipped) + `node --test 'tests/ts/*.test.ts'` 155/155 + `tsc` + shellcheck · `src/guard.ts` (hook JSON parsed natively, jq semantics), `src/commands/worktree-guard.ts`, `src/commands/flow-next.ts` (guard in-process), `src/bash-bridge.ts`. Both bins are launchers. The guard now needs node instead of jq/python: the no-jq tests in test-worktree-guard / test-review-fixes link `node` instead of `python3`; the `gsd_hook_payload.py` loop became a guard-level check (gsdt-flow/gsdw-flow treated as gsd-flow); new tests for "no node". `gsd_command_guards_active` (bash + TS) also accepts the in-process guard call in `src/commands/flow-next.ts`. No legacy read dropped.
+- P4 · 2026-11-11 · (this commit: `git log --grep "ts-port P4"`) · all 18 bash suites green on macOS (test-ui 179, test-ui-browser 63 with real Playwright, test-flow-next 116, test-worktree-guard 123, test-doctor 172, test-e2e 38 with real gsd-core) + `node --test 'tests/ts/*.test.ts'` 177/177 + `tsc` + shellcheck · `src/ui.ts` (all of ui.sh), `src/commands/ui.ts` (`gsdt-ui` is a launcher), `src/ui-check.ts` + `src/commands/ui-check.ts` (runner; `lib/ui-check.mjs` deleted). Guard, flow-next and `finishGates` call TS for UI (no bash). `lib/ui.sh` stays for unported bash callers. No legacy read dropped.
 
 ## Decisions (from P0)
 
@@ -111,8 +112,7 @@ logic goes in exported functions next to `main` (e.g. `derivePort`).
 - **Rules text lives twice until P5/P8:** `src/rules-text.ts` (TS
   `gsdt-rules`) and `lib/provider.sh` (bash bootstrap + doctor T016). Edit
   both; the parity suite fails if they drift.
-- **TODOs left in TS:** `finishGates` calls bash `gsd_ui_finish_gate` (P4);
-  `staleHooks` runs `gsd_hook_paths.py` (P5); `providerHookState` still uses
+- **TODOs left in TS:** `staleHooks` runs `gsd_hook_paths.py` (P5); `providerHookState` still uses
   `jq` (P5 may drop); `compactSettings` runs `gsd_claude_env.py` (P8); the
   baseref python (`src/baseref-py.ts`) runs verbatim (P8).
 - **Parity tests:** `node --test 'tests/ts/*.test.ts'` (not `tests/ts/` —
@@ -157,7 +157,14 @@ logic goes in exported functions next to `main` (e.g. `derivePort`).
   decimal; bash read it as octal. Nobody passes that; not tested.
 - **P3 notes.** Guard fail rules (keep them): `GSD_SKIP_GUARD=1` exits 0 before node is needed. No node / old Node / import or runtime error → with `--global` exit 0 silently (fail open), otherwise one `BLOCKED: …` line, exit 2 (never exit 1: Claude reads non-2 as "allow"). Done in `bin/gsdt-worktree-guard` and `src/launch.mjs`. Gap: a node that starts and itself exits 1 passes that through (a test documents it).
 - `guard(opts)` → `{rc, stdout, stderr}`; `guardArgv(argv, {stdin, env, cwd})` does SKIP + parse + guard. flow-next calls `guardArgv` in-process (no subprocess).
-- `src/bash-bridge.ts` `bashLib(fn, args, env)` sources common/ui/ticket.sh and runs one bash function. Users: the guard's rule 5 and flow-next (ui.sh → P4, `gsd_tracker_which`/`gsd_ticket_extract` → P9). `finishGates` still has its own bash call (switch it in P4).
+- `src/bash-bridge.ts` `bashLib(fn, args, env)` sources common/ticket.sh and runs one bash function. Since P4 its only user is flow-next (`gsd_tracker_which`/`gsd_ticket_extract` → P9; delete the file then).
 - Payload: the port follows jq semantics (the old guard used jq when present): `//` treats null/false as missing; a non-object `tool_input` is invalid only when the first alternative is missing; trailing newlines dropped from command/args/cwd; one leading `/` stripped. The python reader differed in edge cases; `lib/gsd_hook_payload.py` is now only the oracle's (old bin in `tests/fixtures/p3-old-bins/`); delete it with the oracle later.
 - Not matched (stderr only, rc same): flow-next `--repo` without a value names `gsdt-flow-next:` instead of the script path. Globs (`<P>-*` dirs, PLANs, UATs) sort in byte order, bash by locale (same for normal names). A two-value JSON payload (`{} {}`) is invalid now (jq joined them).
 - The node parity glob now takes ~4–5 minutes (p3-guard ~55 s, p3-flow-next ~85 s).
+- **P4 notes.** `src/ui.ts` has a twin of every `gsd_ui_*` (`uiGate` stays the ONE "which UI step is open"). `lib/ui.sh` STAYS live for the bash callers (doctor P5, finish/wt-finish P7, init/bootstrap P8); keep both in step until then — `tests/ts/p4-ui.test.ts` diffs them. `finishGates` (common.ts) → `uiFinishGate` makes a `common.ts` ↔ `ui.ts` import cycle; safe (call-time only), keep it that way (no top-level use across the cycle).
+- The runner is `src/ui-check.ts` + `src/commands/ui-check.ts`, run as a child: `node <pkg>/src/launch.mjs ui-check job.tsv` (via `process.execPath`). `lib/ui-check.mjs` is deleted; axe-core stays in `lib/vendor/` (path passed in the job file). Playwright typed with small local interfaces, no dependency. CI's `node --check lib/ui-check.mjs` is gone (tsc covers it).
+- `bin/gsdt-ui` is a launcher; `--help` still reads its header comment. It never took the lock (still doesn't). Oracles: `tests/fixtures/p4-old-bins/{gsdt-ui,ui-check.mjs}`; `p4-ui-command.test.ts` (113 steps) normalizes only `<W>` root, `<PKG>` dirs, ISO timestamps.
+- Open gap (P5): the guard's rule 5 UI helpers read `process.env`, not the guard's `opts.env` (`confGet`/`findMain`/`git()`/`uiCodeState` all read process.env). Only matters when flow-next calls the guard in-process with its own env; no test differs.
+- Quirks kept: `uiField`/`uiFm` strip trailing space only and take the first `key:` line even if empty (flow-next's own `fm()` strips all — on purpose); `uiLookState` counts answer text in bytes; `uiLookKeys` numeric `==` (`0375` = `375`); a page with `|` shifts fields as awk did; `uiInputsState` hashes LAYOUT in the caller's cwd; a missing/non-exec `GSD_UI_RUNNER` writes a bash-style `…/bin/gsdt-ui: line 242: …` line (rc 127/126) into `err.txt`, since that text becomes the check's error reason; a runner without shebang runs via `bash`.
+- Not reproduced: awk `-v` backslash escapes in page names; locale sort of `apps/*`/`packages/*` and `<cand>-*` dirs (byte order now); `pages:` globbing (`*` is literal now); `look` compares page/width as strings (awk compared numerically). `sheet`'s open-in-viewer branch (TTY only) is untested.
+- `test-ui-browser` runs locally with `GSD_PLAYWRIGHT_ROOT=/Users/siminds-ops/projects/cerebrox/code/cerebrox-website` (has playwright + chromium; read only).
