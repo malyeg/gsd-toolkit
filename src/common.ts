@@ -79,7 +79,7 @@ export function run(
 }
 
 /** `git -C <dir> …` */
-export function git(dir: string, args: string[], opts: { inheritStderr?: boolean } = {}): RunResult {
+export function git(dir: string, args: string[], opts: { inheritStderr?: boolean; env?: NodeJS.ProcessEnv } = {}): RunResult {
   return run('git', ['-C', dir, ...args], opts);
 }
 
@@ -179,8 +179,8 @@ function envOr(name: string, fallback: string): string {
 // ── configuration (.gsd.conf) ───────────────────────────────────────────────
 
 /** gsd_main — $1 any path inside the repo → the MAIN checkout ('' when none). */
-export function findMain(p?: string): string {
-  const r = git(p || '.', ['worktree', 'list', '--porcelain']);
+export function findMain(p?: string, env?: NodeJS.ProcessEnv): string {
+  const r = git(p || '.', ['worktree', 'list', '--porcelain'], { env });
   if (r.status !== 0 && r.stdout === '') return '';
   for (const line of r.stdout.split('\n')) {
     if (line.startsWith('worktree ')) return line.slice(9);
@@ -206,13 +206,13 @@ export function confGet(repo: string, key: string): string {
 }
 
 /** gsd_base — the base branch (conf, else develop, else main, else current). */
-export function base(repo: string): string {
+export function base(repo: string, env?: NodeJS.ProcessEnv): string {
   const v = confGet(repo, 'base');
   if (v !== '') return v;
-  const has = (b: string): boolean => git(repo, ['show-ref', '--verify', '--quiet', `refs/heads/${b}`]).status === 0;
+  const has = (b: string): boolean => git(repo, ['show-ref', '--verify', '--quiet', `refs/heads/${b}`], { env }).status === 0;
   if (has('develop')) return 'develop';
   if (has('main')) return 'main';
-  return chomp(git(repo, ['branch', '--show-current'], { inheritStderr: true }).stdout);
+  return chomp(git(repo, ['branch', '--show-current'], { inheritStderr: true, env }).stdout);
 }
 
 /** gsd_flow_mode — strict | off (`flow` in .gsd.conf) */

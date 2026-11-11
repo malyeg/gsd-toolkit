@@ -550,7 +550,7 @@ is "and its setup checks are skipped"    "$(grep -c 'merge driver not registered
 TOOLKIT_FIXTURE="$WORK/toolkit fixture"
 TOOLKIT_LINKED="$WORK/toolkit linked"
 mkdir -p "$TOOLKIT_FIXTURE"
-cp -R "$PKG/bin" "$PKG/lib" "$PKG/shims" "$PKG/install.sh" "$TOOLKIT_FIXTURE/"
+cp -R "$PKG/bin" "$PKG/lib" "$PKG/src" "$PKG/shims" "$PKG/install.sh" "$TOOLKIT_FIXTURE/"
 git -C "$TOOLKIT_FIXTURE" init -q -b main
 git -C "$TOOLKIT_FIXTURE" add .
 git -C "$TOOLKIT_FIXTURE" -c user.name=t -c user.email=t@t commit -qm toolkit

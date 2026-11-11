@@ -112,8 +112,8 @@ function readPayload(input: string): Payload {
   return { ok: true, cmd: chomp(cmd), args: chomp(args), cwd: chomp(cwd) };
 }
 
-function branchOf(dir: string): string {
-  const r = git(dir, ['rev-parse', '--abbrev-ref', 'HEAD']);
+function branchOf(dir: string, env: NodeJS.ProcessEnv): string {
+  const r = git(dir, ['rev-parse', '--abbrev-ref', 'HEAD'], { env });
   // `$(git … || echo unknown)`: an unborn HEAD prints "HEAD" and fails
   return chomp(r.status === 0 ? r.stdout : `${r.stdout}unknown\n`);
 }
@@ -128,12 +128,12 @@ function physical(dir: string, sub: string): string {
 }
 
 /** `gsd_base "$dir" 2>/dev/null || echo develop` */
-function baseOrDevelop(dir: string): string {
+function baseOrDevelop(dir: string, env: NodeJS.ProcessEnv): string {
   if (confGet(dir, 'base') !== '') return confGet(dir, 'base');
-  const has = (b: string): boolean => git(dir, ['show-ref', '--verify', '--quiet', `refs/heads/${b}`]).status === 0;
+  const has = (b: string): boolean => git(dir, ['show-ref', '--verify', '--quiet', `refs/heads/${b}`], { env }).status === 0;
   if (has('develop')) return 'develop';
   if (has('main')) return 'main';
-  const r = git(dir, ['branch', '--show-current']);
+  const r = git(dir, ['branch', '--show-current'], { env });
   return chomp(r.status === 0 ? r.stdout : `${r.stdout}develop\n`);
 }
 
@@ -201,21 +201,21 @@ export function guard(opts: GuardOpts): GuardResult {
 
   const pick = (v: string | undefined): string => (v !== undefined && v !== '' ? v : '');
   let dir = pick(opts.repo) || pick(env.CLAUDE_PROJECT_DIR) || payloadCwd || opts.cwd || process.cwd();
-  const top = git(dir, ['rev-parse', '--show-toplevel']);
+  const top = git(dir, ['rev-parse', '--show-toplevel'], { env });
   if (top.status === 0) dir = chomp(top.stdout);
-  let branch = branchOf(dir);
+  let branch = branchOf(dir, env);
   // Nested workers inherit phase identity only from a containing checkout in
   // the same Git repository. A branch name alone never bypasses the guard.
   if (branch.startsWith('agent-') || branch.startsWith('worktree-agent-')) {
-    const wc = git(dir, ['rev-parse', '--git-common-dir']);
+    const wc = git(dir, ['rev-parse', '--git-common-dir'], { env });
     const workerCommon = physical(dir, wc.status === 0 ? chomp(wc.stdout) : '');
-    const tl = git(dir, ['rev-parse', '--show-toplevel']);
+    const tl = git(dir, ['rev-parse', '--show-toplevel'], { env });
     let parent = path.dirname(tl.status === 0 ? chomp(tl.stdout) : dir);
     while (parent !== '/') {
-      const pb = git(parent, ['branch', '--show-current']);
+      const pb = git(parent, ['branch', '--show-current'], { env });
       const parentBranch = pb.status === 0 ? chomp(pb.stdout) : '';
       if (parentBranch.startsWith('phase-')) {
-        const pc = git(parent, ['rev-parse', '--git-common-dir']);
+        const pc = git(parent, ['rev-parse', '--git-common-dir'], { env });
         const parentCommon = physical(parent, chomp(pc.stdout));
         if (workerCommon === parentCommon) branch = parentBranch;
         break;
@@ -223,7 +223,7 @@ export function guard(opts: GuardOpts): GuardResult {
       parent = path.dirname(parent);
     }
   }
-  const BASE = baseOrDevelop(dir);
+  const BASE = baseOrDevelop(dir, env);
   const hasConf = isFile(`${dir}/.gsd.conf`);
 
   // Rule 0 — the plan is started by gsdt-init, never by the bare skill
@@ -301,9 +301,9 @@ export function guard(opts: GuardOpts): GuardResult {
   // Rules 4 and 5 — opt-in artifact gates. Policy is read from the MAIN
   // checkout's .gsd.conf, not the worktree's copy, so turning it on takes
   // effect for worktrees branched before the key existed.
-  const main = findMain(dir);
+  const main = findMain(dir, env);
   const FLOW_STRICT = confGet(main, 'flow') === 'strict';
-  const UI_STRICT = uiGates(dir) === 'strict';
+  const UI_STRICT = uiGates(dir, env) === 'strict';
   if (!FLOW_STRICT && !UI_STRICT) return done(0);
   // The phase dir may be padded (08-, 02.1-) or not (7.1-); artifacts inside it
   // carry the dir's own prefix, so P is taken from the dir that exists.
@@ -336,8 +336,8 @@ export function guard(opts: GuardOpts): GuardResult {
       // check → look → approval, each for the pages as they are now. A phase
       // whose UI review is already on the base branch predates these steps.
       if (pdir === '') return uiBlock('a phase folder with the UI check of the built pages', `gsdt-ui check ${N}`);
-      if (!uiExempt(dir, pdir, P)) {
-        const gate = uiGate(dir, pdir, P);
+      if (!uiExempt(dir, pdir, P, env)) {
+        const gate = uiGate(dir, pdir, P, '', env);
         if (gate !== '') {
           const step = gate.slice(0, gate.includes('|') ? gate.indexOf('|') : undefined);
           return uiBlock(`the UI steps before it — ${gate.slice(gate.lastIndexOf('|') + 1)}`, uiStepCmd(step, N));

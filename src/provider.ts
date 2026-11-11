@@ -15,6 +15,7 @@ import {
 } from './rules-text.ts';
 import { chomp, commandOnPath, confGet, git, gsdPkg, isExec, isFile, python, run } from './common.ts';
 import type { Failure, Result } from './common.ts';
+import { hookPaths } from './hook-paths.ts';
 
 const fail = (message: string, code = 64): Failure => ({ ok: false, code, message });
 const SPACE = /[ \t\n\r\f\v]/;
@@ -174,19 +175,17 @@ export function providerUserHookFile(p: string): string | null {
 }
 
 /**
- * gsd_stale_hooks — GSD hooks that run a file that is gone: the helper's
- * tab-separated lines ('' without python). TODO(P5): lib/gsd_hook_paths.py.
+ * gsd_stale_hooks — GSD hooks that run a file that is gone: tab-separated
+ * lines (src/hook-paths.ts, the port of lib/gsd_hook_paths.py).
  */
 export function staleHooks(repo = ''): string {
-  const py = python() ?? 'python3';
-  if (commandOnPath(py) === null) return '';
   const args: string[] = [];
   for (const p of ['claude', 'codex']) args.push(`user:${providerUserHookFile(p)}`);
   if (repo !== '') {
     args.push('--project', repo);
     for (const f of ['.claude/settings.json', '.claude/settings.local.json']) args.push(`project:${repo}/${f}`);
   }
-  return run(py, [`${gsdPkg()}/lib/gsd_hook_paths.py`, ...args]).stdout;
+  return hookPaths(args);
 }
 
 /**

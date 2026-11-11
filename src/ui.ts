@@ -104,8 +104,8 @@ function splitPipe(s: string): string[] {
 // ── gates, design, layout ───────────────────────────────────────────────────
 
 /** gsd_ui_gates — any checkout → warn | strict | off */
-export function uiGates(checkout: string): 'warn' | 'strict' | 'off' {
-  let v = confGet(findMain(checkout), 'ui_gates');
+export function uiGates(checkout: string, env?: NodeJS.ProcessEnv): 'warn' | 'strict' | 'off' {
+  let v = confGet(findMain(checkout, env), 'ui_gates');
   if (v === '') v = confGet(checkout, 'ui_gates');
   return v === 'strict' || v === 'off' ? v : 'warn';
 }
@@ -262,8 +262,8 @@ export function uiPageHash(page: string): string {
 }
 
 /** gsd_ui_min_font — ui_min_font (8–32), default 12 */
-export function uiMinFont(checkout: string): number {
-  let v = confGet(findMain(checkout), 'ui_min_font');
+export function uiMinFont(checkout: string, env?: NodeJS.ProcessEnv): number {
+  let v = confGet(findMain(checkout, env), 'ui_min_font');
   if (v === '') v = confGet(checkout, 'ui_min_font');
   if (v === '' || /[^0-9]/.test(v)) return 12;
   const n = BigInt.asIntN(64, BigInt(v)); // bash `$((10#$v))` wraps at 64 bits
@@ -271,16 +271,16 @@ export function uiMinFont(checkout: string): number {
 }
 
 /** gsd_ui_code_state — a hash of the working tree outside .planning/ ('' = unknown) */
-export function uiCodeState(checkout: string): string {
+export function uiCodeState(checkout: string, env0?: NodeJS.ProcessEnv): string {
   // The tree git would write for the files as they are on disk now. Built in a
   // throwaway index and object directory: the checkout, its index and its
   // object store are not touched.
-  const topR = git(checkout, ['rev-parse', '--show-toplevel']);
+  const topR = git(checkout, ['rev-parse', '--show-toplevel'], { env: env0 });
   if (topR.status !== 0) return '';
   const top = topR.stdout.replace(/\n+$/, '');
-  const idxR = git(top, ['rev-parse', '--git-path', 'index']);
+  const idxR = git(top, ['rev-parse', '--git-path', 'index'], { env: env0 });
   if (idxR.status !== 0) return '';
-  const objR = git(top, ['rev-parse', '--git-path', 'objects']);
+  const objR = git(top, ['rev-parse', '--git-path', 'objects'], { env: env0 });
   if (objR.status !== 0) return '';
   let idx = idxR.stdout.replace(/\n+$/, '');
   let objs = objR.stdout.replace(/\n+$/, '');
@@ -296,7 +296,7 @@ export function uiCodeState(checkout: string): string {
   let h = '';
   try {
     if (isFile(idx)) copyFileSync(idx, `${tmp}/index`);
-    const env = { ...process.env, GIT_INDEX_FILE: `${tmp}/index`, GIT_OBJECT_DIRECTORY: `${tmp}/objects`, GIT_ALTERNATE_OBJECT_DIRECTORIES: objs };
+    const env = { ...(env0 ?? process.env), GIT_INDEX_FILE: `${tmp}/index`, GIT_OBJECT_DIRECTORY: `${tmp}/objects`, GIT_ALTERNATE_OBJECT_DIRECTORIES: objs };
     const steps: string[][] = [
       ['add', '-A', '--', '.', ':(exclude).planning'],
       ['rm', '-r', '-q', '--cached', '--ignore-unmatch', '--', '.planning'],
@@ -321,25 +321,25 @@ export function uiCodeState(checkout: string): string {
 }
 
 /** gsd_ui_inputs_state — what a UI check is valid for: <code hash>+<LAYOUT hash> ('' = unknown) */
-export function uiInputsState(checkout: string, pdir: string, p: string): string {
+export function uiInputsState(checkout: string, pdir: string, p: string, env?: NodeJS.ProcessEnv): string {
   // The LAYOUT says what is checked, and it lives in .planning/, outside the
   // code hash: an edit to it must make an older check stale too.
-  const code = uiCodeState(checkout);
+  const code = uiCodeState(checkout, env);
   if (code === '') return '';
-  const r = run('git', ['hash-object', `${pdir}/${p}-LAYOUT.md`]); // cwd = the caller's, like bash
+  const r = run('git', ['hash-object', `${pdir}/${p}-LAYOUT.md`], { env }); // cwd = the caller's, like bash
   const lay = r.status === 0 ? r.stdout.replace(/\n+$/, '') : '';
   return `${code}+${lay !== '' ? lay : 'none'}`;
 }
 
 /** gsd_ui_exempt — true when the phase's UI review is already on the base branch */
-export function uiExempt(checkout: string, pdir: string, p: string): boolean {
+export function uiExempt(checkout: string, pdir: string, p: string, env?: NodeJS.ProcessEnv): boolean {
   // Only a review that was MERGED exempts a phase from the newer steps; one
   // written in the phase's own worktree exempts nothing.
-  const main = findMain(checkout);
-  const b = base(main !== '' ? main : checkout);
+  const main = findMain(checkout, env);
+  const b = base(main !== '' ? main : checkout, env);
   const rel = `${pdir.startsWith(`${checkout}/`) ? pdir.slice(checkout.length + 1) : pdir}/${p}-UI-REVIEW.md`;
   for (const ref of [`refs/remotes/origin/${b}`, `refs/heads/${b}`]) {
-    if (git(checkout, ['cat-file', '-e', `${ref}:${rel}`]).status === 0) return true;
+    if (git(checkout, ['cat-file', '-e', `${ref}:${rel}`], { env }).status === 0) return true;
   }
   return false;
 }
@@ -347,7 +347,7 @@ export function uiExempt(checkout: string, pdir: string, p: string): boolean {
 export type CheckState = 'missing' | 'error' | 'failed' | 'skipped' | 'stale' | 'passed';
 
 /** gsd_ui_check_state — `noStale` true (bash: $4 non-empty) skips the code comparison */
-export function uiCheckState(checkout: string, pdir: string, p: string, noStale: string | boolean = ''): CheckState {
+export function uiCheckState(checkout: string, pdir: string, p: string, noStale: string | boolean = '', env?: NodeJS.ProcessEnv): CheckState {
   const f = `${pdir}/${p}-UI-CHECK.md`;
   if (!isFile(f)) return 'missing';
   const st = uiFm(f, 'status');
@@ -356,7 +356,7 @@ export function uiCheckState(checkout: string, pdir: string, p: string, noStale:
   const code = uiFm(f, 'code');
   if ((noStale === '' || noStale === false) && code !== '') {
     // a check written before the LAYOUT was part of it holds the code hash only
-    const now = code.includes('+') ? uiInputsState(checkout, pdir, p) : uiCodeState(checkout);
+    const now = code.includes('+') ? uiInputsState(checkout, pdir, p, env) : uiCodeState(checkout, env);
     if (now !== '' && now !== code) return 'stale';
   }
   return st;
@@ -478,8 +478,8 @@ export function uiApprovalState(pdir: string, p: string): ApprovalState {
 }
 
 /** gsd_ui_gate — `step|state|what is open` for the first open UI step ('' = none) */
-export function uiGate(checkout: string, pdir: string, p: string, noStale: string | boolean = ''): string {
-  const cs = uiCheckState(checkout, pdir, p, noStale);
+export function uiGate(checkout: string, pdir: string, p: string, noStale: string | boolean = '', env?: NodeJS.ProcessEnv): string {
+  const cs = uiCheckState(checkout, pdir, p, noStale, env);
   const chk = `${pdir}/${p}-UI-CHECK.md`;
   switch (cs) {
     case 'missing':

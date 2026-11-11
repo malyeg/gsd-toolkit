@@ -47,7 +47,7 @@ REL="$WORK/releases-served"
 release() {  # $1=version [$2=bad] — build a release tarball + SHA256SUMS from this checkout
   local v=$1 d="$WORK/build/gsd-toolkit-$1"
   mkdir -p "$d" "$REL/v$v"
-  cp -R "$PKG/bin" "$PKG/lib" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$d/"
+  cp -R "$PKG/bin" "$PKG/lib" "$PKG/src" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$d/"
   printf '%s\n' "$v" > "$d/VERSION"
   tar -czf "$REL/v$v/gsd-toolkit-$v.tar.gz" -C "$WORK/build" "gsd-toolkit-$v"
   if [ "${2:-}" = bad ]; then echo "0000  gsd-toolkit-$v.tar.gz" > "$REL/v$v/SHA256SUMS"
@@ -193,7 +193,7 @@ if git -C "$PKG" rev-parse -q --verify 'v0.7.0^{commit}' >/dev/null; then
   BR="$WORK/src-071"; cp -R "$OLD" "$BR"; cp "$PKG/install.sh" "$BR/install.sh"
   sed -i.bak 's#^GSD_UPDATE_REPO_DEFAULT=.*#GSD_UPDATE_REPO_DEFAULT=malyeg/gsd-toolkit#' "$BR/lib/version.sh"; rm -f "$BR/lib/version.sh.bak"
   NEW="$WORK/src-080"; mkdir -p "$NEW"; git -C "$PKG" archive v0.8.0 | tar -x -C "$NEW"
-  CUR="$WORK/src-cur"; mkdir -p "$CUR"; cp -R "$PKG/bin" "$PKG/lib" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$CUR/"
+  CUR="$WORK/src-cur"; mkdir -p "$CUR"; cp -R "$PKG/bin" "$PKG/lib" "$PKG/src" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$CUR/"
   gh_release arconme/gsd-worktrees gsd-worktrees 0.7.0 "$OLD"
   H="$WORK/hop"; HB="$H/bin"; HS="$H/skills"; mkdir -p "$HB" "$HS"
   hop() { env -u GSD_UPDATE_REPO GSD_BIN_DIR="$HB" GSD_CLAUDE_SKILL_DIR="$HS" XDG_CACHE_HOME="$H/cache" "$@" > "$WORK/out" 2>&1; }

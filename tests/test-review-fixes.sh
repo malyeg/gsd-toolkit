@@ -111,6 +111,7 @@ mkdir -p "$WORK/broken/bin" "$WORK/broken/lib" "$WORK/broken/shims"
 cp "$PKG"/bin/* "$WORK/broken/bin/"
 cp "$PKG"/lib/* "$WORK/broken/lib/" 2>/dev/null || true
 cp -R "$PKG/shims/scripts" "$WORK/broken/shims/"
+cp -R "$PKG/src" "$WORK/broken/src"
 chmod -x "$WORK/broken/bin/gsdt-worktree-guard"
 "$WORK/broken/bin/gsdt-doctor" --repo "$R" --json > "$WORK/doctor" || true
 grep -q '"command_guard":false' "$WORK/doctor"

@@ -188,7 +188,7 @@ has "a checkout reinstalls with its install.sh" 'install.sh --reuse-install-conf
 
 # A release runtime has no .git: it re-runs its own install.sh for its version.
 RT="$WORK/runtime"; mkdir -p "$RT"
-cp -R "$PKG/bin" "$PKG/lib" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$PKG/VERSION" "$RT/"
+cp -R "$PKG/bin" "$PKG/lib" "$PKG/src" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$PKG/VERSION" "$RT/"
 PATH="$RT/bin:$PATH:$STUB" "$RT/bin/gsdt-doctor" --json --repo "$R" > "$OUT" 2>&1
 has "a release reinstalls with its install.sh and version" "install.sh --version $(cat "$PKG/VERSION") --reuse-install-config" "$OUT"
 rm -rf "$WORK/skills"
