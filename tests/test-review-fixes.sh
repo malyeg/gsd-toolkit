@@ -41,14 +41,14 @@ done
 
 # No jq is discoverable in this PATH, even on Linux where jq lives in /usr/bin.
 mkdir "$WORK/no-jq"
-for cmd in bash cat dirname sed head grep git python3 tr awk; do ln -s "$(command -v "$cmd")" "$WORK/no-jq/$cmd"; done
+for cmd in bash cat dirname sed head grep git tr awk node env readlink; do ln -s "$(command -v "$cmd")" "$WORK/no-jq/$cmd"; done
 set +e
 printf '%s' '{"tool_name":"Skill","tool_input":{"skill":"gsd-plan-phase","args":"8"}}' |
   PATH="$WORK/no-jq" CLAUDE_PROJECT_DIR="$R" "$PKG/bin/gsdt-worktree-guard" > "$WORK/hook" 2>&1
 rc=$?
 set -e
 [ "$rc" = 2 ]; grep -q 'targets phase 8' "$WORK/hook"
-ok 'Claude no-jq fallback blocks nested wrong-phase args'
+ok 'Claude payload without jq or Python blocks nested wrong-phase args'
 
 R="$WORK/bootstrap"; repo "$R"
 (cd "$R" && gsdt-bootstrap-repo --agents codex,custom --provider-command custom=true) >/dev/null

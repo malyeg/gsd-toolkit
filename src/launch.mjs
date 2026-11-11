@@ -9,8 +9,18 @@ const [name, ...args] = process.argv.slice(2);
 // `gsdt-rules --hook` runs as a Claude SessionStart hook: whatever goes wrong it
 // must say nothing and exit 0 (the bash version could not fail either).
 const quiet = name === 'rules' && args.includes('--hook');
+// `gsdt-worktree-guard` runs as a hook: a crash must never let a call through
+// with exit 1 (that is not a block). It blocks (2), or with --global lets it
+// through, like the bash guard did with a payload it could not read.
+const guarding = name === 'worktree-guard';
+const guardFail = (why) => {
+  if (args.includes('--global')) process.exit(0);
+  process.stderr.write(`BLOCKED: gsdt-worktree-guard: ${why}\n`);
+  process.exit(2);
+};
 if (major < 24) {
   if (quiet) process.exit(0);
+  if (guarding) guardFail(`needs Node.js >= 24 (found ${process.versions.node})`);
   process.stderr.write(`gsdt-${name}: needs Node.js >= 24 (found ${process.versions.node})\n`);
   process.exit(1);
 }
@@ -22,6 +32,7 @@ try {
   const mod = await import(new URL(`./commands/${name}.ts`, import.meta.url).href);
   process.exitCode = await mod.main(args);
 } catch (e) {
+  if (guarding) guardFail(String(e instanceof Error ? e.message : e).split('\n')[0]);
   if (!quiet) throw e;
   process.exitCode = 0;
 }

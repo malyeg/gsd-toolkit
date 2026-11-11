@@ -330,7 +330,8 @@ gsd_command_guards_active() { # toolkit package; native hook/shim is not require
   [ -x "$1/bin/gsdt-worktree-guard" ] && [ -x "$1/bin/gsdt-start" ] &&
     [ -x "$1/bin/gsdt-flow-next" ] &&
     grep -q 'gsdt-worktree-guard.*--command' "$1/bin/gsdt-start" &&
-    grep -q 'gsdt-worktree-guard.*--command' "$1/bin/gsdt-flow-next"
+    { grep -q 'gsdt-worktree-guard.*--command' "$1/bin/gsdt-flow-next" ||
+      grep -q "guardArgv(\['--command'" "$1/src/commands/flow-next.ts" 2>/dev/null; } # ported in P3b: the guard runs in-process
 }
 
 gsd_provider_validate() { # provider, executable override

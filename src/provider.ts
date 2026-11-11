@@ -404,7 +404,9 @@ export function commandGuardsActive(pkg: string): boolean {
     return false;
   }
   const has = (f: string): boolean => (readBytes(f) ?? '').split('\n').some((l) => /gsdt-worktree-guard.*--command/.test(l));
-  return has(`${pkg}/bin/gsdt-start`) && has(`${pkg}/bin/gsdt-flow-next`);
+  // P3b: flow-next is TypeScript and runs the guard in-process (guardArgv(['--command', …))
+  const inProcess = (readBytes(`${pkg}/src/commands/flow-next.ts`) ?? '').includes("guardArgv(['--command'");
+  return has(`${pkg}/bin/gsdt-start`) && (has(`${pkg}/bin/gsdt-flow-next`) || inProcess);
 }
 
 // ── resolving provider, executable, model, start mode, compact point ────────
