@@ -51,6 +51,10 @@ type Sc = {
   cwd?: (c: Ctx) => string;
   pkgGit?: boolean; // make the package copy a git checkout
   expect?: RegExp; // sanity: the NEW stdout+stderr of some run must match
+  // Not comparable with the old bin on purpose (P6): without perl the old bin skipped the roadmap
+  // check, the TypeScript always runs it. Only the new side runs; it must still show `expect` and a
+  // roadmap finding (T022), and never the old "roadmap row check skipped" note.
+  newOnly?: boolean;
   tty?: never;
 };
 
@@ -183,6 +187,12 @@ function snapshot(dir: string, root = dir, out: Record<string, string> = {}): Re
 }
 
 const norm = (s: string, W: string): string => s.replaceAll(W, '<W>');
+// P6 changed the T006 (perl) wording: the old bin's text is mapped to the new one, nothing else.
+const T006_OLD: Array<[string, string]> = [
+  ['perl (claims add roadmap rows; the roadmap check needs it)', 'perl (the bash commands not yet ported need it)'],
+  ['perl not found — claims cannot add roadmap rows and the roadmap check is skipped', 'perl not found — gsdt-finish, gsdt-init and gsdt-migrate need it'],
+];
+const t006 = (s: string): string => T006_OLD.reduce((t, [a, b]) => t.replaceAll(a, b), s);
 
 /** assert.equal with a readable message: the chunks that differ, not the whole JSON line */
 function same(actual: string, expected: string, lab: string): void {
@@ -211,16 +221,28 @@ async function check(sc: Sc): Promise<void> {
   }
   const runs = sc.runs ?? (sc.noplain ? [DEF_RUNS[0] as string[]] : DEF_RUNS);
   let sawExpect = sc.expect === undefined;
+  if (sc.newOnly) {
+    const c = worlds[1] as Ctx;
+    let all = '';
+    for (const argv of runs) {
+      const n = await runBin(c, sc, argv, sc.cwd ? sc.cwd(c) : c.W);
+      all += n.out + n.err;
+    }
+    assert.match(all, sc.expect as RegExp, `${sc.name}: expect`);
+    assert.match(all, /T022/, `${sc.name}: the roadmap check ran`);
+    assert.doesNotMatch(all, /roadmap row check skipped/, `${sc.name}: not skipped`);
+    return;
+  }
   for (const argv of runs) {
     const [o, n] = await Promise.all(worlds.map((c) => runBin(c, sc, argv, sc.cwd ? sc.cwd(c) : c.W)));
     const lab = `${sc.name} [${argv.join(' ')}]`;
     const a = worlds[0] as Ctx;
     const b = worlds[1] as Ctx;
-    same(norm((n as { out: string }).out, b.W), norm((o as { out: string }).out, a.W), `${lab}: stdout`);
+    same(norm((n as { out: string }).out, b.W), norm(t006((o as { out: string }).out), a.W), `${lab}: stdout`);
     // The old bin leaks bash's own "<script>: line N: <file>: No such file or directory" for a
     // missing planning file (a `wc -c < file` redirect error); the port does not (a bug, not a contract).
     const oldErr = (o as { err: string }).err.replace(/^.*gsdt-doctor: line \d+: .*: No such file or directory\n/gm, '');
-    same(norm((n as { err: string }).err, b.W), norm(oldErr, a.W), `${lab}: stderr`);
+    same(norm((n as { err: string }).err, b.W), norm(t006(oldErr), a.W), `${lab}: stderr`);
     assert.equal((n as { rc: number }).rc, (o as { rc: number }).rc, `${lab}: exit code`);
     if (sc.expect && sc.expect.test((n as { out: string; err: string }).out + (n as { out: string; err: string }).err)) sawExpect = true;
   }
@@ -314,7 +336,7 @@ const S: Sc[] = [
   { name: 'context: skills in codex dir', setup: (c) => { repoSc(c); conf(c, 'base = develop\nproviders = codex\n'); for (const s of FLOW_SKILLS) write(path.join(c.home, `.agents/skills/gsd-${s}/SKILL.md`), `---\nname: gsd-${s}\ndescription: d\n---\n`); write(path.join(c.home, '.codex/agents/gsd-a.toml'), 'name = "a"\ndescription = "d"\n'); } },
   { name: 'big planning files', setup: (c) => { repoSc(c); const big = Array.from({ length: 900 }, (_, i) => `filler line ${i} that is long enough to fill the roadmap up`).join('\n'); writeFileSync(path.join(c.repo, '.planning/ROADMAP.md'), `# Roadmap\n\n### Phase 1: One\n\n### Phase 2: Two\n${big}\n`); writeFileSync(path.join(c.repo, '.planning/STATE.md'), big.repeat(2)); }, expect: /KiB/ },
   { name: 'big AGENTS.md with codex', setup: (c) => { repoSc(c); conf(c, 'base = develop\nproviders = codex\n'); writeFileSync(path.join(c.repo, 'AGENTS.md'), 'x'.repeat(40000)); }, expect: /Codex reads only/ },
-  { name: 'no perl', farm: ['perl'], expect: /T006/ },
+  { name: 'no perl', farm: ['perl'], expect: /T006/, newOnly: true },
   { name: 'no python', farm: ['python3', 'python'], expect: /T003/ },
   { name: 'no gsdt-finish on PATH', farm: ['gsdt-finish'], expect: /T001/ },
   { name: 'no gsdt-planning-repair', farm: ['gsdt-planning-repair'], expect: /T004/ },

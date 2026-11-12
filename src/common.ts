@@ -848,6 +848,9 @@ export function releaseLock(): void {
   } catch {
     // like `rm -rf … || true`
   }
+  // Released means released: a command that hands over to a long session (gsdt-start)
+  // releases early, and the exit hook must not remove a lock another command took since.
+  lockDir = '';
 }
 
 /** gsd__mkdir_excl — true only for the one caller that made the dir */

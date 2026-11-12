@@ -396,8 +396,8 @@ class Doctor {
     } else {
       fail('no python 3.7+ (tried python3, then python) — planning merges fall back to plain union', 'install python3', 'T003');
     }
-    if (commandOnPath('perl') !== null) pass('perl (claims add roadmap rows; the roadmap check needs it)');
-    else fail('perl not found — claims cannot add roadmap rows and the roadmap check is skipped', 'install perl', 'T006');
+    if (commandOnPath('perl') !== null) pass('perl (the bash commands not yet ported need it)');
+    else fail('perl not found — gsdt-finish, gsdt-init and gsdt-migrate need it', 'install perl', 'T006');
 
     const gsdAgent = DOCTOR_PROVIDER === 'codex' ? 'codex' : 'claude';
     const gsdRun = cli();
@@ -856,9 +856,7 @@ class Doctor {
         fail('phase_id_convention is "bracket" in .planning/config.json — gsd-toolkit reads numbered phases only', 'set phase_id_convention to null in .planning/config.json', 'T026');
       }
 
-      if (isFile(ROADMAP) && commandOnPath('perl') === null) {
-        note('roadmap row check skipped — needs perl (see T006)');
-      } else if (isFile(ROADMAP)) {
+      if (isFile(ROADMAP)) {
         const audit = chomp(roadmapAudit(ROADMAP));
         if (BR !== '') note(`roadmap checked on '${BR}' (this worktree's own copy, not ${confBase(MAIN)}'s)`);
         if (audit === '') {

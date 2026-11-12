@@ -9,8 +9,9 @@
 // mojibake; `bytes()` keeps that (never reached by ASCII names).
 import { spawnSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
-import { git, gsdPkg, isDir, isFile } from '../common.ts';
+import { git, isDir, isFile } from '../common.ts';
 import { staleHooksNotice } from '../provider.ts';
+import { updateNotice } from '../update-check.ts';
 
 const HELP = `gsdt-list — list GSD phases: number, description, plan progress, worktree
 
@@ -290,19 +291,6 @@ function perlSubstr(s: string, n: number): string {
 }
 
 const lineList = (s: string): string[] => s.split('\n').filter((l) => l !== '');
-
-// a newer release? (one stderr line, terminal only) — lib/version.sh until the
-// version notice is ported (P11): it only reads/refreshes a cache in the background
-function updateNotice(): void {
-  if ((process.env.GSD_NO_UPDATE_CHECK ?? '') !== '') return;
-  if (!process.stderr.isTTY && process.env.GSD_UPDATE_NOTICE !== 'always') return;
-  const pkg = gsdPkg();
-  if (!isFile(`${pkg}/lib/version.sh`)) return;
-  spawnSync('bash', ['-c', '. "$GSD_PKG/lib/version.sh"; gsd_update_notice'], {
-    stdio: ['ignore', 'ignore', 'inherit'],
-    env: { ...process.env, GSD_PKG: pkg },
-  });
-}
 
 export function main(argv: string[]): number {
   const err = (s: string): void => void process.stderr.write(s);

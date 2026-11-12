@@ -1,215 +1,22 @@
 #!/usr/bin/env bash
 #
-# gsdt-wt-new — create the worktree for a GSD phase in ONE step.
-#
-# Naming convention: branch + worktree dir = phase-<N>-<slug>, where <N> is the
-# phase number. This binds a phase to exactly one worktree, which the guard
-# (gsdt-worktree-guard) uses to keep per-phase commands in the right place.
+# gsdt-wt-new — create the worktree for a GSD phase in ONE step (branch +
+# worktree dir = phase-<N>-<slug>; reuses an existing one).
 #
 # Usage (from inside the target repo, typically its main checkout):
 #   gsdt-wt-new [slug] [--phase <N>] [--no-install|--install]
 #   gsdt-wt-new --batch batch-<date>-<slug> [--no-install|--install]
 #
-#   --batch makes the worktree of a quick-task batch instead (gsdt-batch runs
-#   it): branch + dir = the name given, off the base branch. No phase, no
-#   ROADMAP.md. Reused when the branch exists, like a phase's.
-#
-#   - <N>  is auto-detected: the phase added by the latest claim commit, else
-#          the highest-numbered phase in .planning/ROADMAP.md. Pass --phase <N>
-#          to target an already-claimed phase explicitly (what gsdt-start does);
-#          it must exist in ROADMAP.md.
-#   - <slug> defaults to a slugified phase title; pass one to override.
-#   - The dependency install (from .gsd.conf `install`, else lockfile
-#     detection) runs in the BACKGROUND by default (log:
-#     <worktree>/.gsd-install.log, status: .gsd-install.status). --install
-#     runs it in the foreground; --no-install skips it.
-#   - Idempotent per phase: if a phase-<N>-* branch already exists, its
-#     worktree is reused (re-attached if it was removed) instead of failing.
-#     PR branches (*-pr) are never treated as the feature branch.
-#
-# Repo settings (base branch, worktree dir, install cmd): .gsd.conf, see
-# gsdt-bootstrap-repo. The old per-repo copy of this logic
-# (scripts/gsdt-new-worktree-feature.sh) is now a shim that delegates here.
+# What the options mean: gsdt-wt-new --help. Repo settings (base branch,
+# worktree dir, install command): .gsd.conf, see gsdt-bootstrap-repo.
 set -euo pipefail
 
-SELF="$0"
-while [ -L "$SELF" ]; do
-  tgt=$(readlink "$SELF")
-  case "$tgt" in /*) SELF="$tgt" ;; *) SELF="$(dirname "$SELF")/$tgt" ;; esac
-done
-GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
-# shellcheck source=../lib/common.sh
-. "$GSD_PKG/lib/common.sh"
-
-INSTALL_MODE=background   # background | foreground | none
-SLUG=""
-PHASE=""
-BATCH=""
-while [ $# -gt 0 ]; do
-  case "$1" in
-    --no-install)  INSTALL_MODE=none; shift ;;
-    --install)     INSTALL_MODE=foreground; shift ;;
-    --background)  INSTALL_MODE=background; shift ;;
-    --phase)       [ $# -ge 2 ] || { echo "error: --phase needs a value" >&2; exit 1; }
-                   PHASE="$2"; shift 2 ;;
-    --batch)       [ $# -ge 2 ] || { echo "error: --batch needs a name" >&2; exit 1; }
-                   printf '%s' "$2" | grep -qE '^batch-[a-z0-9][a-z0-9.-]*$' \
-                     || { echo "error: --batch needs a batch-<date>-<slug> name (a-z, 0-9, ., -), got '$2'" >&2; exit 1; }
-                   BATCH="$2"; shift 2 ;;
-    -*)            echo "unknown flag: $1" >&2; exit 1 ;;
-    *)             SLUG="$1"; shift ;;
-  esac
-done
-
-MAIN=$(gsd_main .)
-[ -n "$MAIN" ] || { echo "error: not inside a git repository" >&2; exit 1; }
-# The existing-branch check below and `git worktree add` must not interleave
-# with another run for the same phase. Re-entrant: gsdt-start already holds it.
-gsd_acquire_lock "$MAIN"
-BASE=$(gsd_base "$MAIN")
-WTDIR=$(gsd_wtdir "$MAIN")
-INSTALL_CMD=$(gsd_install_cmd "$MAIN")
-[ -n "$INSTALL_CMD" ] || INSTALL_MODE=none
-
-if [ -n "$BATCH" ]; then
-  # A batch: no phase, no ROADMAP. The rest (reuse, local config, baseRef,
-  # install) is the same as for a phase.
-  N=""; NAME="$BATCH"; WHAT="batch"
-  EXISTING=""
-  git -C "$MAIN" show-ref --verify --quiet "refs/heads/$NAME" && EXISTING="$NAME"
-else
-ROADMAP="$MAIN/.planning/ROADMAP.md"
-[ -f "$ROADMAP" ] || { echo "error: $ROADMAP not found (is GSD initialized?)" >&2; exit 1; }
-
-# Phase number: --phase wins; else prefer the one added in the latest commit
-# (the claim), else the highest-numbered phase in ROADMAP.md.
-if [ -n "$PHASE" ]; then
-  N="$PHASE"
-  N_RE=$(printf '%s' "$N" | sed 's/\./\\./g')
-  grep -qE "^### Phase $N_RE:" "$ROADMAP" \
-    || { echo "error: phase $N not found in $ROADMAP" >&2; exit 1; }
-else
-  N=$(git -C "$MAIN" show HEAD -- .planning/ROADMAP.md 2>/dev/null \
-        | grep -E '^\+### Phase [0-9]+(\.[0-9]+)?:' | tail -1 \
-        | sed -E 's/^\+### Phase ([0-9]+(\.[0-9]+)?):.*/\1/' || true)
-  if [ -z "${N:-}" ]; then
-    N=$(grep -E '^### Phase [0-9]+(\.[0-9]+)?:' "$ROADMAP" \
-          | sed -E 's/^### Phase ([0-9]+(\.[0-9]+)?):.*/\1/' \
-          | sort -t. -k1,1n -k2,2n | tail -1 || true)
-  fi
-  [ -n "${N:-}" ] || { echo "error: no phase found in ROADMAP.md — claim one first (gsdt-start)" >&2; exit 1; }
-fi
-
-# Slug: from arg, else slugify the phase title.
-if [ -z "$SLUG" ]; then
-  N_RE=$(printf '%s' "$N" | sed 's/\./\\./g')
-  TITLE=$(grep -E "^### Phase $N_RE:" "$ROADMAP" | head -1 | sed -E "s/^### Phase $N_RE:[[:space:]]*//" || true)
-  SLUG=$(printf '%s' "${TITLE:-}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
-  [ -n "$SLUG" ] || SLUG="feature"
-fi
-
-NAME="phase-$N-$SLUG"; WHAT="phase $N"
-
-# Idempotent per phase: reuse any existing phase-<N>-* branch (whatever its
-# slug), and its worktree if still attached. PR branches (*-pr, from
-# /gsd-pr-branch) are NOT the feature branch — never attach to those.
-EXISTING=$(gsd_phase_branch "$MAIN" "$N")
-fi
-if [ -n "$EXISTING" ]; then
-  NAME="$EXISTING"
-  WT=$(git -C "$MAIN" worktree list --porcelain \
-        | awk -v b="branch refs/heads/$NAME" '/^worktree /{w=substr($0,10)} $0==b{print w; exit}')
-  if [ -n "$WT" ] && [ ! -d "$WT" ]; then
-    # Its folder was deleted by hand: git still lists it. Drop the dead entry
-    # and re-attach below, rather than report a worktree that is not there.
-    echo "• the worktree for '$NAME' is gone from disk ($WT) — re-creating it."
-    git -C "$MAIN" worktree prune
-    WT=""
-  fi
-  if [ -n "$WT" ]; then
-    echo "• branch '$NAME' already has a worktree — reusing it."
-    # A worktree made before the toolkit set it (or by hand) lacks it.
-    gsd_baseref_ensure "$WT"
-    echo ""
-    echo "✅ worktree ready: $WT   ($WHAT)"
-    exit 0
-  fi
-fi
-DEST="$(dirname "$MAIN")/$WTDIR/$NAME"
-if [ -e "$DEST" ]; then
-  echo "error: $DEST already exists but is not a registered worktree — remove it or run 'git worktree prune'" >&2
+# Ported to TypeScript (src/commands/wt-new.ts, which holds the --help text);
+# this launcher only finds the package.
+SELF=$0
+while [ -L "$SELF" ]; do t=$(readlink "$SELF"); case "$t" in /*) SELF=$t ;; *) SELF="$(dirname "$SELF")/$t" ;; esac; done
+if ! command -v node >/dev/null 2>&1; then
+  echo "gsdt-wt-new: needs Node.js >= 24 (node not found on PATH)" >&2
   exit 1
 fi
-
-if [ -n "$EXISTING" ]; then
-  echo "▶ re-attaching worktree for existing branch '$NAME': $DEST"
-  git -C "$MAIN" worktree add "$DEST" "$NAME"
-else
-  echo "▶ creating worktree: $DEST   (branch '$NAME' off $BASE)"
-  git -C "$MAIN" worktree add "$DEST" -b "$NAME" "$BASE"
-fi
-
-echo "▶ copying gitignored local config…"
-# .claude/settings.local.json carries the user's permission allowlist; without
-# it every worktree re-prompts for everything. (worktree.baseRef is added below
-# when the copy does not have it.) Only gitignored files are copied — gsdt-bootstrap-repo ignores it.
-# `git ls-files --others --ignored` does not recurse into a directory that is
-# itself ignored: it collapses the whole tree to one 'path/' entry, which the
-# pathspec still matches when a file inside it does. Nested agent checkouts
-# (.claude/worktrees/agent-*) with their own .env.local hit this. Those entries
-# are directories, not config files — skip anything that is not a regular file.
-while IFS= read -r rel; do
-  [ -z "$rel" ] && continue
-  [ -f "$MAIN/$rel" ] || continue
-  mkdir -p "$DEST/$(dirname "$rel")"
-  cp "$MAIN/$rel" "$DEST/$rel" && echo "  copied $rel"
-done < <( cd "$MAIN" && git ls-files --others --ignored --exclude-standard \
-            -- ':(glob)**/.env.local' '.env.local' '.mcp.json' \
-               '.claude/settings.local.json' 2>/dev/null )
-
-# The status/log files and the local settings must never read as uncommitted
-# work (that would stop the finish). Bootstrap ignores them in .gitignore; the repo-local exclude
-# list covers a repo whose .gitignore lost the lines.
-excl=$(git -C "$MAIN" rev-parse --git-path info/exclude 2>/dev/null || true)
-case "$excl" in ''|/*) ;; *) excl="$MAIN/$excl" ;; esac
-if [ -n "$excl" ] && mkdir -p "$(dirname "$excl")" 2>/dev/null; then
-  for pat in .gsd-install.status .gsd-install.log .claude/settings.local.json; do
-    grep -qxF "$pat" "$excl" 2>/dev/null && continue
-    [ ! -s "$excl" ] || [ -z "$(tail -c1 "$excl")" ] || printf '\n' >> "$excl"
-    printf '%s\n' "$pat" >> "$excl"
-  done
-fi
-
-gsd_baseref_ensure "$DEST"
-
-case "$INSTALL_MODE" in
-  background)
-    echo running > "$DEST/.gsd-install.status"
-    # The redirect must cover the whole subshell: the forked `cd && nohup` list
-    # otherwise keeps our stdout open, and gsdt-start's WT_OUT=$( … ) then waits
-    # for the install to end.
-    ( cd "$DEST" \
-      && INSTALL_CMD="$INSTALL_CMD" nohup bash -c 'if bash -c "$INSTALL_CMD" >.gsd-install.log 2>&1; then echo ok >.gsd-install.status; else echo fail >.gsd-install.status; fi' & ) </dev/null >/dev/null 2>&1
-    echo "▶ $INSTALL_CMD running in background → $DEST/.gsd-install.log (status: .gsd-install.status)" ;;
-  foreground)
-    echo "▶ installing dependencies ($INSTALL_CMD)…"
-    echo running > "$DEST/.gsd-install.status"
-    if ( cd "$DEST" && bash -c "$INSTALL_CMD" ); then echo ok > "$DEST/.gsd-install.status"
-    else echo fail > "$DEST/.gsd-install.status"; exit 1; fi ;;
-  none)
-    # Record the skip: without this the guard cannot tell "skipped" apart from
-    # "still installing" (both look like a missing status file) and would block
-    # /gsd-execute-phase forever with a misleading message.
-    echo skipped > "$DEST/.gsd-install.status"
-    echo "▶ skipped dependency install" ;;
-esac
-
-echo ""
-echo "✅ worktree ready: $DEST   ($WHAT)"
-if [ -z "${GSD_WT_NEW_SUPPRESS_NEXT:-}" ] && [ -n "$BATCH" ]; then
-  echo "Open an agent session there and run /gsdt-batch. Finish:  gsdt-finish $NAME"
-elif [ -z "${GSD_WT_NEW_SUPPRESS_NEXT:-}" ]; then
-  echo "Open an agent session there, then:"
-  echo "    /gsd-discuss-phase $N → /gsd-plan-phase $N → /gsd-execute-phase $N"
-  echo "Finish:  gsdt-finish $N"
-fi
+exec node "$(cd "$(dirname "$SELF")/.." && pwd)/src/launch.mjs" wt-new "$@"

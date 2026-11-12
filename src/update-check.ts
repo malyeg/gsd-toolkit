@@ -174,3 +174,18 @@ export function coreUpdateHow(agent = 'claude'): string {
 export function updateHow(): string {
   return existsSync(`${gsdPkg()}/.git`) ? `${gsdPkg()}/install.sh` : 'gsdt-update';
 }
+
+/**
+ * gsd_update_notice — a newer release? (one stderr line, terminal only). Still
+ * lib/version.sh (P11 ports it): it only reads/refreshes a cache in the background.
+ */
+export function updateNotice(): void {
+  if ((process.env.GSD_NO_UPDATE_CHECK ?? '') !== '') return;
+  if (!process.stderr.isTTY && process.env.GSD_UPDATE_NOTICE !== 'always') return;
+  const pkg = gsdPkg();
+  if (!existsSync(`${pkg}/lib/version.sh`)) return;
+  spawnSync('bash', ['-c', '. "$GSD_PKG/lib/common.sh"; . "$GSD_PKG/lib/version.sh"; gsd_update_notice'], {
+    stdio: ['ignore', 'ignore', 'inherit'],
+    env: { ...process.env, GSD_PKG: pkg },
+  });
+}

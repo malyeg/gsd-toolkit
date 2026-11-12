@@ -171,7 +171,8 @@ farm "$WORK/noperl" perl
 DPATH="$WORK/noperl" json "$R"
 has "no perl → T006" '"T006"' "$OUT"
 DPATH="$WORK/noperl" doc "$R"
-has "no perl → roadmap row check is skipped, not passed" 'roadmap row check skipped' "$OUT"
+has "no perl → the roadmap check still runs (it is TypeScript now): its T022 finding shows" 'Phase 1 has no checklist row' "$OUT"
+hasnt "…and is not skipped" 'roadmap row check skipped' "$OUT"
 
 section "skills (T007)"
 doc "$R"

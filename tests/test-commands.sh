@@ -93,8 +93,10 @@ fails "re-claiming an existing title"   bash -c 'cd "$1" && gsdt-start -n "Catal
 # A bare PATH and an empty HOME, so no gsd-core of this machine is found.
 mkdir -p "$WORK/oldgsd" "$WORK/oldhome"
 printf '#!/bin/sh\necho 1.42.0\n' > "$WORK/oldgsd/gsd-sdk"; chmod +x "$WORK/oldgsd/gsd-sdk"
+# the TypeScript gsdt-start needs node: a folder holding only that
+mkdir -p "$WORK/nodeonly"; ln -sf "$(command -v node)" "$WORK/nodeonly/node"
 fails "no gsd-core, only the old gsd-sdk → a claim is refused" env -u GSD_CLI -u CLAUDE_CONFIG_DIR -u CODEX_HOME \
-  HOME="$WORK/oldhome" PATH="$PKG/bin:$WORK/oldgsd:/usr/bin:/bin" bash -c 'cd "$1" && gsdt-start -n "cart" --no-launch' _ "$R"
+  HOME="$WORK/oldhome" PATH="$PKG/bin:$WORK/oldgsd:$WORK/nodeonly:/usr/bin:/bin" bash -c 'cd "$1" && gsdt-start -n "cart" --no-launch' _ "$R"
 has   "…and says gsd-core is missing"   "GSD (gsd-core) not found" "$WORK/out"
 has   "…with the install command"       "npx @opengsd/gsd-core@latest --claude --global" "$WORK/out"
 

@@ -327,11 +327,12 @@ gsd_replace_owned_block() { # file, kind, new block file; caller prevalidates
 }
 
 gsd_command_guards_active() { # toolkit package; native hook/shim is not required
-  [ -x "$1/bin/gsdt-worktree-guard" ] && [ -x "$1/bin/gsdt-start" ] &&
-    [ -x "$1/bin/gsdt-flow-next" ] &&
-    grep -q 'gsdt-worktree-guard.*--command' "$1/bin/gsdt-start" &&
-    { grep -q 'gsdt-worktree-guard.*--command' "$1/bin/gsdt-flow-next" ||
-      grep -q "guardArgv(\['--command'" "$1/src/commands/flow-next.ts" 2>/dev/null; } # ported in P3b: the guard runs in-process
+  [ -x "$1/bin/gsdt-worktree-guard" ] && [ -x "$1/bin/gsdt-start" ] && [ -x "$1/bin/gsdt-flow-next" ] || return 1
+  # start and flow-next are TypeScript (P6/P3b): the guard runs in-process there, as a guardArgv call
+  { grep -q 'gsdt-worktree-guard.*--command' "$1/bin/gsdt-start" ||
+    grep -q "guardArgv(\['--command'" "$1/src/commands/start.ts" 2>/dev/null; } || return 1
+  { grep -q 'gsdt-worktree-guard.*--command' "$1/bin/gsdt-flow-next" ||
+    grep -q "guardArgv(\['--command'" "$1/src/commands/flow-next.ts" 2>/dev/null; } || return 1
 }
 
 gsd_provider_validate() { # provider, executable override
