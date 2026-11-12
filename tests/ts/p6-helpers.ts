@@ -25,6 +25,7 @@ process.env.XDG_CONFIG_HOME = '/nonexistent-xdg';
 
 const root = tmp();
 const OLD_FIX = path.join(PKG, 'tests', 'fixtures', 'p6-old-bins');
+const OLD_FIX7 = path.join(PKG, 'tests', 'fixtures', 'p7-old-bins');
 
 /** the old package: lib/ and src/ copied, the current launchers, and the two old bins on top */
 export const oldPkg = path.join(root, 'oldpkg');
@@ -32,8 +33,8 @@ mkdirSync(path.join(oldPkg, 'bin'), { recursive: true });
 for (const d of ['lib', 'src']) cpSync(path.join(PKG, d), path.join(oldPkg, d), { recursive: true });
 cpSync(path.join(PKG, 'bin'), path.join(oldPkg, 'bin'), { recursive: true });
 for (const f of ['VERSION', 'package.json']) copyFileSync(path.join(PKG, f), path.join(oldPkg, f));
-for (const n of ['gsdt-start', 'gsdt-wt-new']) {
-  copyFileSync(path.join(OLD_FIX, n), path.join(oldPkg, 'bin', n));
+for (const [dir, n] of [[OLD_FIX, 'gsdt-start'], [OLD_FIX, 'gsdt-wt-new'], [OLD_FIX7, 'gsdt-finish'], [OLD_FIX7, 'gsdt-wt-finish']] as const) {
+  copyFileSync(path.join(dir, n), path.join(oldPkg, 'bin', n));
   chmodSync(path.join(oldPkg, 'bin', n), 0o755);
 }
 writeFileSync(path.join(oldPkg, '.git'), '');
@@ -215,7 +216,7 @@ sys.exit(os.waitstatus_to_exitcode(st))
 `;
 
 export type Step = {
-  cmd: 'start' | 'wt-new';
+  cmd: 'start' | 'wt-new' | 'finish' | 'wt-finish';
   args: string[] | ((s: Side) => string[]);
   cwd?: (s: Side) => string;
   env?: Record<string, string | undefined> | ((s: Side) => Record<string, string | undefined>);
@@ -307,8 +308,11 @@ export function snapshot(s: Side): string {
       if (existsSync(path.join(w, '.gsd-install.log'))) P(`wt ${d}/.gsd-install.log`, readFileSync(path.join(w, '.gsd-install.log'), 'latin1'));
     }
   }
-  const log = path.join(s.root, 'agent.log');
-  if (existsSync(log)) P('agent.log', readFileSync(log, 'utf8'));
+  for (const f of ['agent.log', 'tracker.log', 'gh.log', 'doctor.log']) {
+    const log = path.join(s.root, f);
+    if (existsSync(log)) P(f, readFileSync(log, 'utf8'));
+  }
+  P('merge driver', g(s.R, ['config', '--get', 'merge.gsd-planning.driver']));
   return norm(s, parts.join('\n'));
 }
 
