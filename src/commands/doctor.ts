@@ -94,6 +94,7 @@ import {
   uiStack,
 } from '../ui.ts';
 import { gsdVersion } from '../version.ts';
+import { ticketExtract } from '../ticket.ts';
 
 class Quit extends Error {
   code: number;
@@ -214,17 +215,6 @@ function runMerged(cmd: string, args: string[]): { out: string; rc: number } {
 function runInherit(cmd: string, args: string[], cwd?: string): number {
   const r = spawnSync(cmd, args, { stdio: 'inherit', cwd });
   return r.error ? 127 : (r.status ?? 1);
-}
-
-/** gsd_ticket_extract — the tagged id of a title/branch/dir ('' when none) */
-export function ticketExtract(s: string): string {
-  let m = /(^|[^A-Za-z0-9])[Tt][Kk]-[A-Za-z0-9]+(-[A-Za-z0-9]+)*/.exec(s);
-  if (m) return m[0].replace(/^[^A-Za-z0-9]?[Tt][Kk]-/, '');
-  m = /(^|[^a-z0-9])cu[-_][a-z0-9]{6,}/i.exec(s);
-  if (m) return m[0].replace(/^[^A-Za-z0-9]?[Cc][Uu][-_]/, '');
-  m = /clickup[ \t\n\r\f\v]+[a-z0-9]{6,}/i.exec(s);
-  if (m) return m[0].split(/[ \t\n\r\f\v]+/)[1] ?? '';
-  return '';
 }
 
 /** awk's `x + 0`: the leading number of a string, else 0 */

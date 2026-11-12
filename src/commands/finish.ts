@@ -4,13 +4,12 @@
 //
 // Takes the lock, then runs gsdt-wt-finish as a CHILD with GSD_LOCK_HELD=1 (as
 // gsdt-start does gsdt-wt-new), and afterwards the ticket write-back, the roadmap
-// bookkeeping note and the "cd" line. Outside this file until P9: lib/ticket.sh
-// (through src/bash-bridge.ts); children: gsdt-wt-finish, gsdt-tracker, gsdt-doctor
+// bookkeeping note and the "cd" line. Tickets: src/ticket.ts; children: gsdt-wt-finish, gsdt-tracker, gsdt-doctor
 // (from PATH, as bash did), gh.
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { bashLib } from '../bash-bridge.ts';
+import { ticketExtract, trackerWhich } from '../ticket.ts';
 import {
   acquireLock,
   base,
@@ -110,13 +109,6 @@ class Stop extends Error {
     super(`exit ${code}`);
     this.code = code;
   }
-}
-
-/** a lib/ticket.sh function (bash until P9): its stderr goes through, stdout is `$( )`-captured */
-function ticket(fn: string, args: string[]): string {
-  const r = bashLib(fn, args);
-  if (r.stderr !== '') err(r.stderr);
-  return chomp(r.stdout);
 }
 
 /** `sed -E 's/^phase-([0-9]+(\.[0-9]+)?)-.*\/\1/'` (per line, like sed) */
@@ -245,11 +237,11 @@ function run(argv: string[]): number {
     BR = phaseBranch(MAIN, ID);
   }
   // A batch has no ROADMAP phase, so no ticket.
-  if (KIND === 'phase' && ticket('gsd_tracker_which', [MAIN]) !== 'none') {
+  if (KIND === 'phase' && trackerWhich(MAIN) !== 'none') {
     if (PHASE_N !== '' && existsSync(`${MAIN}/.planning/ROADMAP.md`)) {
-      TICKET_ID = ticket('gsd_ticket_extract', [roadmapTitle(MAIN, PHASE_N)]);
+      TICKET_ID = ticketExtract(roadmapTitle(MAIN, PHASE_N));
     }
-    if (TICKET_ID === '') TICKET_ID = ticket('gsd_ticket_extract', [BR]);
+    if (TICKET_ID === '') TICKET_ID = ticketExtract(BR);
   }
 
   // ── --pr: push + open a PR instead of merging ────────────────────────────

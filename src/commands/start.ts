@@ -3,8 +3,7 @@
 // Port of the bash bin/gsdt-start (kept as the parity oracle in
 // tests/fixtures/p6-old-bins/).
 //
-// Still outside this file: the ticket helpers (lib/ticket.sh, through
-// src/bash-bridge.ts until P9), the update notice (lib/version.sh, P11),
+// Still outside this file: the update notice (lib/version.sh, P11),
 // `gsd_run query phase.add|insert` (gsd-core), gsdt-wt-new (a child, like the bash:
 // its output is captured and printed once it is done), gsdt-planning-repair,
 // gsdt-flow-next and gsdt-tracker (children). The ROADMAP rows and STATE.md note
@@ -13,7 +12,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, rmdirSync, appendFileSync, writeFileSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import path from 'node:path';
-import { bashLib } from '../bash-bridge.ts';
+import { ticketExtract, ticketNorm, ticketTagged, trackerWhich } from '../ticket.ts';
 import {
   acquireLock,
   base,
@@ -222,13 +221,6 @@ const headingNumber = (l: string): string => (/^### Phase ([0-9]+(?:\.[0-9]+)?):
 function stopOn(r: { ok: false; code: number; message: string }): never {
   if (r.message !== '') err(`${r.message}\n`);
   throw new Stop(r.code);
-}
-
-/** a lib/ticket.sh function (bash until P9): its stderr goes through, stdout is `$( )`-captured */
-function ticket(fn: string, args: string[], env: NodeJS.ProcessEnv = process.env): { rc: number; out: string } {
-  const r = bashLib(fn, args, env);
-  if (r.stderr !== '') err(r.stderr);
-  return { rc: r.rc, out: chomp(r.stdout) };
 }
 
 /** `git … >/dev/null 2>&1`-style helpers and the plain "runs, output passes through" kind */
@@ -447,17 +439,17 @@ function run(argv: string[]): number {
 
   // ── --ticket: normalize the id and tag the phase title/slug with tk-<id> ───
   // The ROADMAP title is what gsdt-finish and /gsdt-flow read the id back from.
-  const TRACKER = ticket('gsd_tracker_which', [MAIN]).out;
+  const TRACKER = trackerWhich(MAIN);
   if (TICKET !== '') {
     const normAs = TICKET_CU ? 'clickup' : TRACKER;
-    const t = ticket('gsd_ticket_norm', [TICKET, normAs]);
-    TICKET = t.out;
-    if (t.rc !== 0) die(`--ticket doesn't look like a ticket id (letters/digits, '-' between): ${TICKET}`); // bash assigned first: a failed norm leaves it empty
-    if (DESC !== '' && ticket('gsd_ticket_tagged', [DESC, TICKET]).rc !== 0) DESC = `${DESC} tk-${TICKET}`;
-    if (SLUG !== '' && ticket('gsd_ticket_tagged', [SLUG, TICKET]).rc !== 0) SLUG = `${SLUG}-tk-${TICKET}`;
+    const t = ticketNorm(TICKET, normAs);
+    TICKET = t === null ? '' : chomp(t);
+    if (t === null) die(`--ticket doesn't look like a ticket id (letters/digits, '-' between): ${TICKET}`); // bash assigned first: a failed norm leaves it empty
+    if (DESC !== '' && !ticketTagged(DESC, TICKET)) DESC = `${DESC} tk-${TICKET}`;
+    if (SLUG !== '' && !ticketTagged(SLUG, TICKET)) SLUG = `${SLUG}-tk-${TICKET}`;
   }
   // With a tracker set, every new phase is a ticket's work. Attaching (-p) only notes it below.
-  if (ATTACH === '' && TRACKER !== 'none' && !NO_TICKET && TICKET === '' && ticket('gsd_ticket_extract', [DESC]).out === '') {
+  if (ATTACH === '' && TRACKER !== 'none' && !NO_TICKET && TICKET === '' && ticketExtract(DESC) === '') {
     die(
       `tracker = ${TRACKER} is set, but this phase has no ticket.`,
       '  Claim it with its ticket:  add --ticket <id>   (an id, tk-<id> or the ticket\'s URL)',
@@ -631,13 +623,7 @@ function run(argv: string[]): number {
         const hs = headings();
         let tkN = '';
         if (hs.length > 0) {
-          const r = bashLib(
-            'tkfirst() { local h; for h in "$@"; do if gsd_ticket_tagged "$h" "$GSD_TK"; then printf "%s\\n" "$h"; return 0; fi; done; }; tkfirst',
-            hs,
-            { ...process.env, GSD_TK: TICKET },
-          );
-          if (r.stderr !== '') err(r.stderr);
-          const first = r.stdout.split('\n')[0] ?? '';
+          const first = hs.find((h) => ticketTagged(h, TICKET)) ?? '';
           if (first !== '') tkN = headingNumber(first);
         }
         if (tkN !== '') {
@@ -762,7 +748,7 @@ function run(argv: string[]): number {
   if (TICKET_ID === '') {
     for (const src of [DESC, TITLE, path.basename(DEST)]) {
       if (src === '') continue;
-      TICKET_ID = ticket('gsd_ticket_extract', [src]).out;
+      TICKET_ID = ticketExtract(src);
       if (TICKET_ID !== '') break;
     }
   }

@@ -13,9 +13,8 @@
 //    (sed does not substitute), which then fails the "invalid phase number" check;
 //  - globs ($pd/$P-[0-9]*-PLAN.md, $P-*UAT.md, $P-*) list in BYTE order here; bash
 //    sorts by the locale's collation (same order for the usual 07-01-PLAN.md names).
-// TODO(P9): gsd_tracker_which / gsd_ticket_extract are called through bash.
 import { readdirSync, readFileSync, realpathSync } from 'node:fs';
-import { bashLib } from '../bash-bridge.ts';
+import { ticketExtract, trackerWhich } from '../ticket.ts';
 import { chomp, confGet, findMain, git, GsdExit, isDir, isFile, migrateRefuse, reviewsProblem, validationProblem, workflowFlag } from '../common.ts';
 import { guardArgv } from '../guard.ts';
 import { GSD_GEMINI_GONE, providerGone, providerKnown, providerReviewFlag } from '../provider.ts';
@@ -263,12 +262,6 @@ function flowNextRun(argv: string[], env: NodeJS.ProcessEnv, cwd: string, so: st
   const fm = (suffix: string, key: string): string => frontmatterValue(`${pd}/${P}-${suffix}`, key);
   /** ${pd#"$REPO"/} */
   const relPd = pd.startsWith(`${REPO}/`) ? pd.slice(REPO.length + 1) : pd;
-  /** a lib/*.sh function through bash; its stderr goes through, its stdout is returned (`$( )`) */
-  const lib = (fn: string, a: string[]): { rc: number; out: string } => {
-    const r = bashLib(fn, a, env);
-    se.push(r.stderr);
-    return { rc: r.rc, out: chomp(r.stdout) };
-  };
   let emitted = 0;
   const emit = (step: string, run: string, then: string, stop: string, note: string): void => {
     // --all is a preview, not authorization to execute future steps. Location
@@ -302,15 +295,15 @@ function flowNextRun(argv: string[], env: NodeJS.ProcessEnv, cwd: string, so: st
 
   // 1 ticket — the tracker's issue/task, saved in the phase folder. The tag
   // tk-<id> in the ROADMAP title (or dir name) says which one.
-  const TRACKER = lib('gsd_tracker_which', [REPO]).out; // TODO(P9)
+  const TRACKER = trackerWhich(REPO, env);
   if (TRACKER !== 'none' && !has('TICKET.md') && !has('STORY.md') && !pd.includes('cu_')) {
     const rel = `${relPd}/${P}-TICKET.md`;
     const nRe = `${N}|${P}`.replace(/\./g, '\\.');
     const headRe = new RegExp(`^#{2,4} Phase (${nRe}):`);
     const road = readText(`${REPO}/.planning/ROADMAP.md`);
     const heading = road === null ? '' : (fileLines(road).find((l) => headRe.test(l)) ?? '');
-    let tk = lib('gsd_ticket_extract', [heading]).out; // TODO(P9)
-    if (tk === '') tk = lib('gsd_ticket_extract', [pd.slice(pd.lastIndexOf('/') + 1)]).out;
+    let tk = ticketExtract(heading);
+    if (tk === '') tk = ticketExtract(pd.slice(pd.lastIndexOf('/') + 1));
     if (tk !== '') {
       emit('ticket', `gsdt-tracker snapshot ${tk} --out ${rel}`, `commit ${rel}`, '', `saves ${TRACKER} ticket ${tk} (description + comments) for discuss and planning`);
     } else {
