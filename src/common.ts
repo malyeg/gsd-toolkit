@@ -40,7 +40,7 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { BASEREF_PY } from './baseref-py.ts';
+import { baserefState } from './claude-settings.ts';
 import { uiFinishGate } from './ui.ts'; // import cycle: ui.ts uses common.ts too; both only call at run time
 
 /** A bash `exit N` inside a library function. */
@@ -634,29 +634,22 @@ export function python(): string | null {
 
 // ── worktree.baseRef in Claude's local settings ─────────────────────────────
 
-function baserefPy(py: string, mode: string, dir: string): string {
+function baserefFiles(dir: string): string[] {
   const claudeDir = envOr('CLAUDE_CONFIG_DIR', `${process.env.HOME ?? ''}/.claude`);
-  // TODO(P8): the python is run verbatim; port with the Claude env helper.
-  const r = run(py, ['-', mode, `${dir}/.claude/settings.local.json`, `${dir}/.claude/settings.json`, `${claudeDir}/settings.json`], {
-    input: BASEREF_PY,
-  });
-  // bash: python's stdout, then "invalid" when python failed
-  return chomp(r.status === 0 ? r.stdout : `${r.stdout}invalid\n`);
+  return [`${dir}/.claude/settings.local.json`, `${dir}/.claude/settings.json`, `${claudeDir}/settings.json`];
 }
 
 /**
  * gsd_baseref — check|ensure <dir> →
- * head | missing | set | other:<value> | invalid | tracked | unignored | nopython
+ * head | missing | set | other:<value> | invalid | tracked | unignored
  */
 export function baseref(mode: 'check' | 'ensure', dir: string): string {
-  const py = python();
-  if (py === null) return 'nopython';
-  const st = baserefPy(py, 'check', dir);
+  const st = baserefState('check', baserefFiles(dir));
   if (mode !== 'ensure' || st !== 'missing') return st;
   const f = '.claude/settings.local.json';
   if (git(dir, ['ls-files', '--error-unmatch', '--', f]).status === 0) return 'tracked';
   if (git(dir, ['check-ignore', '-q', '--', f]).status !== 0) return 'unignored';
-  return baserefPy(py, 'ensure', dir);
+  return baserefState('ensure', baserefFiles(dir));
 }
 
 /** gsd_baseref_ensure — one line saying what happened ('' for head); never fails */
@@ -673,7 +666,6 @@ export function baserefEnsure(dir: string, label: string = dir): string {
   if (st === 'unignored') {
     return `⚠ .claude/settings.local.json is not gitignored in ${label} — not written; run gsdt-init, then add worktree.baseRef = "head" so a wave's plans run in parallel`;
   }
-  if (st === 'nopython') return `⚠ no python 3.7+ — could not set worktree.baseRef = "head" in ${label}/.claude/settings.local.json`;
   return `⚠ ${label}/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel`;
 }
 
@@ -740,7 +732,7 @@ gsdt-planning-repair || true
 `;
 
 /** chmod +x (all three bits, minus the umask) */
-function chmodPlusX(p: string): void {
+export function chmodPlusX(p: string): void {
   const um = process.umask();
   const mode = statSync(p).mode & 0o7777;
   chmodSync(p, mode | (0o111 & ~um));

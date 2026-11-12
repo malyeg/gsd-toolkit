@@ -1038,7 +1038,7 @@ class Doctor {
           'gsdt-doctor --fix   (adds worktree.baseRef = "head" to .claude/settings.local.json; other keys kept)',
           'T034',
         );
-      } else if (!odd && baseref('check', MAIN) !== 'nopython') {
+      } else if (!odd) {
         pass('worktree.baseRef = "head" (a wave\'s plans can run in parallel)');
       }
     }

@@ -26,14 +26,15 @@ process.env.XDG_CONFIG_HOME = '/nonexistent-xdg';
 const root = tmp();
 const OLD_FIX = path.join(PKG, 'tests', 'fixtures', 'p6-old-bins');
 const OLD_FIX7 = path.join(PKG, 'tests', 'fixtures', 'p7-old-bins');
+const OLD_FIX8 = path.join(PKG, 'tests', 'fixtures', 'p8-old-bins');
 
 /** the old package: lib/ and src/ copied, the current launchers, and the two old bins on top */
 export const oldPkg = path.join(root, 'oldpkg');
 mkdirSync(path.join(oldPkg, 'bin'), { recursive: true });
-for (const d of ['lib', 'src']) cpSync(path.join(PKG, d), path.join(oldPkg, d), { recursive: true });
+for (const d of ['lib', 'src', 'shims']) cpSync(path.join(PKG, d), path.join(oldPkg, d), { recursive: true });
 cpSync(path.join(PKG, 'bin'), path.join(oldPkg, 'bin'), { recursive: true });
 for (const f of ['VERSION', 'package.json']) copyFileSync(path.join(PKG, f), path.join(oldPkg, f));
-for (const [dir, n] of [[OLD_FIX, 'gsdt-start'], [OLD_FIX, 'gsdt-wt-new'], [OLD_FIX7, 'gsdt-finish'], [OLD_FIX7, 'gsdt-wt-finish']] as const) {
+for (const [dir, n] of [[OLD_FIX, 'gsdt-start'], [OLD_FIX, 'gsdt-wt-new'], [OLD_FIX7, 'gsdt-finish'], [OLD_FIX7, 'gsdt-wt-finish'], [OLD_FIX8, 'gsdt-init'], [OLD_FIX8, 'gsdt-bootstrap-repo']] as const) {
   copyFileSync(path.join(dir, n), path.join(oldPkg, 'bin', n));
   chmodSync(path.join(oldPkg, 'bin', n), 0o755);
 }
@@ -115,6 +116,8 @@ export type Project = {
   state?: string;
   config?: string;
   noOrigin?: boolean;
+  /** no .planning/ at all (a repo before gsdt-init); commit holds `files` only */
+  noPlanning?: boolean;
   files?: Record<string, string>;
   /** dirs under .planning/phases (committed, with a .gitkeep) */
   phaseDirs?: string[];
@@ -133,15 +136,17 @@ export function makeSide(kind: 'old' | 'new', p: Project = {}): Side {
   if (!p.noOrigin) sh(rootDir, 'git', ['init', '-q', '--bare', '-b', 'main', origin]);
   mkdirSync(R, { recursive: true });
   sh(R, 'git', ['init', '-qb', 'main']);
-  write(path.join(R, '.planning/ROADMAP.md'), p.roadmap ?? ROADMAP_PLAIN);
-  mkdirSync(path.join(R, '.planning/phases'), { recursive: true });
+  if (!p.noPlanning) {
+    write(path.join(R, '.planning/ROADMAP.md'), p.roadmap ?? ROADMAP_PLAIN);
+    mkdirSync(path.join(R, '.planning/phases'), { recursive: true });
+  }
   if (p.conf !== null) write(path.join(R, '.gsd.conf'), p.conf ?? 'install = none\ntest = none\n');
   if (p.state !== undefined) write(path.join(R, '.planning/STATE.md'), p.state);
   if (p.config !== undefined) write(path.join(R, '.planning/config.json'), p.config);
   for (const d of p.phaseDirs ?? []) write(path.join(R, `.planning/phases/${d}/.gitkeep`), '');
   for (const [f, c] of Object.entries(p.files ?? {})) write(path.join(R, f), c);
   sh(R, 'git', ['add', '-A']);
-  sh(R, 'git', ['commit', '-qm', 'init']);
+  sh(R, 'git', ['commit', '-qm', 'init', '--allow-empty']);
   if (!p.noOrigin) {
     sh(R, 'git', ['remote', 'add', 'origin', origin]);
     sh(R, 'git', ['push', '-qu', 'origin', 'main']);
@@ -216,14 +221,18 @@ sys.exit(os.waitstatus_to_exitcode(st))
 `;
 
 export type Step = {
-  cmd: 'start' | 'wt-new' | 'finish' | 'wt-finish';
+  cmd: 'start' | 'wt-new' | 'finish' | 'wt-finish' | 'init' | 'bootstrap-repo';
   args: string[] | ((s: Side) => string[]);
   cwd?: (s: Side) => string;
   env?: Record<string, string | undefined> | ((s: Side) => Record<string, string | undefined>);
+  /** text for the command's stdin (default: nothing) */
+  input?: string;
   /** run under a pseudo terminal (stdout and stderr come back merged) */
   tty?: boolean;
   /** the exit code both must give (a guard against two identical failures that are not the one meant) */
   rc?: number;
+  /** both must exit nonzero (the exact code is only compared old vs new) */
+  fail?: boolean;
   out?: RegExp;
   err?: RegExp;
   /** a regexp that must NOT match the merged output */
@@ -240,7 +249,7 @@ export function runStep(s: Side, st: Step): R {
     const r = spawnSync('python3', ['-c', PTY, cwd, bin, ...args], { env, encoding: 'utf8' });
     return { out: (r.stdout ?? '').replace(/\r\n/g, '\n'), err: '', rc: r.status ?? -1 };
   }
-  const r = spawnSync(bin, args, { cwd, env, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  const r = spawnSync(bin, args, { cwd, env, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], ...(st.input !== undefined ? { input: st.input, stdio: ['pipe', 'pipe', 'pipe'] } : {}) });
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? -1 };
 }
 
@@ -325,7 +334,12 @@ const eq = (got: string, want: string, label: string): void => {
 };
 
 /** Both sides, each on its own fixture; every step's stdout, stderr and exit code, then the files left behind. */
-export function scenario(project: Project | ((kind: 'old' | 'new') => Project), prep: ((s: Side) => void) | null, steps: Step[]): void {
+export function scenario(
+  project: Project | ((kind: 'old' | 'new') => Project),
+  prep: ((s: Side) => void) | null,
+  steps: Step[],
+  extraSnapshot?: (s: Side) => string,
+): void {
   const mk = (k: 'old' | 'new'): Side => makeSide(k, typeof project === 'function' ? project(k) : project);
   const o = mk('old');
   const n = mk('new');
@@ -343,10 +357,12 @@ export function scenario(project: Project | ((kind: 'old' | 'new') => Project), 
     eq(norm(n, rn.err), norm(o, ro.err), `${label}: stderr`);
     assert.equal(rn.rc, ro.rc, `${label}: exit code (old ${ro.rc})`);
     if (st.rc !== undefined) assert.equal(rn.rc, st.rc, `${label}: expected rc\n${rn.out}${rn.err}`);
+    if (st.fail) assert.notEqual(rn.rc, 0, `${label}: expected a failure\n${rn.out}${rn.err}`);
     if (st.out) assert.match(rn.out, st.out, label);
     if (st.err) assert.match(rn.err, st.err, label);
     if (st.not) assert.doesNotMatch(rn.out + rn.err, st.not, label);
     eq(snapshot(n), snapshot(o), `${label}: files left behind`);
+    if (extraSnapshot) eq(norm(n, extraSnapshot(n)), norm(o, extraSnapshot(o)), `${label}: files left behind (full tree)`);
   });
 }
 

@@ -13,7 +13,8 @@ import {
   RULES_BASE,
   RULES_SCREENS,
 } from './rules-text.ts';
-import { chomp, commandOnPath, confGet, git, gsdPkg, isExec, isFile, python, run } from './common.ts';
+import { claudeEnv } from './claude-settings.ts';
+import { chomp, commandOnPath, confGet, git, gsdPkg, isExec, isFile, run } from './common.ts';
 import type { Failure, Result } from './common.ts';
 import { hookPaths } from './hook-paths.ts';
 
@@ -511,8 +512,7 @@ export function compactResolve(repo: string): Result<string> {
 
 /**
  * gsd_compact_settings — repo, worktree, tokens ('' = remove ours). Returns what
- * bash echoed (a note, or '' ). Best effort, never fatal.
- * TODO(P8): lib/gsd_claude_env.py is still run as a program.
+ * bash echoed (a note, or '' ). Best effort, never fatal. (lib/gsd_claude_env.py = claudeEnv.)
  */
 export function compactSettings(repo: string, wt: string, tokens = ''): string {
   let n = tokens;
@@ -525,14 +525,8 @@ export function compactSettings(repo: string, wt: string, tokens = ''): string {
   if (git(wt, ['ls-files', '--error-unmatch', '--', f]).status === 0 || git(wt, ['check-ignore', '-q', '--', f]).status !== 0) {
     return `• ${f} is tracked or not gitignored — compact point not saved there (a plain 'claude' keeps the CLI's own)\n`;
   }
-  const py = python();
-  if (py === null) return `• no python 3.7+ — compact point not saved in ${f}\n`;
-  const args = [`${gsdPkg()}/lib/gsd_claude_env.py`, `${wt}/${f}`, 'CLAUDE_CODE_AUTO_COMPACT_WINDOW'];
-  if (n !== '') args.push(n);
-  const r = run(py, args, { inheritStderr: true });
-  let out = r.stdout;
-  if (r.status !== 0) out += `• could not update ${f} (not a JSON object?) — compact point not saved there\n`;
-  return out;
+  const rc = claudeEnv(`${wt}/${f}`, 'CLAUDE_CODE_AUTO_COMPACT_WINDOW', n !== '' ? n : undefined);
+  return rc === 0 ? '' : `• could not update ${f} (not a JSON object?) — compact point not saved there\n`;
 }
 
 // ── prompts, argv, rendering ────────────────────────────────────────────────

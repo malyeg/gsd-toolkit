@@ -337,7 +337,8 @@ const S: Sc[] = [
   { name: 'big planning files', setup: (c) => { repoSc(c); const big = Array.from({ length: 900 }, (_, i) => `filler line ${i} that is long enough to fill the roadmap up`).join('\n'); writeFileSync(path.join(c.repo, '.planning/ROADMAP.md'), `# Roadmap\n\n### Phase 1: One\n\n### Phase 2: Two\n${big}\n`); writeFileSync(path.join(c.repo, '.planning/STATE.md'), big.repeat(2)); }, expect: /KiB/ },
   { name: 'big AGENTS.md with codex', setup: (c) => { repoSc(c); conf(c, 'base = develop\nproviders = codex\n'); writeFileSync(path.join(c.repo, 'AGENTS.md'), 'x'.repeat(40000)); }, expect: /Codex reads only/ },
   { name: 'no perl', farm: ['perl'], expect: /T006/, newOnly: true },
-  { name: 'no python', farm: ['python3', 'python'], expect: /T003/ },
+  // P8: the baseRef check no longer needs python, so without it the new doctor still reports T034 (the old one skipped it)
+  { name: 'no python', farm: ['python3', 'python'], expect: /(?=[\s\S]*T003)(?=[\s\S]*T034)/, newOnly: true },
   { name: 'no gsdt-finish on PATH', farm: ['gsdt-finish'], expect: /T001/ },
   { name: 'no gsdt-planning-repair', farm: ['gsdt-planning-repair'], expect: /T004/ },
   { name: 'PATH commands from another package', setup: (c) => { repoSc(c); write(path.join(c.W, 'other/bin/gsdt-finish'), '#!/bin/sh\n', 0o755); }, env: { PATH: (c) => `${c.W}/other/bin:${c.pkg}/bin:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` }, expect: /T002/ },

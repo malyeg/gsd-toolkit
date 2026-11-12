@@ -1,6 +1,4 @@
-// The python that gsd__baseref_py (lib/common.sh) runs, verbatim. TODO(P8): port natively
-// with the Claude env helper; until then common.ts feeds it to `python -` on stdin.
-export const BASEREF_PY = String.raw`import json, os, shutil, sys, tempfile
+import json, os, shutil, sys, tempfile
 mode, local = sys.argv[1], os.path.realpath(sys.argv[2])
 
 def read(path):  # → (settings dict or None, parsed?)
@@ -38,4 +36,3 @@ else:
     os.chmod(tmp, 0o644)
 os.replace(tmp, local)
 print("set")
-`;
