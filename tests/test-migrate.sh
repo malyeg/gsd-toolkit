@@ -212,7 +212,12 @@ if git -C "$PKG" rev-parse -q --verify 'v0.9.0^{commit}' >/dev/null; then
   git -C "$R4" add -A && git -C "$R4" commit -qm "0.9.0 setup"
   (cd "$R4" && gsdt-migrate --apply) > "$OUT" 2>&1; is "--apply: exit 0" "$?" 0
   (cd "$R4" && gsdt-migrate --check); is "…then --check clean" "$?" 0
-  gsdt-doctor --repo "$R4" --quiet > "$OUT" 2>&1
+  # This repo names claude + codex as providers. Doctor's T057 wants their
+  # executables, which CI does not have: put stand-ins on PATH for this call
+  # only, so the check below still sees every other T05x finding.
+  mkdir -p "$WORK/agents"
+  for a in claude codex; do printf '#!/bin/sh\nexit 0\n' > "$WORK/agents/$a"; chmod +x "$WORK/agents/$a"; done
+  PATH="$WORK/agents:$PATH" gsdt-doctor --repo "$R4" --quiet > "$OUT" 2>&1
   hasnt "…and doctor reports no shim, block or setup finding" "T01[0-6]\|T090\|T05[2-8]" "$OUT"
 elif [ -n "${CI:-}" ]; then
   bad "the real 0.9.0 needs the v0.9.0 tag (checkout with fetch-depth: 0)"
