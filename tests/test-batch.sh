@@ -273,7 +273,7 @@ CLAUDE_CONFIG_DIR="$H" "$BR" --repo "$R" --last 9 --json > "$WORK/r.json"
 is "--repo <path>" "$(j "$WORK/r.json" 'len(d["batches"])')" 3
 long="/$(printf 'x%.0s' $(seq 1 230))"
 lname=$(printf '%s' "$long" | sed 's/[^A-Za-z0-9]/-/g'); mkdir -p "$H/projects/${lname:0:200}-abc123"
-is "a long path: cut at 200 + hash suffix" "$(python3 "$PKG/lib/gsd_batch_report.py" projdir --home "$H" --repo "$long")" "$H/projects/${lname:0:200}-abc123"
+is "a long path: cut at 200 + hash suffix" "$(node --input-type=module -e 'import("'"$PKG"'/src/batch-report.ts").then((m) => console.log(m.projdir(process.argv[1], [process.argv[2]])))' "$H" "$long")" "$H/projects/${lname:0:200}-abc123"
 
 section "gsdt-batch — the launcher"
 GB="$PKG/bin/gsdt-batch"
@@ -393,7 +393,8 @@ section "lint"
 for f in "$BR" "$GB" "$HERE/test-batch.sh"; do
   bash -n "$f" 2>/dev/null; is "bash -n $(basename "$f")" "$?" 0
 done
-python3 -m py_compile "$PKG/lib/gsd_batch_report.py" 2>/dev/null; is "python compiles" "$?" 0
+node --check "$PKG/src/batch-report.ts" 2>/dev/null; is "batch-report.ts compiles (node --check)" "$?" 0
+node --check "$PKG/src/commands/batch-report.ts" 2>/dev/null; is "commands/batch-report.ts compiles (node --check)" "$?" 0
 risky=$(LC_ALL=C grep -nE '\$[A-Za-z_][A-Za-z0-9_]*[^ -~[:space:]]' "$BR" "$GB" || true)
 is "bash 3.2: no \$VAR directly followed by a non-ASCII character" "$risky" ""
 
