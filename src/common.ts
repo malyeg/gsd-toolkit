@@ -867,7 +867,11 @@ function pidAlive(pid: number): boolean {
 /**
  * gsd_acquire_lock — serialize gsdt commands on this checkout. Sync (waits with
  * Atomics.wait). Re-entrant when GSD_LOCK_HELD=1. Registers an exit hook that
- * releases it; INT/TERM exit 130/143. Prints the same commentary as bash;
+ * releases it. No INT/TERM handlers on purpose: Node runs a handler only when the
+ * event loop turns, and these commands are synchronous (spawnSync, Atomics.wait),
+ * so a handler would keep the command going after the user said stop. A signal
+ * kills the process at once (128+n, like bash's trap); the lock it leaves names a
+ * dead PID, which the next command reclaims. Prints the same commentary as bash;
  * returns false when it gave up after 300 waits (message on stderr).
  */
 export function acquireLock(mainCheckout: string): boolean {
@@ -902,8 +906,6 @@ export function acquireLock(mainCheckout: string): boolean {
   if (!lockHandlersSet) {
     lockHandlersSet = true;
     process.on('exit', releaseLock);
-    process.on('SIGINT', () => process.exit(130));
-    process.on('SIGTERM', () => process.exit(143));
   }
   return true;
 }

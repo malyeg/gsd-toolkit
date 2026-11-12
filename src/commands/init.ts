@@ -4,7 +4,6 @@
 // ROADMAP is there. --no-launch, or no terminal, prints the command instead. Provider adapters
 // choose the actual CLI argv. Port of the bash bin/gsdt-init (parity oracle:
 // tests/fixtures/p8-old-bins/gsdt-init).
-import { spawnSync } from 'node:child_process';
 import { existsSync, lstatSync, readFileSync, readSync, readdirSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import path from 'node:path';
@@ -23,7 +22,7 @@ import {
   providerUiTip,
   providerValidate,
 } from '../provider.ts';
-import { signalNumber, err, out } from '../stdio.ts';
+import { err, out, runSession } from '../stdio.ts';
 import { uiGates } from '../ui.ts';
 import { updateNotice } from '../update-check.ts';
 import { die, guarded, main as bootstrap, Stop, stopOn } from './bootstrap-repo.ts';
@@ -101,7 +100,7 @@ RELATED
   gsdt-start, gsdt-finish
 `;
 
-export function main(argv: string[]): number {
+export function main(argv: string[]): number | Promise<number> {
   return guarded(() => run(argv));
 }
 
@@ -161,7 +160,7 @@ export function findDocs(dest: string): string[] {
   return found;
 }
 
-function run(argv: string[]): number {
+function run(argv: string[]): number | Promise<number> {
   let MODE = ''; // '' = auto-detect | new | ingest
   let TRACKER_CLI = '';
   let TRACKER_COMMAND_CLI = '';
@@ -463,8 +462,7 @@ function run(argv: string[]): number {
     say(`▶ opening ${PROVIDER} in ${DEST} to make the plan (/gsd-${MODE === 'ingest' ? 'ingest-docs' : 'new-project'})…`);
     say('  Answer its questions; close the session when it has written the roadmap.');
     say();
-    const r = spawnSync(ARGV[0] as string, ARGV.slice(1), { stdio: 'inherit', cwd: DEST });
-    const rc = r.error ? 127 : (r.status ?? 128 + (r.signal ? signalNumber(r.signal) : 0));
+    return runSession(ARGV[0] as string, ARGV.slice(1), DEST).then((rc) => {
     say();
     const roadmap = `${DEST}/.planning/ROADMAP.md`;
     if (existsSync(roadmap)) {
@@ -489,6 +487,7 @@ function run(argv: string[]): number {
     err('✖ the session closed before the plan was written (no .planning/ROADMAP.md).\n');
     err('  Run gsdt-init again to pick it up where it stopped.\n');
     return rc === 0 ? 1 : rc;
+    });
   }
   say();
   // Only an explicit --launch/--agent turns a missing executable into an error; by default the

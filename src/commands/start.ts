@@ -48,7 +48,7 @@ import {
   startModeResolve,
 } from '../provider.ts';
 import { roadmapRows } from '../roadmap.ts';
-import { err, inherit, out, signalNumber } from '../stdio.ts';
+import { err, inherit, out, runSession } from '../stdio.ts';
 import { updateNotice } from '../update-check.ts';
 import { grepq, phaseHeadingRe, worktreeOf } from './wt-new.ts';
 
@@ -231,7 +231,7 @@ const must = (rc: number): void => {
   if (rc !== 0) throw new Stop(rc);
 };
 
-export function main(argv: string[]): number {
+export function main(argv: string[]): number | Promise<number> {
   try {
     return run(argv);
   } catch (e) {
@@ -248,7 +248,7 @@ export function main(argv: string[]): number {
   }
 }
 
-function run(argv: string[]): number {
+function run(argv: string[]): number | Promise<number> {
   const PKG = gsdPkg();
   let DESC = '';
   let REPO = '';
@@ -578,7 +578,9 @@ function run(argv: string[]): number {
     if (subj !== `docs(gsd): claim phase ${N} — ${DESC}` && subj !== `docs(gsd): insert phase ${N} (after ${INSERT}) — ${DESC}`) {
       die(`expected the claim commit at HEAD but found: ${subj} — resolve manually in ${MAIN}`);
     }
-    must(gitShow(MAIN, ['reset', '-q', '--hard', 'HEAD~1']));
+    // --keep, not --hard: drop the claim commit but keep uncommitted work elsewhere in the checkout
+    // (git refuses, and nothing is lost, if a file the claim touched has local changes too).
+    must(gitShow(MAIN, ['reset', '-q', '--keep', 'HEAD~1']));
     // phase.add/phase.insert also made a phase dir — drop the stale one (empty after the reset). Integer claims pad
     // the dir (07-slug); decimal inserts do not (11.1-slug) — cover both patterns.
     const major = N.split('.')[0] as string;
@@ -785,9 +787,7 @@ function run(argv: string[]): number {
     out(`▶ opening ${PROVIDER} session in ${DEST}…\n`);
     // bash `exec`'d the agent: release the lock first (a session can last hours), then hand the terminal over.
     releaseLock();
-    const r = spawnSync(ARGV[0] as string, ARGV.slice(1), { stdio: 'inherit', cwd: DEST });
-    if (r.error) return 127;
-    return r.status ?? 128 + (r.signal ? signalNumber(r.signal) : 0);
+    return runSession(ARGV[0] as string, ARGV.slice(1), DEST);
   }
   out('\n');
   // Only an explicit --launch/--agent turns a missing executable into an error; by default the command is just printed.

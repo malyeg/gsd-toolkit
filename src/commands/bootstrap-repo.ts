@@ -80,7 +80,7 @@ export function stopOn(r: { ok?: false; code: number; message: string }): never 
   throw new Stop(r.code);
 }
 /** run a main() body and turn Die/Stop/GsdExit into an exit code */
-export function guarded(fn: () => number): number {
+export function guarded<T extends number | Promise<number>>(fn: () => T): T | number {
   try {
     return fn();
   } catch (e) {

@@ -10,7 +10,7 @@ import { isatty } from 'node:tty';
 import path from 'node:path';
 import { base, chomp, commandOnPath, findMain, git, gsdPkg, isDir, isFile, wtdir } from '../common.ts';
 import { GSD_GEMINI_GONE, modelResolve, modelValidate, providerArgv, providerGone, providerPrompt, providerRender, providerResolve } from '../provider.ts';
-import { err, out, signalNumber } from '../stdio.ts';
+import { err, out, runSession } from '../stdio.ts';
 
 // The header comment of bin/gsdt-batch before the port = the --help text.
 const HELP = `
@@ -89,7 +89,7 @@ const today = (): string => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-function run(argv: string[]): number {
+function run(argv: string[]): number | Promise<number> {
   let PROVIDER = '';
   let COMMAND = '';
   let MODEL = '';
@@ -293,12 +293,10 @@ function run(argv: string[]): number {
   out(`▶ opening a ${P} batch session${MODEL !== '' ? ` on ${MODEL}` : ''} in ${DEST}…\n`);
   out(`  land it afterwards: gsdt-finish ${BR}\n`);
   if (!isDir(DEST)) die(`cannot enter ${DEST}`, 1);
-  const s = spawnSync(ARGV[0] as string, ARGV.slice(1), { stdio: 'inherit', cwd: DEST });
-  if (s.error) return 127;
-  return s.status ?? 128 + (s.signal ? signalNumber(s.signal) : 0);
+  return runSession(ARGV[0] as string, ARGV.slice(1), DEST);
 }
 
-export function main(argv: string[]): number {
+export function main(argv: string[]): number | Promise<number> {
   try {
     return run(argv);
   } catch (e) {

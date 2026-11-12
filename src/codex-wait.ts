@@ -121,8 +121,13 @@ function* strings(o: PyJson): Generator<string> {
   else if (Array.isArray(o)) for (const v of o) yield* strings(v);
 }
 
-/** The last usage-limit message recorded in one session log, or null. */
-export function limitMessage(file: string): string | null {
+/**
+ * The last usage-limit message recorded in one session log, or null. With `since`, a line whose
+ * `timestamp` (Codex writes an ISO time on every line) is older than `since` does not count: a log
+ * that hit a limit days ago and was written to since by a healthy run must not make every later
+ * failure look like a limit. A line without a readable timestamp still counts.
+ */
+export function limitMessage(file: string, since?: number): string | null {
   let msg: string | null = null;
   let text: string;
   try {
@@ -138,6 +143,11 @@ export function limitMessage(file: string): string | null {
     } catch (e) {
       if (e instanceof PyJsonError) continue;
       throw e;
+    }
+    if (since !== undefined && o instanceof Map) {
+      const ts = o.get('timestamp');
+      const t = typeof ts === 'string' ? Date.parse(ts) : NaN;
+      if (!Number.isNaN(t) && t / 1000 < since) continue;
     }
     for (const s of strings(o)) if (LIMIT.test(s)) msg = s;
   }
@@ -182,7 +192,7 @@ export function scan(home: string, since: number): { mtime: number; message: str
   }
   logs.sort((a, b) => (a[0] !== b[0] ? b[0] - a[0] : a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0));
   for (const [mt, p] of logs) {
-    const msg = limitMessage(p);
+    const msg = limitMessage(p, since);
     if (msg) return { mtime: Math.floor(mt), message: msg.split(/\s+/).filter(Boolean).join(' ') };
   }
   return null;

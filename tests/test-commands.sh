@@ -391,6 +391,82 @@ wt="$WORK/baseref-tracked-worktrees/phase-1-catalog"
 is  "a TRACKED settings.local.json is not changed" "$(git -C "$wt" status --porcelain)" ""
 has "…and said" "is tracked by git" "$WORK/out"
 
+section "a signal stops a command that holds the lock (TS port review, 2026-11-12)"
+R="$WORK/sig"; project "$R"
+printf 'install = none\ntest = touch "%s/sig-started"; sleep 4\n' "$WORK" > "$R/.gsd.conf"; commit "$R" tests; git -C "$R" push -q
+(cd "$R" && gsdt-wt-new --phase 1) >/dev/null 2>&1
+wt=$(git -C "$R" worktree list --porcelain | awk '/^worktree /{w=substr($0,10)} /^branch refs\/heads\/phase-1-/{print w; exit}')
+printf 'x\n' > "$wt/f.txt"; commit "$wt" feat
+sig_finish() {  # $1=signal — gsdt-wt-finish gets it while its tests run
+  rm -f "$WORK/sig-started"; local before; before=$(git -C "$R" rev-parse main)
+  (cd "$R" && exec perl -e '$SIG{INT}="DEFAULT"; $SIG{TERM}="DEFAULT"; exec @ARGV' gsdt-wt-finish 1) > "$WORK/out" 2>&1 &
+  local pid=$! n=0
+  while [ ! -e "$WORK/sig-started" ] && [ $n -lt 100 ]; do sleep 0.1; n=$((n + 1)); done
+  SECONDS=0; kill -"$1" "$pid"; wait "$pid"; local rc=$? took=$SECONDS
+  sleep 5   # let the orphaned test command end
+  is  "$1 → the command stops at once"  "$rc:$([ "$took" -lt 3 ] && echo fast)" "$((128 + $([ "$1" = INT ] && echo 2 || echo 15))):fast"
+  is  "…nothing merged"                 "$(git -C "$R" rev-parse main)" "$before"
+  is  "…origin untouched"               "$(git --git-dir="$R.git" rev-parse main)" "$before"
+  if [ -d "$wt" ]; then ok "…worktree kept"; else bad "…worktree kept"; fi
+}
+sig_finish TERM
+sig_finish INT
+(cd "$R" && gsdt-wt-new --phase 1) > "$WORK/out" 2>&1
+has "…the next command reclaims the lock it left" "reclaimed stale gsd lock" "$WORK/out"
+
+section "a launched session gets the signals bash's exec gave it"
+cat > "$WORK/stub/claude" <<EOF
+#!/usr/bin/env bash
+trap 'echo term > "$WORK/claude-sig"; exit 0' TERM
+trap 'echo int >> "$WORK/claude-int"' INT
+echo \$\$ > "$WORK/claude-pid"
+for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do sleep 0.1; done
+echo done > "$WORK/claude-done"; exit 7
+EOF
+chmod +x "$WORK/stub/claude"
+R="$WORK/sigl"; project "$R"
+launch_sig() {  # $1=signal $2=what to run — the signal goes to the gsdt launcher only, not the session
+  rm -f "$WORK"/claude-* "$WORK/l-pid" "$WORK/l-rc"
+  in_tty "cd '$R' && { perl -e '\$SIG{INT}=\"DEFAULT\"; exec @ARGV' $2 < /dev/tty & echo \$! > '$WORK/l-pid'; wait \$!; echo \$? > '$WORK/l-rc'; }" > "$WORK/out" 2>&1 < /dev/null &
+  local tp=$! n=0
+  while [ ! -e "$WORK/claude-pid" ] && [ $n -lt 100 ]; do sleep 0.1; n=$((n + 1)); done
+  kill -"$1" "$(cat "$WORK/l-pid")"; wait "$tp"
+}
+launch_sig TERM "gsdt-start -p 1"
+is  "gsdt-start: a TERM reaches the session"            "$(cat "$WORK/claude-sig" 2>/dev/null)" "term"
+launch_sig INT "gsdt-batch '- fix a typo'"
+is  "gsdt-batch: an INT to it alone neither kills it nor the session" "$(cat "$WORK/claude-done" 2>/dev/null):$(cat "$WORK/l-rc" 2>/dev/null)" "done:7"
+rm -f "$WORK/stub/claude"
+
+section "gsdt-start — losing a claim race keeps uncommitted work in the main checkout"
+R="$WORK/race"; project "$R"
+printf 'local edit\n' > "$R/notes.txt"; commit "$R" notes; git -C "$R" push -q
+git clone -q "$R.git" "$WORK/race-other"
+cat > "$R/.git/hooks/pre-push" <<EOF
+#!/bin/sh
+[ -e "$WORK/raced" ] && exit 0
+touch "$WORK/raced"
+cd "$WORK/race-other" && printf '\n### Phase 2: theirs\n' >> .planning/ROADMAP.md && git commit -qam theirs && git push -q origin main
+exit 1
+EOF
+chmod +x "$R/.git/hooks/pre-push"
+printf 'uncommitted edit\n' > "$R/notes.txt"
+(cd "$R" && gsdt-start -n "mine" --no-launch) > "$WORK/out" 2>&1
+is  "the claim is renumbered and pushed"   "$?:$(git --git-dir="$R.git" show main:.planning/ROADMAP.md | grep -c '^### Phase 3: mine')" "0:1"
+has "…after losing phase 2"                "renumbering" "$WORK/out"
+is  "…and the uncommitted edit is still there" "$(cat "$R/notes.txt")" "uncommitted edit"
+
+section "finish — a stray untracked file in .planning/ does not strand the merge"
+R="$WORK/stray"; project "$R"
+(cd "$R" && gsdt-wt-new --phase 1) >/dev/null 2>&1
+wt=$(git -C "$R" worktree list --porcelain | awk '/^worktree /{w=substr($0,10)} /^branch refs\/heads\/phase-1-/{print w; exit}')
+printf 'x\n' > "$wt/f.txt"; commit "$wt" feat
+printf 'notes\n' > "$R/.planning/scratch.md"
+(cd "$R" && gsdt-wt-finish 1) > "$WORK/out" 2>&1
+is  "finish succeeds"                      "$?" 0
+is  "…the merge is on origin"              "$(git --git-dir="$R.git" show main:f.txt 2>/dev/null)" "x"
+is  "…the stray file is left alone"        "$(cat "$R/.planning/scratch.md")" "notes"
+
 section "lint — bash 3.2 traps"
 # macOS bash 3.2 in a UTF-8 locale reads "$VAR…" as a variable named VAR plus
 # the first byte of "…" → "unbound variable" under set -u. Worse, with the lock's

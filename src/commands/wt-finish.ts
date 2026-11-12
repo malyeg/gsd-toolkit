@@ -168,9 +168,10 @@ function run(argv: string[]): number {
       err('  The merge is committed locally only. Fix .planning, commit, then re-run finish.\n');
       return false;
     }
-    if (chomp(git(MAIN, ['status', '--porcelain', '--', '.planning']).stdout) !== '') {
+    // tracked files only: an untracked note someone keeps in .planning/ is not an uncommitted repair
+    if (chomp(git(MAIN, ['status', '--porcelain', '--untracked-files=no', '--', '.planning']).stdout) !== '') {
       err('✗ the .planning repair was not committed — not pushing.\n');
-      toStderr('git', ['-C', MAIN, 'status', '--short', '--', '.planning']);
+      toStderr('git', ['-C', MAIN, 'status', '--short', '--untracked-files=no', '--', '.planning']);
       err('  Commit it, then re-run finish.\n');
       return false;
     }

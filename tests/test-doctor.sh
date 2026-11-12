@@ -240,6 +240,9 @@ has "a premerge path that does not exist → T019" 'premerge = scripts/nope.sh, 
 printf 'base = develop\npremerge = none\n' > "$R/.gsd.conf"
 json "$R"
 hasnt "premerge = none → no T019" '"T019"' "$OUT"
+printf 'base = develop\npremerge = scripts/a\tb.sh\n' > "$R/.gsd.conf"
+json "$R"
+if python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$OUT" 2>/dev/null; then ok "--json stays valid JSON when a finding holds a tab"; else bad "--json stays valid JSON when a finding holds a tab" "$(head -c 400 "$OUT")"; fi
 cp "$WORK/conf.bak" "$R/.gsd.conf"; rm -rf "$R/scripts"
 
 section "duplicate phase headings (T025)"

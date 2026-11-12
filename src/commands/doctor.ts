@@ -145,9 +145,13 @@ export function usageText(pkg: string = gsdPkg()): string {
 
 const SP = '[ \\t\\n\\r\\f\\v]';
 
-/** jstr — escape for the JSON the bash built by hand: \ and ", no ESC; nothing else */
+/** jstr — escape a JSON string body: \ and ", ESC dropped (as the bash did), other control characters escaped */
 export function jstr(s: string): string {
-  return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\x1b/g, '');
+  return s
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\x1b/g, '')
+    .replace(/[\x00-\x1f]/g, (c) => ({ '\n': '\\n', '\t': '\\t', '\r': '\\r' })[c] ?? `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`);
 }
 
 /** `for x in $list` with IFS=, : split on commas, one trailing delimiter makes no empty field */

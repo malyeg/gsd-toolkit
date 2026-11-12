@@ -102,6 +102,29 @@ is "limited every time → 75 when the total would pass the cap" "$rc" 75
 is "…after 3 one-hour waits" "$(clock)" "$((T0 + 10800))"
 is "…and 4 runs" "$(runs)" 4
 
+section "an OLD limit in a session log that has been written to since is no limit"
+reset_clock; rm -f "$CODEX_HOME"/sessions/2026/10/10/*.jsonl
+iso() { python3 -c 'import sys,time; print(time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime(int(sys.argv[1]))))' "$1"; }
+python3 - "$CODEX_HOME/sessions/2026/10/10/rollout-3.jsonl" "$(limit_msg $((T0 / 60 * 60 - 86400)))" "$(iso $((T0 - 2 * 86400)))" "$(iso "$T0")" > /dev/null <<'PY'
+import json, sys
+f, msg, old, new = sys.argv[1:]
+open(f, "w").write(json.dumps({"timestamp": old, "type": "event_msg", "payload": {"type": "task_complete", "error": {"message": msg}}}) + "\n"
+                   + json.dumps({"timestamp": new, "type": "event_msg", "payload": {"type": "token_count"}}) + "\n")
+PY
+printf '#!/bin/sh\necho x >> "%s/runs"; echo "unrelated test failure" >&2; exit 3\n' "$WORK" > "$WORK/stub3"; chmod +x "$WORK/stub3"
+"$CW" --max-wait 3h -- "$WORK/stub3" > /dev/null 2> "$WORK/e"; rc=$?
+is "an unrelated failure → its own exit code, at once" "$rc:$(runs):$(clock)" "3:1:$T0"
+reset_clock
+python3 - "$CODEX_HOME/sessions/2026/10/10/rollout-3.jsonl" "$(limit_msg "$R")" "$(iso "$T0")" > /dev/null <<'PY'
+import json, sys
+f, msg, new = sys.argv[1:]
+open(f, "a").write(json.dumps({"timestamp": new, "type": "event_msg", "payload": {"type": "task_complete", "error": {"message": msg}}}) + "\n")
+PY
+stub 1 ""
+"$CW" -- "$WORK/stub" > /dev/null 2> "$WORK/e"; rc=$?
+is "…but a limit logged since the run started still counts" "$rc:$(clock)" "0:$((R + 120))"
+rm -f "$CODEX_HOME"/sessions/2026/10/10/*.jsonl
+
 section "--wait-only"
 reset_clock
 "$CW" --wait-only --message "$(limit_msg "$R")" 2> "$WORK/e"; rc=$?

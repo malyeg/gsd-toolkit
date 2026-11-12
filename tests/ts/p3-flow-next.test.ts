@@ -18,6 +18,7 @@ function oldPackage(): string {
   const d = path.join(tmp(), 'old-pkg');
   mkdirSync(path.join(d, 'bin'), { recursive: true });
   cpSync(path.join(PKG, 'lib'), path.join(d, 'lib'), { recursive: true });
+  cpSync(path.join(PKG, 'src'), path.join(d, 'src'), { recursive: true }); // bin/gsdt-tracker is a launcher since P9
   for (const [src, name] of [[path.join(FIX, 'gsdt-flow-next'), 'gsdt-flow-next'], [path.join(FIX, 'gsdt-worktree-guard'), 'gsdt-worktree-guard'], [path.join(PKG, 'bin', 'gsdt-tracker'), 'gsdt-tracker']] as const) {
     copyFileSync(src, path.join(d, 'bin', name));
     chmodSync(path.join(d, 'bin', name), 0o755);

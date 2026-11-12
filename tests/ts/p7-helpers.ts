@@ -15,7 +15,7 @@ case " $* " in
     if [ "$mode" = badcheck ]; then echo "stub: ROADMAP is self-contradictory"; echo "stub check failed" >&2; exit 1; fi ;;
   *" --commit "*)
     if [ "$mode" = failcommit ]; then echo "stub repair broke" >&2; exit 1; fi
-    if [ "$mode" = dirty ]; then echo x >> "$2/.planning/NOTES.md"; exit 0; fi ;;
+    if [ "$mode" = dirty ]; then echo x >> "$2/.planning/ROADMAP.md"; exit 0; fi ;;
 esac
 exec "${pkg}/bin/gsdt-planning-repair" "$@"
 `;
