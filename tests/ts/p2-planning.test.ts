@@ -399,9 +399,18 @@ test('engine CLI: argv, usage, --help and errors match argparse', () => {
       assert.equal(b.rc, a.rc, `rc of ${JSON.stringify(c)}`); // python prints a traceback here
       continue;
     }
-    assert.deepEqual(b, a, `argv ${JSON.stringify(c)}`);
+    // older argparse (3.12.3) reads a `--` before the command as the command; newer ones skip it, as the new side does
+    if (c[0] === '--' && a.err.includes("invalid choice: '--'")) continue;
+    // argparse's wording of a bad choice changes with the python version: 3.12.x
+    // quotes the choices or not, 3.15 adds "maybe you meant"; the new side
+    // prints 3.15's. Only those two parts are evened out.
+    assert.deepEqual({ ...b, err: argparseWording(b.err) }, { ...a, err: argparseWording(a.err) }, `argv ${JSON.stringify(c)}`);
   }
 });
+
+function argparseWording(s: string): string {
+  return s.replace(/, maybe you meant '[^']*'\?/g, '').replace(/\(choose from ([^)]*)\)/g, (_m, l: string) => `(choose from ${l.replace(/'/g, '')})`);
+}
 
 test('parseArgs / main are importable and do no work at import time', () => {
   assert.deepEqual(parseArgs(['repair', '--check', 'd']), { cmd: 'repair', planning: 'd', check: true });

@@ -9,7 +9,7 @@ import { spawnSync } from 'node:child_process';
 import { chmodSync, copyFileSync, cpSync, mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
-import { PKG, repo, sh, tmp, write } from './helpers.ts';
+import { PKG, repo, sh, tmp, write, LOCALE_ENV } from './helpers.ts';
 import { renderList } from '../../src/commands/list.ts';
 
 const NEW_BIN = path.join(PKG, 'bin', 'gsdt-list');
@@ -34,7 +34,7 @@ const baseEnv = (extra: Record<string, string | undefined> = {}): NodeJS.Process
     CLAUDE_CONFIG_DIR: path.join(home, '.claude'),
     CODEX_HOME: path.join(home, '.codex'),
     GSD_NO_UPDATE_CHECK: '1',
-    LC_ALL: 'en_US.UTF-8',
+    ...LOCALE_ENV,
     GIT_CONFIG_GLOBAL: '/dev/null',
     GIT_CONFIG_NOSYSTEM: '1',
   };

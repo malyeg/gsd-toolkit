@@ -614,7 +614,8 @@ export function shellQuote(s: string): string {
   let out = '';
   let i = 0;
   for (const ch of s) {
-    out += Q_ESC.has(ch) || (ch === '#' && i === 0) ? `\\${ch}` : ch;
+    // a leading ~ is escaped as bash >= 4.4 does (3.2 does not): `~x` pasted into a shell is a tilde expansion
+    out += Q_ESC.has(ch) || ((ch === '#' || ch === '~') && i === 0) ? `\\${ch}` : ch;
     i++;
   }
   return out;

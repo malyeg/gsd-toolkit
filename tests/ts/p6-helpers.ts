@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { chmodSync, copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { PKG, sh, tmp, write } from './helpers.ts';
+import { PKG, sh, tmp, write, LOCALE_ENV } from './helpers.ts';
 
 export { PKG, sh, tmp, write };
 
@@ -188,7 +188,7 @@ export function envFor(s: Side, extra: Record<string, string | undefined> = {}):
     GSD_NO_UPDATE_CHECK: '1',
     GSD_TEST_MAIN: s.R,
     GSD_TEST_AGENT_LOG: path.join(s.root, 'agent.log'),
-    LC_ALL: 'en_US.UTF-8',
+    ...LOCALE_ENV,
   };
   for (const [k, v] of Object.entries(extra)) {
     if (v === undefined) delete e[k];

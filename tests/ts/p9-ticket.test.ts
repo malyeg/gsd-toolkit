@@ -4,12 +4,12 @@ import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { test } from 'node:test';
 import { ticketExtract, ticketNorm, ticketTagged, trackerWhich } from '../../src/ticket.ts';
-import { PKG, repo, sh, tmp, withEnv } from './helpers.ts';
+import { PKG, repo, sh, tmp, withEnv, LOCALE_ENV } from './helpers.ts';
 
 const sourced = (script: string, args: string[], env: Record<string, string> = {}) =>
   spawnSync('bash', ['-c', `. "$GSD_PKG/lib/common.sh"; . "$GSD_PKG/lib/ticket.sh"; ${script}`, '_', ...args], {
     encoding: 'utf8',
-    env: { ...process.env, GSD_PKG: PKG, LC_ALL: 'en_US.UTF-8', ...env },
+    env: { ...process.env, GSD_PKG: PKG, ...LOCALE_ENV, ...env },
   });
 const chomp = (s: string): string => s.replace(/\n+$/, '');
 

@@ -13,7 +13,15 @@ for (const k of Object.keys(process.env)) {
   if (/^(GSD_|CLAUDE_|CODEX_)/.test(k)) delete process.env[k];
 }
 process.env.GSD_NO_UPDATE_CHECK = '1';
-process.env.LC_ALL = 'en_US.UTF-8';
+// One locale for both sides: UTF-8 characters (bash counts é as one letter),
+// C collation. GNU sed/grep read a range like [a-z] by the locale's collation,
+// so under en_US.UTF-8 on Linux é falls inside [a-z] and the old code keeps it
+// in slugs and ticket ids; BSD (macOS) reads ranges as ASCII, which is what the
+// old code means and what the new code does. LC_ALL would override
+// LC_COLLATE, so it is unset. Files that build their own env use LOCALE_ENV.
+export const LOCALE_ENV = { LANG: 'en_US.UTF-8', LC_CTYPE: 'en_US.UTF-8', LC_COLLATE: 'C' } as const;
+delete process.env.LC_ALL;
+Object.assign(process.env, LOCALE_ENV);
 
 /** Run `script` in bash with common.sh, provider.sh and ui.sh sourced; args are $1… */
 export function bash(script: string, args: string[] = [], env: Record<string, string> = {}): BashResult {

@@ -14,7 +14,7 @@ import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, rea
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { PKG } from './helpers.ts';
+import { PKG, LOCALE_ENV } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p9-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
@@ -131,7 +131,7 @@ function makeSide(name: string): Side {
     XDG_CONFIG_HOME: path.join(home, '.config'),
     GIT_CONFIG_GLOBAL: '/dev/null',
     GIT_CONFIG_NOSYSTEM: '1',
-    LC_ALL: 'en_US.UTF-8',
+    ...LOCALE_ENV,
     CURL_LOG: path.join(root, 'curl.log'),
     TRACKER_LOG: path.join(root, 'tracker.log'),
   });

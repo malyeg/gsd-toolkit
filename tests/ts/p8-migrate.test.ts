@@ -58,7 +58,7 @@ const mkSide = (name: 'old' | 'new', tag: string): Side => {
 
 const baseEnv = (s: Side, extra: Record<string, string> = {}): NodeJS.ProcessEnv => {
   const env: NodeJS.ProcessEnv = {};
-  for (const k of ['PATH', 'LANG', 'LC_ALL', 'TMPDIR', 'TERM']) if (process.env[k] !== undefined) env[k] = process.env[k];
+  for (const k of ['PATH', 'LANG', 'LC_CTYPE', 'LC_COLLATE', 'TMPDIR', 'TERM']) if (process.env[k] !== undefined) env[k] = process.env[k];
   return {
     ...env,
     HOME: s.home,
@@ -537,7 +537,8 @@ test('NEW ONLY: works with no python on PATH, same result as the old command wit
     writeFileSync(s.settings, USER_HOOKS);
   }
   const np = noPythonPath();
-  assert.equal(spawnSync('bash', ['-c', 'command -v python3 python'], { env: { PATH: np }, encoding: 'utf8' }).stdout, '');
+  const seen = spawnSync('bash', ['-c', 'command -v python3 python; echo "PATH=$PATH bash=$BASH $BASH_VERSION"'], { env: { PATH: np }, encoding: 'utf8' }).stdout;
+  assert.ok(seen.startsWith('PATH='), `python is still found with PATH=${np}:\n${seen}${spawnSync('ls', ['-l', np], { encoding: 'utf8' }).stdout}`);
   for (const args of [[], ['--check'], ['--apply'], ['--check']]) {
     const a = runStep(o, st(args));
     const b = runStep(n, st(args, { path: np }));

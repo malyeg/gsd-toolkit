@@ -11,7 +11,7 @@ import { chmodSync, cpSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, 
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { PKG } from './helpers.ts';
+import { PKG, LOCALE_ENV } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p10-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
@@ -26,7 +26,7 @@ const BINS = { old: path.join(OLDPKG, 'bin', 'gsdt-batch-report'), neu: path.joi
 
 type R = { out: string; err: string; rc: number };
 function run(bin: string, args: string[], o: { cwd?: string; env?: Record<string, string> } = {}): R {
-  const env: Record<string, string> = { PATH: process.env.PATH ?? '', HOME: path.join(W, 'home'), TZ: 'UTC', LC_ALL: 'en_US.UTF-8', ...o.env };
+  const env: Record<string, string> = { PATH: process.env.PATH ?? '', HOME: path.join(W, 'home'), TZ: 'UTC', ...LOCALE_ENV, ...o.env };
   const r = spawnSync('bash', [bin, ...args], { cwd: o.cwd ?? W, encoding: 'utf8', env });
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? 1 };
 }

@@ -25,7 +25,7 @@ import {
 } from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
-import { PKG, tmp, write } from './helpers.ts';
+import { PKG, tmp, write, LOCALE_ENV } from './helpers.ts';
 
 Object.assign(process.env, {
   GIT_CONFIG_GLOBAL: '/dev/null',
@@ -125,7 +125,7 @@ function runBin(c: Ctx, sc: Sc, argv: string[], cwd: string): Promise<{ out: str
   const env: Record<string, string> = {
     HOME: c.home,
     PATH,
-    LC_ALL: 'en_US.UTF-8',
+    ...LOCALE_ENV,
     GSD_NO_UPDATE_CHECK: '1',
     GSD_NO_CORE: '1',
     GIT_CONFIG_GLOBAL: '/dev/null',

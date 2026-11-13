@@ -1029,8 +1029,9 @@ const AWKWARD = ['', 'plain', 'with space', 'it\'s', 'quote " and $ safe', 'back
 
 test('shellQuote / providerRender / providerArgv', () => {
   for (const s of AWKWARD) {
-    // bash >= 4.4 escapes a leading ~ and not `,`; compare under the bash in use
-    const b = bash('gsd_shell_quote "$1"', [s]).out;
+    // bash >= 4.4 escapes a leading ~; 3.2 does not, and the new code always does
+    let b = bash('gsd_shell_quote "$1"', [s]).out;
+    if (BASH3) b = b.replace(/^~/, '\\~');
     // bash 3.2 (macOS) escapes the bytes of characters beyond Latin-1 as octal; bash >= 4 keeps them
     if (BASH3 && /[^\u0000-\u00ff]/.test(s)) {
       assert.ok(!P.shellQuote(s).includes('\\3'), `quote keeps ${JSON.stringify(s)}`);
