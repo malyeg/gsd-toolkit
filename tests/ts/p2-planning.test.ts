@@ -16,6 +16,8 @@ const LAUNCH = path.join(PKG, 'src', 'launch.mjs');
 const FIX = path.join(PKG, 'tests', 'fixtures');
 const OLD_BINS = path.join(FIX, 'p2-old-bins');
 delete process.env.COLUMNS;
+// --commit makes its own commit: give git a name (a Linux runner has none and git cannot guess one)
+Object.assign(process.env, { GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@t', GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@t' });
 
 type R = { out: string; err: string; rc: number };
 const run = (cmd: string, args: string[], cwd?: string, env?: Record<string, string>): R => {

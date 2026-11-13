@@ -537,8 +537,11 @@ test('NEW ONLY: works with no python on PATH, same result as the old command wit
     writeFileSync(s.settings, USER_HOOKS);
   }
   const np = noPythonPath();
-  const seen = spawnSync('bash', ['-c', 'command -v python3 python; echo "PATH=$PATH bash=$BASH $BASH_VERSION"'], { env: { PATH: np }, encoding: 'utf8' }).stdout;
-  assert.ok(seen.startsWith('PATH='), `python is still found with PATH=${np}:\n${seen}${spawnSync('ls', ['-l', np], { encoding: 'utf8' }).stdout}`);
+  // Same env as the steps (HOME = the side's empty home). With only PATH set, macOS bash 3.2
+  // whose stdin is a socket (Node's pipes) and no SHLVL runs the REAL ~/.bashrc, as if started
+  // by sshd; the CI runner's ~/.bashrc puts its python folders back on PATH.
+  const seen = spawnSync('bash', ['-c', 'command -v python3 python'], { env: { ...baseEnv(n), PATH: np }, encoding: 'utf8' }).stdout;
+  assert.equal(seen, '', `python is still found with PATH=${np}:\n${seen}`);
   for (const args of [[], ['--check'], ['--apply'], ['--check']]) {
     const a = runStep(o, st(args));
     const b = runStep(n, st(args, { path: np }));

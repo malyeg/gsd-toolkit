@@ -25,7 +25,7 @@ import {
 } from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
-import { PKG, tmp, write, LOCALE_ENV } from './helpers.ts';
+import { AWK_DIR, PKG, tmp, write, LOCALE_ENV } from './helpers.ts';
 
 Object.assign(process.env, {
   GIT_CONFIG_GLOBAL: '/dev/null',
@@ -100,6 +100,7 @@ const repoSc = (c: Ctx): void => mkrepo(c.repo);
 function runBin(c: Ctx, sc: Sc, argv: string[], cwd: string): Promise<{ out: string; err: string; rc: number }> {
   const dirs = [path.join(c.pkg, 'bin')];
   if (!sc.nostub) dirs.push(c.stub);
+  if (AWK_DIR) dirs.push(AWK_DIR); // gawk counts bytes, as BSD awk and mawk do (helpers.ts)
   const node = path.dirname(process.execPath);
   dirs.push(node);
   const jq = spawnSync('sh', ['-c', 'command -v jq'], { encoding: 'utf8' }).stdout.trim();
@@ -193,6 +194,12 @@ const T006_OLD: Array<[string, string]> = [
   ['perl not found — claims cannot add roadmap rows and the roadmap check is skipped', 'perl not found — gsdt-finish, gsdt-init and gsdt-migrate need it'],
 ];
 const t006 = (s: string): string => T006_OLD.reduce((t, [a, b]) => t.replaceAll(a, b), s);
+// The old fail() skips a repeated fix with `printf "$FIXES" | grep -qxF` under pipefail. When
+// grep -q quits before printf is done, printf dies of SIGPIPE (141), the pipe "fails" and the fix
+// is listed twice. Rare, under load (25 in 32000 with 16 at once); a bug, not a contract. The
+// port lists each fix once: drop repeats from the old list.
+const oneFixEach = (s: string): string =>
+  s.replace(/(finding\(s\)\.[^\n]*Run:\n\n)((?: {2}[^\n]*\n)*)/, (_m, head: string, list: string) => head + [...new Set(list.split('\n'))].join('\n'));
 
 /** assert.equal with a readable message: the chunks that differ, not the whole JSON line */
 function same(actual: string, expected: string, lab: string): void {
@@ -238,7 +245,7 @@ async function check(sc: Sc): Promise<void> {
     const lab = `${sc.name} [${argv.join(' ')}]`;
     const a = worlds[0] as Ctx;
     const b = worlds[1] as Ctx;
-    same(norm((n as { out: string }).out, b.W), norm(t006((o as { out: string }).out), a.W), `${lab}: stdout`);
+    same(norm((n as { out: string }).out, b.W), norm(oneFixEach(t006((o as { out: string }).out)), a.W), `${lab}: stdout`);
     // The old bin leaks bash's own "<script>: line N: <file>: No such file or directory" for a
     // missing planning file (a `wc -c < file` redirect error); the port does not (a bug, not a contract).
     const oldErr = (o as { err: string }).err.replace(/^.*gsdt-doctor: line \d+: .*: No such file or directory\n/gm, '');

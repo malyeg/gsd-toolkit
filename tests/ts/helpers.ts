@@ -23,6 +23,21 @@ export const LOCALE_ENV = { LANG: 'en_US.UTF-8', LC_CTYPE: 'en_US.UTF-8', LC_COL
 delete process.env.LC_ALL;
 Object.assign(process.env, LOCALE_ENV);
 
+// awk's length(): BSD awk (macOS) and mawk count bytes; gawk under a UTF-8
+// locale counts characters. The port counts bytes (docs/ts-port-progress.md,
+// gsd_listing_size). Where awk is gawk (GitHub's ubuntu runner), AWK_DIR holds
+// an `awk` that runs it with -b (--characters-as-bytes); it goes first on PATH.
+// Files that build their own PATH add it themselves.
+export const AWK_DIR: string | null = (() => {
+  const real = spawnSync('sh', ['-c', 'command -v awk'], { encoding: 'utf8' }).stdout.trim();
+  if (!real || !/^GNU Awk/.test(spawnSync(real, ['--version'], { encoding: 'utf8' }).stdout ?? '')) return null;
+  const dir = mkdtempSync(path.join(tmpdir(), 'gsd-awk-'));
+  writeFileSync(path.join(dir, 'awk'), `#!/bin/sh\nexec '${real}' -b "$@"\n`, { mode: 0o755 });
+  process.on('exit', () => rmSync(dir, { recursive: true, force: true }));
+  return dir;
+})();
+if (AWK_DIR) process.env.PATH = `${AWK_DIR}:${process.env.PATH}`;
+
 /** Run `script` in bash with common.sh, provider.sh and ui.sh sourced; args are $1… */
 export function bash(script: string, args: string[] = [], env: Record<string, string> = {}): BashResult {
   const r = spawnSync(
