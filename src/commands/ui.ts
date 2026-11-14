@@ -447,7 +447,7 @@ function run(argv: string[]): number {
     const RUNNER = process.env.GSD_UI_RUNNER ?? '';
     if (RUNNER === '') {
       if (commandOnPath('node') === null) cannotRun("node is not installed — gsdt-ui check runs the project's Playwright with Node");
-      if (!isFile(`${pkg}/src/commands/ui-check.ts`)) cannotRun('src/commands/ui-check.ts is missing from the toolkit — reinstall it (gsdt-update)');
+      if (!isFile(`${pkg}/src/commands/ui-check.ts`) && !isFile(`${pkg}/dist/commands/ui-check.js`)) cannotRun('src/commands/ui-check.ts is missing from the toolkit — reinstall it (gsdt-update)');
     }
     const u = resolveUrl(repoDir, LAYOUT, int);
     if (!u.ok) cannotRun(u.error);
