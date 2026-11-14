@@ -1,0 +1,302 @@
+#!/usr/bin/env bash
+#
+# gsdt-worktree-guard — shared validator called by gsdt-start and gsdt-flow-next.
+# Optional native hooks use the same validator through a per-repo shim.
+#
+# Rules (independent of how the command was invoked):
+#   0. /gsd-new-project, /gsd-ingest-docs → only in a repo gsdt-init has set
+#                              up (.gsd.conf). Run alone, they write the plan
+#                              without the toolkit's files; gsdt-init installs
+#                              those first, then opens a session that runs them.
+#   0b. GSD skills that clash with the worktree model → never in a set-up
+#                              repo; the block names the toolkit command:
+#                                /gsd-autonomous, /gsd-manager   (many phases in
+#                                               one checkout)  → gsdt-start + /gsdt-flow
+#                                /gsd-workspace, /gsd-workstreams (GSD's own
+#                                               isolation)     → gsdt-start
+#                                /gsd-phase, --insert, --remove (unpushed claim;
+#                                               --remove renumbers phases that
+#                                               may have worktrees) → gsdt-start
+#                                               -n / --insert. --edit is allowed.
+#   1. /gsd-phase --edit     → only on the base branch (the shared claim point).
+#   2. per-phase commands    → only inside the matching 'phase-<N>-*' worktree.
+#   3. /gsd-execute-phase    → also requires deps installed (background install
+#                              done) — skipped for repos with no install step.
+#   4. phase-flow order      → OPT-IN via `flow = strict` in .gsd.conf. Each
+#                              step must find the artifact the previous one
+#                              leaves in .planning/phases/<P>-*/:
+#                                plan-phase     needs <P>-CONTEXT.md   (discuss)
+#                                               — unless --prd (express path)
+#                                execute-phase  needs <P>-REVIEWS.md   (cross-AI
+#                                               review; one whose reviewer
+#                                               failed does not count) —
+#                                               unless --gaps-only
+#                                secure-phase   needs <P>-REVIEW.md    (code
+#                                               review), when a UI-SPEC
+#                                               exists <P>-UI-REVIEW.md, and
+#                                               the test audit (validate-
+#                                               phase) — it is the last code
+#                                               gate
+#   5. UI gates              → OPT-IN via `ui_gates = strict` (lib/ui.sh):
+#                                ui-phase   needs a filled DESIGN.md and a
+#                                           <P>-LAYOUT.md with a chosen sketch
+#                                           (or sketch: skip <reason>)
+#                                ui-review  needs the checks of the built
+#                                           pages, each current: a passed
+#                                           <P>-UI-CHECK.md (gsdt-ui check), a
+#                                           complete <P>-UI-LOOK.md, and
+#                                           <P>-UI-APPROVAL.md (the user's
+#                                           yes). Exempt: a phase whose UI
+#                                           review is already on the base
+#
+# --global: the user-level hook install.sh registers (~/.claude).
+# It fires in EVERY repo, including ones that never use this toolkit: there
+# (no .gsd.conf) it applies rule 0 only. In a set-up repo it applies every
+# rule — it is the only hook that sees a slash command the user TYPES (Claude
+# UserPromptExpansion); the repo hook sees skill calls. An unreadable payload
+# is let through in this mode.
+#
+# Block = exit 2 (stderr shown). Escape hatch: GSD_SKIP_GUARD=1.
+# Repo settings (base branch, install cmd, flow): .gsd.conf, see gsdt-bootstrap-repo.
+set -uo pipefail
+
+[ "${GSD_SKIP_GUARD:-}" = 1 ] && exit 0
+explicit_cmd=""; explicit_args=""; explicit_repo=""; GLOBAL=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --command|--args|--phase|--repo)
+      [ $# -ge 2 ] && [ -n "$2" ] || { echo "$1 needs a value" >&2; exit 64; }
+      case "$1" in
+        --command) explicit_cmd=$2 ;;
+        --args) explicit_args=$2 ;;
+        --phase)
+          printf '%s' "$2" | grep -qE '^[0-9]+(\.[0-9]+)?$' || { echo "--phase needs a numeric phase" >&2; exit 64; }
+          explicit_args="${explicit_args:+$explicit_args }$2" ;;
+        --repo) explicit_repo=$2 ;;
+      esac
+      shift 2 ;;
+    --global) GLOBAL=1; shift ;;
+    -h|--help) echo 'usage: gsdt-worktree-guard [--global] [--command gsd-… --args "…" --repo <dir>]'; exit 0 ;;
+    *) echo "unknown option: $1" >&2; exit 64 ;;
+  esac
+done
+if [ -n "$explicit_cmd" ]; then input=""; cmd=${explicit_cmd#/}; args=$explicit_args
+else input=$(cat 2>/dev/null || true); fi
+
+SELF="$0"
+while [ -L "$SELF" ]; do
+  tgt=$(readlink "$SELF")
+  case "$tgt" in /*) SELF="$tgt" ;; *) SELF="$(dirname "$SELF")/$tgt" ;; esac
+done
+GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
+# shellcheck source=../lib/common.sh
+. "$GSD_PKG/lib/common.sh"
+# shellcheck source=../lib/ui.sh
+. "$GSD_PKG/lib/ui.sh"
+
+unreadable() {  # $1=why — a payload the guard cannot classify
+  [ "$GLOBAL" = 0 ] || exit 0
+  printf 'BLOCKED: %s\n' "$1" >&2; exit 2
+}
+
+payload_cwd=""   # Claude's .cwd: the location when CLAUDE_PROJECT_DIR is unset
+# Command + args from the known payload shapes:
+#   UserPromptExpansion → .command_name / .command_args
+#   PreToolUse(Skill)   → .tool_input.skill / .tool_input.args
+if [ -z "$explicit_cmd" ] && command -v jq >/dev/null 2>&1; then
+  if ! printf '%s' "$input" | jq -e 'type == "object" and
+    ((.command_name // .tool_input.skill // "") | type == "string") and
+    ((.command_args // .tool_input.args // "") | type == "string")' >/dev/null 2>&1; then
+    unreadable 'invalid Claude hook payload.'
+  fi
+  cmd=$(printf '%s' "$input" | jq -r '.command_name // .tool_input.skill // empty' 2>/dev/null || true)
+  args=$(printf '%s' "$input" | jq -r '.command_args // .tool_input.args // empty' 2>/dev/null || true)
+  payload_cwd=$(printf '%s' "$input" | jq -r '.cwd // empty | strings' 2>/dev/null || true)
+elif [ -z "$explicit_cmd" ]; then
+  py=$(gsd_python 2>/dev/null || true)
+  [ -n "$py" ] || unreadable 'Claude hook needs jq or Python 3.7+ to inspect tool calls.'
+  hook_fields=(); hook_field_count=0
+  while IFS= read -r -d '' field; do
+    hook_fields+=("$field"); hook_field_count=$((hook_field_count + 1))
+  done < <(printf '%s' "$input" | "$py" "$GSD_PKG/lib/gsd_hook_payload.py" --claude)
+  [ "$hook_field_count" -eq 4 ] || unreadable 'could not parse Claude hook payload.'
+  case "${hook_fields[0]}" in
+    allow) exit 0 ;;
+    guard) cmd=${hook_fields[1]}; args=${hook_fields[2]}; payload_cwd=${hook_fields[3]} ;;
+    *) unreadable "${hook_fields[1]}" ;;
+  esac
+fi
+cmd="${cmd:-}"; args="${args:-}"
+cmd=${cmd#/}
+case "$cmd" in gsd:*) cmd="gsd-${cmd#gsd:}" ;; esac   # namespaced form of a GSD skill
+case "$cmd" in *:gsd-*) cmd=${cmd#*:} ;; esac          # a plugin's form: gsd-core:gsd-plan-phase
+case "$cmd" in gsdt-flow|gsdw-flow) cmd=gsd-flow ;; esac   # this toolkit's flow skill (gsdw-: before 0.8.0)
+case "$cmd" in gsd-*) ;; *) exit 0 ;; esac   # not a GSD command → allow
+
+# The phase is the first word that is only a number: a number inside a path or
+# a name (--files src/v2/a.ts, --prd docs/r3.md) is not a phase.
+N=$(printf '%s' "$args" | tr -s '[:space:]' '\n' | sed 's/^--phase=//' | grep -E '^[0-9]+(\.[0-9]+)?$' | head -1 || true)
+# Phase numbers come padded or not: dirs are 08-slug, integer branches are
+# phase-8-slug, GSD decimal inserts are 02.1 in both. Compare numerically.
+pnorm() { local int=${1%%.*}; printf '%s' "$((10#$int))${1#"$int"}"; }
+
+dir="${explicit_repo:-${CLAUDE_PROJECT_DIR:-${payload_cwd:-$PWD}}}"
+dir=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$dir")
+branch=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+# Nested workers inherit phase identity only from a containing checkout in the
+# same Git repository. A branch name alone never bypasses the guard.
+case "$branch" in agent-*|worktree-agent-*)
+  worker_common=$(git -C "$dir" rev-parse --git-common-dir 2>/dev/null || true)
+  worker_common=$(cd "$dir" && cd "$worker_common" 2>/dev/null && pwd -P)
+  parent=$(dirname "$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null || echo "$dir")")
+  while [ "$parent" != / ]; do
+    parent_branch=$(git -C "$parent" branch --show-current 2>/dev/null || true)
+    case "$parent_branch" in phase-*)
+      parent_common=$(git -C "$parent" rev-parse --git-common-dir)
+      parent_common=$(cd "$parent" && cd "$parent_common" && pwd -P)
+      [ "$worker_common" != "$parent_common" ] || branch=$parent_branch
+      break ;;
+    esac
+    parent=$(dirname "$parent")
+  done ;;
+esac
+BASE=$(gsd_base "$dir" 2>/dev/null || echo develop)
+
+block() { printf '%s\n' "$@" >&2; exit 2; }
+
+# Rule 0 — the plan is started by gsdt-init, never by the bare skill
+case "$cmd" in gsd-new-project|gsd-ingest-docs)
+  [ -f "$dir/.gsd.conf" ] || block \
+    "BLOCKED: /$cmd needs the gsd-toolkit setup first — this repo has no .gsd.conf." \
+    "Run gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /$cmd. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)" ;;
+esac
+[ "$GLOBAL" = 0 ] || [ -f "$dir/.gsd.conf" ] || exit 0
+
+# Rule 0b — GSD skills that clash with one-phase-per-worktree (set-up repos)
+if [ -f "$dir/.gsd.conf" ]; then
+  clash() {  # $1=why  $2=what to run instead
+    block "BLOCKED: /$cmd does not work with gsd-toolkit — $1." \
+          "Instead: $2   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)"
+  }
+  case "$cmd" in
+    gsd-autonomous) clash "it runs every phase in this one checkout and skips the review, validate and secure gates" \
+      "gsdt-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree" ;;
+    gsd-manager) clash "it runs several phases as background agents in one checkout, and two writers in one checkout are not safe" \
+      "gsdt-list to see every phase, gsdt-start per phase (each gets its own worktree and session)" ;;
+    gsd-workspace|gsd-workstreams) clash "it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's" \
+      "gsdt-start -n \"<desc>\" — one worktree per phase, phases run in parallel" ;;
+    gsd-phase)
+      case " $args " in   # --remove/--insert win over --edit: "--remove 3 --edit" still removes
+        *" --remove "*) clash "--remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number" \
+          "check gsdt-list first; only when no later phase is in flight, run it on $BASE with GSD_SKIP_GUARD=1" ;;
+        *" --insert "*) clash "its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows" \
+          "gsdt-start --insert <N> \"<desc>\"" ;;
+        *" --edit "*) ;;
+        *) clash "its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows" \
+          "gsdt-start -n \"<desc>\"" ;;
+      esac ;;
+  esac
+fi
+
+# Rule 1 — /gsd-phase only on the base branch
+if [ "$cmd" = "gsd-phase" ]; then
+  [ "$branch" = "$BASE" ] && exit 0
+  block "BLOCKED: /gsd-phase must run on '$BASE' (main checkout), not '$branch'." \
+        "ROADMAP.md changes go through $BASE. See .gsd/INSTRUCTIONS.md."
+fi
+
+# Per-phase ("feature work") commands
+case " gsd-flow gsd-review gsd-discuss-phase gsd-plan-phase gsd-execute-phase gsd-ui-phase gsd-mvp-phase gsd-spec-phase gsd-ai-integration-phase gsd-verify-work gsd-secure-phase gsd-validate-phase gsd-code-review gsd-add-tests gsd-extract-learnings gsd-ui-review gsd-eval-review " in
+  *" $cmd "*) ;;
+  *) exit 0 ;;   # progress, help, map-codebase, resume-work, … allowed anywhere
+esac
+
+[ "$branch" = "$BASE" ] && block \
+  "BLOCKED: /$cmd is feature work — run it in the phase worktree, not on $BASE." \
+  "Create/open it with: gsdt-start -p ${N:-<N>}  (then open a session in phase-${N:-<N>}-*). See .gsd/INSTRUCTIONS.md."
+
+if [ -z "$N" ]; then
+  N=$(printf '%s' "$branch" | sed -nE 's/^phase-([0-9]+(\.[0-9]+)?)(-.*)?$/\1/p')
+  [ -n "$N" ] || block "BLOCKED: /$cmd requires a phase number and matching phase worktree."
+fi
+
+bn=$(printf '%s' "$branch" | sed -nE 's/^phase-([0-9]+(\.[0-9]+)?)(-.*)?$/\1/p')
+case "$branch" in
+  phase-*) if [ -z "$bn" ] || [ "$(pnorm "$bn")" != "$(pnorm "$N")" ]; then
+             block "BLOCKED: you're in '$branch', but /$cmd targets phase $N. Switch to the phase-$N-* worktree."
+           fi ;;
+  *)       block "BLOCKED: /$cmd targets phase $N but '$branch' isn't a phase-$N-* worktree. See .gsd/INSTRUCTIONS.md." ;;
+esac
+
+# Rule 3 — execute-phase needs deps installed (only for repos with an install step)
+if [ "$cmd" = "gsd-execute-phase" ] && [ -n "$(gsd_install_cmd "$dir")" ]; then
+  s=$(cat "$dir/.gsd-install.status" 2>/dev/null || echo unknown)
+  [ "$s" = "fail" ] && block "BLOCKED: dependency install FAILED — see $dir/.gsd-install.log, then install manually."
+  [ "$s" = "running" ] && block "BLOCKED: dependencies still installing. Log: $dir/.gsd-install.log"
+  if [ "$s" != ok ] && [ ! -d "$dir/node_modules" ]; then
+    block "BLOCKED: dependency installation is not complete (status: $s). Run '$(gsd_install_cmd "$dir")' successfully and record ok in .gsd-install.status."
+  fi
+fi
+
+# Rules 4 and 5 — opt-in artifact gates. Policy is read from the MAIN
+# checkout's .gsd.conf, not the worktree's copy, so turning it on takes effect
+# for worktrees branched before the key existed.
+FLOW_STRICT=0; [ "$(gsd_conf_get "$(gsd_main "$dir" 2>/dev/null || echo "$dir")" flow)" = "strict" ] && FLOW_STRICT=1
+UI_STRICT=0; [ "$(gsd_ui_gates "$dir")" = strict ] && UI_STRICT=1
+[ "$FLOW_STRICT" = 1 ] || [ "$UI_STRICT" = 1 ] || exit 0
+# The phase dir may be padded (08-, 02.1-) or not (7.1-); artifacts inside it
+# carry the dir's own prefix, so P is taken from the dir that exists.
+nn=$(pnorm "$N"); int=${nn%%.*}; P="$(printf '%02d' "$int")${nn#"$int"}"
+pdir=""; for d in "$dir/.planning/phases/$P"-* "$dir/.planning/phases/$nn"-*; do
+  [ -d "$d" ] && { pdir="$d"; P=$(basename "$d"); P=${P%%-*}; break; }
+done
+need() {  # $1=artifact suffix  $2=step that produces it  $3=command that runs it
+  [ -n "$pdir" ] && [ -f "$pdir/$P-$1" ] && return 0
+  block "BLOCKED (flow = strict): /$cmd $N needs $P-$1 — $2 has not been done." \
+        "Run: $3   (or GSD_SKIP_GUARD=1 if the user asked to skip it)"
+}
+ui_block() {  # $1=what is missing  $2=how to fix it
+  block "BLOCKED (ui_gates = strict): /$cmd $N needs $1." \
+        "Run: $2   (or GSD_SKIP_GUARD=1 if the user asked to skip it)"
+}
+if [ "$UI_STRICT" = 1 ]; then
+  case "$cmd" in
+    gsd-ui-phase)
+      [ "$(gsd_ui_design_state "$dir")" = ok ] || ui_block "a filled .planning/design/DESIGN.md (the design system)" "gsdt-ui design, then fill it with the user"
+      case "$([ -n "$pdir" ] && gsd_ui_layout_state "$dir" "$pdir" "$P")" in
+        ok|skip) ;;
+        *) ui_block "$P-LAYOUT.md with a chosen sketch and pages" "gsdt-ui layout $N, /gsd-sketch, then fill sketch: and pages:" ;;
+      esac ;;
+    gsd-ui-review)
+      # check → look → approval, each for the pages as they are now. A phase
+      # whose UI review is already on the base branch predates these steps.
+      [ -n "$pdir" ] || ui_block "a phase folder with the UI check of the built pages" "gsdt-ui check $N"
+      if ! gsd_ui_exempt "$dir" "$pdir" "$P"; then
+        gate=$(gsd_ui_gate "$dir" "$pdir" "$P")
+        [ -z "$gate" ] || ui_block "the UI steps before it — ${gate##*|}" "$(gsd_ui_step_cmd "${gate%%|*}" "$N")"
+      fi ;;
+  esac
+fi
+[ "$FLOW_STRICT" = 1 ] || exit 0
+case "$cmd" in
+  gsd-plan-phase)
+    case " $args " in *" --prd "*|*" --prd="*) ;; *) need CONTEXT.md "discuss-phase" "/gsd-discuss-phase $N" ;; esac ;;
+  gsd-execute-phase)
+    case " $args " in *" --gaps-only "*) ;; *)
+      need REVIEWS.md "the cross-AI plan review" "/gsd-review --phase $N  then  /gsd-plan-phase $N --reviews"
+      rp=$(gsd_conf_get "$(gsd_main "$dir" 2>/dev/null || echo "$dir")" review_provider)
+      if why=$(gsd_reviews_problem "$pdir/$P-REVIEWS.md" "${rp:-codex}"); then
+        block "BLOCKED (flow = strict): /$cmd $N needs a usable $P-REVIEWS.md — $why." \
+              "Open it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase $N  then  /gsd-plan-phase $N --reviews   (Codex usage limit: gsdt-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)"
+      fi ;;
+    esac ;;
+  gsd-secure-phase)
+    need REVIEW.md "the code review" "/gsd-code-review $N"
+    [ -f "$pdir/$P-UI-SPEC.md" ] && need UI-REVIEW.md "ui-review (this phase has screens)" "/gsd-ui-review $N"
+    if why=$(gsd_validation_problem "$pdir" "$P" "$dir"); then
+      block "BLOCKED (flow = strict): /$cmd $N needs the test audit — $why." \
+            "Run: /gsd-validate-phase $N   (or GSD_SKIP_GUARD=1 if the user asked to skip it)"
+    fi ;;
+esac
+
+exit 0

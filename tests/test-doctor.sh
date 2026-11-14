@@ -171,7 +171,8 @@ farm "$WORK/noperl" perl
 DPATH="$WORK/noperl" json "$R"
 has "no perl → T006" '"T006"' "$OUT"
 DPATH="$WORK/noperl" doc "$R"
-has "no perl → roadmap row check is skipped, not passed" 'roadmap row check skipped' "$OUT"
+has "no perl → the roadmap check still runs (it is TypeScript now): its T022 finding shows" 'Phase 1 has no checklist row' "$OUT"
+hasnt "…and is not skipped" 'roadmap row check skipped' "$OUT"
 
 section "skills (T007)"
 doc "$R"
@@ -188,7 +189,7 @@ has "a checkout reinstalls with its install.sh" 'install.sh --reuse-install-conf
 
 # A release runtime has no .git: it re-runs its own install.sh for its version.
 RT="$WORK/runtime"; mkdir -p "$RT"
-cp -R "$PKG/bin" "$PKG/lib" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$PKG/VERSION" "$RT/"
+cp -R "$PKG/bin" "$PKG/lib" "$PKG/src" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$PKG/VERSION" "$RT/"
 PATH="$RT/bin:$PATH:$STUB" "$RT/bin/gsdt-doctor" --json --repo "$R" > "$OUT" 2>&1
 has "a release reinstalls with its install.sh and version" "install.sh --version $(cat "$PKG/VERSION") --reuse-install-config" "$OUT"
 rm -rf "$WORK/skills"
@@ -239,6 +240,9 @@ has "a premerge path that does not exist → T019" 'premerge = scripts/nope.sh, 
 printf 'base = develop\npremerge = none\n' > "$R/.gsd.conf"
 json "$R"
 hasnt "premerge = none → no T019" '"T019"' "$OUT"
+printf 'base = develop\npremerge = scripts/a\tb.sh\n' > "$R/.gsd.conf"
+json "$R"
+if python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$OUT" 2>/dev/null; then ok "--json stays valid JSON when a finding holds a tab"; else bad "--json stays valid JSON when a finding holds a tab" "$(head -c 400 "$OUT")"; fi
 cp "$WORK/conf.bak" "$R/.gsd.conf"; rm -rf "$R/scripts"
 
 section "duplicate phase headings (T025)"

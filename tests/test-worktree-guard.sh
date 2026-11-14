@@ -245,14 +245,35 @@ gis "after gsdt-init (.gsd.conf) → allowed"                          "$(gg "$(
 mkrepo "" phase-7-thing 07-thing
 gis "--global skips the phase rules (plan-phase on a phase branch)" "$(gg "$(upe gsd-plan-phase "$REPO")")" 0
 allowed "the repo hook: new-project in a set-up repo passes"        gsd-new-project ""
+# A PATH without jq (and without Python): the guard reads the payload itself,
+# including the cwd. It needs node, which is linked in.
 NOJQ="$WORK/no-jq"; mkdir -p "$NOJQ"
-for c in bash cat dirname sed head grep git python3 tr awk env readlink; do ln -sf "$(command -v "$c")" "$NOJQ/$c"; done
+for c in bash cat dirname sed head grep git tr awk env readlink node; do ln -sf "$(command -v "$c")" "$NOJQ/$c"; done
 rm -f "$BARE/.gsd.conf"
-gis "no jq: the Python reader takes the cwd too → blocked" "$(printf '%s' "$(upe gsd-new-project "$BARE")" | PATH="$NOJQ" env -u CLAUDE_PROJECT_DIR "$GUARD" --global >/dev/null 2>"$WORK/err"; echo $?)" 2
-# the flow skill by both names (gsdw-flow: a session started before 0.8.0)
+gis "no jq, no python: the guard reads the cwd of the payload too → blocked" "$(printf '%s' "$(upe gsd-new-project "$BARE")" | PATH="$NOJQ" env -u CLAUDE_PROJECT_DIR "$GUARD" --global >/dev/null 2>"$WORK/err"; echo $?)" 2
+# the flow skill by both names (gsdw-flow: a session started before 0.8.0) is
+# the guard's gsd-flow: feature work, so blocked on the base branch of a
+# set-up repo, and blocked in a phase worktree for another phase
+mkrepo "" phase-7-thing 07-thing
+git -C "$REPO" checkout -q develop
 for fs in gsdt-flow gsdw-flow; do
-  r=$(skl "$fs" "$BARE" | python3 "$PKG/lib/gsd_hook_payload.py" --claude | tr '\0' ' ' | cut -d' ' -f1-2); [ "$r" = "guard gsd-flow" ] && ok "the Python reader maps $fs to gsd-flow" || bad "the Python reader maps $fs to gsd-flow" "got: $r"
+  gis "the guard treats $fs as gsd-flow: feature work on the base → blocked" "$(printf '{"tool_name":"Skill","tool_input":{"skill":"%s","args":"7"}}' "$fs" | CLAUDE_PROJECT_DIR="$REPO" "$GUARD" >/dev/null 2>"$WORK/err"; echo $?)" 2
+  grep -q 'is feature work' "$WORK/err" && ok "…as gsd-flow ($fs) and says so" || bad "…as gsd-flow ($fs) and says so" "$(cat "$WORK/err")"
 done
+git -C "$REPO" checkout -q phase-7-thing
+for fs in gsdt-flow gsdw-flow; do
+  gis "$fs for another phase in a phase worktree → blocked (gsd-flow)" "$(printf '{"tool_name":"Skill","tool_input":{"skill":"%s","args":"9"}}' "$fs" | CLAUDE_PROJECT_DIR="$REPO" "$GUARD" >/dev/null 2>"$WORK/err"; echo $?)" 2
+  gis "$fs for the matching phase → allowed" "$(printf '{"tool_name":"Skill","tool_input":{"skill":"%s","args":"7"}}' "$fs" | CLAUDE_PROJECT_DIR="$REPO" "$GUARD" >/dev/null 2>"$WORK/err"; echo $?)" 0
+done
+# no node on PATH: the guard cannot read anything, so it blocks (fail closed);
+# the user-level --global hook lets it through like an unreadable payload
+NONODE="$WORK/no-node"; mkdir -p "$NONODE"
+for c in bash cat dirname sed head grep git tr awk env readlink; do ln -sf "$(command -v "$c")" "$NONODE/$c"; done
+gis "no node: the guard blocks (exit 2)" "$(printf '%s' "$(skl gsd-plan-phase "$REPO")" | PATH="$NONODE" env -u CLAUDE_PROJECT_DIR "$GUARD" >/dev/null 2>"$WORK/err"; echo $?)" 2
+grep -q 'needs Node.js' "$WORK/err" && ok "…and says it needs Node.js" || bad "…and says it needs Node.js" "$(cat "$WORK/err")"
+gis "no node: --global lets it through (exit 0, silent)" "$(printf '%s' "$(skl gsd-plan-phase "$REPO")" | PATH="$NONODE" env -u CLAUDE_PROJECT_DIR "$GUARD" --global >/dev/null 2>"$WORK/err"; echo $?)" 0
+[ ! -s "$WORK/err" ] && ok "…without a word" || bad "…without a word" "$(cat "$WORK/err")"
+gis "no node: GSD_SKIP_GUARD=1 still escapes" "$(printf '%s' "$(skl gsd-plan-phase "$REPO")" | PATH="$NONODE" GSD_SKIP_GUARD=1 "$GUARD" >/dev/null 2>&1; echo $?)" 0
 
 section "rule 0b — GSD skills that clash with the worktree model (set-up repos)"
 mkrepo "" phase-7-thing 07-thing

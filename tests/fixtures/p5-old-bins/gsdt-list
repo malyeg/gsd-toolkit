@@ -1,0 +1,327 @@
+#!/usr/bin/env bash
+#
+# gsdt-list — list the GSD phases of a repo: number, description, plan
+# progress, and worktree/branch state. Read-only; safe from anywhere.
+#
+# Usage (from anywhere inside a GSD-fitted repo or its worktrees):
+#   gsdt-list [--repo <path>] [--compact]
+#
+# By default long PHASE/WORKTREE text wraps across lines to fit the screen so
+# nothing is truncated; pass --compact for the one-line-per-phase view.
+#
+# Options:
+#   --repo <path>    main checkout of the target repo (default: derived from cwd)
+#   --compact, -c    one line per phase, clipping each cell (the old default)
+#
+# Columns:
+#   N         phase number (what gsdt-start -p <N> takes)
+#   PHASE     description from the '### Phase N:' heading in ROADMAP.md
+#   PLANS     plans executed/total (a plan is done once it has a SUMMARY) ·
+#             ✔ all executed · — no plans yet
+#   STAGE     furthest lifecycle step reached, from the phase's artifact files:
+#             spec → discuss → ui → plan → execute → done (all plans executed)
+#   WORKTREE  the phase's phase-<N>-* branch, ● = worktree attached
+# Under the table: the gsdt-batch branches (batch-*), ● = worktree attached.
+set -euo pipefail
+
+die() { printf '✖ %s\n' "$@" >&2; exit 1; }
+
+usage() {
+  cat <<'HELP'
+gsdt-list — list GSD phases: number, description, plan progress, worktree
+
+USAGE
+  gsdt-list [--repo <path>] [--compact]
+
+  By default long PHASE/WORKTREE cells wrap across lines to fit the screen
+  (nothing truncated). Use --compact for the one-line-per-phase view.
+
+OPTIONS
+  --repo <path>   main checkout of the target repo
+                  (default: derived from the current directory)
+  --compact, -c   one line per phase, clipping each cell to fit (old default)
+  -h, --help      show this help
+
+COLUMNS
+  N         phase number — what gsdt-start -p <N> attaches to
+  PHASE     description from the '### Phase N:' heading in ROADMAP.md
+  PLANS     plans executed/total (a plan is done once it has a SUMMARY),
+            e.g. 5/6 · ✔ = all executed · — = none yet
+  STAGE     furthest lifecycle step reached, from the phase's artifact files:
+            spec → discuss → ui → plan → execute → done (all plans executed)
+  WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
+
+  Under the table: the batch-* branches of gsdt-batch runs not landed yet
+  (● = worktree attached). Land one with gsdt-finish <branch>.
+
+RELATED
+  gsdt-start -n "<desc>"     claim a NEW phase and open its session
+  gsdt-start -p <N>       attach to an existing phase (no duplicate claim)
+  gsdt-finish             finish the phase from inside its worktree
+HELP
+}
+
+REPO=""
+FULL=1                     # wrap-to-screen is the default; --compact opts out
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    --repo)  [ $# -ge 2 ] || die "--repo needs a value"; REPO="$2"; shift 2 ;;
+    -c|--compact) FULL=0; shift ;;
+    --full)  FULL=1; shift ;;          # accepted for back-compat (now the default)
+    *) die "unknown argument: $1 (see gsdt-list --help)" ;;
+  esac
+done
+
+# a newer release? (one stderr line, terminal only — see lib/version.sh)
+SELF=$0
+while [ -L "$SELF" ]; do t=$(readlink "$SELF"); case "$t" in /*) SELF=$t ;; *) SELF="$(dirname "$SELF")/$t" ;; esac; done
+GSD_PKG=$(cd "$(dirname "$SELF")/.." && pwd)
+if [ -f "$GSD_PKG/lib/version.sh" ]; then
+  # shellcheck source=../lib/version.sh
+  . "$GSD_PKG/lib/version.sh"; gsd_update_notice
+  # shellcheck source=../lib/provider.sh
+  . "$GSD_PKG/lib/provider.sh"; gsd_stale_hooks_notice
+fi
+
+# ── locate the main checkout (same detection as gsdt-start) ───────────────────
+if [ -n "$REPO" ]; then
+  MAIN="$(cd "$REPO" 2>/dev/null && git rev-parse --show-toplevel 2>/dev/null)" \
+    || die "--repo is not a git checkout: $REPO"
+else
+  git rev-parse --show-toplevel >/dev/null 2>&1 \
+    || die "not inside a git repo — cd into the target repo or pass --repo <path>"
+  # substr, not $2: a checkout path with a space would be cut at the space
+  MAIN=$(git worktree list --porcelain | awk '/^worktree /{print substr($0,10); exit}')
+fi
+ROADMAP="$MAIN/.planning/ROADMAP.md"
+[ -f "$ROADMAP" ] || die "$ROADMAP not found — is GSD initialized here?"
+
+# phase-* branches and which of them are attached as worktrees
+BRANCHES=$(git -C "$MAIN" for-each-ref --format='%(refname:short)' 'refs/heads/phase-*' || true)
+# gsdt-batch runs: batch-* branches, listed under the table
+BATCHES=$(git -C "$MAIN" for-each-ref --format='%(refname:short)' 'refs/heads/batch-*' || true)
+WTMAP=$(git -C "$MAIN" worktree list --porcelain \
+          | awk '/^worktree /{w=substr($0,10)} /^branch /{b=substr($0,8); sub("refs/heads/","",b); print b "\t" w}')
+# COLUMNS first: without a terminal (pipes, CI) tput cannot know the width.
+TERMCOLS=${COLUMNS:-$( tput cols 2>/dev/null || echo 120 )}
+PHASESROOT="$MAIN/.planning/phases"
+
+export BRANCHES BATCHES WTMAP TERMCOLS FULL PHASESROOT
+exec perl -CS - "$ROADMAP" <<'PERL'
+use strict; use warnings; use utf8;
+binmode STDOUT, ':encoding(UTF-8)';
+
+my $file = shift;
+open my $fh, '<:encoding(UTF-8)', $file or die "cannot read $file\n";
+my @phases;
+while (<$fh>) {
+  push @phases, { n => $1, title => $2 }
+    if /^### Phase ([0-9]+(?:\.[0-9]+)?):\s*(.+?)\s*$/;
+}
+@phases or do { print "no phases found in $file\n"; exit 0 };
+
+my %wt = map { split /\t/, $_, 2 } grep { /\t/ } split /\n/, ($ENV{WTMAP} // '');
+my @branches = grep { length } split /\n/, ($ENV{BRANCHES} // '');
+
+# map phase number → its .planning/phases/<NN>-* directory. Dir prefixes are
+# zero-padded ('01', '10', '01.1'); ROADMAP numbers aren't ('1', '10', '01.1'),
+# so normalize both by stripping one leading zero before matching.
+my $norm = sub { (my $k = shift) =~ s/^0(?=\d)//; $k };
+my %dir_cache;
+my $dir_in = sub {   # phase dir under a given phases/ root (cached per root)
+  my ($proot, $n) = @_;
+  return undef unless $proot;
+  unless ($dir_cache{$proot}) {
+    my %m;
+    if (opendir my $ph, $proot) {
+      for my $d (readdir $ph) {
+        next if $d =~ /^\./ || !-d "$proot/$d";
+        (my $pre = $d) =~ s/-.*$//;
+        $m{ $norm->($pre) } = "$proot/$d";
+      }
+      closedir $ph;
+    }
+    $dir_cache{$proot} = \%m;
+  }
+  $dir_cache{$proot}{ $norm->($n) };
+};
+# scan a phase's artifact files: how many plans exist / were executed (a plan
+# is executed once it has a matching SUMMARY), plus which earlier steps ran.
+# In-flight artifacts live on the phase BRANCH, so prefer the phase's attached
+# worktree when there is one — the main checkout only sees merged state.
+my $scan = sub {
+  my ($n, $wtroot) = @_;
+  my %r = (fp => 0, fs => 0);
+  my $dir = ($wtroot && $dir_in->("$wtroot/.planning/phases", $n))
+            || $dir_in->($ENV{PHASESROOT}, $n);
+  my $dh;
+  return \%r unless $dir && opendir($dh, $dir);
+  for (readdir $dh) {
+    $r{fp}++,      next if /-PLAN\.md$/i;
+    $r{fs}++,      next if /-SUMMARY\.md$/i;
+    $r{planning}++ if /RESEARCH\.md$/i || /PATTERNS\.md$/i || /PLAN-OUTLINE\.md$/i;
+    $r{ui}++       if /UI-SPEC\.md$/i;
+    $r{discuss}++  if /CONTEXT\.md$/i || /DISCUSSION-LOG\.md$/i
+                   || /(TICKET|STORY)\.md$/i || /DISCUSS-CHECKPOINT\.json$/i;
+    $r{spec}++     if /SPEC\.md$/i && !/UI-SPEC\.md$/i;
+  }
+  closedir $dh;
+  \%r;
+};
+
+for my $p (@phases) {
+  # match the phase's feature branch; PR branches (/gsd-pr-branch, *-pr) don't count
+  my ($br) = grep { /^phase-\Q$p->{n}\E-/ && !/-pr$/ } @branches;
+  my $s = $scan->($p->{n}, ($br && $wt{$br}) ? $wt{$br} : undef);
+  # PLANS: executed/total from the files · ✔ all executed · — no plans yet
+  $p->{plans} = $s->{fp} == 0        ? '—'
+              : $s->{fs} >= $s->{fp} ? '✔'
+              :                        "$s->{fs}/$s->{fp}";
+  # STAGE: furthest lifecycle step reached; 'done' once every plan is executed
+  $p->{stage} = $s->{fp} > 0
+                  ? ($s->{fs} >= $s->{fp} ? 'done'
+                   : $s->{fs} > 0         ? 'execute'
+                   :                        'plan')
+              : $s->{planning} ? 'plan'
+              : $s->{ui}       ? 'ui'
+              : $s->{discuss}  ? 'discuss'
+              : $s->{spec}     ? 'spec'
+              :                  '—';
+  # keep the branch name and the ● attached-marker apart so clipping a long
+  # branch never eats the marker (it lives at the end of the cell)
+  $p->{wt}     = $br // '—';
+  $p->{wtmark} = ($br && $wt{$br}) ? ' ●' : '';
+}
+
+# column widths: N and PLANS fit content; WORKTREE capped, PHASE flexes
+my $termcols = $ENV{TERMCOLS} || 120;
+my $max = sub { my $w = 0; length > $w and $w = length for @_; $w };
+my $wN = $max->('N',        map { $_->{n} }     @phases);
+my $wP = $max->('PLANS',    map { $_->{plans} } @phases);
+my $wS = $max->('STAGE',    map { $_->{stage} } @phases);
+my $wWnat = $max->('WORKTREE', map { $_->{wt} . $_->{wtmark} } @phases);
+my $wTnat = $max->('PHASE',    map { $_->{title} }             @phases);
+my $wW = $wWnat;
+my $wT = $wTnat;
+my $frame = 16;                                  # '│ ' + ' │ '×4 + ' │'
+my $avail = $termcols - $frame - $wN - $wP - $wS;
+
+if ($ENV{FULL}) {
+  # wrap mode: fit the real screen and wrap long cells instead of truncating.
+  # Branch names have no spaces (they wrap poorly), so cap WORKTREE to a
+  # third of the row and give the rest to PHASE — but never stretch either
+  # column past the text it actually holds.
+  my $wwCap = int($avail / 3);
+  $wwCap = 40 if $wwCap > 40;
+  $wwCap = 12 if $wwCap < 12;
+  $wW = $wwCap if $wW > $wwCap;
+  $wT = $avail - $wW;
+  $wT = $wTnat if $wT > $wTnat;     # don't stretch PHASE past its own text
+  $wT = 20 if $wT < 20;
+} elsif ($wT + $wW > $avail) {
+  # clip mode: PHASE is the description humans read; the WORKTREE branch name
+  # just repeats N + a slug of it, so surrender space from WORKTREE first.
+  my $wwFloor = 12;                 # keep 'phase-N-…' recognizable
+  my $wtFloor = 20;                 # keep the description readable
+  $wW = $avail - $wT;              # give PHASE its full width…
+  if ($wW < $wwFloor) {           # …unless that starves WORKTREE
+    $wW = $wwFloor;
+    $wT = $avail - $wW;
+    $wT = $wtFloor if $wT < $wtFloor;
+  }
+}
+my $clip = sub {
+  my ($s, $w) = @_;
+  length($s) <= $w ? $s : substr($s, 0, $w - 1) . '…';
+};
+# clip the branch name but always keep the trailing ● marker visible
+my $wtcell = sub {
+  my ($p) = @_;
+  my $mark = $p->{wtmark};
+  return $clip->($p->{wt}, $wW) unless length $mark;
+  $clip->($p->{wt}, $wW - length $mark) . $mark;
+};
+
+# word-wrap a description to width $w, hard-breaking any word longer than $w
+my $wrap_words = sub {
+  my ($s, $w) = @_;
+  my @out; my $line = '';
+  for my $word (split /\s+/, $s) {
+    while (length $word > $w) {               # word too long for the column
+      if (length $line) { push @out, $line; $line = '' }
+      push @out, substr($word, 0, $w);
+      $word = substr($word, $w);
+    }
+    if    (!length $line)                          { $line = $word }
+    elsif (length($line) + 1 + length($word) <= $w) { $line .= " $word" }
+    else  { push @out, $line; $line = $word }
+  }
+  push @out, $line if length $line;
+  @out ? @out : ('');
+};
+
+# hard-wrap a branch name to width $w, keeping the ● marker on the last line
+my $wrap_wt = sub {
+  my ($p, $w) = @_;
+  return ('—') if $p->{wt} eq '—';
+  my $s = $p->{wt};
+  my @out;
+  push @out, substr($s, 0, $w, '') while length $s;
+  my $mark = $p->{wtmark};
+  if (length $mark) {
+    if (length($out[-1]) + length($mark) <= $w) { $out[-1] .= $mark }
+    else { push @out, substr($mark, 1) }          # marker alone, drop lead space
+  }
+  @out;
+};
+
+# a full-width row whose PHASE/WORKTREE cells may span several lines
+my $row_multi = sub {
+  my ($p) = @_;
+  my @tl = $wrap_words->($p->{title}, $wT);
+  my @wl = $wrap_wt->($p, $wW);
+  my $lines = @tl > @wl ? @tl : @wl;
+  my $out = '';
+  for my $i (0 .. $lines - 1) {
+    $out .= sprintf "│ %*s │ %-*s │ %*s │ %-*s │ %-*s │\n",
+      $wN, ($i ? '' : $p->{n}),
+      $wT, ($i < @tl ? $tl[$i] : ''),
+      $wP, ($i ? '' : $p->{plans}),
+      $wS, ($i ? '' : $p->{stage}),
+      $wW, ($i < @wl ? $wl[$i] : '');
+  }
+  $out;
+};
+
+my $rule = sub {
+  my ($l, $m, $r, $fill) = @_;
+  $fill //= '─';
+  $l . $fill x ($wN + 2) . $m . $fill x ($wT + 2) . $m
+     . $fill x ($wP + 2) . $m . $fill x ($wS + 2) . $m
+     . $fill x ($wW + 2) . $r . "\n";
+};
+my $row = sub {
+  my ($n, $t, $pl, $st, $w) = @_;   # $w is already sized to $wW by the caller
+  sprintf "│ %*s │ %-*s │ %*s │ %-*s │ %-*s │\n",
+    $wN, $n, $wT, $clip->($t, $wT), $wP, $pl, $wS, $st, $wW, $w;
+};
+
+print $rule->('┌', '┬', '┐');
+print $row->('N', 'PHASE', 'PLANS', 'STAGE', 'WORKTREE');
+print $rule->('├', '┼', '┤');
+for my $i (0 .. $#phases) {
+  my $p = $phases[$i];
+  print $ENV{FULL}
+    ? $row_multi->($p)
+    : $row->($p->{n}, $p->{title}, $p->{plans}, $p->{stage}, $wtcell->($p));
+  print $rule->('├', '┼', '┤', '┈') if $i < $#phases;
+}
+print $rule->('└', '┴', '┘');
+print "  new phase: gsdt-start -n \"<desc>\" · attach: gsdt-start -p <N> · ● worktree attached\n";
+my @batches = grep { length } split /\n/, ($ENV{BATCHES} // '');
+if (@batches) {
+  print "\n  batches (gsdt-batch; land with gsdt-finish <branch>):\n";
+  print "    ", (exists $wt{$_} ? '● ' : '  '), $_, "\n" for @batches;
+}
+PERL

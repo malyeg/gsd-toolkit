@@ -1,0 +1,22 @@
+{
+  // Dev + tests: Node 24 runs src/*.ts directly (type stripping), so only
+  // erasable syntax: no enum, no namespace, no parameter properties.
+  // CI: `tsc --noEmit`. P11 builds dist/ from this config.
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["esnext"],
+    "types": ["node"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}

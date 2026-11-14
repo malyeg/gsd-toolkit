@@ -19,57 +19,19 @@
 #                            a repo with .gsd.conf, nothing elsewhere; always
 #                            exits 0.
 #   -h, --help               show this help
-set -uo pipefail
-
-usage() { awk 'NR>1 && /^set -uo/{exit} NR>1 {sub(/^# ?/,""); print}' "$0"; }
-
+#
+# Launcher: the command is src/commands/rules.ts (TypeScript, run by Node >= 24
+# through src/launch.mjs); the help text above is HELP in that file. See
+# docs/ts-port-progress.md. --hook never fails: without a usable node it prints
+# nothing and exits 0, so a SessionStart hook cannot break a session.
 SELF="$0"
 while [ -L "$SELF" ]; do
   tgt=$(readlink "$SELF")
   case "$tgt" in /*) SELF="$tgt" ;; *) SELF="$(dirname "$SELF")/$tgt" ;; esac
 done
-GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
-
-REPO=""; HOOK=0
-while [ $# -gt 0 ]; do
-  case "$1" in
-    --repo) [ $# -ge 2 ] || { echo "gsdt-rules: --repo needs a directory" >&2; exit 2; }; REPO=$2; shift 2 ;;
-    --hook) HOOK=1; shift ;;
-    -h|--help) usage; exit 0 ;;
-    *) echo "gsdt-rules: unknown argument: $1 (see --help)" >&2; exit 2 ;;
-  esac
-done
-
-if [ "$HOOK" = 1 ]; then
-  # Never let the hook break a session: no stdin wait, no error output.
-  [ -t 0 ] || cat >/dev/null 2>&1 || true
-  exec 2>/dev/null
-  REPO=${REPO:-${CLAUDE_PROJECT_DIR:-$PWD}}
+if ! command -v node >/dev/null 2>&1; then
+  case " $* " in *" --hook "*) exit 0 ;; esac
+  echo "gsdt-rules: needs Node.js >= 24 (node not found on PATH)" >&2
+  exit 1
 fi
-
-# shellcheck source=../lib/common.sh
-. "$GSD_PKG/lib/common.sh" || exit 0
-# shellcheck source=../lib/provider.sh
-. "$GSD_PKG/lib/provider.sh" || exit 0
-# shellcheck source=../lib/version.sh
-. "$GSD_PKG/lib/version.sh" || exit 0
-# shellcheck source=../lib/ui.sh
-. "$GSD_PKG/lib/ui.sh" || exit 0
-
-MAIN=$(gsd_main "${REPO:-.}")
-[ -n "$MAIN" ] && [ -f "$MAIN/.gsd.conf" ] || MAIN=""
-if [ -z "$MAIN" ]; then
-  [ "$HOOK" = 1 ] && exit 0
-  [ -z "$REPO" ] || [ -d "$REPO" ] || { echo "gsdt-rules: no such directory: $REPO" >&2; exit 2; }
-  gsd_rules_text on
-  exit 0
-fi
-
-ui=$(gsd_ui_gates "$MAIN"); ui_on=on; [ "$ui" != off ] || ui_on=off
-providers=$(gsd_conf_providers "$MAIN")
-out=$(gsd_rules_text "$ui_on"; gsd_repo_values "$providers" "${providers%%,*}" "$(gsd_base "$MAIN")" "$(gsd_wtdir "$MAIN")" "$ui" "$(gsd_flow_mode "$MAIN")")
-if [ "$HOOK" = 1 ]; then
-  printf 'GSD toolkit rules (gsdt-rules, gsd-toolkit %s) — follow them in this repo; .gsd/INSTRUCTIONS.md has its settings.\n\n' "$(gsd_version)"
-fi
-printf '%s\n' "$out"
-exit 0
+exec node "$(cd "$(dirname "$SELF")/.." && pwd)/src/launch.mjs" rules "$@"

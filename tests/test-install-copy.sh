@@ -41,7 +41,7 @@ mkdir -p "$COPY/skills/gsd-flow"; printf 'old\n' > "$COPY/skills/gsd-flow/SKILL.
 install_copy
 [ ! -e "$COPY/skills/gsd-flow" ]
 # the page checker travels with the runtime: the Node script and the pinned axe-core
-[ -f "$COPY/lib/ui-check.mjs" ]
+[ -f "$COPY/src/commands/ui-check.ts" ]
 [ -f "$COPY/lib/vendor/axe-core/axe.min.js" ]
 [ -f "$COPY/lib/vendor/axe-core/LICENSE" ]
 [ -f "$COPY/lib/vendor/axe-core/VERSION" ]
@@ -131,7 +131,7 @@ grep -q "^codex_skills	$(cd "$CH/.agents/skills" && pwd -P)\$" "$CB/.gsd-install
 # copy of the package, then remove only that temporary fixture.
 FIXTURE="$WORK/source"
 mkdir -p "$FIXTURE"
-cp -R "$PKG/bin" "$PKG/lib" "$PKG/shims" "$PKG/skills" "$FIXTURE/"
+cp -R "$PKG/bin" "$PKG/lib" "$PKG/shims" "$PKG/skills" "$PKG/src" "$FIXTURE/"
 cp "$PKG/install.sh" "$FIXTURE/install.sh"
 printf '#!/bin/sh\nexit 0\n' > "$FIXTURE/bin/gsd-obsolete"
 chmod +x "$FIXTURE/bin/gsd-obsolete"

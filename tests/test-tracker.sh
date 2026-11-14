@@ -425,8 +425,9 @@ else
 fi
 
 section "gsdt-tracker is standalone"
-S="$WORK/solo-pkg"; mkdir -p "$S/bin" "$S/lib"
-cp "$PKG/bin/gsdt-tracker" "$S/bin/"; cp -R "$PKG/lib/tracker" "$S/lib/"
+S="$WORK/solo-pkg"; mkdir -p "$S/bin" "$S/src/commands"
+cp "$PKG/bin/gsdt-tracker" "$S/bin/"; cp "$PKG/src/launch.mjs" "$S/src/"
+cp "$PKG/src/commands/tracker.ts" "$S/src/commands/"; cp -R "$PKG/src/tracker" "$S/src/"
 is  "runs with only its own files"             "$(cd "$WORK/noconf" && "$S/bin/gsdt-tracker" which)" clickup
 : > "$CURL_LOG"; (cd "$WORK/noconf" && "$S/bin/gsdt-tracker" --tracker clickup check) > "$WORK/out" 2>&1
 has "…and talks to ClickUp"                    'GET /user' "$CURL_LOG"
@@ -435,8 +436,31 @@ is  "…and logs in"                             "$?" 0
 uses=$(cd "$PKG" && grep -nE '(^|[^A-Za-z0-9_])gsd_[a-z]|lib/(common|ticket|provider)\.sh' \
          bin/gsdt-tracker lib/tracker/*.sh | grep -vE "^[^:]+:[0-9]+:[[:space:]]*#" || true)
 is  "tracker files use no GSD code"            "$uses" ""
+# the TypeScript: every import is node:… or a path inside src/tracker (and no GSD name is called)
+tsuses=$(cd "$PKG" && grep -nE '(^|[^A-Za-z0-9_])gsd_[a-z]|lib/(common|ticket|provider)\.sh' \
+           src/tracker/*.ts src/commands/tracker.ts | grep -vE "^[^:]+:[0-9]+:[[:space:]]*(//|\*)" || true)
+is  "tracker TypeScript uses no GSD names"     "$tsuses" ""
+ts_foreign_imports() {  # every import/export-from/dynamic import that is not node:… or inside src/tracker
+  local f spec
+  for f in src/tracker/*.ts src/commands/tracker.ts; do
+    grep -hoE "(from|import\\(|require\\()[[:space:]]*['\"][^'\"]*['\"]" "$f" | sed -E "s/^[a-z(]*[[:space:]]*['\"]([^'\"]*)['\"]/\\1/" \
+      | while read -r spec; do
+          case "$spec" in
+            node:*) ;;
+            ./*) ;;
+            ../tracker/*) [ "$f" = src/commands/tracker.ts ] || echo "$f: $spec" ;;
+            *) echo "$f: $spec" ;;
+          esac
+        done
+  done
+}
+tsimports=$(cd "$PKG" && ts_foreign_imports)
+is  "tracker TypeScript imports only node:* and src/tracker" "$tsimports" ""
 srcs=$(cd "$PKG" && grep -nE '^[[:space:]]*\. .*lib/tracker/' bin/* lib/*.sh | grep -vE '^bin/gsdt-tracker:' || true)
 is  "GSD never sources tracker files"          "$srcs" ""
+tsrefs=$(cd "$PKG" && grep -rnE "from[[:space:]]+['\"][^'\"]*tracker/" src --include='*.ts' \
+           | grep -vE '^src/(tracker/|commands/tracker\.ts:)' || true)
+is  "GSD (src/) never imports from src/tracker" "$tsrefs" ""
 is  "GSD: a tracker nobody set counts as none" "$(GSD_PKG=$PKG gsd_tracker_which "$WORK/noconf")" none
 is  "…a set one counts"                     "$(GSD_PKG=$PKG gsd_tracker_which "$WORK/custom")" custom
 for s in 869e33cv4 tk-PROJ-42 cu_869e33cv4 CU-12 'https://x.atlassian.net/browse/PROJ-42?focus=1' '#42' 'a b' 'x;rm'; do

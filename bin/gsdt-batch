@@ -1,186 +1,20 @@
 #!/usr/bin/env bash
 #
 # gsdt-batch — run several quick tasks as one batch, in a FRESH session with
-# the gsdt-batch skill already running. On Claude the session runs on Sonnet:
-# a small, fresh context makes every coordinator turn cheaper. The planners
-# keep the model gsd-core gives them (it never follows the session's model
-# unless GSD's settings say `inherit` — the skill checks that first).
+# the gsdt-batch skill already running, in a worktree of its own (batch-<date>-<slug>).
 #
 # Usage (from anywhere inside the repo):
 #   gsdt-batch [options] [--] <task list | brief | --file <path>> [gsd-quick-batch flags]
 #
-#   A task list is what /gsd-quick-batch takes: one item per bulleted or
-#   numbered line ("- fix …"), quoted as one argument, or --file <path>.
-#   A brief is anything else, in your own words, quoted:
-#     gsdt-batch "Read plan/FIX-BRIEF-7.md. Validate every item, fix only the
-#     real ones, recommend the owner calls."
-#   Everything that is not an option below goes to the skill unchanged.
-#
-# Options:
-#   --provider <p>      claude (default: the repo's provider), codex or custom
-#   --agent-command <c> the provider's executable
-#   --model <m>         the session's model (Claude default: sonnet; others:
-#                       their configured model). `default` = the CLI's own
-#   --name <slug>       the batch's name (default: the first words of the
-#                       list or brief, or the --file name)
-#   --repo <path>       the repo (default: the main checkout of the cwd)
-#   --print             print the worktree and command; make nothing
-#
-# The batch runs in its OWN worktree: gsdt-batch makes a
-# batch-<YYYY-MM-DD>-<slug> branch + worktree off the base branch (next to the
-# phase worktrees), then starts the session there. Its commits land on that
-# branch, never on the base branch; `gsdt-finish batch-…` merges it (tests →
-# merge → push → cleanup, like a phase). Run from inside a batch-* worktree,
-# it starts the session there instead. A taken name gets -2, -3, … (unless
-# --name named it: then that worktree is reused). Without a terminal the
-# worktree is made and the command printed. The Sonnet switch is Claude-only:
-# other providers launch with their usual model, and gsdt-batch says so.
+# What the options mean, with examples: gsdt-batch --help.
 set -uo pipefail
 
+# Ported to TypeScript (src/commands/batch.ts, which holds the --help text);
+# this launcher only finds the package.
 SELF=$0
 while [ -L "$SELF" ]; do t=$(readlink "$SELF"); case "$t" in /*) SELF=$t ;; *) SELF="$(dirname "$SELF")/$t" ;; esac; done
-GSD_PKG=$(cd "$(dirname "$SELF")/.." && pwd)
-# shellcheck source=../lib/common.sh
-. "$GSD_PKG/lib/common.sh"
-# shellcheck source=../lib/provider.sh
-. "$GSD_PKG/lib/provider.sh"
-
-usage() { awk 'NR>1 && /^set -uo/{exit} NR>1 {sub(/^# ?/,""); print}' "$0"; }
-die() { echo "gsdt-batch: $1" >&2; exit "${2:-64}"; }
-say() { echo "gsdt-batch: $1" >&2; }
-
-PROVIDER=""; COMMAND=""; MODEL=""; MODEL_SET=0; REPO=""; PRINT=0; REST=()
-NAME=""; FILE=""; FILE_AT=-1
-while [ $# -gt 0 ]; do
-  case "$1" in
-    --name) [ $# -ge 2 ] || die "--name needs a slug"; NAME=$2; shift ;;
-    --file) [ $# -ge 2 ] || die "--file needs a path"; FILE=$2
-            FILE_AT=${#REST[@]}; REST+=("--file" "$2"); shift ;;
-    --provider) [ $# -ge 2 ] || die "--provider needs a name"; PROVIDER=$2; shift ;;
-    --agent-command) [ $# -ge 2 ] || die "--agent-command needs a command"; COMMAND=$2; shift ;;
-    --model) [ $# -ge 2 ] || die "--model needs a model"; MODEL=$2; MODEL_SET=1; shift ;;
-    --repo) [ $# -ge 2 ] || die "--repo needs a path"; REPO=$2; shift ;;
-    --print) PRINT=1 ;;
-    -h|--help) usage; exit 0 ;;
-    --) shift; REST+=("$@"); break ;;
-    *) REST+=("$1") ;;
-  esac
-  shift
-done
-[ ${#REST[@]} -gt 0 ] || die "nothing to run: gsdt-batch \"- task one
-- task two\", or gsdt-batch --file <path>"
-
-MAIN=$(gsd_main "${REPO:-$PWD}")
-[ -n "$MAIN" ] || die "not inside a git repository${REPO:+: $REPO}"
-BASE=$(gsd_base "$MAIN")
-[ -n "$BASE" ] || die "could not tell the base branch — set 'base = <branch>' in $MAIN/.gsd.conf"
-
-# gsd-core runs a batch in the checkout it starts in only when that checkout
-# has its own .planning/ (else it uses the main checkout's, and merges there).
-# A worktree has it only when git tracks it.
-[ -n "$(git -C "$MAIN" ls-tree -d "$BASE" -- .planning 2>/dev/null)" ] \
-  || die "'.planning/' is not committed on '$BASE': the batch worktree would have none, and gsd-core would then run the batch in the main checkout. Commit .planning/ first (GSD's commit_docs = true)."
-
-slugify() {  # text → a-z0-9 words joined by -, at most 5 words / 40 chars
-  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9' ' ' \
-    | awk '{ s=""; for (i = 1; i <= NF && i <= 5; i++) s = s (s == "" ? "" : "-") $i; print s }' \
-    | cut -c1-40 | sed -E 's/-+$//'
-}
-# Where the session runs: the current batch-* worktree, or a new one.
-HERE_BR=$(git -C "${REPO:-$PWD}" branch --show-current 2>/dev/null || true)
-HERE_TOP=$(git -C "${REPO:-$PWD}" rev-parse --show-toplevel 2>/dev/null || true)
-DEST=""; MAKE=0; BR=""
-case "$HERE_BR" in
-  batch-*) if [ -z "$REPO" ] && [ "$HERE_TOP" != "$MAIN" ]; then DEST=$HERE_TOP; BR=$HERE_BR; fi ;;
-esac
-if [ -z "$DEST" ]; then
-  if [ -n "$NAME" ]; then
-    SLUG=$(slugify "${NAME#batch-}")
-  elif [ -n "$FILE" ]; then
-    f=${FILE##*/}; SLUG=$(slugify "${f%.*}")
-  else
-    first=""
-    for a in "${REST[@]}"; do case "$a" in --*) ;; *) first=$a; break ;; esac; done
-    first=$(printf '%s\n' "$first" | sed -E '/^[[:space:]]*$/d' | head -1 \
-              | sed -E 's/^[[:space:]]*([-*]|[0-9]+[.)])[[:space:]]+//')
-    SLUG=$(slugify "$first")
-  fi
-  [ -n "$SLUG" ] || SLUG="batch"
-  BR="batch-$(date +%Y-%m-%d)-$SLUG"
-  if [ -z "$NAME" ]; then  # a derived name never reuses another batch's worktree
-    n=1; try=$BR
-    while git -C "$MAIN" show-ref --verify --quiet "refs/heads/$try"; do n=$((n + 1)); try="$BR-$n"; done
-    BR=$try
-  fi
-  DEST=$(git -C "$MAIN" worktree list --porcelain \
-           | awk -v b="branch refs/heads/$BR" '/^worktree /{w=substr($0,10)} $0==b{print w; exit}')
-  [ -n "$DEST" ] || DEST="$(dirname "$MAIN")/$(gsd_wtdir "$MAIN")/$BR"
-  MAKE=1
+if ! command -v node >/dev/null 2>&1; then
+  echo "gsdt-batch: needs Node.js >= 24 (node not found on PATH)" >&2
+  exit 1
 fi
-
-# --file: the session runs in the worktree, so the path is made absolute, and
-# a file git tracks on the base branch is read from the worktree's own copy
-# (a brief may ask for notes written into it: they belong to the batch).
-if [ "$FILE_AT" -ge 0 ]; then
-  case "$FILE" in /*) abs=$FILE ;; *) abs="$PWD/$FILE" ;; esac
-  [ -f "$abs" ] || die "--file: no such file: $FILE"
-  abs="$(cd "$(dirname "$abs")" && pwd -P)/$(basename "$abs")"
-  mainp=$(cd "$MAIN" && pwd -P)
-  case "$abs" in
-    "$mainp"/*) rel=${abs#"$mainp"/}
-                git -C "$MAIN" cat-file -e "$BASE:$rel" 2>/dev/null && abs="$DEST/$rel" ;;
-  esac
-  REST[FILE_AT + 1]=$abs
-fi
-if gsd_provider_gone "${PROVIDER:-}"; then die "$GSD_GEMINI_GONE"; fi
-gsd_provider_resolve "$MAIN" "$PROVIDER" "$COMMAND" || exit 64
-P=$GSD_PROVIDER_RESOLVED
-if [ "$P" = claude ]; then
-  [ "$MODEL_SET" = 1 ] || MODEL=sonnet
-  gsd_model_validate "$P" "$MODEL" || exit 64
-  [ "$MODEL" != default ] || MODEL=""
-else
-  gsd_model_resolve "$MAIN" "$P" "$MODEL" || exit 64
-  MODEL=$GSD_MODEL_RESOLVED
-  say "the switch to Sonnet is Claude-only; $P runs with its usual model."
-fi
-
-# Flags first, then the task list on lines of its own: a flag typed after
-# the list must not become part of its last item. Newlines inside a quoted
-# list stay newlines.
-NL='
-'
-FLAGS=""; LIST=""
-for a in "${REST[@]}"; do
-  case "$a" in
-    *"$NL"*|-[[:space:]]*|"*"[[:space:]]*|[0-9]*[.\)][[:space:]]*) LIST="${LIST:+$LIST$NL}$a" ;;
-    *) FLAGS="${FLAGS:+$FLAGS }$a" ;;
-  esac
-done
-ARGS=$FLAGS
-[ -z "$LIST" ] || ARGS="${ARGS:+$ARGS$NL}$LIST"
-PROMPT=$(gsd_provider_prompt "$P" batch "$ARGS")
-gsd_provider_argv "$P" "$GSD_AGENT_COMMAND_RESOLVED" "$PROMPT" "$MODEL" "" || exit 64
-
-if [ "$PRINT" = 1 ]; then
-  if [ "$MAKE" = 1 ] && [ ! -d "$DEST" ]; then
-    say "would make worktree ${DEST} (branch '$BR' off $BASE)"
-  else
-    say "would use worktree ${DEST}"
-  fi
-  gsd_provider_render "$DEST" "${GSD_LAUNCH_ARGV[@]}"
-  exit 0
-fi
-if [ "$MAKE" = 1 ]; then
-  ( cd "$MAIN" && GSD_WT_NEW_SUPPRESS_NEXT=1 "$GSD_PKG/bin/gsdt-wt-new" --batch "$BR" ) >&2 \
-    || die "could not make the batch worktree $BR" 1
-fi
-if [ ! -t 0 ] || [ ! -t 1 ]; then
-  gsd_provider_render "$DEST" "${GSD_LAUNCH_ARGV[@]}"
-  exit 0
-fi
-command -v "$GSD_AGENT_COMMAND_RESOLVED" >/dev/null 2>&1 || die "$GSD_AGENT_COMMAND_RESOLVED not found on PATH" 69
-echo "▶ opening a $P batch session${MODEL:+ on $MODEL} in ${DEST}…"
-echo "  land it afterwards: gsdt-finish $BR"
-cd "$DEST" || die "cannot enter $DEST" 1
-exec "${GSD_LAUNCH_ARGV[@]}"
+exec node "$(cd "$(dirname "$SELF")/.." && pwd)/src/launch.mjs" batch "$@"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-ui-browser.sh — the REAL runner behind `gsdt-ui check` (lib/ui-check.mjs)
+# test-ui-browser.sh — the REAL runner behind `gsdt-ui check` (src/ui-check.ts)
 # in a real browser, against the pages in tests/fixtures/ui/: one page per
 # check (C1–C8), the questions, waivers, the capture id, the sheet, and how
 # the runner finds the project's Playwright.

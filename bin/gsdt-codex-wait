@@ -32,137 +32,19 @@
 #
 # Exit: the command's code (wrap); 0 after the wait (--wait-only); 75 = gave
 # up, the wait would pass --max-wait — nothing was reviewed, never treat it as
-# a pass; 64 = bad usage; 69 = no Python 3.7+.
+# a pass; 64 = bad usage.
 #
 # Long waits: run it as a BACKGROUND job — agent tool calls in the foreground
 # are cut off (Claude Code: run_in_background; foreground stops at 10 min).
 # On macOS it keeps the Mac awake while it waits (caffeinate -i -w).
 set -uo pipefail
 
+# Ported to TypeScript (src/commands/codex-wait.ts, which holds the --help text);
+# this launcher only finds the package.
 SELF=$0
 while [ -L "$SELF" ]; do t=$(readlink "$SELF"); case "$t" in /*) SELF=$t ;; *) SELF="$(dirname "$SELF")/$t" ;; esac; done
-GSD_PKG=$(cd "$(dirname "$SELF")/.." && pwd)
-# shellcheck source=../lib/common.sh
-. "$GSD_PKG/lib/common.sh"
-LIB="$GSD_PKG/lib/gsd_codex_limit.py"
-
-usage() { awk 'NR>1 && /^set -uo/{exit} NR>1 {sub(/^# ?/,""); print}' "$0"; }
-die() { echo "gsdt-codex-wait: $1" >&2; exit "${2:-64}"; }
-say() { echo "gsdt-codex-wait: $1" >&2; }
-dur() {  # $1=duration → seconds
-  local n=${1%[smhd]}
-  case "$n" in ''|*[!0-9]*) return 1 ;; esac
-  case "$1" in *d) echo $((10#$n * 86400)) ;; *h) echo $((10#$n * 3600)) ;; *m) echo $((10#$n * 60)) ;; *) echo $((10#$n)) ;; esac
-}
-human() {  # $1=seconds → "2h 05m"
-  local s=$1
-  if [ "$s" -ge 3600 ]; then printf '%dh %02dm' $((s / 3600)) $((s % 3600 / 60))
-  else printf '%dm' $(((s + 59) / 60)); fi
-}
-
-MSG=""; HAVE_MSG=0; WAIT_ONLY=0; MAX=86400; INTERVAL=1800; MARGIN=120
-while [ $# -gt 0 ]; do
-  case "$1" in
-    --message) [ $# -ge 2 ] || die "--message needs a value"; MSG=$2; HAVE_MSG=1; shift ;;
-    --max-wait|--interval|--margin)
-      [ $# -ge 2 ] || die "$1 needs a value"
-      v=$(dur "$2") || die "$1: not a duration: $2 (use 90s, 30m, 4h, 1d)"
-      case "$1" in --max-wait) MAX=$v ;; --interval) INTERVAL=$v ;; *) MARGIN=$v ;; esac; shift ;;
-    --wait-only) WAIT_ONLY=1 ;;
-    -h|--help) usage; exit 0 ;;
-    --) shift; break ;;
-    *) die "unknown option: $1 (put the command after --)" ;;
-  esac
-  shift
-done
-if [ "$WAIT_ONLY" = 1 ]; then [ $# -eq 0 ] || die "--wait-only takes no command"
-else [ $# -gt 0 ] || die "nothing to run: gsdt-codex-wait -- <command> [args...], or --wait-only"; fi
-[ "$INTERVAL" -gt 0 ] || die "--interval must be more than 0"
-PY=$(gsd_python) || die "needs Python 3.7+" 69
-CODEX_DIR="${CODEX_HOME:-$HOME/.codex}"
-
-# Tests set GSD_CODEX_WAIT_CLOCK=<file holding epoch seconds>: the clock is
-# read from it and a wait just moves it forward, so hours pass in no time.
-now() { if [ -n "${GSD_CODEX_WAIT_CLOCK:-}" ]; then cat "$GSD_CODEX_WAIT_CLOCK"; else date +%s; fi; }
-nap() { if [ -n "${GSD_CODEX_WAIT_CLOCK:-}" ]; then echo $(($(now) + $1)) > "$GSD_CODEX_WAIT_CLOCK"; else sleep "$1"; fi; }
-when() { "$PY" "$LIB" when "$1"; }
-AWAKE=0
-keep_awake() {
-  [ "$AWAKE" = 0 ] || return 0; AWAKE=1
-  if [ -z "${GSD_CODEX_WAIT_CLOCK:-}" ] && [ "$(uname -s)" = Darwin ] && command -v caffeinate >/dev/null 2>&1; then
-    caffeinate -i -w $$ >/dev/null 2>&1 &
-  fi
-}
-DEADLINE=$(($(now) + MAX))
-
-# Wait for the reset ($1 = epoch, '' = unknown; $2 = where it came from).
-# Short naps, re-reading the clock: one long sleep runs late after the
-# machine sleeps.
-wait_reset() {
-  local target left
-  if [ -n "$1" ]; then
-    target=$(($1 + MARGIN))
-    [ "$WAIT_ONLY" = 1 ] || [ "$target" -gt $(($(now) + 60)) ] || target=$(($(now) + 60))
-    say "Codex usage limit — it resets $(when "$1") ($2)."
-  else
-    target=$(($(now) + INTERVAL))
-    say "Codex usage limit — no reset time found ($2); checking again in $(human "$INTERVAL")."
-  fi
-  if [ "$target" -gt "$DEADLINE" ]; then
-    say "GAVE UP: waiting until $(when "$target") would pass --max-wait ($(human "$MAX"))."
-    say "The Codex step did not run: this is NOT a pass. Run it again after the reset."
-    exit 75
-  fi
-  left=$((target - $(now)))
-  [ "$left" -gt 0 ] || return 0
-  say "waiting $(human "$left"), until $(when "$target")…"
-  keep_awake
-  while [ "$left" -gt 0 ]; do
-    [ "$left" -gt 60 ] && left=60
-    nap "$left"
-    left=$((target - $(now)))
-  done
-}
-
-# The reset time from Codex's session logs changed since $1.
-# → RESET (epoch, '' when the message has none); false when no log has a limit.
-from_logs() {
-  local hit
-  hit=$("$PY" "$LIB" scan --home "$CODEX_DIR" --since "$1") || return 1
-  RESET=$(printf '%s' "${hit#*	}" | "$PY" "$LIB" parse --base "${hit%%	*}") || RESET=""
-}
-
-if [ "$WAIT_ONLY" = 1 ]; then
-  if [ "$HAVE_MSG" = 1 ]; then
-    RESET=$(printf '%s' "$MSG" | "$PY" "$LIB" parse --base "$(now)"); rc=$?
-    [ "$rc" != 2 ] || die "--message has no Codex usage-limit text in it"
-    src="from --message"
-  elif from_logs $(($(now) - 8 * 86400)); then src="from Codex's session log"
-  else RESET=""; src="no limited run in $CODEX_DIR/sessions"; fi
-  if [ -n "$RESET" ] && [ $((RESET + MARGIN)) -le "$(now)" ]; then
-    say "Codex's limit already reset ($(when "$RESET")) — run the step again."; exit 0
-  fi
-  wait_reset "$RESET" "$src"
-  say "done waiting — Codex should take requests again. Run the step again."
-  exit 0
+if ! command -v node >/dev/null 2>&1; then
+  echo "gsdt-codex-wait: needs Node.js >= 24 (node not found on PATH)" >&2
+  exit 1
 fi
-
-WORK=$(mktemp -d "${TMPDIR:-/tmp}/gsdt-codex-wait.XXXXXX") || die "cannot make a temp folder" 1
-trap 'rm -rf "$WORK"' EXIT
-while :; do
-  START=$(now)
-  # Stream stdout and stderr through as they are, keeping a copy of each.
-  rm -f "$WORK/out" "$WORK/err" "$WORK/o.fifo" "$WORK/e.fifo"
-  mkfifo "$WORK/o.fifo" "$WORK/e.fifo" || die "mkfifo failed" 1
-  tee "$WORK/out" < "$WORK/o.fifo" & t1=$!
-  tee "$WORK/err" < "$WORK/e.fifo" >&2 & t2=$!
-  "$@" > "$WORK/o.fifo" 2> "$WORK/e.fifo"; rc=$?
-  wait "$t1" "$t2"
-  [ "$rc" = 0 ] && exit 0
-  RESET=$(cat "$WORK/out" "$WORK/err" | "$PY" "$LIB" parse --base "$(now)"); prc=$?
-  if [ "$prc" != 2 ]; then src="from its output"
-  elif from_logs $((START - 5)); then src="from Codex's session log"
-  else exit "$rc"; fi
-  wait_reset "$RESET" "$src"
-  say "running it again: $*"
-done
+exec node "$(cd "$(dirname "$SELF")/.." && pwd)/src/launch.mjs" codex-wait "$@"
