@@ -375,7 +375,9 @@ class Doctor {
         }
         live = t.startsWith('/') ? t : `${path.dirname(live)}/${t}`;
       }
-      const cand = path.resolve(path.dirname(live), '..');
+      let cand = path.resolve(path.dirname(live), '..');
+      // the npm entries live in <pkg>/dist/bin/
+      if (path.basename(cand) === 'dist' && path.basename(path.dirname(live)) === 'bin') cand = path.dirname(cand);
       if (isDir(path.dirname(live))) resolved = cand;
     }
     if (resolved === '') fail('gsd commands are not on PATH', REINSTALL, 'T001');

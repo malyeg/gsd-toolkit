@@ -34,6 +34,7 @@ tests/test-list.sh                    # gsdt-list PLANS/STAGE/WORKTREE derivatio
 tests/test-review-round2.sh           # regressions from the 2026-09-25 review (docs/fix-plan.md)
 tests/test-commands.sh                # derive-port, start refusals/insert/-p/--flow/TDD default, conflict abort, stale lock, init docs detection, finish --pr, finish test-audit gate, finish of a batch-* worktree, bash-3.2 lint
 tests/test-tracker.sh                 # tickets: ids, settings order, login (any folder, use/replace), standalone check, gsdt-tracker none/custom/fake ClickUp (curl stub), --ticket through start/finish, doctor T070–T072
+tests/test-npm.sh                     # the npm package: npm pack (builds dist/), install -g into a temp prefix, every entry, a real planning merge through the npm driver, doctor/list/tracker from it, gsdt-setup (skills, user hooks, moving a 0.10.x ~/.local/bin install), gsdt-update npm mode (npm stub). Needs npm ci.
 tests/test-update.sh                  # releases: install.sh, gsdt-update, checksums, pruning, update notice (fake GitHub via a curl stub)
 tests/test-ui.sh                      # UI gates: gsdt-ui design/layout/shots/check/look/approve (stub Playwright, stub runner, local http server), finish gate, doctor T080/T081/T018/UI debt, bootstrap --no-ui
 GSD_PLAYWRIGHT_ROOT=<dir> tests/test-ui-browser.sh   # the REAL runner (src/ui-check.ts) in a browser against tests/fixtures/ui/; <dir> has playwright + chromium installed. Skips without it; CI installs one.

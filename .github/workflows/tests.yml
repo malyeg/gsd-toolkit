@@ -71,6 +71,8 @@ jobs:
         run: tests/test-tracker.sh
       - name: release install + update suite
         run: tests/test-update.sh
+      - name: npm package suite (pack, install -g, gsdt-setup, gsdt-update)
+        run: tests/test-npm.sh
       - name: UI gates suite
         run: tests/test-ui.sh
       - name: doctor checks suite
