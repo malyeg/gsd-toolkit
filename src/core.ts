@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { GSD_CORE_INSTALL, commandOnPath, isExec } from './common.ts';
 import { out } from './stdio.ts';
-import { versionGt } from './update-check.ts';
+import { versionGt } from './version.ts';
 
 const nz = (v: string | undefined): string | undefined => (v === undefined || v === '' ? undefined : v);
 
@@ -60,7 +60,7 @@ export function coreSync(provider: string, mode: 'install' | 'update', latest = 
     encoding: 'utf8',
   });
   const text = `${r.stdout ?? ''}${r.stderr ?? ''}`;
-  for (const line of text.split('\n').slice(0, text.endsWith('\n') ? -1 : undefined)) out(`  ${line}\n`);
+  if (text !== '') for (const line of text.split('\n').slice(0, text.endsWith('\n') ? -1 : undefined)) out(`  ${line}\n`);
   if (r.status === 0 && isExec(`${d}/gsd-core/bin/gsd_run`)) out(`✔ ${provider} gsd-core ${coreVersion(provider)} → ${d}\n`);
   else out(`⚠ gsd-core for ${provider} not ${did} (see above); run:  ${cmd}\n`);
 }

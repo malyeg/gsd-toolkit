@@ -11,7 +11,7 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 import { git, isDir, isFile } from '../common.ts';
 import { staleHooksNotice } from '../provider.ts';
-import { updateNotice } from '../update-check.ts';
+import { updateNotice } from '../version.ts';
 
 const HELP = `gsdt-list — list GSD phases: number, description, plan progress, worktree
 

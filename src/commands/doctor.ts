@@ -81,7 +81,7 @@ import {
   updateHow,
   updateRepo,
   versionGt,
-} from '../update-check.ts';
+} from '../version.ts';
 import {
   uiAddonPresent,
   uiApprovalState,

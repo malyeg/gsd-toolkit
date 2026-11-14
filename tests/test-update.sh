@@ -131,6 +131,8 @@ if bash "$PKG/install.sh" --version latest > "$WORK/out" 2>&1; then bad "a non-v
 has "a git checkout updates nothing, and names install.sh" "not a release — pull it with git; install the release with: $PKG/install.sh" "$WORK/out"
 
 section "the newer-release notice"
+# npm is a stub from the start: a background refresh must never reach this machine's real npm
+printf '#!/usr/bin/env bash\necho 1.2.0\n' > "$WORK/stub/npm"; chmod +x "$WORK/stub/npm"
 rm -rf "$XDG_CACHE_HOME"
 GSD_UPDATE_NOTICE=always "$BIN/gsdt-list" --repo "$WORK/nope" > /dev/null 2> "$WORK/err"
 for _ in 1 2 3 4 5 6 7 8 9 10; do [ -s "$(gsd_update_cache)" ] && break; sleep 0.5; done
@@ -149,8 +151,7 @@ is  "a fresh cache → no GitHub call"    "$(grep -c api.github.com "$WORK/curl.
 mkdir -p "$WORK/gc/gsd-core/bin"
 printf '#!/usr/bin/env bash\necho '"'"'{"packageName":"@opengsd/gsd-core","version":"1.0.0"}'"'"'\n' > "$WORK/gc/gsd-core/bin/gsd_run"
 printf '1.0.0\n' > "$WORK/gc/gsd-core/VERSION"
-printf '#!/usr/bin/env bash\necho 1.2.0\n' > "$WORK/stub/npm"
-chmod +x "$WORK/gc/gsd-core/bin/gsd_run" "$WORK/stub/npm"
+chmod +x "$WORK/gc/gsd-core/bin/gsd_run"
 export GSD_CLI="$WORK/gc/gsd-core/bin/gsd_run"
 rm -f "$(gsd_gsd_cache)"   # a real gsd-core on this machine may have filled it already
 GSD_UPDATE_NOTICE=always "$BIN/gsdt-list" --repo "$WORK/nope" > /dev/null 2>&1
