@@ -49,7 +49,7 @@ import {
 } from '../provider.ts';
 import { roadmapRows } from '../roadmap.ts';
 import { err, inherit, out, runSession } from '../stdio.ts';
-import { updateNotice } from '../update-check.ts';
+import { updateNotice } from '../version.ts';
 import { grepq, phaseHeadingRe, worktreeOf } from './wt-new.ts';
 
 const HELP = `gsdt-start — start a GSD feature in ONE step

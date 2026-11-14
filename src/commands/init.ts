@@ -24,7 +24,7 @@ import {
 } from '../provider.ts';
 import { err, out, runSession } from '../stdio.ts';
 import { uiGates } from '../ui.ts';
-import { updateNotice } from '../update-check.ts';
+import { updateNotice } from '../version.ts';
 import { die, guarded, main as bootstrap, Stop, stopOn } from './bootstrap-repo.ts';
 
 const HELP = `gsdt-init — set up GSD in a repo that doesn't have it yet
