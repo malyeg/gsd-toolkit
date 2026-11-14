@@ -93,7 +93,7 @@ import {
   uiPlaywrightInstalled,
   uiStack,
 } from '../ui.ts';
-import { gsdVersion } from '../version.ts';
+import { gsdVersion, installMode } from '../version.ts';
 import { ticketExtract } from '../ticket.ts';
 
 class Quit extends Error {
@@ -334,6 +334,7 @@ class Doctor {
     let REINSTALL: string;
     if (exists(`${pkg}/.git`)) REINSTALL = `${pkg}/install.sh --reuse-install-config`;
     else if (isFile(`${pkg}/install.sh`)) REINSTALL = `bash ${pkg}/install.sh --version ${gsdVersion()} --reuse-install-config`;
+    else if (installMode(pkg) === 'npm') REINSTALL = 'gsdt-setup';
     else REINSTALL = `curl -fsSL https://raw.githubusercontent.com/${updateRepo()}/main/install.sh | bash -s --`;
 
     const RAW_PROVIDERS = confGet(MAIN, 'providers');
