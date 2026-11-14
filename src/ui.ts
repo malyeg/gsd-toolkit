@@ -15,7 +15,7 @@
 //  - uiLookState compares answer text by BYTE length (`LC_ALL=C awk length`);
 //  - awk's `==` on two numeric-looking strings is numeric (lookKeys widths).
 import { createHash } from 'node:crypto';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { base, commandOnPath, confGet, findMain, git, isDir, isExec, isFile, phaseDir, run } from './common.ts';
@@ -295,7 +295,14 @@ export function uiCodeState(checkout: string, env0?: NodeJS.ProcessEnv): string 
   }
   let h = '';
   try {
-    if (isFile(idx)) copyFileSync(idx, `${tmp}/index`);
+    // Keep the index's own mtime (cp -p): git re-reads a file whose mtime is
+    // not older than the index's ("racy git"). A fresh mtime on the copy would
+    // hide a same-size edit made in the second of the last index write.
+    if (isFile(idx)) {
+      copyFileSync(idx, `${tmp}/index`);
+      const st = statSync(idx);
+      utimesSync(`${tmp}/index`, st.atime, st.mtime);
+    }
     const env = { ...(env0 ?? process.env), GIT_INDEX_FILE: `${tmp}/index`, GIT_OBJECT_DIRECTORY: `${tmp}/objects`, GIT_ALTERNATE_OBJECT_DIRECTORIES: objs };
     const steps: string[][] = [
       ['add', '-A', '--', '.', ':(exclude).planning'],

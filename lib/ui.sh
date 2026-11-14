@@ -174,7 +174,10 @@ gsd_ui_code_state() {  # $1=checkout → a hash of the working tree outside .pla
   case "$objs" in /*) ;; *) objs="$top/$objs" ;; esac
   tmp=$(mktemp -d 2>/dev/null) || return 0
   mkdir -p "$tmp/objects"
-  [ ! -f "$idx" ] || cp "$idx" "$tmp/index"
+  # -p keeps the index's own mtime: git re-reads a file whose mtime is not
+  # older than the index's ("racy git"). A fresh mtime on the copy would hide
+  # a same-size edit made in the second of the last index write.
+  [ ! -f "$idx" ] || cp -p "$idx" "$tmp/index"
   h=$(cd "$top" \
     && GIT_INDEX_FILE="$tmp/index" GIT_OBJECT_DIRECTORY="$tmp/objects" GIT_ALTERNATE_OBJECT_DIRECTORIES="$objs" \
        git add -A -- . ':(exclude).planning' >/dev/null 2>&1 \

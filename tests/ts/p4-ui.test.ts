@@ -366,6 +366,15 @@ test('uiCodeState / uiInputsState — new file, edit, .planning-only, worktree, 
   write(`${r}/app.js`, 'two\n');
   const h1 = cs('edit');
   assert.notEqual(h1, h0);
+  // "Racy git": a same-size edit in the second of the last index write, hashed
+  // a second later. A copied index with a fresh mtime made git trust the old
+  // stat data and hash the old content (both sides, before the fix).
+  commitAll(r);
+  write(`${r}/app.js`, 'six\n');
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 1100);
+  assert.notEqual(cs('same-size edit, a second later'), h1, 'a same-size edit right after a commit changes the hash');
+  write(`${r}/app.js`, 'two\n');
+  assert.equal(cs('edit back'), h1);
   write(`${r}/new.js`, 'x\n');
   const h2 = cs('new file');
   assert.notEqual(h2, h1);
