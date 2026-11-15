@@ -200,6 +200,25 @@ function runStep(s: Side, step: Step): Ran {
   return { out: norm(r.stdout ?? ''), err: norm(r.stderr ?? ''), rc: r.status ?? -1, files: snap(s) };
 }
 
+/**
+ * INTENDED DIFFERENCES from the old bash command (the commit offer, spec in
+ * docs/ts-port-progress.md follow-ups): the old `next:  git … add -A && …
+ * commit` hint is replaced by a path-limited `to commit by hand:` line, plus
+ * optional `not committing:` reason lines; the teammates' line is no longer
+ * indented; the `your Claude settings:` heading is printed only when a
+ * line follows it; and --help documents --commit and the prompt (its text is
+ * not compared; migrate-commit.test.ts checks it). Both sides are normalized the same way before comparing;
+ * everything else must still be byte-identical (tests/ts/migrate-commit.test.ts
+ * checks the new lines themselves).
+ */
+const intended = (t: string): string =>
+  t
+    .replace(/^(next:  |to commit by hand:  )git -C .* add -A.*\n/gm, '')
+    .replace(/^not committing: .*\n(  .*\n)*/gm, '')
+    .replace(/^ +then each teammate/gm, 'then each teammate')
+    .replace(/^your Claude settings:\n(?!  )/gm, '')
+    .replace(/^\ngsdt-migrate — move a repo[\s\S]*$/, '<HELP>');
+
 type Setup = (s: Side) => void;
 /** A fresh copy of the template repo (or whatever `repo` makes) on both sides, then the steps on both. */
 function scenario(setup: Setup | null, steps: Step[], opts: { template?: boolean } = {}): Ran[] {
@@ -220,7 +239,7 @@ function scenario(setup: Setup | null, steps: Step[], opts: { template?: boolean
   steps.forEach((step, i) => {
     const [a, b] = sides.map((s) => runStep(s, step)) as [Ran, Ran];
     const label = `step ${i} (${step.args.join(' ')})`;
-    assert.equal(b.out, a.out, `${label}: stdout`);
+    assert.equal(intended(b.out), intended(a.out), `${label}: stdout`);
     assert.equal(b.err, a.err, `${label}: stderr`);
     assert.equal(b.rc, a.rc, `${label}: rc`);
     assert.equal(b.files, a.files, `${label}: files`);
@@ -545,7 +564,7 @@ test('NEW ONLY: works with no python on PATH, same result as the old command wit
   for (const args of [[], ['--check'], ['--apply'], ['--check']]) {
     const a = runStep(o, st(args));
     const b = runStep(n, st(args, { path: np }));
-    assert.equal(b.out, a.out, `${args.join(' ')} stdout`);
+    assert.equal(intended(b.out), intended(a.out), `${args.join(' ')} stdout`);
     assert.equal(b.err, a.err, `${args.join(' ')} stderr`);
     assert.equal(b.rc, a.rc, `${args.join(' ')} rc`);
     assert.equal(b.files, a.files, `${args.join(' ')} files`);
@@ -572,7 +591,7 @@ test('NEW ONLY: a matcher that is a list: same stdout/rc/files as old; old also 
   for (const args of [[], ['--apply']]) {
     const a = runStep(o, st(args));
     const b = runStep(n, st(args));
-    assert.equal(b.out, a.out);
+    assert.equal(intended(b.out), intended(a.out));
     assert.equal(b.rc, a.rc);
     assert.equal(b.files, a.files);
     assert.match(a.err, /Traceback/);

@@ -203,6 +203,107 @@ gsdt-doctor --repo "$R3" --fix --yes > "$OUT" 2>&1
 has "--fix lists it" "gsdt-migrate --apply" "$OUT"
 (cd "$R3" && gsdt-migrate --check); is "…and the repo is migrated" "$?" 0
 
+section "--commit: exactly the repo files this run changed, nothing else, no push"
+rm -f "$GSD_CLAUDE_SETTINGS"          # no user settings: step 7 has nothing to say
+R5="$WORK/proj5"; mkold "$R5"
+git init -q --bare -b main "$WORK/origin5.git"; git -C "$R5" remote add origin "$WORK/origin5.git"; git -C "$R5" push -q origin main
+origin_before=$(git --git-dir="$WORK/origin5.git" rev-parse main)
+printf 'mine\n' > "$R5/unrelated-staged.txt"; git -C "$R5" add unrelated-staged.txt
+printf '\n# my note\n' >> "$R5/.planning/notes.md"        # unstaged edit to a tracked file
+printf 'scratch\n' > "$R5/untracked.txt"
+(cd "$R5" && gsdt-migrate --apply --commit) > "$OUT" 2>&1; rc=$?
+is  "exit 0" "$rc" 0
+has "says committed" "(14 change(s), committed)" "$OUT"
+has "prints the short hash" "^commit [0-9a-f]\{7,\}: Switch to gsdt-\* toolkit commands" "$OUT"
+has "prints the push hint (only a hint)" "push when ready: git -C '$R5' push" "$OUT"
+has "keeps the teammates' line" "then each teammate: gsdt-update, then gsdt-migrate --apply in their clone" "$OUT"
+has "lists the files first, git-style" "^files to commit (17):$" "$OUT"
+has "…a deletion" "^  D scripts/gsd-premerge-check.sh$" "$OUT"
+has "…an add"     "^  A scripts/gsdt-premerge-check.sh$" "$OUT"
+has "…a modify"   "^  M package.json$" "$OUT"
+has "…the commit line counts files" "(17 files)" "$OUT"
+hasnt "no old add -A hint" "add -A &&" "$OUT"
+hasnt "no empty 'your Claude settings:' heading" "your Claude settings" "$OUT"
+git -C "$R5" show --no-renames --name-status --format=%s HEAD > "$WORK/show"
+is  "the commit message" "$(sed -n 1p "$WORK/show")" "Switch to gsdt-* toolkit commands"
+exp=$( { for rel in $SHIMS; do printf 'A\t%s\nD\t%s\n' "$rel" "$(old_of "$rel")"; done
+         printf 'A\tscripts/gsdt-premerge-check.sh\nD\tscripts/gsd-premerge-check.sh\n'
+         printf 'M\tpackage.json\nM\t.claude/settings.json\nM\t.gsd/INSTRUCTIONS.md\nM\tCLAUDE.md\nM\tAGENTS.md\n'; } | sort )
+got=$(sed 1d "$WORK/show" | sed '/^$/d' | sort)
+is  "the commit holds exactly the changed repo files (adds, deletions, edits)" "$got" "$exp"
+is  "…17 files, no .git/config or hook involved" "$(printf '%s\n' "$got" | wc -l | tr -d ' ')/$(printf '%s\n' "$got" | grep -c '^.\s\.git')" "17/0"
+is  "an unrelated staged file stays staged, uncommitted" "$(git -C "$R5" diff --cached --name-only)" "unrelated-staged.txt"
+is  "an unrelated unstaged edit stays unstaged" "$(git -C "$R5" diff --name-only)" ".planning/notes.md"
+is  "an untracked file stays untracked" "$(git -C "$R5" ls-files --others --exclude-standard)" "untracked.txt"
+is  "nothing was pushed: origin is where it was" "$(git --git-dir="$WORK/origin5.git" rev-parse main)" "$origin_before"
+is  "this clone's config was changed too (not by the commit)" "$(git -C "$R5" config --get merge.gsd-planning.driver)" "gsdt-planning-merge %O %A %B %P"
+
+section "--commit is refused without --apply"
+for a in "--commit" "--commit --check" "--apply --check --commit"; do
+  # shellcheck disable=SC2086
+  (cd "$R5" && gsdt-migrate $a) > "$OUT" 2>&1; rc=$?
+  is  "gsdt-migrate $a: usage error" "$rc" 2
+  has "…says it needs --apply" "--commit only works with --apply" "$OUT"
+done
+
+section "no terminal, no --commit: nothing committed, the path-limited command is printed"
+R6="$WORK/proj6"; mkold "$R6"
+head6=$(git -C "$R6" rev-parse HEAD)
+(cd "$R6" && gsdt-migrate --apply) > "$OUT" 2>&1 < /dev/null; rc=$?
+is  "exit 0" "$rc" 0
+has "says not committed" "(14 change(s), not committed)" "$OUT"
+is  "HEAD did not move" "$(git -C "$R6" rev-parse HEAD)" "$head6"
+has "prints add -- <paths> for exactly those paths" "^to commit by hand:  git -C '$R6' add -A -- scripts/gsd-new-worktree-feature.sh scripts/gsdt-new-worktree-feature.sh " "$OUT"
+has "…and the commit limited to the same paths" "&& git -C '$R6' commit -m 'Switch to gsdt-\* toolkit commands' -- scripts/gsd-new-worktree-feature.sh " "$OUT"
+hasnt "…never the whole tree (no bare add -A)" "add -A &&\|add -A$" "$OUT"
+hasnt "no prompt" "\[y/N\]" "$OUT"
+# the printed command works as printed
+cmd=$(sed -n 's/^to commit by hand:  //p' "$OUT")
+(cd "$WORK" && bash -c "$cmd") > /dev/null 2>&1
+is  "…and running it commits them" "$(git -C "$R6" log -1 --format=%s)" "Switch to gsdt-* toolkit commands"
+
+section "--commit with a file that was dirty before: no commit, the file is listed"
+R7="$WORK/proj7"; mkold "$R7"; head7=$(git -C "$R7" rev-parse HEAD)
+printf '# changed by hand\n' >> "$R7/scripts/gsd-derive-port.sh"
+(cd "$R7" && gsdt-migrate --apply --commit) > "$OUT" 2>&1; rc=$?
+is  "exit 0 (the migration itself worked)" "$rc" 0
+has "says not committed" "not committed" "$OUT"
+has "says why" "had uncommitted changes before the migration" "$OUT"
+has "lists the file" "^  scripts/gsd-derive-port.sh$" "$OUT"
+has "prints the command to commit by hand" "^to commit by hand:  git -C '$R7' add -A -- " "$OUT"
+is  "HEAD did not move" "$(git -C "$R7" rev-parse HEAD)" "$head7"
+R7b="$WORK/proj7b"; mkold "$R7b"; head7b=$(git -C "$R7b" rev-parse HEAD)
+printf 'untracked, in our way\n' > "$R7b/scripts/gsdt-derive-port.sh"   # untracked, and a path we write
+(cd "$R7b" && gsdt-migrate --apply --commit) > "$OUT" 2>&1
+has "an untracked file at a path we write counts as dirty" "^  scripts/gsdt-derive-port.sh$" "$OUT"
+is  "…no commit" "$(git -C "$R7b" rev-parse HEAD)" "$head7b"
+
+section "--commit when the main checkout is not on the base branch: no commit"
+R8="$WORK/proj8"; mkold "$R8"; git -C "$R8" checkout -q -b side; head8=$(git -C "$R8" rev-parse HEAD)
+(cd "$R8" && gsdt-migrate --apply --commit) > "$OUT" 2>&1; rc=$?
+is  "exit 0" "$rc" 0
+has "says why" "not committing: this checkout is on 'side', not the base branch 'main'" "$OUT"
+has "prints the command" "^to commit by hand:  git -C '$R8' add -A -- " "$OUT"
+is  "HEAD did not move" "$(git -C "$R8" rev-parse HEAD)" "$head8"
+
+section "--commit when the commit fails (a pre-commit hook says no): git's error, the command, exit 1"
+R9="$WORK/proj9"; mkold "$R9"; head9=$(git -C "$R9" rev-parse HEAD)
+printf '#!/bin/sh\necho "hook says no" >&2\nexit 1\n' > "$R9/.git/hooks/pre-commit"; chmod +x "$R9/.git/hooks/pre-commit"
+(cd "$R9" && gsdt-migrate --apply --commit) > "$OUT" 2>&1; rc=$?
+is  "exit 1" "$rc" 1
+has "prints git's error" "hook says no" "$OUT"
+has "says not committed" "not committed" "$OUT"
+has "prints the command" "^to commit by hand:  git -C '$R9' add -A -- " "$OUT"
+is  "HEAD did not move" "$(git -C "$R9" rev-parse HEAD)" "$head9"
+
+section "the 'your Claude settings:' heading comes only with a line under it"
+R10="$WORK/proj10"; mkold "$R10"; mkuser
+(cd "$R10" && gsdt-migrate) > "$OUT" 2>&1
+has "a dry run with an old user hook: heading + its line" "^your Claude settings:$" "$OUT"
+rm -f "$GSD_CLAUDE_SETTINGS"
+(cd "$R10" && gsdt-migrate) > "$OUT" 2>&1
+hasnt "…and without one: no heading" "your Claude settings" "$OUT"
+
 section "a repo bootstrapped by the real 0.9.0"
 if git -C "$PKG" rev-parse -q --verify 'v0.9.0^{commit}' >/dev/null; then
   OLD="$WORK/src-090"; mkdir -p "$OLD"; git -C "$PKG" archive v0.9.0 | tar -x -C "$OLD"
