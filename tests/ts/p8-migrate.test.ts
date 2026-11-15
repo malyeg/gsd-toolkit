@@ -221,7 +221,10 @@ const intended = (t: string): string =>
 
 type Setup = (s: Side) => void;
 /** A fresh copy of the template repo (or whatever `repo` makes) on both sides, then the steps on both. */
-function scenario(setup: Setup | null, steps: Step[], opts: { template?: boolean } = {}): Ran[] {
+// P12: the port reads a CRLF file as its LF version and keeps the file's endings when it rewrites it; the old bash
+// choked on the \r. `stripCr` compares without any \r; `lfOracle` is the setup the OLD side gets instead (the LF
+// version of the same repo), the files are then compared without \r.
+function scenario(setup: Setup | null, steps: Step[], opts: { template?: boolean; stripCr?: boolean; lfOracle?: Setup } = {}): Ran[] {
   const tag = `s${Math.random().toString(36).slice(2, 8)}`;
   const sides = [mkSide('old', tag), mkSide('new', tag)];
   for (const s of sides) {
@@ -233,16 +236,17 @@ function scenario(setup: Setup | null, steps: Step[], opts: { template?: boolean
       git(s.repo, 'commit', '-q', '--allow-empty', '-m', 'init');
     }
     writeFileSync(s.settings, USER_HOOKS);
-    setup?.(s);
+    (s.name === 'old' && opts.lfOracle ? opts.lfOracle : setup)?.(s);
   }
   const results: Ran[] = [];
+  const sc = (t: string): string => (opts.stripCr || opts.lfOracle ? t.replace(/\r/g, '') : t);
   steps.forEach((step, i) => {
     const [a, b] = sides.map((s) => runStep(s, step)) as [Ran, Ran];
     const label = `step ${i} (${step.args.join(' ')})`;
-    assert.equal(intended(b.out), intended(a.out), `${label}: stdout`);
-    assert.equal(b.err, a.err, `${label}: stderr`);
+    assert.equal(sc(intended(b.out)), sc(intended(a.out)), `${label}: stdout`);
+    assert.equal(sc(b.err), sc(a.err), `${label}: stderr`);
     assert.equal(b.rc, a.rc, `${label}: rc`);
-    assert.equal(b.files, a.files, `${label}: files`);
+    assert.equal(opts.lfOracle ? sc(b.files) : b.files, opts.lfOracle ? sc(a.files) : a.files, `${label}: files`);
     results.push(b);
   });
   for (const s of sides) rmSync(s.root, { recursive: true, force: true });
@@ -386,6 +390,7 @@ test('instruction blocks: broken markers, no block, old header, a CRLF file', ()
       writeFileSync(f, readFileSync(f, 'utf8').replace(/\n/g, '\r\n'));
     },
     [st([]), st(['--apply'])],
+    { lfOracle: () => undefined },
   );
   scenario((s) => rmSync(path.join(s.repo, '.gsd/INSTRUCTIONS.md')), [st([]), st(['--apply'])]);
 });
@@ -414,6 +419,7 @@ test('references: a binary file, CRLF lines, a file with no final newline, a tra
       git(s.repo, 'commit', '-qm', 'more');
     },
     [st([]), st(['--apply']), st(['--check'])],
+    { stripCr: true },
   );
 });
 

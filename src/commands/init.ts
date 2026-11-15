@@ -7,7 +7,7 @@
 import { existsSync, lstatSync, readFileSync, readSync, readdirSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import path from 'node:path';
-import { chomp, commandOnPath, confGet, findMain, git, isExec, migrateRefuse, planningHook } from '../common.ts';
+import { chomp, commandOnPath, confGet, findMain, git, isExec, lf, migrateRefuse, planningHook } from '../common.ts';
 import {
   compactResolve,
   GSD_GEMINI_GONE,
@@ -466,7 +466,7 @@ function run(argv: string[]): number | Promise<number> {
     say();
     const roadmap = `${DEST}/.planning/ROADMAP.md`;
     if (existsSync(roadmap)) {
-      const ls = readFileSync(roadmap, 'latin1').split('\n');
+      const ls = lf(readFileSync(roadmap, 'latin1')).split('\n');
       const phases = ls.filter((l) => /^#{2,4} Phase [0-9]/.test(l)).length;
       let first = '';
       for (const l of ls) {

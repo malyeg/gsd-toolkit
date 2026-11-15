@@ -21,6 +21,7 @@ import {
   GsdExit,
   gsdPkg,
   isPrHelper,
+  lf,
   migrateRefuse,
   phaseBranch,
 } from '../common.ts';
@@ -125,7 +126,7 @@ function roadmapTitle(main: string, n: string): string {
   if (re === null || !existsSync(f)) return '';
   let text: string;
   try {
-    text = readFileSync(f, 'utf8');
+    text = lf(readFileSync(f, 'utf8'));
   } catch {
     return '';
   }

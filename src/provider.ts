@@ -15,7 +15,7 @@ import {
 } from './rules-text.ts';
 import { claudeEnv } from './claude-settings.ts';
 import { WIN } from './spawn.ts';
-import { chomp, commandOnPath, confGet, git, gsdPkg, isExec, isFile, run } from './common.ts';
+import { chomp, commandOnPath, confGet, eolOf, git, gsdPkg, isExec, isFile, lf, run, toEol } from './common.ts';
 import type { Failure, Result } from './common.ts';
 import { hookPaths } from './hook-paths.ts';
 
@@ -220,7 +220,7 @@ const lines = (t: string): string[] => {
 };
 const readBytes = (f: string): string | null => {
   try {
-    return readFileSync(f, 'latin1');
+    return lf(readFileSync(f, 'latin1')); // a CRLF checkout reads as the LF file would
   } catch {
     return null;
   }
@@ -337,7 +337,7 @@ export function providerEntryBlock(providers: string): string {
 export function replaceOwnedBlock(file: string, kind: string, blockFile: string): boolean {
   let block: string;
   try {
-    block = readFileSync(blockFile, 'latin1');
+    block = lf(readFileSync(blockFile, 'latin1'));
   } catch {
     return false;
   }
@@ -351,7 +351,10 @@ export function replaceOwnedBlock(file: string, kind: string, blockFile: string)
     missing = true;
   }
   const k = reEscape(kind);
-  const startRe = new RegExp(`(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:start -->(?![^\\n])`);
+  // a CRLF file keeps its endings: the markers may be followed by \r\n, the new block is written with the file's
+  // dominant ending, and nothing outside the block is touched
+  const eol = eolOf(content);
+  const startRe = new RegExp(`(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:start -->(?=\\r?\\n|$)`);
   let result: string;
   if (missing) {
     // perl -0777 -pe finds no file, so it prints nothing: bash creates an EMPTY file (mode 0600).
@@ -359,12 +362,12 @@ export function replaceOwnedBlock(file: string, kind: string, blockFile: string)
     result = '';
   } else if (startRe.test(content)) {
     const full = new RegExp(
-      `(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:start -->\\n[\\s\\S]*?(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:end -->(?:\\n|$)`,
+      `(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:start -->\\r?\\n[\\s\\S]*?(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:end -->(?:\\r?\\n|$)`,
       'g',
     );
-    result = content.replace(full, () => block);
+    result = content.replace(full, () => toEol(block, eol));
   } else {
-    result = `${content}${content.length > 0 && !content.endsWith('\n') ? '\n' : ''}\n${block}`;
+    result = `${content}${content.length > 0 && !content.endsWith('\n') ? eol : ''}${eol}${toEol(block, eol)}`;
   }
   let isLink = false;
   try {

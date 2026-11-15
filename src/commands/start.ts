@@ -20,12 +20,14 @@ import {
   cli,
   cliMissing,
   commandOnPath,
+  eolOf,
   findMain,
   git,
   GsdExit,
   gsdPkg,
   isDir,
   isFile,
+  lf,
   migrateRefuse,
   originLacks,
   phaseBranch,
@@ -514,13 +516,15 @@ function run(argv: string[]): number | Promise<number> {
     const state = `${MAIN}/.planning/STATE.md`;
     if (!isFile(state)) return;
     // The perl worked on bytes: keep them (latin1 in, latin1 out).
-    const raw = readFileSync(state, 'latin1');
+    const rawFile = readFileSync(state, 'latin1');
+    const eol = eolOf(rawFile); // a CRLF STATE.md stays CRLF
+    const raw = lf(rawFile);
     if (raw.split('\n').some((l) => l.includes('### Roadmap Evolution'))) {
       const note = Buffer.from(text, 'utf8').toString('latin1');
       const next = raw.replace(/(### Roadmap Evolution\n\n(?:- [^\n]*\n)*)/, (m) => `${m}- ${note}\n`);
-      if (next !== raw) writeFileSync(state, Buffer.from(next, 'latin1'));
+      if (next !== raw) writeFileSync(state, Buffer.from(eol === '\r\n' ? next.replace(/\n/g, '\r\n') : next, 'latin1'));
     } else {
-      appendFileSync(state, `\n### Roadmap Evolution\n\n- ${text}\n`);
+      appendFileSync(state, `\n### Roadmap Evolution\n\n- ${text}\n`.replace(/\n/g, eol));
     }
   };
 
@@ -601,7 +605,7 @@ function run(argv: string[]): number | Promise<number> {
     }
   };
 
-  const headings = (): string[] => readFileSync(ROADMAP, 'utf8').split('\n').filter((l) => HEADING_RE.test(l));
+  const headings = (): string[] => lf(readFileSync(ROADMAP, 'utf8')).split('\n').filter((l) => HEADING_RE.test(l));
 
   if (ATTACH !== '') {
     // ── attach mode: the phase is already claimed — just verify it exists ────
@@ -613,7 +617,7 @@ function run(argv: string[]): number | Promise<number> {
     }
     N = ATTACH;
     const re = phaseHeadingRe(N);
-    const line = re === null ? undefined : readFileSync(ROADMAP, 'utf8').split('\n').find((l) => re.test(l));
+    const line = re === null ? undefined : lf(readFileSync(ROADMAP, 'utf8')).split('\n').find((l) => re.test(l));
     TITLE = line === undefined || re === null ? '' : line.replace(new RegExp(`${re.source}${SP}*`), '');
     if (TITLE === '') die(`phase ${N} not found in .planning/ROADMAP.md — omit -p/--phase to claim a new phase`);
     out(`▶ attaching to existing phase ${N}: ${TITLE}\n`);

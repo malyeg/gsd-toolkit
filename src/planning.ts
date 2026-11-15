@@ -21,6 +21,7 @@
 //    only for distinct keys; "02" and "2" tie, and Python's order there is
 //    hash-dependent (random per process). Here ties keep insertion order.
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { eolOf } from './common.ts';
 
 export const CORRUPT = 'corrupt';
 export const ADVISORY = 'advisory';
@@ -133,6 +134,12 @@ export function readText(file: string): string {
 }
 /** read() in gsd_planning.py */
 export const readLines = (file: string): string[] => splitLines(readText(file));
+
+/** Write the lines back in the file's own dominant ending (a CRLF checkout stays CRLF; LF stays LF). */
+function writeBack(file: string, text: string): void {
+  const eol = eolOf(UTF8.decode(readFileSync(file)));
+  writeFileSync(file, eol === '\r\n' ? text.replace(/\n/g, '\r\n') : text, 'utf8');
+}
 
 // ── generic helpers ─────────────────────────────────────────────────────────
 
@@ -769,7 +776,7 @@ export function reconcileFile(file: string, hint?: string | null): Out {
   if (kind === null) return { out: '', err: '', rc: 0 };
   const before = readLines(f);
   const [after, problems] = processFile(f, kind);
-  if (!sameLines(after, before)) writeFileSync(f, after.join(''), 'utf8');
+  if (!sameLines(after, before)) writeBack(f, after.join(''));
   let err = '';
   for (const [level, message] of problems) if (level === CORRUPT) err += `  reconciled — ${message}\n`;
   return { out: '', err, rc: 0 };
@@ -792,7 +799,7 @@ export function repairDir(planningArg: string, check: boolean): Out {
     const before = readLines(file);
     const [after, problems] = kind === 'roadmap' ? reconcileRoadmap(before) : reconcileState(before, truth);
     const differs = !sameLines(after, before);
-    if (differs && !check) writeFileSync(file, after.join(''), 'utf8');
+    if (differs && !check) writeBack(file, after.join(''));
     if (differs) changed.push(name);
     all.push(...problems);
   }

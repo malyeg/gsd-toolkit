@@ -31,6 +31,7 @@ import {
   GSD_OLD_SHIMS,
   gsdPkg,
   isFile,
+  lf,
   planningHook,
   wtdir,
 } from '../common.ts';
@@ -365,7 +366,7 @@ export function main(argv: string[]): number {
     if (oldShims.includes(f)) continue;
     const text = latin1(`${MAIN}/${f}`);
     const pathRe = new RegExp(PATH_RE_SRC);
-    const ls = text.split('\n');
+    const ls = lf(text).split('\n'); // hits listed as the LF file shows them; the rewrite below keeps the file's own endings
     if (ls[ls.length - 1] === '') ls.pop();
     const hits: string[] = [];
     ls.forEach((l, n) => {
@@ -490,7 +491,7 @@ export function main(argv: string[]): number {
   for (const f of ls.status === 0 ? ls.stdout.split('\n') : []) {
     if (f === '' || !isFile(`${MAIN}/${f}`)) continue;
     let inBlock = false;
-    const lines = latin1(`${MAIN}/${f}`).split('\n');
+    const lines = lf(latin1(`${MAIN}/${f}`)).split('\n');
     if (lines[lines.length - 1] === '') lines.pop();
     lines.forEach((l, n) => {
       if (/^<!-- gsd-(?:toolkit|worktrees):\w+:start -->$/.test(l)) inBlock = true;

@@ -16,6 +16,7 @@ import {
   installCmd,
   isDir,
   isFile,
+  lf,
   phaseBranch,
   wtdir,
 } from '../common.ts';
@@ -179,7 +180,7 @@ function run(argv: string[]): number {
   } else {
     const ROADMAP = `${MAIN}/.planning/ROADMAP.md`;
     if (!isFile(ROADMAP)) fail(`error: ${ROADMAP} not found (is GSD initialized?)`);
-    const lines = (): string[] => readFileSync(ROADMAP, 'utf8').split('\n');
+    const lines = (): string[] => lf(readFileSync(ROADMAP, 'utf8')).split('\n');
     // Phase number: --phase wins; else the one added in the latest commit (the claim), else the highest in ROADMAP.md.
     if (phase !== '') {
       N = phase;

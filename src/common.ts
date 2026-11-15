@@ -119,16 +119,28 @@ export function isExec(p: string): boolean {
   }
 }
 
+/** CRLF → LF (Git for Windows checks repo text out with CRLF; every reader of repo text sees LF). */
+export const lf = (t: string): string => (t.includes('\r\n') ? t.replace(/\r\n/g, '\n') : t);
+/** The line ending a file mostly uses: CRLF only when it has more CRLF lines than bare LF lines. */
+export function eolOf(text: string): '\r\n' | '\n' {
+  const all = (text.match(/\n/g) ?? []).length;
+  const crlf = (text.match(/\r\n/g) ?? []).length;
+  return crlf > 0 && crlf * 2 > all ? '\r\n' : '\n';
+}
+
+/** LF text → the given ending (what a rewritten CRLF file gets back). */
+export const toEol = (t: string, eol: '\r\n' | '\n'): string => (eol === '\r\n' ? t.replace(/\n/g, '\r\n') : t);
+
 function readLatin1(p: string): string | null {
   try {
-    return readFileSync(p, 'latin1');
+    return lf(readFileSync(p, 'latin1'));
   } catch {
     return null;
   }
 }
 function readUtf8(p: string): string | null {
   try {
-    return readFileSync(p, 'utf8');
+    return lf(readFileSync(p, 'utf8'));
   } catch {
     return null;
   }
@@ -741,10 +753,17 @@ export function chmodPlusX(p: string): void {
 
 /** `perl -pi -e s///` on bytes: line by line, the line's own "\n" included. */
 function perlSubLines(file: string, fn: (line: string) => string): void {
-  const t = readLatin1(file);
-  if (t === null) return;
-  const parts = t.match(/[^\n]*\n|[^\n]+$/g) ?? [];
-  writeFileSync(file, parts.map(fn).join(''), 'latin1');
+  let raw: string;
+  try {
+    raw = readFileSync(file, 'latin1');
+  } catch {
+    return;
+  }
+  // a CRLF file keeps its endings: the substitutions see LF lines, the line's ending goes back
+  const eol = eolOf(raw);
+  const parts = lf(raw).match(/[^\n]*\n|[^\n]+$/g) ?? [];
+  const out = parts.map(fn).join('');
+  writeFileSync(file, eol === '\r\n' ? out.replace(/\n/g, '\r\n') : out, 'latin1');
 }
 
 /** gsd_planning_apply — install whatever planningStatus reports missing; returns the ✔/⚠ lines bash echoed */
@@ -760,7 +779,13 @@ export function planningApply(repo: string): string[] {
       out.push('✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)');
     }
     for (const line of ['.planning/ROADMAP.md merge=gsd-planning', '.planning/STATE.md merge=gsd-planning']) {
-      if (!fileLines(readLatin1(attrs) ?? '').includes(line)) appendFileSync(attrs, `${line}\n`);
+      let raw = '';
+      try {
+        raw = readFileSync(attrs, 'latin1');
+      } catch {
+        // none yet
+      }
+      if (!fileLines(lf(raw)).includes(line)) appendFileSync(attrs, `${line}${eolOf(raw)}`);
     }
     out.push('✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)');
   }
