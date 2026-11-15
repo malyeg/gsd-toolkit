@@ -12,9 +12,9 @@
 //  - flow_skip / flow_since compare numbers the awk way (leading number, else 0);
 //  - globs (`<P>-*` dirs, `skills/*`) sort in byte order, bash sorts by locale.
 // Differences (improvements): T062 reads the settings file natively (no python).
-import { spawnSync } from 'node:child_process';
 import { closeSync, existsSync, lstatSync, mkdtempSync, openSync, readFileSync, readdirSync, readSync, readlinkSync, realpathSync, rmSync, statSync, writeSync } from 'node:fs';
 import { tmpdir } from 'node:os';
+import { WIN, normalizePath, selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
 import path from 'node:path';
 import {
   GSD_CORE_INSTALL,
@@ -181,7 +181,7 @@ function readFileText(f: string): string | null {
 
 const realOrSelf = (p: string): string => {
   try {
-    return realpathSync(p);
+    return normalizePath(realpathSync(p));
   } catch {
     return p;
   }
@@ -216,6 +216,10 @@ function runMerged(cmd: string, args: string[]): { out: string; rc: number } {
 }
 
 /** child with the doctor's own stdio (output order is kept: ours is synchronous) */
+function runInheritSelf(name: string, args: string[], cwd?: string): number {
+  const [c, a] = selfArgv(name, args);
+  return runInherit(c, a, cwd);
+}
 function runInherit(cmd: string, args: string[], cwd?: string): number {
   const r = spawnSync(cmd, args, { stdio: 'inherit', cwd });
   return r.error ? 127 : (r.status ?? 1);
@@ -682,8 +686,8 @@ class Doctor {
       const pm = confGet(MAIN, 'premerge');
       if (pm !== 'none') {
         const pmRel = pm || 'scripts/gsdt-premerge-check.sh';
-        const pmAbs = pmRel.startsWith('/') ? pmRel : `${MAIN}/${pmRel}`;
-        if (exists(pmAbs) && !isExec(pmAbs)) {
+        const pmAbs = pmRel.startsWith('/') || (WIN && path.isAbsolute(pmRel)) ? pmRel : `${MAIN}/${pmRel}`;
+        if (!WIN && exists(pmAbs) && !isExec(pmAbs)) { // no exec bit on Windows: the script runs as `sh <script>`
           fail(`pre-merge script ${pmRel} is not executable — gsdt-finish will refuse`, `chmod +x ${pmRel} (and commit it)`, 'T019');
           safe('chmod');
           this.pmAbs = pmAbs;
@@ -695,7 +699,7 @@ class Doctor {
       }
 
       // ── ticket tracker ────────────────────────────────────────────────────
-      const trk = run(`${pkg}/bin/gsdt-tracker`, ['--repo', MAIN, 'config']);
+      const trk = run(...selfArgv('tracker', ['--repo', MAIN, 'config'], pkg));
       const TRK_CONF = trk.status === 127 ? '' : trk.stdout;
       const tkConf = (k: string): string => {
         for (const l of TRK_CONF.split('\n')) if (l.startsWith(`${k}=`)) return l.slice(k.length + 1);
@@ -737,7 +741,7 @@ class Doctor {
       this.tracker = TRACKER;
 
       // The 0.10.0 rename.
-      const mig = spawnSync(`${pkg}/bin/gsdt-migrate`, ['--check', '--repo', MAIN], { stdio: 'ignore' });
+      const mig = spawnSync(...selfArgv('migrate', ['--check', '--repo', MAIN], pkg), { stdio: 'ignore' });
       if (!mig.error && mig.status === 0) pass('uses the gsdt-* command names');
       else fail('this repo still uses the old gsd-* command names (before 0.10.0) — gsdt-start and gsdt-finish refuse', 'gsdt-migrate --apply', 'T090');
 
@@ -1097,7 +1101,7 @@ class Doctor {
       if (this.safeList.length === 0) {
         if (this.findings !== 0) out('--fix: none of these findings has a safe automatic fix — run the commands below.\n');
       } else {
-        const ordered = ['unlock', 'track', 'migrate', 'chmod', 'init', 'repair', 'baseref'].filter((a) => this.safeList.includes(a));
+        const ordered = ['unlock', 'track', 'migrate', 'chmod', 'init', 'repair', 'baseref'].filter((a) => this.safeList.includes(a) && !(WIN && a === 'chmod'));
         out(`\x1b[1m--fix will run (in ${MAIN}):\x1b[0m\n`);
         for (const a of ordered) out(`  ${this.safeLabel(a)}\n`);
         let answer = 'n';
@@ -1116,7 +1120,7 @@ class Doctor {
           }
           out('\n');
           out('Checking again:\n');
-          const rc = runInherit(`${pkg}/bin/gsdt-doctor`, ['--quiet', '--repo', REPO]);
+          const rc = runInheritSelf('doctor', ['--quiet', '--repo', REPO]);
           out('\n');
           out('Changed files (not committed — review with git diff, then commit):\n');
           const st = git(MAIN, ['status', '--short']);
@@ -1350,11 +1354,11 @@ class Doctor {
       case 'chmod':
         return runInherit('chmod', ['+x', this.pmAbs]) === 0;
       case 'migrate':
-        return runInherit(`${pkg}/bin/gsdt-migrate`, ['--apply', '--repo', MAIN]) === 0;
+        return runInheritSelf('migrate', ['--apply', '--repo', MAIN]) === 0;
       case 'init':
-        return runInherit(`${pkg}/bin/gsdt-init`, ['--no-launch', '--no-commit'], MAIN) === 0;
+        return runInheritSelf('init', ['--no-launch', '--no-commit'], MAIN) === 0;
       case 'repair':
-        return runInherit(`${pkg}/bin/gsdt-planning-repair`, ['--repo', MAIN]) === 0;
+        return runInheritSelf('planning-repair', ['--repo', MAIN]) === 0;
       case 'baseref':
         // each dir T034 found; gsdt-init above may have done the main one
         for (const wt of this.basereFix) {

@@ -6,7 +6,7 @@
 // gsdt-start does gsdt-wt-new), and afterwards the ticket write-back, the roadmap
 // bookkeeping note and the "cd" line. Tickets: src/ticket.ts; children: gsdt-wt-finish, gsdt-tracker, gsdt-doctor
 // (from PATH, as bash did), gh.
-import { spawnSync } from 'node:child_process';
+import { spawnSyncX as spawnSync } from '../spawn.ts';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { ticketExtract, trackerWhich } from '../ticket.ts';
@@ -24,7 +24,7 @@ import {
   migrateRefuse,
   phaseBranch,
 } from '../common.ts';
-import { err, inherit, out } from '../stdio.ts';
+import { err, inherit, inheritSelf, out } from '../stdio.ts';
 import { grepq, phaseHeadingRe, worktreeOf } from './wt-new.ts';
 
 const HELP = `gsdt-finish — finish a GSD phase: merge back, push, clean up
@@ -285,7 +285,7 @@ function run(argv: string[]): number {
       }
     }
     if (TICKET_ID !== '') {
-      const rc = inherit(`${PKG}/bin/gsdt-tracker`, ['--repo', MAIN, 'finish', TICKET_ID, `🔀 GSD phase ${PHASE_N || '?'}: PR opened ${HEAD_BR} → ${BASE}`]);
+      const rc = inheritSelf('tracker', ['--repo', MAIN, 'finish', TICKET_ID, `🔀 GSD phase ${PHASE_N || '?'}: PR opened ${HEAD_BR} → ${BASE}`]);
       if (rc !== 0) out(`• ticket ${TICKET_ID} not updated (non-fatal) — check: gsdt-tracker check\n`);
     }
     out('\n');
@@ -296,14 +296,14 @@ function run(argv: string[]): number {
   // Run from the main checkout so removing the worktree we may be standing in is safe; the toolkit worker does the merge →
   // push → cleanup.
   process.chdir(MAIN);
-  const wrc = inherit(`${PKG}/bin/gsdt-wt-finish`, [ID, BASE]);
+  const wrc = inheritSelf('wt-finish', [ID, BASE]);
   if (wrc !== 0) return wrc;
 
   // ── ticket write-back (best-effort): ticket → "in testing" + merge comment ──
   if (TICKET_ID !== '') {
     const r = git(MAIN, ['rev-parse', '--short', BASE]);
     const SHA = r.status === 0 ? chomp(r.stdout) : '?';
-    const rc = inherit(`${PKG}/bin/gsdt-tracker`, [
+    const rc = inheritSelf('tracker', [
       '--repo',
       MAIN,
       'finish',

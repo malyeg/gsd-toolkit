@@ -9,7 +9,7 @@
 // are read and applied to the environment — nothing else in it is run.
 // The API is reached by running `curl` from PATH (tests stub it); the JSON work jq and Python
 // did in bash is done natively (see json.ts).
-import { spawnSync } from 'node:child_process';
+import { spawnSyncX as spawnSync } from './winexec.ts';
 import { chmodSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import { profileFromRepo, trkClickupEnv, trkConfGet, trkGet, trkGitGet, trkHasToken, trkProfileOk } from './config.ts';

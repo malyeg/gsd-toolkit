@@ -2,7 +2,7 @@
 // ONE step. Port of the bash bin/gsdt-wt-new (kept as the parity oracle in
 // tests/fixtures/p6-old-bins/). Output, exit codes and the files it writes are the
 // same; the background install is a detached child, as the subshell was.
-import { spawn } from 'node:child_process';
+import { SH, spawnX as spawn } from '../spawn.ts';
 import { appendFileSync, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import {
@@ -307,8 +307,8 @@ function run(argv: string[]): number {
       writeFileSync(status, 'running\n');
       // Fully detached, no stdio: an open stdout would make gsdt-start's capture of ours wait for the install to end.
       const child = spawn(
-        'bash',
-        ['-c', 'if bash -c "$INSTALL_CMD" >.gsd-install.log 2>&1; then echo ok >.gsd-install.status; else echo fail >.gsd-install.status; fi'],
+        SH,
+        ['-c', `if ${SH} -c "$INSTALL_CMD" >.gsd-install.log 2>&1; then echo ok >.gsd-install.status; else echo fail >.gsd-install.status; fi`],
         { cwd: DEST, env: { ...process.env, INSTALL_CMD }, detached: true, stdio: 'ignore' },
       );
       child.on('error', () => {});
@@ -319,7 +319,7 @@ function run(argv: string[]): number {
     case 'foreground': {
       out(`▶ installing dependencies (${INSTALL_CMD})…\n`);
       writeFileSync(status, 'running\n');
-      const rc = inherit('bash', ['-c', INSTALL_CMD], { cwd: DEST });
+      const rc = inherit(SH, ['-c', INSTALL_CMD], { cwd: DEST });
       if (rc === 0) writeFileSync(status, 'ok\n');
       else {
         writeFileSync(status, 'fail\n');

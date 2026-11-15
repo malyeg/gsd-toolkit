@@ -1,6 +1,6 @@
 // gsdt-codex-wait — port of bin/gsdt-codex-wait (the old bash is the oracle in
 // tests/fixtures/p10-old-bins/). Waits out a Codex usage limit instead of failing.
-import { spawn } from 'node:child_process';
+import { spawnX as spawn } from '../spawn.ts';
 import { constants } from 'node:os';
 import { readFileSync, writeFileSync, writeSync } from 'node:fs';
 import { homedir } from 'node:os';

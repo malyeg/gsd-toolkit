@@ -14,6 +14,7 @@ import {
   RULES_SCREENS,
 } from './rules-text.ts';
 import { claudeEnv } from './claude-settings.ts';
+import { WIN } from './spawn.ts';
 import { chomp, commandOnPath, confGet, git, gsdPkg, isExec, isFile, run } from './common.ts';
 import type { Failure, Result } from './common.ts';
 import { hookPaths } from './hook-paths.ts';
@@ -400,7 +401,10 @@ export function replaceOwnedBlock(file: string, kind: string, blockFile: string)
 
 /** gsd_command_guards_active — toolkit package; the native hook/shim is not required */
 export function commandGuardsActive(pkg: string): boolean {
-  if (!(isExec(`${pkg}/bin/gsdt-worktree-guard`) && isExec(`${pkg}/bin/gsdt-start`) && isExec(`${pkg}/bin/gsdt-flow-next`))) {
+  // Windows has no exec bit and an npm install may not carry bin/: the command's TypeScript or compiled file counts there
+  const runnable = (n: string, cmd: string): boolean =>
+    isExec(`${pkg}/bin/gsdt-${n}`) || (WIN && (isFile(`${pkg}/src/commands/${cmd}.ts`) || isFile(`${pkg}/dist/commands/${cmd}.js`)));
+  if (!(runnable('worktree-guard', 'worktree-guard') && runnable('start', 'start') && runnable('flow-next', 'flow-next'))) {
     return false;
   }
   const has = (f: string): boolean => (readBytes(f) ?? '').split('\n').some((l) => /gsdt-worktree-guard.*--command/.test(l));

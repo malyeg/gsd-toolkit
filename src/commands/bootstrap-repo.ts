@@ -3,7 +3,7 @@
 // tests/fixtures/p8-old-bins/). `gsdt-init` calls main() in-process. Still outside this file:
 // `bash -n` (the self-check), `git`, and `jq` (merging the native hook into Claude's settings,
 // as the bash did; without jq the hook is reported as absent and the file is left alone).
-import { spawnSync } from 'node:child_process';
+import { SH, spawnSyncX as spawnSync } from '../spawn.ts';
 import { appendFileSync, copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -476,7 +476,7 @@ function run(argv: string[]): number {
   if (GEMINI_DROPPED) say('✔ .gsd.conf: gemini removed from providers (Gemini is no longer supported)');
 
   for (const f of [...gsdtScripts(DEST), `${DEST}/scripts/hooks/gsdt-worktree-guard.sh`]) {
-    const rc = inherit('bash', ['-n', f]);
+    const rc = inherit(SH, ['-n', f]);
     if (rc !== 0) throw new Stop(rc);
   }
   say('✔ self-check (shims parse)');

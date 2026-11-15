@@ -33,7 +33,7 @@
 //
 // Still outside this file: gsdt-planning-repair (found on PATH, as bash did) and
 // the project's own pre-merge script / test command (children).
-import { spawnSync } from 'node:child_process';
+import { SH, WIN, normalizePath, spawnSyncX as spawnSync } from '../spawn.ts';
 import path from 'node:path';
 import {
   acquireLock,
@@ -204,17 +204,18 @@ function run(argv: string[]): number {
   // ── pre-merge check hook (repo-specific validations) ─────────────────────
   // Runs after the sync so it sees the freshest base; nonzero exit aborts with nothing merged.
   const PREMERGE = confGet(MAIN, 'premerge') || 'scripts/gsdt-premerge-check.sh';
-  const PREMERGE_PATH = PREMERGE.startsWith('/') ? PREMERGE : `${MAIN}/${PREMERGE}`;
+  const PREMERGE_PATH = PREMERGE.startsWith('/') || (WIN && path.isAbsolute(PREMERGE)) ? PREMERGE : `${MAIN}/${PREMERGE}`;
   /** validate_finish: false = bash `return 1` (set -e: the command ends with exit 1) */
   const validateFinish = (validationDir: string, stage: string): boolean => {
-    if (PREMERGE !== 'none' && existsSync(PREMERGE_PATH) && !isExec(PREMERGE_PATH)) {
+    // Windows has no exec bit: the script is run as `sh <script>` there
+    if (!WIN && PREMERGE !== 'none' && existsSync(PREMERGE_PATH) && !isExec(PREMERGE_PATH)) {
       // Present but not runnable: falling through to tests (or to nothing under `test = none`) would merge code the repo meant to gate.
       err(`✗ ${PREMERGE} exists but is not executable — chmod +x it (or set premerge = none).\n`);
       return false;
     }
     if (PREMERGE !== 'none' && isExec(PREMERGE_PATH)) {
       out(`▶ pre-merge check (${PREMERGE})…\n`);
-      if (inherit(PREMERGE_PATH, [BRANCH, BASE], { cwd: MAIN }) !== 0) {
+      if ((WIN ? inherit('sh', [PREMERGE_PATH.replace(/\\/g, '/'), BRANCH, BASE], { cwd: MAIN }) : inherit(PREMERGE_PATH, [BRANCH, BASE], { cwd: MAIN })) !== 0) {
         err(`✗ validation failed (${stage}) — not pushing or removing the ${KIND} worktree.\n`);
         return false;
       }
@@ -228,7 +229,7 @@ function run(argv: string[]): number {
       if (!isDir(validationDir)) {
         err(`gsdt-wt-finish: cd: ${validationDir}: No such file or directory\n`);
         rc = 1;
-      } else rc = inherit('bash', ['-c', TEST_CMD], { cwd: validationDir });
+      } else rc = inherit(SH, ['-c', TEST_CMD], { cwd: validationDir });
       if (rc !== 0) {
         err(`✗ tests failed (${stage}) — not pushing or removing the ${KIND} worktree. Any merge remains local.\n`);
         err(`  (skip with 'test = none' in .gsd.conf, or provide ${PREMERGE})\n`);

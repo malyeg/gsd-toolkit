@@ -7,6 +7,7 @@
 // (the fallback Python reader is gone): `.command_name // .tool_input.skill`,
 // `.command_args // .tool_input.args`, `.cwd`.
 import { readFileSync, readdirSync, realpathSync } from 'node:fs';
+import { WIN } from './spawn.ts';
 import path from 'node:path';
 import { chomp, confGet, findMain, git, installCmd, isDir, isFile, reviewsProblem, validationProblem } from './common.ts';
 import { uiDesignState, uiExempt, uiGate, uiGates, uiLayoutState, uiStepCmd } from './ui.ts';
@@ -211,7 +212,7 @@ export function guard(opts: GuardOpts): GuardResult {
     const workerCommon = physical(dir, wc.status === 0 ? chomp(wc.stdout) : '');
     const tl = git(dir, ['rev-parse', '--show-toplevel'], { env });
     let parent = path.dirname(tl.status === 0 ? chomp(tl.stdout) : dir);
-    while (parent !== '/') {
+    while (parent !== '/' && !(WIN && path.dirname(parent) === parent)) {
       const pb = git(parent, ['branch', '--show-current'], { env });
       const parentBranch = pb.status === 0 ? chomp(pb.stdout) : '';
       if (parentBranch.startsWith('phase-')) {

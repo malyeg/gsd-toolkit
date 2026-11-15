@@ -7,7 +7,7 @@
 // when it runs, so only the listing is counted. Tokens are estimated as
 // characters / 4. Reads files only; node runs only to read gsd-core's own
 // skill-group list (clusters.cjs), never anything that changes state.
-import { spawnSync } from 'node:child_process';
+import { spawnSyncX as spawnSync } from './spawn.ts';
 import { readdirSync, readFileSync } from 'node:fs';
 import { commandOnPath, isDir, isFile } from './common.ts';
 import { providerSkillRoot } from './provider.ts';

@@ -8,7 +8,7 @@
 // its output is captured and printed once it is done), gsdt-planning-repair,
 // gsdt-flow-next and gsdt-tracker (children). The ROADMAP rows and STATE.md note
 // are edited in-process (no perl).
-import { spawnSync } from 'node:child_process';
+import { selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
 import { existsSync, readFileSync, readdirSync, rmdirSync, appendFileSync, writeFileSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import path from 'node:path';
@@ -48,7 +48,7 @@ import {
   startModeResolve,
 } from '../provider.ts';
 import { roadmapRows } from '../roadmap.ts';
-import { err, inherit, out, runSession } from '../stdio.ts';
+import { err, inherit, inheritSelf, out, runSession } from '../stdio.ts';
 import { updateNotice } from '../version.ts';
 import { grepq, phaseHeadingRe, worktreeOf } from './wt-new.ts';
 
@@ -496,7 +496,7 @@ function run(argv: string[]): number | Promise<number> {
     if (r.stderr !== '') err(r.stderr);
     if (r.rc !== 0) err(`⚠ could not add the ROADMAP rows for phase ${N} — gsdt-doctor will list them (T022/T023)\n`);
     // Recompute STATE.md's progress counters (total_phases, …) in the claim commit itself. Best effort.
-    inherit(`${PKG}/bin/gsdt-planning-repair`, ['--repo', MAIN], { stdio: ['inherit', 'ignore', 'ignore'] });
+    inheritSelf('planning-repair', ['--repo', MAIN], { stdio: ['inherit', 'ignore', 'ignore'] });
   };
 
   const tddDefault = (): void => {
@@ -698,7 +698,7 @@ function run(argv: string[]): number | Promise<number> {
   // Always pin the worktree to the exact phase we claimed/attached — never let wt-new re-detect it from HEAD.
   const wtArgs = ['--phase', N];
   if (SLUG !== '') wtArgs.push(SLUG);
-  const wt = spawnSync(`${PKG}/bin/gsdt-wt-new`, wtArgs, {
+  const wt = spawnSync(...selfArgv('wt-new', wtArgs, PKG), {
     cwd: MAIN,
     env: { ...process.env, GSD_LOCK_HELD: '1', GSD_WT_NEW_SUPPRESS_NEXT: '1' },
     encoding: 'utf8',
@@ -738,7 +738,7 @@ function run(argv: string[]): number | Promise<number> {
       dirs = [];
     }
     if (dirs.length > 0) {
-      const rc = inherit(`${PKG}/bin/gsdt-flow-next`, [N, '--repo', DEST], { stdio: ['inherit', 'ignore', 'inherit'] });
+      const rc = inheritSelf('flow-next', [N, '--repo', DEST], { stdio: ['inherit', 'ignore', 'inherit'] });
       if (rc !== 0) return rc;
     }
   }
@@ -763,7 +763,7 @@ function run(argv: string[]): number | Promise<number> {
         out(`• tracker = none — phase tagged tk-${TICKET_ID} only (set tracker = clickup|custom in .gsd.conf to update the ticket)\n`);
       }
     } else {
-      const rc = inherit(`${PKG}/bin/gsdt-tracker`, [
+      const rc = inheritSelf('tracker', [
         '--repo',
         MAIN,
         'start',

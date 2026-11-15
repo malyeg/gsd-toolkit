@@ -7,7 +7,7 @@
 // ${XDG_CACHE_HOME:-~/.cache}/gsd-toolkit/ so commands never wait on the
 // network: updateNotice reads the caches and refreshes stale ones in a detached
 // child. Programs (curl, npm) are run as child processes, so a stub on PATH works.
-import { spawn, spawnSync } from 'node:child_process';
+import { spawnX as spawn, spawnSyncX as spawnSync } from './spawn.ts';
 import { existsSync, mkdirSync, readFileSync, readlinkSync, renameSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { err } from './stdio.ts';

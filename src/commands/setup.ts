@@ -33,6 +33,7 @@ import {
 } from '../common.ts';
 import { coreSync } from '../core.ts';
 import { providerListValidate, providerSkillRoot, providerUserHookFile } from '../provider.ts';
+import { WIN, shellPath } from '../spawn.ts';
 import { err, out } from '../stdio.ts';
 import { readManifest, setupManifestPath } from '../version.ts';
 
@@ -208,6 +209,8 @@ export function userHook(provider: string, mode: 'on' | 'off', binDir: string): 
   if (provider !== 'claude') return;
   const settings = providerUserHookFile(provider) as string;
   if (mode !== 'on' && !isFile(settings)) return;
+  // Windows: Claude Code runs hooks in Git Bash — C:/… paths, the npm bin dir's extensionless sh shims
+  binDir = shellPath(binDir);
   const guard = `${binDir}/gsdt-worktree-guard`;
   const rules = `${binDir}/gsdt-rules`;
   if (guard.includes("'")) {
@@ -328,6 +331,10 @@ export function findBinDir(pkg: string): string | null {
       continue;
     }
     if (isFile(real) && within(real, realPkg)) return path.resolve(d);
+    // Windows: npm's shim is a script in the prefix, not a link into the package; the package sits next to it
+    if (WIN && isFile(real) && isDir(path.join(d, 'node_modules', 'gsd-toolkit')) && realpathLoose(path.join(d, 'node_modules', 'gsd-toolkit')) === realPkg) {
+      return path.resolve(d);
+    }
   }
   return null;
 }

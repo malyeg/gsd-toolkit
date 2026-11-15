@@ -22,7 +22,6 @@
 //    owned blocks) are returned byte for byte, trailing newline included.
 //  - Everything that runs a program uses argv arrays (spawnSync), never a
 //    shell string.
-import { spawnSync } from 'node:child_process';
 import {
   accessSync,
   appendFileSync,
@@ -41,6 +40,7 @@ import {
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { baserefState } from './claude-settings.ts';
+import { WIN, resolveWin, spawnSyncX as spawnSync } from './spawn.ts';
 import { uiFinishGate } from './ui.ts'; // import cycle: ui.ts uses common.ts too; both only call at run time
 
 /** A bash `exit N` inside a library function. */
@@ -154,6 +154,7 @@ function basenameOf(p: string): string {
 
 /** bash `command -v name` for an external program. */
 export function commandOnPath(name: string): string | null {
+  if (WIN) return resolveWin(name);
   if (name.includes('/')) return isFile(name) && isExec(name) ? name : null;
   for (const d of (process.env.PATH ?? '').split(path.delimiter)) {
     const p = path.join(d === '' ? '.' : d, name);

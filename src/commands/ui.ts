@@ -13,7 +13,7 @@
 //  - `pages:` entries are split on commas and blanks (no globbing);
 //  - the stub runner is run as a command: a missing/non-executable file gives
 //    rc 127/126 and a bash-style line in the run's err.txt.
-import { spawnSync } from 'node:child_process';
+import { SH, WIN, spawnSyncX as spawnSync } from '../spawn.ts';
 import { closeSync, copyFileSync, mkdirSync, openSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { constants as osConstants } from 'node:os';
 import path from 'node:path';
@@ -418,7 +418,7 @@ function run(argv: string[]): number {
       if (!isFile(`${SHOTS_DIR}/index.html`)) die(`no sheet yet — run: gsdt-ui check ${N}`);
       echo(`${SHOTS_DIR}/index.html`);
       if (process.stdout.isTTY) {
-        const opener = commandOnPath('open') ? 'open' : commandOnPath('xdg-open') ? 'xdg-open' : '';
+        const opener = WIN ? 'explorer' : commandOnPath('open') ? 'open' : commandOnPath('xdg-open') ? 'xdg-open' : '';
         if (opener !== '') spawnSync(opener, [`${SHOTS_DIR}/index.html`], { stdio: 'ignore' });
       }
       return 0;
@@ -663,7 +663,7 @@ function runRunner(runner: string, runDir: string, pkg: string): number {
     let r = runner !== ''
       ? spawnSync(runner, [job], { stdio })
       : spawnSync(process.execPath, [`${pkg}/src/launch.mjs`, 'ui-check', job], { stdio });
-    if (runner !== '' && r.error && (r.error as NodeJS.ErrnoException).code === 'ENOEXEC') r = spawnSync('bash', [runner, job], { stdio });
+    if (runner !== '' && r.error && (r.error as NodeJS.ErrnoException).code === 'ENOEXEC') r = spawnSync(SH, [runner, job], { stdio });
     if (r.error) {
       const code = (r.error as NodeJS.ErrnoException).code;
       if (code === 'ENOENT' || code === 'EACCES' || code === 'ENOTDIR' || code === 'ELOOP') {

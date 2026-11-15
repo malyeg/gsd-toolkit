@@ -3,7 +3,7 @@
 // where it is missing; gsdt-update also brings it to the latest version.
 // Always the full skill profile: the phase flow runs skills only it has
 // (doctor T009).
-import { spawnSync } from 'node:child_process';
+import { spawnSyncX as spawnSync } from './spawn.ts';
 import { readFileSync } from 'node:fs';
 import { GSD_CORE_INSTALL, commandOnPath, isExec } from './common.ts';
 import { out } from './stdio.ts';
