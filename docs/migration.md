@@ -7,7 +7,7 @@ codes, `.gsd.conf`, the shims and the generated blocks stay the same. What
 changes is how it is installed and what it needs.
 
 **Needs:** Node.js 24 or newer, and Git (on Windows, Git for Windows). Python,
-Perl, `jq` and `curl` are not needed to run the commands.
+Perl and `jq` are not used; `curl` is optional (ClickUp, the update check).
 
 **On each machine:**
 

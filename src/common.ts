@@ -615,24 +615,6 @@ export function skillDiffers(src0: string, dest0: string): boolean {
   return !Buffer.from(kept, 'latin1').equals(s);
 }
 
-// ── python (still needed by a few helpers until they are ported) ────────────
-
-let pythonCache: string | null = null;
-
-/** gsd_python — the interpreter for the python helpers (null when none) */
-export function python(): string | null {
-  if (process.env.GSD_PYTHON) return process.env.GSD_PYTHON;
-  if (pythonCache !== null) return pythonCache;
-  for (const py of ['python3', 'python']) {
-    if (commandOnPath(py) === null) continue;
-    const r = run(py, ['-c', 'import sys; sys.exit(0 if sys.version_info >= (3, 7) else 1)']);
-    if (r.status !== 0) continue;
-    pythonCache = py;
-    return py;
-  }
-  return null;
-}
-
 // ── worktree.baseRef in Claude's local settings ─────────────────────────────
 
 function baserefFiles(dir: string): string[] {

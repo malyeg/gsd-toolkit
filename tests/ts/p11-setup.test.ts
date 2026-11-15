@@ -47,7 +47,8 @@ const linkGuard = (bin: string): void => {
 function setup(w: World, args: string[] = [], extra: Record<string, string> = {}): { out: string; err: string; rc: number } {
   const r = spawnSync('node', [path.join(PKG, 'src', 'launch.mjs'), 'setup', ...args], {
     encoding: 'utf8',
-    env: { ...w.env, ...extra },
+    // the tests run from a checkout, but they test the npm install's behaviour
+    env: { GSD_SETUP_MODE: 'npm', ...w.env, ...extra },
   });
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? -1 };
 }
@@ -343,6 +344,31 @@ test('0.10.x clean-up: only owned links, the runtime and the manifest go', () =>
   assert.match(r2.out, /✂ old release runtime .* removed/);
   assert.ok(lstatSync(path.join(oldBin, 'gsdt-other')).isSymbolicLink());
   assert.ok(existsSync(path.join(oldBin, 'gsdt-file')));
+});
+
+test('0.10.x clean-up: a checkout run leaves the install alone and says so', () => {
+  const w = world();
+  const oldBin = path.join(w.home, '.local', 'bin');
+  const share = path.join(w.home, '.local', 'share', 'gsd-toolkit');
+  const rt = path.join(share, 'releases', '0.10.0');
+  write(path.join(rt, 'install.sh'), '');
+  write(path.join(rt, 'lib', 'common.sh'), '');
+  write(path.join(rt, 'bin', 'gsdt-list'), '#!/bin/sh\n', 0o755);
+  mkdirSync(oldBin, { recursive: true });
+  symlinkSync(path.join(rt, 'bin', 'gsdt-list'), path.join(oldBin, 'gsdt-list'));
+  write(path.join(oldBin, '.gsd-install-manifest'), 'providers\tclaude\n');
+  const r = setup(w, [], { GSD_BIN_DIR: w.bin, GSD_SETUP_MODE: 'checkout' });
+  assert.equal(r.rc, 0, r.err);
+  assert.ok(lstatSync(path.join(oldBin, 'gsdt-list')).isSymbolicLink());
+  assert.ok(existsSync(share));
+  assert.ok(existsSync(path.join(oldBin, '.gsd-install-manifest')));
+  assert.equal((r.out.match(/a 0\.10\.x install is in .*left in place because this is a checkout run/g) ?? []).length, 1);
+  assert.doesNotMatch(r.out, /✂/);
+  // no old install: no note
+  const w2 = world();
+  const r2 = setup(w2, [], { GSD_BIN_DIR: w2.bin, GSD_SETUP_MODE: 'checkout' });
+  assert.equal(r2.rc, 0, r2.err);
+  assert.doesNotMatch(r2.out, /0\.10\.x install/);
 });
 
 test('0.10.x clean-up: a link into this package stays', () => {

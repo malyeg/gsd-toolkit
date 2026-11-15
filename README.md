@@ -99,11 +99,11 @@ in the worktree vs the main checkout, is in
   runs the repo scripts and hooks.
 - At least one agent CLI: [Claude Code](https://claude.com/claude-code) or
   [Codex](https://github.com/openai/codex)
-- Optional: `gh` (`gsdt-finish --pr`), `jq` (merging the Claude hook into a
-  repo's `.claude/settings.json`), `curl` (only with `tracker = clickup`),
+- Optional: `gh` (`gsdt-finish --pr`), `curl` (the ClickUp API with `tracker = clickup`,
+  and the release-line update check; Windows 10+ ships it),
   [Playwright](https://playwright.dev) (`gsdt-ui check`, for phases with screens)
 
-Python and Perl are not needed. `jq` and `curl` are optional, as listed.
+Python, Perl and `jq` are not used at runtime. `curl` is optional, as listed.
 
 ## Commands
 

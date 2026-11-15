@@ -257,7 +257,7 @@ test('flowFinishGate / finishGates / gateTree', () => {
 
 // ── gsd_cli, python, skills ─────────────────────────────────────────────────
 
-test('cli / cliMissing / python', () => {
+test('cli / cliMissing', () => {
   const d = tmp();
   const good = write(path.join(d, 'good'), '#!/bin/sh\necho \'{"packageName":"@opengsd/gsd-core"}\'\n', 0o755);
   const spaced = write(path.join(d, 'spaced'), '#!/bin/sh\necho \'{"packageName": "@opengsd/gsd-core"}\'\n', 0o755);
@@ -278,8 +278,6 @@ test('cli / cliMissing / python', () => {
     assert.ok(C.cli()?.endsWith('cc/gsd-core/bin/gsd_run'));
   });
   same('cliMissing', 'gsd_cli_missing', [], C.cliMissing());
-  withEnv({ GSD_PYTHON: undefined }, () => assert.equal(C.python(), bash('gsd_python').out.trim()));
-  withEnv({ GSD_PYTHON: 'my-python' }, () => assert.equal(C.python(), 'my-python'));
 });
 
 test('skillOwned / skillDiffers', () => {
@@ -681,7 +679,7 @@ test('providerHookState', () => {
       assert.equal(P.providerHookState(r, p), chomp(bash('gsd_provider_hook_state "$1" "$2"', [r, p]).out), `${p} ${f}`);
     }
   }
-  // without jq
+  // P13: without jq the TS check still works (the bash twin answers `unverified`, the TS never does)
   const noJq = tmp();
   const r = repo(path.join(tmp(), 'hs2'));
   write(path.join(r, '.claude', 'settings.json'), settings(good));
@@ -689,10 +687,9 @@ test('providerHookState', () => {
     const w = spawnSync('sh', ['-c', `command -v ${x}`], { encoding: 'utf8' }).stdout.trim();
     if (w) symlinkSync(w, path.join(noJq, x));
   }
-  const b = bash('gsd_provider_hook_state "$1" claude', [r], { PATH: noJq });
+  assert.equal(chomp(bash('gsd_provider_hook_state "$1" claude', [r], { PATH: noJq }).out), 'unverified');
   const t = withEnv({ PATH: noJq }, () => P.providerHookState(r, 'claude'));
-  assert.equal(t, chomp(b.out));
-  assert.equal(t, 'unverified');
+  assert.equal(t, 'present');
 });
 
 test('staleHooks / staleHooksNotice', () => {

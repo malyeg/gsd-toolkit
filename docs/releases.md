@@ -18,8 +18,7 @@ gsdt-setup --agent claude --agent codex     # skills for more than one agent
 ```
 
 You need Node 24 or newer and Git (on Windows, Git for Windows). Nothing
-else: no Python, Perl, `jq` or `curl` for the commands (`jq` and `curl` are
-optional; see the README).
+else: no Python, Perl or `jq`; `curl` is optional (see the README).
 
 - `npm i -g` puts the `gsdt-*` commands on your `PATH`, and writes the
   `.cmd` / `.ps1` wrappers on Windows. There is no `postinstall` script.

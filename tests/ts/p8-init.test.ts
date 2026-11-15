@@ -401,11 +401,14 @@ t('.claude/settings.json: the native guard hook', () => {
   sc(S('[]'), null, [init(NL, { rc: 0 })]);
   sc(S(''), null, [init(NL, { rc: 0 })]);
   sc(S({ hooks: { PreToolUse: [{ ...HOOK, disabled: true }] } }), null, [init(NL, { rc: 0 })]);
-  sc(S({ n: 1.0, big: 123456789012345678901234567890, s: 'é' }), null, [init(NL, { rc: 0 })]);
+  // (a raw file: JSON.stringify would write 1.0 as 1 and the big number as 1.23e+29, which jq and the python-exact writer print differently)
+  sc(S('{\n  "n": 1.0,\n  "big": 123456789012345678901234567890,\n  "s": "é"\n}\n'), null, [init(NL, { rc: 0 })]);
   sc(FRESH, null, [init(['--provider', 'codex', ...NL], { rc: 0, out: /codex native guard hook: unsupported/ })]);
   sc(FRESH, null, [init(['--providers', 'codex,claude', ...NL], { rc: 0 })]);
-  // no jq: the hook is left absent, the same words
-  sc(S({ model: 'x' }), null, [init(NL, { rc: 0, env: (s: Side) => ({ PATH: `${s.pkg}/bin${D}${nojqPath()}` }) })]);
+  // P13: the new side merges the hook with no jq on PATH; the old bin (jq present) is the oracle
+  sc(S('{\n  "model": "x",\n  "n": 1.0,\n  "big": 123456789012345678901234567890\n}\n'), null, [
+    init(NL, { rc: 0, out: /native guard hook/, env: (s: Side) => (s.kind === 'new' ? { PATH: `${s.pkg}/bin${D}${nojqPath()}` } : {}) }),
+  ]);
 });
 
 let noJq: string | null = null;

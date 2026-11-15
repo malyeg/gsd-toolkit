@@ -12,7 +12,7 @@ An extension to GSD, written in TypeScript on Node ≥ 24 and shipped as the npm
 
 This repo is the **single source of truth**: target repos carry only `.gsd.conf`, the frozen shims, and generated instruction blocks. User docs: `README.md`, `docs/features.md` (full feature list), `docs/providers.md` (capability matrix + full `.gsd.conf` key reference), `docs/architecture.md`, `docs/migration.md`, `docs/releases.md`, and `docs/command-order.html` (phase order).
 
-GSD itself (gsd-core, `@opengsd/gsd-core`: the `/gsd-*` planning skills, including `gsd-review`, and the `gsd_run` CLI) is upstream and **not** in this repo. The toolkit knows nothing of the old GSD (`get-shit-done-cc`, `gsd-sdk`): no fallback, no detection. `gsdt-setup` installs gsd-core where an agent has none, and `gsdt-update` updates it (`src/core.ts`). `gsdt-start` claims phases with `gsd_run query phase.add` / `phase.insert` — no LLM call. Outside tools: Node ≥ 24 and `git` (on Windows, Git for Windows: its `sh` runs the shims, hooks, merge driver and pre-merge script), `npm`/`npx` (install, gsd-core), `gh` (for `gsdt-finish --pr`). No Python, Perl, `jq` or `curl` is needed to run the commands. Optional: `jq` (merging the repo hook into `.claude/settings.json`; without it the hook is reported as absent), `curl` (only with `tracker = clickup`: the ClickUp API, token in `~/.config/gsd/clickup.env`), Playwright (`gsdt-ui check`).
+GSD itself (gsd-core, `@opengsd/gsd-core`: the `/gsd-*` planning skills, including `gsd-review`, and the `gsd_run` CLI) is upstream and **not** in this repo. The toolkit knows nothing of the old GSD (`get-shit-done-cc`, `gsd-sdk`): no fallback, no detection. `gsdt-setup` installs gsd-core where an agent has none, and `gsdt-update` updates it (`src/core.ts`). `gsdt-start` claims phases with `gsd_run query phase.add` / `phase.insert` — no LLM call. Outside tools: Node ≥ 24 and `git` (on Windows, Git for Windows: its `sh` runs the shims, hooks, merge driver and pre-merge script), `npm`/`npx` (install, gsd-core), `gh` (for `gsdt-finish --pr`). No Python, Perl or `jq` is used at runtime (the repo hook merge into `.claude/settings.json` is native). Optional: `curl` (only for the ClickUp API with `tracker = clickup`, token in `~/.config/gsd/clickup.env`), Playwright (`gsdt-ui check`).
 
 ## Commands
 
@@ -29,7 +29,7 @@ tests/test-worktree-guard.sh          # the guard, incl. flow = strict
 tests/test-flow-next.sh               # the flow step engine
 tests/test-providers.sh               # provider adapters, bootstrap, doctor JSON, gsdt-rules + the split instruction blocks, user hooks
 tests/test-install-copy.sh            # lib/install.sh runtime, install.sh --copy compat
-bash tests/test-review-fixes.sh       # regressions (finish push race, no-jq hooks, …)
+bash tests/test-review-fixes.sh       # regressions (finish push race, no-jq hook checks, …)
 tests/test-list.sh                    # gsdt-list PLANS/STAGE/WORKTREE derivation + layout
 tests/test-review-round2.sh           # regressions from the 2026-09-25 review (docs/fix-plan.md)
 tests/test-commands.sh                # derive-port, start refusals/insert/-p/--flow/TDD default, conflict abort, stale lock, init docs detection, finish --pr, finish test-audit gate, finish of a batch-* worktree, bash-3.2 lint

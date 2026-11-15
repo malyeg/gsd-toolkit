@@ -3,7 +3,7 @@
 // a package that npm placed (no runtime copy, no links into ~/.local/bin).
 // Decided in P0: a separate command, no npm postinstall; gsdt-init stays
 // repo-only. Machine-level legacy (Gemini, pre-0.8 gsd-worktrees) is dropped;
-// a 0.10.x release install is moved off ~/.local/bin.
+// a 0.10.x release install is moved off ~/.local/bin (npm mode only; a checkout run leaves it).
 import {
   chmodSync,
   cpSync,
@@ -35,7 +35,7 @@ import { coreSync } from '../core.ts';
 import { providerListValidate, providerSkillRoot, providerUserHookFile } from '../provider.ts';
 import { WIN, shellPath } from '../spawn.ts';
 import { err, out } from '../stdio.ts';
-import { readManifest, setupManifestPath } from '../version.ts';
+import { installMode, readManifest, setupManifestPath } from '../version.ts';
 
 const HELP = `gsdt-setup — machine-level setup for the npm install (npm i -g gsd-toolkit)
 
@@ -49,7 +49,8 @@ What it does:
     (refuses /gsd-new-project and /gsd-ingest-docs before gsdt-init) and the
     SessionStart hook that loads gsdt-rules in a set-up repo
   - installs gsd-core (npx) for each agent that has none
-  - moves a 0.10.x release install off ~/.local/bin (its gsd*-links, its runtime)
+  - npm install: moves a 0.10.x release install off ~/.local/bin (its gsd*-links, its runtime);
+    from a git checkout it leaves that install alone and says so
   - records the choices in \${XDG_CONFIG_HOME:-~/.config}/gsd/setup-manifest; the next run
     keeps the recorded agents (a given --agent is added to them)
 
@@ -341,8 +342,10 @@ export function findBinDir(pkg: string): string | null {
 
 // ── moving a 0.10.x release install off ~/.local/bin ─────────────────────────
 
-function cleanOldInstall(pkg: string, oldBin: string): void {
-  if (!isDir(oldBin)) return;
+/** dry = only look: true when there is a 0.10.x install here (nothing is removed) */
+function cleanOldInstall(pkg: string, oldBin: string, dry = false): boolean {
+  let found = false;
+  if (!isDir(oldBin)) return false;
   const realPkg = realpathLoose(pkg);
   const targetOf = (link: string): string => {
     const t = readlinkSync(link);
@@ -355,6 +358,8 @@ function cleanOldInstall(pkg: string, oldBin: string): void {
     if (!isLink(link)) continue;
     const t = targetOf(link);
     if (intoPkg(t) || !ownedLink(link, 'bin')) continue;
+    found = true;
+    if (dry) continue;
     unlinkSync(link);
     out(`✂ ${name} removed from ${oldBin} (the toolkit is on npm now)\n`);
   }
@@ -365,15 +370,20 @@ function cleanOldInstall(pkg: string, oldBin: string): void {
       return isLink(l) && within(targetOf(l), share);
     });
     if (!used) {
-      rmSync(share, { recursive: true, force: true });
-      out(`✂ old release runtime ${share} removed\n`);
+      found = true;
+      if (!dry) rmSync(share, { recursive: true, force: true });
+      if (!dry) out(`✂ old release runtime ${share} removed\n`);
     }
   }
   const man = `${oldBin}/.gsd-install-manifest`;
   if (present(man)) {
-    rmSync(man, { force: true });
-    out(`✂ old install settings ${man} removed\n`);
+    found = true;
+    if (!dry) {
+      rmSync(man, { force: true });
+      out(`✂ old install settings ${man} removed\n`);
+    }
   }
+  return found;
 }
 
 // ── main ─────────────────────────────────────────────────────────────────────
@@ -471,7 +481,13 @@ export function main(argv: string[]): number {
 
   for (const p of providers) installSkills(pkg, p, skillDirs[p] as string);
   for (const p of providers) userHook(p, mode, bin);
-  cleanOldInstall(pkg, oldBin);
+  // From a git checkout the 0.10.x install is another copy of the toolkit that may still be in use:
+  // leave it, say so. (GSD_SETUP_MODE=npm|checkout is for tests.)
+  if ((nz(process.env.GSD_SETUP_MODE) ?? installMode(pkg)) === 'checkout') {
+    if (cleanOldInstall(pkg, oldBin, true)) {
+      out(`• a 0.10.x install is in ${oldBin}; left in place because this is a checkout run — the npm install's gsdt-setup moves it\n`);
+    }
+  } else cleanOldInstall(pkg, oldBin);
 
   if (core && nz(process.env.GSD_NO_CORE) === undefined) for (const p of providers) coreSync(p, 'install');
 
