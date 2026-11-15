@@ -1,9 +1,71 @@
 # Changelog
 
-Each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
+From 1.0.0 the toolkit is an npm package: `npm i -g gsd-toolkit`. Up to 0.10.x
+each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 (`gsd-worktrees-X.Y.Z.tar.gz` before 0.8.0, in `arconme/gsd-worktrees`) and
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
+
+## 1.0.0 (unreleased)
+
+**Breaking: the toolkit is now TypeScript on Node.js 24 or newer, installed
+from npm.** Commands, flags, output, exit codes, `.gsd.conf`, the shims and the
+generated instruction blocks are the same, so repos need no change (see below).
+
+- **Install from npm:** `npm i -g gsd-toolkit && gsdt-setup`. `gsdt-setup
+  [--agent claude|codex]... [--all-agents] [--no-core] [--no-user-hook]` is new:
+  it installs the skills and the two Claude user hooks, installs gsd-core where
+  an agent has none, and removes a 0.10.x install from `~/.local/bin` and
+  `~/.local/share/gsd-toolkit`. There is no `postinstall` script. 22 commands.
+- **`gsdt-update`** updates from npm (`npm install -g gsd-toolkit@X`, then the
+  new version's `gsdt-setup`), then gsd-core. The update notice reads the npm
+  registry.
+- **Windows without WSL.** Git for Windows is required: its `sh` runs the
+  shims, hooks, merge driver and the pre-merge script. The pre-merge script
+  needs no exec bit there (doctor T019 and `--fix` skip the exec-bit check).
+  `git config --global core.longpaths true` is recommended. CI runs the new
+  `tests/os/` suite (the real npm package) on Windows, macOS and Linux.
+- **No Python, Perl or `jq` needed.** All of that is TypeScript now. `jq` is
+  optional (merging the repo hook into `.claude/settings.json`); `curl` is used
+  only by the ClickUp tracker.
+- **`gsdt-migrate --apply` offers to commit** the repo files it changed: it
+  lists them, then asks `Commit these N files? [y/N]` in a terminal.
+  `--commit` answers yes. It commits only those files, not when one already had
+  uncommitted edits or when the checkout is off the base branch, and never
+  pushes.
+- **Fixes found while porting** (old bash and Python bugs):
+  - A signal (Ctrl-C, TERM) now stops a command that holds the lock;
+    `gsdt-finish` used to carry on to merge and push.
+  - `gsdt-start` losing a claim race resets with `--keep`; it used to
+    discard uncommitted work in the main checkout.
+  - `gsdt-codex-wait`: an old usage-limit line in a log that was written to
+    since no longer makes any later failure look like a limit.
+  - `gsdt-doctor --json` escapes control characters (it could print invalid
+    JSON).
+  - `gsdt-wt-finish`: an untracked file in `.planning/` no longer strands the
+    merge.
+  - `gsdt-start -p 08` works (bash read it as octal and died after making the
+    worktree); `gsdt-derive-port` reads a base with leading zeros as decimal.
+  - `gsdt-init` / `gsdt-bootstrap-repo`: a `.gsd.conf` without a final newline
+    no longer gets the new key glued to its last line; the mode of
+    `settings.json` is kept after the hook merge.
+  - `gsdt-wt-new` and `gsdt-wt-finish` outside a repo print the error, not
+    silence.
+  - The guard parses the Claude hook JSON natively, with the old `jq`
+    semantics (no `jq`, no Python).
+- **Dropped:** the machine-level legacy forms of old installs: the
+  `gsd-worktrees` install paths and tarball name, the `gsdw-*` skills, the
+  pre-0.10 `gsd-*` command names on the machine. A repo must be T090-clean
+  first (run `gsdt-migrate --apply`, best on 0.10.x). The config legacy
+  (`provider`, `agent_command`, `--agent`, `GSD_AGENT`) is still read.
+- **The 0.10.x line is frozen** (only data-loss fixes); its install is still
+  `install.sh`.
+
+**Moving from 0.10.x:** on each machine, `npm i -g gsd-toolkit && gsdt-setup`.
+It removes the old `~/.local/bin` links and `~/.local/share/gsd-toolkit`,
+rewrites the user hooks to the npm path and re-installs the skills. In each
+repo, nothing, when `gsdt-doctor` shows no T090; otherwise `gsdt-migrate
+--apply` first. See [docs/migration.md](docs/migration.md#100-npm-package-nodejs-24-windows).
 
 ## 0.10.0
 

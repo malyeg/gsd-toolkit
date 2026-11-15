@@ -6,7 +6,7 @@
 | Skills | `~/.claude/skills` | `~/.agents/skills` (`GSD_CODEX_SKILL_DIR` overrides) |
 | Interactive launch | positional prompt | positional prompt |
 | Native guard hook | `PreToolUse(Skill)` | not installed by this toolkit |
-| User-level hook (`install.sh`: `/gsd-new-project` only after `gsdt-init`) | `PreToolUse(Skill)` + `UserPromptExpansion` (matcher `gsd.*`: a plain word is an exact match) in `~/.claude/settings.json` | none (the skill's written rule) |
+| User-level hook (`gsdt-setup`: `/gsd-new-project` only after `gsdt-init`) | `PreToolUse(Skill)` + `UserPromptExpansion` (matcher `gsd.*`: a plain word is an exact match) in `~/.claude/settings.json` | none (the skill's written rule) |
 | Toolkit rules (`gsdt-rules`) | loaded by a user-level `SessionStart` hook (`gsdt-rules --hook`, every session source); the `CLAUDE.md` entry is the fallback | the `AGENTS.md` entry: run `gsdt-rules` first (fresh sessions do; custom shares it) |
 | Required safety | `gsdt-flow-next` command guard | same |
 
@@ -115,9 +115,9 @@ on `gsdt-start` do not rewrite the set. Refer to `gsdt-init --help` for setup fl
 | `compact_at` | Tokens at which a launched session compacts: 100000–1000000, default `300000`; `default` keeps the CLI's own. Claude gets `env CLAUDE_CODE_AUTO_COMPACT_WINDOW=<n>`, and `gsdt-start` saves it in the worktree's `.claude/settings.local.json` `env` (a plain `claude` there gets it too; an exported window or `default` removes it); Codex `-c model_auto_compact_token_limit=<n>`, custom nothing |
 | `base` | Base branch; detect develop, main, then current branch |
 | `wtdir` | Sibling worktree directory; default `<repo>-worktrees` |
-| `install` | Dependency install command; detect lockfile; `none` disables |
-| `premerge` | Validation script; default `scripts/gsdt-premerge-check.sh`; `none` disables the script, not test fallback |
-| `test` | Test command; detected by project type, `none` skips tests |
+| `install` | Dependency install command; detect lockfile; `none` disables; run through `sh` (Git for Windows' on Windows) |
+| `premerge` | Validation script; default `scripts/gsdt-premerge-check.sh`; runs through `sh` on Windows (no exec bit needed there); `none` disables the script, not test fallback |
+| `test` | Test command; detected by project type, `none` skips tests; run through `sh` the same way |
 | `flow` | `strict` enables prerequisite checks; unset preserves legacy non-strict behavior |
 | `flow_since` | Minimum phase included in doctor's historical flow-debt report |
 | `flow_skip` | Phases left out of that report, e.g. `flow_skip = 13.1, 14` (accepted as they are; doctor lists them as a note) |
@@ -145,7 +145,7 @@ pointer; the rules themselves are `gsdt-rules`' output, so they follow the
 installed release. T016 fires only when the repo's values or the core
 changed (or for a full block from before the split, once). T062: Claude is
 configured but `gsdt-rules` is not on PATH, or no user-level `SessionStart`
-hook runs it — re-run the installer (`--no-user-hook` makes it a note).
+hook runs it — re-run `gsdt-setup` (`--no-user-hook` makes it a note).
 
 Doctor checks complete instruction blocks and actual command routes. Native-hook
 states are `present`, `absent`, `invalid`, `unverified` (no jq), or `unsupported`.

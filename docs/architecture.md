@@ -1,9 +1,52 @@
 # Agent-agnostic architecture
 
-The shell workflow is the source of truth. `bin/`, `lib/common.sh`, the
-planning reconciler, worktree rules, and `gsdt-flow-next` form the shared core.
-They may depend on `lib/provider.sh`; provider adapters must not contain phase
-state, merge, claim, or safety policy.
+The TypeScript in `src/` is the source of truth. `src/common.ts`, the planning
+reconciler (`src/planning.ts`), the worktree rules (`src/guard.ts`), and
+`gsdt-flow-next` (`src/commands/flow-next.ts`) form the shared core. They may
+depend on `src/provider.ts`; provider adapters must not contain phase state,
+merge, claim, or safety policy.
+
+## Source layout
+
+Every command is `src/commands/<name>.ts`, exporting
+`main(argv)`. Each goes through `src/launch.mjs`, which checks for Node 24 or
+newer and loads the TypeScript (a checkout) or `dist/commands/<name>.js` (the
+npm package; `tools/build.mjs` builds it with `tsc`). `package.json` `bin`
+lists one `dist/bin/gsdt-<name>.js` entry per command, and npm makes the
+command wrappers. The `bin/gsdt-*` bash scripts in a checkout are launchers for
+running from it.
+
+| File | Holds |
+|---|---|
+| `src/common.ts` | `.gsd.conf`, main checkout / base / worktree dir, the checkout lock, merge driver registration, reviews and validation checks, finish gates |
+| `src/provider.ts`, `src/rules-text.ts` | the provider adapters and the generated instruction text |
+| `src/planning.ts`, `src/roadmap.ts` | ROADMAP / STATE reconcile and repair; the roadmap audit and claim rows |
+| `src/guard.ts` | the guard and the hook JSON parsing |
+| `src/ui.ts`, `src/ui-check.ts` | the UI gates; the browser runner |
+| `src/tracker/`, `src/ticket.ts` | gsdt-tracker (standalone: imports only `node:*` and itself); the GSD side of tickets |
+| `src/context.ts`, `src/hook-paths.ts`, `src/claude-settings.ts` | doctor's context section; stale hooks; edits to Claude settings |
+| `src/batch-report.ts`, `src/codex-wait.ts` | transcript token counts; Codex usage-limit parsing |
+| `src/version.ts`, `src/core.ts` | version, install mode and the update notice; installing gsd-core |
+| `src/spawn.ts`, `src/stdio.ts` | child processes and paths (Windows rules live here); output and session launching |
+| `src/commands/setup.ts` | `gsdt-setup`: skills, user hooks, gsd-core, moving off a 0.10.x install |
+
+The bash files still in `lib/` (`common.sh`, `provider.sh`, `ui.sh`,
+`tracker/*.sh`, the Python and Perl helpers) are not run by any command and the
+npm package does not ship them (except `lib/vendor/axe-core/`). Tests keep them
+as parity oracles: the TypeScript tests run old and new side by side. `lib/install.sh`
+is the installer of the frozen 0.10.x line.
+
+## Windows
+
+Windows runs the same code, no WSL. Git for Windows' `sh` runs what is
+shell-shaped in a target repo: the shims, the post-merge hook, the merge driver
+command, Claude Code's hooks and the pre-merge script (no exec bit needed
+there). `src/spawn.ts` finds commands on PATH with PATHEXT, runs `.cmd` through
+`cmd.exe` with every argument escaped, and anything extensionless or `.sh` as
+`sh <script>`. Paths from git (`C:/…`) and from Node are compared after
+`normalizePath`. Files are read with `\r\n` or `\n` and written with `\n`. The
+checkout lock reclaims a dead PID with `process.kill(pid, 0)`. CI runs
+`tests/os/` on `windows-latest`.
 
 ## Provider interface
 
@@ -28,7 +71,7 @@ environment, provider-specific repository command, default-provider legacy
 ## Instructions and skills
 
 The workflow rules are not copied into each repo. `gsdt-rules` prints them
-for the installed release (`gsd_rules_text`, `lib/provider.sh`), plus the
+for the installed release (`rulesText`, `src/rules-text.ts`), plus the
 repo's values and, unless `ui_gates = off`, the screens paragraph. So a
 release changes the rules in every repo through `gsdt-update` alone.
 
@@ -44,7 +87,7 @@ receive only a marked, replaceable entrypoint pointing to both. Existing
 content outside the markers is preserved.
 
 How each provider gets the rules: Claude through a user-level `SessionStart`
-hook (`lib/install.sh`, next to the guard's `--global` hook) that runs
+hook (`gsdt-setup`, next to the guard's `--global` hook) that runs
 `gsdt-rules --hook` — it fires on startup, resume, `/clear` and compaction,
 prints nothing outside a repo with `.gsd.conf`, and always exits 0; the
 entry line is the fallback. Codex and custom have no such hook: the
@@ -81,11 +124,11 @@ escape hatch `GSD_SKIP_GUARD=1` disables the guard, with explicit user intent.
 
 ## Adding a provider
 
-Extend the capability helpers in `lib/provider.sh`: identity validation,
+Extend the capability helpers in `src/provider.ts`: identity validation,
 instruction filename, skill root, argv renderer based on verified CLI help,
 review strategy, and honest native-hook metadata. Bootstrap and doctor share
 the integration predicates, and installation uses the same skill-root resolver.
-If the provider needs a different skill format, extend installer handling too;
+If the provider needs a different skill format, extend `gsdt-setup` (`src/commands/setup.ts`) too;
 update CLI allowlists/help, migration documentation and provider tests. A new
 native payload format belongs in the hook adapter, not phase policy. Do not copy
 workflow or phase rules into an adapter.
