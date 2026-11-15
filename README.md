@@ -63,7 +63,7 @@ See [docs/features.md](docs/features.md) for the full list.
 
 ```sh
 # 1. Install (also installs gsd-core for your agent if it is missing)
-npm i -g gsd-toolkit && gsdt-setup
+curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash
 
 # 2. Set up a repo and make its plan
 cd ~/projects/my-app
@@ -79,7 +79,7 @@ gsdt-list                # what is in flight
 gsdt-doctor              # what is wrong, and how to fix it
 ```
 
-> **On 0.10.x (the bash version)?** 1.0.0 comes from npm: `npm i -g gsd-toolkit && gsdt-setup`.
+> **On 0.10.x (the bash version)?** Run `gsdt-update`: it moves you to the 1.0.0 npm package.
 > Your repos need no change. See [Moving from 0.10.x](#moving-from-010x).
 >
 > **Upgrading from 0.9 or older?** The commands are now `gsdt-*` (`gsd-start`
@@ -207,15 +207,37 @@ All logic lives in the installed toolkit. A repo carries only:
 
 ## Install
 
+The GitHub release is the one source. On macOS, Linux and Git Bash (Windows):
+
 ```sh
-npm i -g gsd-toolkit
+curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash
+curl -fsSL …/install.sh | bash -s -- --agent claude --agent codex   # skills for more than one agent
+```
+
+It needs bash, curl, Node.js 24+ and npm. It downloads the release's
+`gsd-toolkit-X.Y.Z.tgz` and `SHA256SUMS`, refuses a checksum mismatch, runs
+`npm install -g` on the package, then the new package's `gsdt-setup`. Options:
+`--version X.Y.Z`, `--agent <name>` (repeatable), `--all-agents`, `--no-core`,
+`--no-user-hook`. If npm's global bin folder is not on your `PATH`, it prints the
+line to add.
+
+Windows without bash: install the same release file with npm, then run setup:
+
+```sh
+npm i -g https://github.com/malyeg/gsd-toolkit/releases/download/vX.Y.Z/gsd-toolkit-X.Y.Z.tgz
+gsdt-setup
+```
+
+(`npm i -g gsd-toolkit` from the npm registry only works once the package is
+published there; nothing here depends on it.) npm puts the `gsdt-*` commands on
+your `PATH` (and makes the Windows wrappers). `gsdt-setup` does the
+machine-level part, and is safe to re-run. There is no npm `postinstall` script:
+nothing runs until you run it.
+
+```sh
 gsdt-setup                                  # skills + Claude user hooks, gsd-core if missing
 gsdt-setup --agent claude --agent codex     # skills for more than one agent
 ```
-
-npm puts the `gsdt-*` commands on your `PATH` (and makes the Windows
-wrappers). `gsdt-setup` does the machine-level part, and is safe to re-run.
-There is no npm `postinstall` script: nothing runs until you run it.
 
 | `gsdt-setup` option | Effect |
 |---|---|
@@ -231,7 +253,7 @@ starts in a set-up repo.
 
 ### Updates
 
-Commands tell you when a newer version is out (at most one registry call a
+Commands tell you when a newer version is out (at most one GitHub call a
 day; `GSD_NO_UPDATE_CHECK=1` turns it off).
 
 ```sh
@@ -240,19 +262,24 @@ gsdt-update                    # the latest toolkit + gsd-core
 gsdt-update --version 1.0.0    # a given version; going back works too
 ```
 
-`gsdt-update` runs `npm install -g gsd-toolkit@<version>` and then the new
-version's `gsdt-setup`, so skills and hooks always match. See
+`gsdt-update` finds the latest release on GitHub, downloads its `.tgz` and
+`SHA256SUMS`, checks the checksum, runs `npm install -g` on the file, and then
+the new version's `gsdt-setup`, so skills and hooks always match. See
 [CHANGELOG.md](CHANGELOG.md) and [docs/releases.md](docs/releases.md).
 
 ### Moving from 0.10.x
 
 0.10.x was installed with `install.sh` into `~/.local/bin`. From 1.0.0 the
-toolkit is an npm package. On the machine:
+toolkit is an npm package. On the machine, just run the 0.10.x updater:
 
 ```sh
-npm i -g gsd-toolkit && gsdt-setup
+gsdt-update
 ```
 
+(or the curl line above). The 0.10.x updater downloads the 1.0.0 release, whose
+`lib/install.sh` hands over to the new `install.sh`; that installs the npm
+package and runs `gsdt-setup`. Nothing is removed until the npm package is
+installed, so a missing Node.js leaves the 0.10.x install as it was.
 `gsdt-setup` removes the old `~/.local/bin/gsdt-*` links and
 `~/.local/share/gsd-toolkit` (only what the old install made), rewrites the
 user hooks to the npm path, and re-installs the skills. Repos need no change
@@ -271,7 +298,7 @@ PowerShell, cmd or Git Bash.
 
 ```sh
 git config --global core.longpaths true   # recommended: worktree paths get long
-npm i -g gsd-toolkit
+npm i -g https://github.com/malyeg/gsd-toolkit/releases/download/vX.Y.Z/gsd-toolkit-X.Y.Z.tgz
 gsdt-setup
 ```
 

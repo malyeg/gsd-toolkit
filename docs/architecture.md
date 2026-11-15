@@ -34,7 +34,8 @@ The bash files still in `lib/` (`common.sh`, `provider.sh`, `ui.sh`,
 `tracker/*.sh`, the Python and Perl helpers) are not run by any command and the
 npm package does not ship them (except `lib/vendor/axe-core/`). Tests keep them
 as parity oracles: the TypeScript tests run old and new side by side. `lib/install.sh`
-is the installer of the frozen 0.10.x line.
+is the bridge from an installed 0.10.x (it hands over to the top-level `install.sh`);
+`lib/install-copy.sh` is the old copy installer, kept as the oracle for `gsdt-setup`.
 
 ## Windows
 

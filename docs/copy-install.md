@@ -1,6 +1,6 @@
 # How a package is installed (0.10.x and earlier)
 
-This page is retired. It described `lib/install.sh`, the installer behind
+This page is retired. It described `lib/install-copy.sh` (then `lib/install.sh`), the installer behind
 `install.sh` and `gsdt-update` in 0.10.x and earlier: it copied the toolkit
 into `~/.local/share/gsd-toolkit/releases/X.Y.Z/` and linked the commands into
 `~/.local/bin`. It needed Python 3.7+, Perl, Bash and Git.

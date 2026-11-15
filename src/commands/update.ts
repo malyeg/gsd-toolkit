@@ -2,17 +2,20 @@
 // The TypeScript port of bin/gsdt-update (the bash one is tests/fixtures/p11-old-bins/gsdt-update).
 //
 // Three ways a copy of the toolkit got here (installMode, src/version.ts):
-//   checkout  a git checkout: updates nothing (pull with git; ./install.sh installs the release)
+//   checkout  a git checkout: updates nothing (pull with git; install.sh / gsdt-setup)
 //   release   a GitHub-release runtime (0.10.x): hands over to its install.sh, as before
-//   npm       the npm package: `npm install -g gsd-toolkit@<version>`, then gsdt-setup
-import { existsSync } from 'node:fs';
-import { mkdirSync, writeFileSync } from 'node:fs';
+//   npm       the npm package: the release's gsd-toolkit-X.Y.Z.tgz from GitHub (checked
+//             against SHA256SUMS), `npm install -g` on it, then gsdt-setup. The npm
+//             registry is never asked.
+import { createHash } from 'node:crypto';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { gsdPkg } from '../common.ts';
 import { coreSync, coreVersion } from '../core.ts';
 import { err, inherit, out } from '../stdio.ts';
 import {
-  NPM_PACKAGE,
   gsdFetch,
   gsdVersion,
   installMode,
@@ -50,12 +53,13 @@ Env: GSD_NO_UPDATE_CHECK=1 turns those checks off; GSD_UPDATE_REPO=owner/name;
      GSD_NO_CORE=1 same as --no-core (tests).
 `;
 
-// Installed from npm the same text, plus how that differs.
+// Installed as the npm package: the same text, plus how that differs.
 const HELP_NPM = `${HELP}
-Installed from npm (npm i -g gsd-toolkit): the latest version comes from the npm
-registry; the update is \`npm install -g gsd-toolkit@<version>\`, then the new
-version's \`gsdt-setup --no-core\` so skills and hooks match it (--version works the
-same way, also to go back).
+Installed as the npm package: the latest version comes from the GitHub release;
+the update downloads that release's gsd-toolkit-X.Y.Z.tgz, checks it against the
+release's SHA256SUMS, runs \`npm install -g\` on it, then the new version's
+\`gsdt-setup --no-core\` so skills and hooks match it (--version works the same
+way, also to go back). The npm registry is not used.
 `;
 
 class Die extends Error {}
@@ -115,7 +119,7 @@ function run(argv: string[], linkDir: string): number {
   const cacheFile = `${cacheDir()}/latest-version`;
   cacheWrite(cacheFile, latest);
   out(`installed : ${cur}  (${pkg})\n`);
-  out(`latest    : ${latest !== '' ? latest : mode === 'npm' ? 'unknown (npm not reachable)' : 'unknown (GitHub not reachable)'}  (${mode === 'npm' ? `npm ${NPM_PACKAGE}` : updateRepo()})\n`);
+  out(`latest    : ${latest !== '' ? latest : 'unknown (GitHub not reachable)'}  (${updateRepo()})\n`);
 
   if (mode === 'checkout') {
     out(`• this is a git checkout, not a release — pull it with git; install the release with: ${pkg}/install.sh\n`);
@@ -146,7 +150,7 @@ function run(argv: string[], linkDir: string): number {
     if (toolkitNew) want = latest;
     else if (latest !== '') out('✔ gsd-toolkit is up to date\n');
     else if (!core) die(mode === 'npm' ? 'cannot find the latest version — try again online, or pass --version X.Y.Z' : 'cannot find the latest release — try again online, or pass --version X.Y.Z');
-    else out(`• gsd-toolkit not checked (${mode === 'npm' ? 'npm' : 'GitHub'} not reachable)\n`);
+    else out(`• gsd-toolkit not checked (GitHub not reachable)\n`);
   }
   let rc = 0;
   if (want !== '') {
@@ -171,17 +175,43 @@ function run(argv: string[], linkDir: string): number {
   return rc;
 }
 
-/** npm mode: install that version globally, then run the NEW package's setup. 0 = fine, 1 = setup failed, 2 = the install failed. */
+/** Download `url` to `file` with curl (retrying a GitHub blip). */
+function download(url: string, file: string, maxTime: number): boolean {
+  const r = spawnSync('curl', ['-fsSL', '--retry', '3', '--retry-delay', '2', '--max-time', String(maxTime), url, '-o', file], {
+    stdio: ['ignore', 'ignore', 'ignore'],
+  });
+  return r.status === 0 && existsSync(file);
+}
+
+/** npm mode: install that release's .tgz globally, then run the NEW package's setup. 0 = fine, 1 = setup failed, 2 = the install failed. */
 function npmInstall(version: string): number {
   if (!/^[0-9]+\.[0-9]+\.[0-9]+$/.test(version)) die('--version needs X.Y.Z');
-  const spec = `${NPM_PACKAGE}@${version}`;
-  out(`▶ npm install -g ${spec}\n`);
-  const r = inherit('npm', ['install', '-g', spec]);
-  if (r !== 0) {
-    err(`⚠ npm install failed (exit ${r}); run:  npm install -g ${spec}\n`);
-    return 2;
+  const name = `gsd-toolkit-${version}.tgz`;
+  const base = `https://github.com/${updateRepo()}/releases/download/v${version}`;
+  const tmp = mkdtempSync(path.join(tmpdir(), 'gsdt-update-'));
+  try {
+    out(`▶ downloading gsd-toolkit ${version}…\n`);
+    if (!download(`${base}/SHA256SUMS`, path.join(tmp, 'SHA256SUMS'), 30)) die(`download failed: ${base}/SHA256SUMS`);
+    let want = '';
+    for (const line of readFileSync(path.join(tmp, 'SHA256SUMS'), 'utf8').split('\n')) {
+      const m = /^(\S+)\s+\*?(\S+)\s*$/.exec(line);
+      if (m && m[2] === name) want = (m[1] as string).toLowerCase();
+    }
+    if (want === '') die(`${version} has no npm package; install it with its own installer: curl -fsSL https://raw.githubusercontent.com/${updateRepo()}/v${version}/install.sh | bash`);
+    const tgz = path.join(tmp, name);
+    if (!download(`${base}/${name}`, tgz, 120)) die(`download failed: ${base}/${name}`);
+    const have = createHash('sha256').update(readFileSync(tgz)).digest('hex');
+    if (have !== want) die(`checksum mismatch for ${name} — not installed`);
+    out(`▶ npm install -g ${name}\n`);
+    const r = inherit('npm', ['install', '-g', '--no-audit', '--no-fund', tgz]);
+    if (r !== 0) {
+      err(`⚠ npm install failed (exit ${r}); the release's ${name} is at ${base}/${name}\n`);
+      return 2;
+    }
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
   }
-  out(`✔ ${spec} installed\n`);
+  out(`✔ gsd-toolkit ${version} installed\n`);
   // The new package's setup, so skills and hooks match the new version. It reuses
   // the agents gsdt-setup recorded. gsd-core is synced below, not there.
   const s = inherit(process.execPath, [`${gsdPkg()}/src/launch.mjs`, 'setup', '--no-core']);

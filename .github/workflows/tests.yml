@@ -69,8 +69,10 @@ jobs:
         run: tests/test-commands.sh
       - name: ticket tracker suite
         run: tests/test-tracker.sh
-      - name: release install + update suite
+      - name: release notice + gsdt-update (release runtime) suite
         run: tests/test-update.sh
+      - name: install.sh + the bridge from 0.10.x suite
+        run: tests/test-install.sh
       - name: npm package suite (pack, install -g, gsdt-setup, gsdt-update)
         run: tests/test-npm.sh
       - name: UI gates suite

@@ -9,7 +9,9 @@
 # 1. Checks: on main, clean, level with origin/main, X.Y.Z newer than VERSION,
 #    and CHANGELOG.md has a "## X.Y.Z" section (write it first — it becomes the
 #    release notes).
-# 2. Writes VERSION and commits "release vX.Y.Z".
+# 2. Writes VERSION, package.json and package-lock.json (the npm package's
+#    version: release.yml refuses a release where they differ) and commits
+#    "release vX.Y.Z".
 # 3. With --push: pushes main. GitHub Actions (release.yml) sees VERSION change,
 #    runs every test suite, tags the commit and publishes the release;
 #    install.sh / gsdt-update pick it up from there. Without --push it prints the
@@ -35,7 +37,10 @@ gsd_version_gt "$V" "$CUR" || die "$V is older than VERSION ($CUR)"
 grep -qE "^## \[?$V\]?" CHANGELOG.md || die "CHANGELOG.md has no '## $V' section — write the release notes first"
 
 printf '%s\n' "$V" > VERSION
-git add VERSION
+# package.json (+ its lock) carry the same version; npm rewrites both
+npm version "$V" --no-git-tag-version --allow-same-version >/dev/null
+git add VERSION package.json
+[ ! -f package-lock.json ] || git add package-lock.json
 git commit -qm "release v$V"
 echo "✔ committed release v$V"
 if [ "$PUSH" = 1 ]; then

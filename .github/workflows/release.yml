@@ -2,8 +2,12 @@ name: release
 
 # A push to main that changes VERSION → check it is a new version with release
 # notes → run the full test suite → tag that commit and publish a GitHub release
-# with gsd-toolkit-X.Y.Z.tar.gz + SHA256SUMS. install.sh and gsdt-update download
-# exactly these two files.
+# with gsd-toolkit-X.Y.Z.tgz (the npm package, `npm pack`), gsd-toolkit-X.Y.Z.tar.gz
+# (git archive) and SHA256SUMS listing both. install.sh and gsdt-update (1.0.0
+# onwards) download SHA256SUMS + the .tgz and `npm install -g` it; the npm
+# registry is not involved. The .tar.gz stays for installed 0.10.x versions: their
+# install.sh / gsdt-update download it and run its lib/install.sh, which hands
+# over to this release's install.sh.
 #
 # A failed run tagged nothing. Fix it on main, then Actions → release → Run
 # workflow (gh workflow run release.yml) releases main at the same VERSION.
@@ -46,12 +50,22 @@ jobs:
       V: ${{ needs.check.outputs.version }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: package.json carries the version
+        run: |
+          pv=$(node -p 'require("./package.json").version')
+          [ "$pv" = "$V" ] || { echo "package.json is $pv, VERSION is $V (tools/release.sh writes both)"; exit 1; }
       - name: build
         run: |
           mkdir dist
           git archive --format=tar.gz --prefix="gsd-toolkit-$V/" \
             -o "dist/gsd-toolkit-$V.tar.gz" HEAD
-          (cd dist && sha256sum "gsd-toolkit-$V.tar.gz" > SHA256SUMS && cat SHA256SUMS)
+          npm ci
+          npm pack --silent --pack-destination dist
+          [ -f "dist/gsd-toolkit-$V.tgz" ] || { echo "npm pack did not make gsd-toolkit-$V.tgz"; ls dist; exit 1; }
+          (cd dist && sha256sum "gsd-toolkit-$V.tar.gz" "gsd-toolkit-$V.tgz" > SHA256SUMS && cat SHA256SUMS)
       - name: release notes (from CHANGELOG.md)
         run: |
           awk -v v="$V" '$1 == "##" && ($2 == v || $2 == "[" v "]") {on=1; next} on && /^## / {exit} on {print}' \
@@ -62,6 +76,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "v$V" \
-            "dist/gsd-toolkit-$V.tar.gz" dist/SHA256SUMS \
+            "dist/gsd-toolkit-$V.tgz" "dist/gsd-toolkit-$V.tar.gz" dist/SHA256SUMS \
             --target "$GITHUB_SHA" \
             --title "gsd-toolkit $V" --notes-file dist/notes.md

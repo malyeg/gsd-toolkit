@@ -149,27 +149,46 @@ o=$(HOME="$H" XDG_CONFIG_HOME="$H/.config" gsdt-setup 2>&1)
 is "second run: settings unchanged (no duplicate hooks)" "$(cmp -s "$WORK/settings.1" "$H/.claude/settings.json" && echo same)" "same"
 has "second run: skills already current" "$o" "already current"
 
-section "gsdt-update, npm mode (npm stubbed)"
-STUB="$WORK/stub"; mkdir -p "$STUB"
+section "gsdt-update, npm mode (GitHub = a curl stub serving the release; npm stubbed)"
+# The release is the one source: latest from the GitHub API, SHA256SUMS + the .tgz from the
+# release download; the npm registry is never asked (the npm stub fails any `view`).
+STUB="$WORK/stub"; mkdir -p "$STUB" "$WORK/rel/v99.0.0"
+cp "$TGZ" "$WORK/rel/v99.0.0/gsd-toolkit-99.0.0.tgz"
+(cd "$WORK/rel/v99.0.0" && { sha256sum gsd-toolkit-99.0.0.tgz 2>/dev/null || shasum -a 256 gsd-toolkit-99.0.0.tgz; } > SHA256SUMS)
+cat > "$STUB/curl" <<EOF
+#!/bin/sh
+echo "\$*" >> "$WORK/curl.log"
+out=""; url=""
+while [ \$# -gt 0 ]; do case "\$1" in -o) out=\$2; shift ;; -H|--max-time|--retry|--retry-delay) shift ;; http*) url=\$1 ;; esac; shift; done
+case "\$url" in
+  */releases/latest) printf '{"tag_name": "v%s"}' "\${LATEST:-}" ;;
+  */releases/download/*) f="$WORK/rel/\${url#*/releases/download/}"; [ -f "\$f" ] || exit 22; if [ -n "\$out" ]; then cp "\$f" "\$out"; else cat "\$f"; fi ;;
+  *) exit 6 ;;
+esac
+EOF
 cat > "$STUB/npm" <<EOF
 #!/bin/sh
 echo "\$*" >> "$WORK/npm.log"
 case "\$1" in
-  view) [ -n "\${NPM_VIEW:-}" ] && echo "\$NPM_VIEW" || exit 1 ;;
   install|i) exit \${NPM_INSTALL_RC:-0} ;;
+  *) exit 1 ;;
 esac
 EOF
-chmod +x "$STUB/npm"
-o=$(HOME="$H" XDG_CONFIG_HOME="$H/.config" XDG_CACHE_HOME="$WORK/cache" NPM_VIEW=99.0.0 PATH="$STUB:$PATH" gsdt-update --check --no-core 2>&1); rc=$?
+chmod +x "$STUB/npm" "$STUB/curl"
+UPD="env HOME=$H XDG_CONFIG_HOME=$H/.config XDG_CACHE_HOME=$WORK/cache GSD_UPDATE_REPO=acme/gsd-toolkit PATH=$STUB:$PATH"
+o=$($UPD LATEST=99.0.0 gsdt-update --check --no-core 2>&1); rc=$?
 is "update --check rc" "$rc" "0"
 has "update --check: installed version" "$o" "installed : $VER"
-has "update --check: latest from npm" "$o" "99.0.0"
+has "update --check: latest from GitHub" "$o" "latest    : 99.0.0  (acme/gsd-toolkit)"
 has "update --check: offers the update" "$o" "update available"
 : > "$WORK/npm.log"
-o=$(HOME="$H" XDG_CONFIG_HOME="$H/.config" XDG_CACHE_HOME="$WORK/cache" NPM_VIEW=99.0.0 PATH="$STUB:$PATH" gsdt-update --no-core 2>&1); rc=$?
+o=$($UPD LATEST=99.0.0 gsdt-update --no-core 2>&1); rc=$?
 is "update rc" "$rc" "0"
-has "update ran npm install -g gsd-toolkit@99.0.0" "$(cat "$WORK/npm.log")" "gsd-toolkit@99.0.0"
-o=$(HOME="$H" XDG_CONFIG_HOME="$H/.config" XDG_CACHE_HOME="$WORK/cache" NPM_VIEW="$VER" PATH="$STUB:$PATH" gsdt-update --check --no-core 2>&1)
+has "update ran npm install -g on the downloaded .tgz" "$(cat "$WORK/npm.log")" "install -g --no-audit --no-fund"
+has "…the release's gsd-toolkit-99.0.0.tgz" "$(cat "$WORK/npm.log")" "gsd-toolkit-99.0.0.tgz"
+hasnt "no npm registry lookup" "$(cat "$WORK/npm.log")" "view"
+has "update says it installed" "$o" "gsd-toolkit 99.0.0 installed"
+o=$($UPD LATEST="$VER" gsdt-update --check --no-core 2>&1)
 has "same version: up to date" "$o" "up to date"
 
 finish

@@ -1,7 +1,8 @@
 # Changelog
 
-From 1.0.0 the toolkit is an npm package: `npm i -g gsd-toolkit`. Up to 0.10.x
-each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
+From 1.0.0 the toolkit is an npm package, shipped as a GitHub release
+(`gsd-toolkit-X.Y.Z.tgz`, installed by `install.sh`; the npm registry is
+optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 (`gsd-worktrees-X.Y.Z.tar.gz` before 0.8.0, in `arconme/gsd-worktrees`) and
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
@@ -12,14 +13,26 @@ becomes its release notes.
 from npm.** Commands, flags, output, exit codes, `.gsd.conf`, the shims and the
 generated instruction blocks are the same, so repos need no change (see below).
 
-- **Install from npm:** `npm i -g gsd-toolkit && gsdt-setup`. `gsdt-setup
+- **Install:** `curl -fsSL …/install.sh | bash` (bash, curl, Node 24+, npm; also
+  Git Bash): it downloads the release's `gsd-toolkit-X.Y.Z.tgz`, checks it against
+  `SHA256SUMS`, runs `npm install -g` on it and then `gsdt-setup`. Without bash:
+  `npm i -g <release .tgz URL>` then `gsdt-setup`. `gsdt-setup
   [--agent claude|codex]... [--all-agents] [--no-core] [--no-user-hook]` is new:
   it installs the skills and the two Claude user hooks, installs gsd-core where
   an agent has none, and removes a 0.10.x install from `~/.local/bin` and
   `~/.local/share/gsd-toolkit`. There is no `postinstall` script. 22 commands.
-- **`gsdt-update`** updates from npm (`npm install -g gsd-toolkit@X`, then the
-  new version's `gsdt-setup`), then gsd-core. The update notice reads the npm
-  registry.
+- **`gsdt-update`** downloads the latest release's `.tgz` from GitHub (checked
+  against `SHA256SUMS`), runs `npm install -g` on it and the new version's
+  `gsdt-setup`, then updates gsd-core. The update notice reads the GitHub
+  release too; the npm registry is never asked.
+- **The release carries both files:** `gsd-toolkit-X.Y.Z.tgz` (`npm pack`) and
+  `gsd-toolkit-X.Y.Z.tar.gz`; `SHA256SUMS` lists both. `release.yml` refuses a
+  `package.json` version that differs from `VERSION`; `tools/release.sh` writes
+  both.
+- **0.10.x moves with its own updater:** `gsdt-update` (or the old `install.sh`)
+  downloads the `.tar.gz`; its `lib/install.sh` is a bridge that hands over to
+  `install.sh` (npm install + `gsdt-setup`, which removes the 0.10.x install).
+  Nothing is removed before the npm package is installed.
 - **Windows without WSL.** Git for Windows is required: its `sh` runs the
   shims, hooks, merge driver and the pre-merge script. The pre-merge script
   needs no exec bit there (doctor T019 and `--fix` skip the exec-bit check).
@@ -61,8 +74,8 @@ generated instruction blocks are the same, so repos need no change (see below).
 - **The 0.10.x line is frozen** (only data-loss fixes); its install is still
   `install.sh`.
 
-**Moving from 0.10.x:** on each machine, `npm i -g gsd-toolkit && gsdt-setup`.
-It removes the old `~/.local/bin` links and `~/.local/share/gsd-toolkit`,
+**Moving from 0.10.x:** on each machine, run `gsdt-update`.
+It installs the npm package and removes the old `~/.local/bin` links and `~/.local/share/gsd-toolkit`,
 rewrites the user hooks to the npm path and re-installs the skills. In each
 repo, nothing, when `gsdt-doctor` shows no T090; otherwise `gsdt-migrate
 --apply` first. See [docs/migration.md](docs/migration.md#100-npm-package-nodejs-24-windows).

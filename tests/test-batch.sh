@@ -365,10 +365,10 @@ has "in the main checkout it stops and prints the gsdt-batch command" "MAIN chec
 has "it never lands the batch itself: it prints gsdt-finish" "gsdt-finish <batch-branch>" "$SK"
 hasnt "provider-neutral: no literal Skill() calls" "Skill(" "$SK"
 H2="$WORK/insthome"; mkdir -p "$H2"
-if HOME="$H2" bash "$PKG/lib/install.sh" --agent claude --no-user-hook > "$WORK/inst" 2>&1; then
+if HOME="$H2" bash "$PKG/lib/install-copy.sh" --agent claude --no-user-hook > "$WORK/inst" 2>&1; then
   has "install copies it, with the toolkit mark" "^<!-- gsd-toolkit-skill " "$H2/.claude/skills/gsdt-batch/SKILL.md"
 else
-  bad "lib/install.sh ran" "$(tail -5 "$WORK/inst")"
+  bad "lib/install-copy.sh ran" "$(tail -5 "$WORK/inst")"
 fi
 # shellcheck source=../lib/provider.sh
 . "$PKG/lib/provider.sh"

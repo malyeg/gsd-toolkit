@@ -1,4 +1,4 @@
-// P11: gsdt-setup. The user hook is compared against lib/install.sh (the python
+// P11: gsdt-setup. The user hook is compared against lib/install-copy.sh (the python
 // user_hook()), byte for byte; skills, the 0.10.x clean-up, the manifest and the
 // bin dir are checked on the new side. Always a temp HOME / CLAUDE / CODEX / XDG.
 // Run: node --test tests/ts/p11-setup.test.ts
@@ -52,9 +52,9 @@ function setup(w: World, args: string[] = [], extra: Record<string, string> = {}
   });
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? -1 };
 }
-/** lib/install.sh of this checkout into the same machine layout (its runtime goes next to its bin) */
+/** lib/install-copy.sh of this checkout into the same machine layout (its runtime goes next to its bin) */
 function oldInstall(w: World, args: string[] = []): { out: string; rc: number } {
-  const r = spawnSync('bash', [path.join(PKG, 'lib', 'install.sh'), ...args], {
+  const r = spawnSync('bash', [path.join(PKG, 'lib', 'install-copy.sh'), ...args], {
     encoding: 'utf8',
     env: { ...w.env, GSD_BIN_DIR: w.bin },
   });

@@ -1,8 +1,8 @@
 // src/version.ts — the toolkit's version, how this copy was installed, what
 // gsdt-setup recorded, and the "a newer release is out" check (lib/version.sh).
 //
-// Two things are checked: gsd-toolkit (GitHub releases of $GSD_UPDATE_REPO for a
-// checkout or a release runtime; the npm registry for the npm package) and GSD
+// Two things are checked: gsd-toolkit (the GitHub releases of $GSD_UPDATE_REPO,
+// whatever the install mode: the npm registry is never asked) and GSD
 // itself (@opengsd/gsd-core on npm). Each latest version is cached for a day in
 // ${XDG_CACHE_HOME:-~/.cache}/gsd-toolkit/ so commands never wait on the
 // network: updateNotice reads the caches and refreshes stale ones in a detached
@@ -27,7 +27,7 @@ export function gsdVersion(): string {
  * How this package got here:
  *   checkout — a git checkout (.git): updated with git, never by gsdt-update
  *   release  — a 0.10.x-style release runtime (has install.sh: GitHub tarball)
- *   npm      — the npm package (npm i -g gsd-toolkit; no install.sh shipped)
+ *   npm      — the npm package (install.sh / npm i -g the release's .tgz; no install.sh shipped)
  */
 export type InstallMode = 'checkout' | 'release' | 'npm';
 export function installMode(pkg: string = gsdPkg()): InstallMode {
@@ -135,26 +135,9 @@ function refresh(f: string, fetch: () => string): void {
   }
 }
 
-/** The npm package name of this toolkit. */
-export const NPM_PACKAGE = 'gsd-toolkit';
 
-/** `npm view gsd-toolkit version` — the latest version on npm ('' when unreachable) */
-export function npmLatest(): string {
-  if (commandOnPath('npm') === null) return '';
-  const r = spawnSync('npm', ['view', NPM_PACKAGE, 'version', '--fetch-retries=0', '--fetch-timeout=5000'], {
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'ignore'],
-  });
-  for (const line of (r.stdout ?? '').split('\n')) if (/^[0-9]+\.[0-9]+\.[0-9]+$/.test(line.trim())) return line.trim();
-  return '';
-}
-
-/**
- * gsd_latest_fetch — this toolkit's latest version ('' when unreachable): GitHub
- * releases for a checkout or a release runtime, npm for the npm package.
- */
+/** The GitHub release's latest version for this toolkit ('' when unreachable). */
 export function latestFetch(): string {
-  if (installMode() === 'npm') return npmLatest();
   const r = spawnSync(
     'curl',
     ['-fsSL', '--max-time', '5', '-H', 'Accept: application/vnd.github+json', `https://api.github.com/repos/${updateRepo()}/releases/latest`],

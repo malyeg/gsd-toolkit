@@ -2,23 +2,37 @@
 
 Two lines exist:
 
-- **1.0.0 onwards: an npm package.** TypeScript on Node 24 or newer. This is
-  what the rest of this page describes first.
-- **0.10.x and earlier: GitHub releases** installed by `install.sh` (bash,
-  Python, Perl). This line is **frozen**: only fixes for data loss. Its last
-  release is planned to tell users to move to npm (`gsdt-update` and the
-  update notice will say so).
+- **1.0.0 onwards: an npm package, shipped as a GitHub release.** TypeScript on
+  Node 24 or newer. The release carries `gsd-toolkit-X.Y.Z.tgz` (`npm pack`) and
+  `SHA256SUMS`; `install.sh` and `gsdt-update` download that file and run
+  `npm install -g` on it. The npm registry is optional (the package may be
+  published there later); nothing depends on it.
+- **0.10.x and earlier: GitHub releases** installed by the old bash
+  `install.sh`. This line is **frozen**: only fixes for data loss. Each release
+  also carries `gsd-toolkit-X.Y.Z.tar.gz` (`git archive`): that is what an
+  installed 0.10.x downloads, and its `lib/install.sh` is the **bridge**: it
+  hands over to the release's `install.sh` (below).
 
 ## For users
 
 ```sh
-npm i -g gsd-toolkit
-gsdt-setup                                  # skills + Claude user hooks, gsd-core if missing
-gsdt-setup --agent claude --agent codex     # skills for more than one agent
+curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash
+curl -fsSL …/install.sh | bash -s -- --agent claude --agent codex     # more than one agent
 ```
 
+`install.sh` (bash, also Git Bash on Windows) needs curl, Node 24 or newer and
+npm. It reads the latest release from the GitHub API (or takes `--version`),
+downloads `SHA256SUMS` and `gsd-toolkit-X.Y.Z.tgz`, checks the checksum,
+runs `npm install -g --no-audit --no-fund <tgz>`, then the new package's
+`gsdt-setup` with the options it was given (`--agent`, `--all-agents`,
+`--no-core`, `--no-user-hook`; `--reuse-install-config` is accepted and ignored).
+A release without a `.tgz` line in `SHA256SUMS` (before 1.0.0) is refused with
+the line that installs it with its own installer. Windows without bash:
+`npm i -g https://github.com/<repo>/releases/download/vX.Y.Z/gsd-toolkit-X.Y.Z.tgz`
+then `gsdt-setup`. Env: `GSD_UPDATE_REPO` (owner/name), and npm's own settings.
+
 You need Node 24 or newer and Git (on Windows, Git for Windows). Nothing
-else: no Python, Perl or `jq`; `curl` is optional (see the README).
+else: no Python, Perl or `jq`.
 
 - `npm i -g` puts the `gsdt-*` commands on your `PATH`, and writes the
   `.cmd` / `.ps1` wrappers on Windows. There is no `postinstall` script.
@@ -51,9 +65,9 @@ gsdt-update --version 1.0.0    # a given version, also how you go back
 gsdt-update --no-core          # leave gsd-core as it is
 ```
 
-From npm, `gsdt-update` asks the npm registry for the latest version, runs
-`npm install -g gsd-toolkit@<version>`, then that version's `gsdt-setup
---no-core` so skills and hooks match it. After that it brings gsd-core to its
+As the npm package, `gsdt-update` asks GitHub for the latest release, downloads
+its `.tgz` and `SHA256SUMS`, checks the checksum, runs `npm install -g` on the
+file, then that version's `gsdt-setup --no-core` so skills and hooks match it. After that it brings gsd-core to its
 latest for each agent you set up (an agent without it gets it). Offline, or
 without `npx`, it prints the command to run.
 
@@ -64,7 +78,7 @@ anything there needs `gsdt-init` again.
 
 ### Knowing about updates
 
-Two versions are watched: gsd-toolkit (the npm registry; GitHub releases for a 0.10.x install or a checkout) and GSD itself
+Two versions are watched: gsd-toolkit (the latest GitHub release, in every install mode) and GSD itself
 (`@opengsd/gsd-core` on npm, compared with the installed gsd-core version;
 the update command is `npx @opengsd/gsd-core@latest --claude --global`).
 
@@ -82,10 +96,15 @@ the update command is `npx @opengsd/gsd-core@latest --claude --global`).
 ### Moving from 0.10.x to 1.0.0
 
 ```sh
-npm i -g gsd-toolkit && gsdt-setup
+gsdt-update          # the 0.10.x updater; or the curl line above
 ```
 
-`gsdt-setup` removes the old `~/.local/bin/gsdt-*` links and
+The 0.10.x `install.sh` / `gsdt-update` download the 1.0.0 release's
+`gsd-toolkit-1.0.0.tar.gz` and run its `lib/install.sh` (the bridge) with
+`GSD_BIN_DIR` / `GSD_COPY_DIR` set. The bridge unsets those (`gsdt-setup` reads
+`GSD_BIN_DIR` as the folder its hooks point at) and runs the release's
+`install.sh --version 1.0.0` with the agent, hook and core options. That
+installs the package from npm's side and `gsdt-setup` removes the old `~/.local/bin/gsdt-*` links and
 `~/.local/share/gsd-toolkit/` (only what the old install made), rewrites the
 user hooks in `~/.claude/settings.json` to the npm path, and re-installs the
 skills. Repos need no change when `gsdt-doctor` shows no T090 (else
@@ -130,29 +149,27 @@ the tests.
 
 1. Add a `## X.Y.Z` section at the top of `CHANGELOG.md` (it becomes the
    release notes) and commit it on `main`.
-2. Change `VERSION` (and `package.json` `version`: `tests/test-npm.sh` checks they
-   are equal) and push, by hand or with:
+2. Change `VERSION` and `package.json` `version` (the release refuses a mismatch;
+   `tests/test-npm.sh` checks it too) and push, by hand or with:
 
    ```sh
    tools/release.sh X.Y.Z --push
    ```
 
    It checks that `main` is clean and level with origin, writes `VERSION`,
-   commits `release vX.Y.Z`, and pushes.
+   `package.json` and `package-lock.json`, commits `release vX.Y.Z`, and pushes.
 3. `.github/workflows/release.yml` runs `tools/release-check.sh`: it stops with an
    error if `VERSION` is older than the newest tag or `CHANGELOG.md` has no notes
    for it, and does nothing if that version already has its tag. Then it runs the
-   whole test suite (`tests.yml`), builds the tarball with `git archive`, tags
-   the commit `vX.Y.Z` and publishes the GitHub release with the tarball and
-   `SHA256SUMS`.
+   whole test suite (`tests.yml`), refuses a `package.json` version that
+   differs from `VERSION`, builds `gsd-toolkit-X.Y.Z.tar.gz` (`git archive`, for
+   0.10.x installers: the bridge) and `gsd-toolkit-X.Y.Z.tgz` (`npm ci`, `npm
+   pack`; the `prepack` script builds `dist/`), tags the commit `vX.Y.Z` and
+   publishes the GitHub release with both files and a `SHA256SUMS` that lists
+   both.
 
-**What is there today:** `release.yml` does exactly that: tag, tarball,
-`SHA256SUMS`, GitHub release. It does **not** publish to npm yet.
-
-**Planned for 1.0.0:** the same tag-gated run also does `npm publish
---provenance` (the `prepack` script builds `dist/`), and the GitHub tarball
-is no longer the install path. Until the user says go, nothing is published to
-npm, and `VERSION` stays as it is.
+The npm registry is not part of the release. `npm publish` can be added later
+(same `.tgz`); `install.sh` and `gsdt-update` do not need it.
 
 `tests.yml` runs the bash suites and the TypeScript suites on Ubuntu and
 macOS, and the cross-platform `tests/os/` suite (the real npm package, packed
@@ -173,6 +190,8 @@ for the latest release (or takes `--version`), downloads
 the package's `lib/install.sh` into
 `~/.local/share/gsd-toolkit/releases/X.Y.Z/` (links in `~/.local/bin`, skills
 copied), and keeps the previous release. `gsdt-update` there re-runs its own
-runtime's `install.sh`. The tests (`tests/test-update.sh`,
-`tests/test-install-copy.sh`) still cover it. See
+runtime's `install.sh`. `tests/test-install.sh` runs the real v0.10.0
+`install.sh` and `gsdt-update` against a 1.0.0 release (the bridge); the old
+copy installer is `lib/install-copy.sh`, kept as the oracle for `gsdt-setup`
+(`tests/test-install-copy.sh`). See
 [copy-install.md](copy-install.md).

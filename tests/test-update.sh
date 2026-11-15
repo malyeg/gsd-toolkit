@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
-# test-update.sh — releases: install.sh installs a release, gsdt-update moves
-# between releases, checksums are enforced, old releases are pruned, and the
-# "newer release" notice / doctor note. CI-safe: GitHub is a curl stub serving
-# fake releases built from this checkout.
+# test-update.sh — the "newer release" notice, the doctor note, gsdt-update's
+# release-runtime mode (--check, gsd-core) and the release check. CI-safe:
+# GitHub is a curl stub. The runtime under test is installed with lib/install-copy.sh
+# (the 0.10.x copy installer, the oracle).
+# The 0.10.x release line (the old install.sh: fresh install, update, go back,
+# prune, checksum refusals, the gsd-worktrees → gsd-toolkit move) is frozen and
+# no longer built here; tests/test-install.sh runs the REAL v0.10.0 install.sh
+# and gsdt-update against a 1.0.0 release, and the npm mode of gsdt-update is
+# in tests/test-npm.sh and tests/ts/p11-update.test.ts.
 set -uo pipefail
 PKG=$(cd "$(dirname "$0")/.." && pwd)
 WORK=$(mktemp -d); WORK=$(cd "$WORK" && pwd -P); trap 'rm -rf "$WORK"' EXIT
@@ -43,18 +48,7 @@ if rc 0.6.3 "$TAGS"; then bad "0.6.3 does not read the notes of 0.6.30"; else ha
 if rc garbage "$TAGS"; then bad "a bad VERSION is refused"; else has "a bad VERSION is refused" "not X.Y.Z" "$WORK/out"; fi
 
 # ── fake GitHub ──────────────────────────────────────────────────────────────
-REL="$WORK/releases-served"
-release() {  # $1=version [$2=bad] — build a release tarball + SHA256SUMS from this checkout
-  local v=$1 d="$WORK/build/gsd-toolkit-$1"
-  mkdir -p "$d" "$REL/v$v"
-  cp -R "$PKG/bin" "$PKG/lib" "$PKG/src" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$d/"
-  printf '%s\n' "$v" > "$d/VERSION"
-  tar -czf "$REL/v$v/gsd-toolkit-$v.tar.gz" -C "$WORK/build" "gsd-toolkit-$v"
-  if [ "${2:-}" = bad ]; then echo "0000  gsd-toolkit-$v.tar.gz" > "$REL/v$v/SHA256SUMS"
-  else (cd "$REL/v$v" && { sha256sum "gsd-toolkit-$v.tar.gz" 2>/dev/null || shasum -a 256 "gsd-toolkit-$v.tar.gz"; } > SHA256SUMS); fi
-}
-for v in 9.9.7 9.9.8 9.9.9; do release "$v"; done
-release 9.9.6 bad
+REL="$WORK/releases-served"; mkdir -p "$REL"   # no release is downloaded here: only the latest-version lookup
 echo 9.9.9 > "$WORK/latest"
 mkdir -p "$WORK/stub"
 cat > "$WORK/stub/curl" <<'CURL'
@@ -91,42 +85,20 @@ export WORK REL PATH="$WORK/stub:$PATH"
 BIN="$WORK/bin"; RUN="$WORK/share/gsd-toolkit/releases"
 points() { readlink "$BIN/$1" | sed -E "s#^$RUN/([^/]+)/.*#\1#"; }
 
-section "install.sh — fresh install of a release"
-bash "$PKG/install.sh" --version 9.9.8 --agent claude > "$WORK/out" 2>&1
+section "an installed release runtime (lib/install-copy.sh, 9.9.7)"
+d="$WORK/build/gsd-toolkit-9.9.7"; mkdir -p "$d"
+cp -R "$PKG/bin" "$PKG/lib" "$PKG/src" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$d/"; printf '9.9.7\n' > "$d/VERSION"
+GSD_COPY_DIR="$RUN/9.9.7" bash "$d/lib/install-copy.sh" --agent claude > "$WORK/out" 2>&1
 is  "installs"                          "$?" 0
-is  "commands link into releases/9.9.8" "$(points gsdt-list)" 9.9.8
-is  "the runtime says 9.9.8"            "$(cat "$RUN/9.9.8/VERSION")" 9.9.8
-if [ -f "$RUN/9.9.8/install.sh" ]; then ok "the runtime carries install.sh (for gsdt-update)"; else bad "the runtime carries install.sh (for gsdt-update)"; fi
-is "both downloads retry a GitHub blip (curl --retry 3)" "$(grep -c 'v9.9.8/.* retry=3$' "$WORK/curl-retry.log")" 2
-if grep -q '^<!-- gsd-toolkit-skill ' "$WORK/skills/gsdt-flow/SKILL.md"; then ok "the skill copy is marked as the toolkit's"; else bad "the skill copy is marked as the toolkit's"; fi
-if [ -z "$(find "$WORK/skills/gsdt-flow" -type f ! -name SKILL.md)" ]; then ok "…in SKILL.md: no other file (gsd-core's installer stops on one)"; else bad "…in SKILL.md: no other file (gsd-core's installer stops on one)"; fi
+is  "commands link into releases/9.9.7" "$(points gsdt-list)" 9.9.7
 "$BIN/gsdt-list" --help >/dev/null 2>&1; is "an installed command runs" "$?" 0
 
-section "gsdt-update — check, update, go back, prune"
+section "gsdt-update --check (release runtime)"
 "$BIN/gsdt-update" --check > "$WORK/out" 2>&1
-has "--check shows the installed version" "installed : 9.9.8" "$WORK/out"
+has "--check shows the installed version" "installed : 9.9.7" "$WORK/out"
 has "…the latest"                       "latest    : 9.9.9" "$WORK/out"
 has "…and says an update is there"      "update available" "$WORK/out"
-is  "--check changes nothing"           "$(points gsdt-list)" 9.9.8
-"$BIN/gsdt-update" > "$WORK/out" 2>&1
-is  "update succeeds"                   "$?" 0
-is  "commands now link into 9.9.9"      "$(points gsdt-finish)" 9.9.9
-if [ -d "$RUN/9.9.8" ]; then ok "the previous release is kept"; else bad "the previous release is kept"; fi
-is  "no .bak left in bin or skills"     "$(find "$BIN" "$WORK/skills" -name '*.bak*' | wc -l | tr -d ' ')" 0
-if [ -f "$WORK/skills/gsdt-flow/SKILL.md" ] && [ ! -L "$WORK/skills/gsdt-flow" ]; then ok "the skill was replaced in place"; else bad "the skill was replaced in place"; fi
-"$BIN/gsdt-update" > "$WORK/out" 2>&1
-has "on the latest → up to date"        "up to date" "$WORK/out"
-"$BIN/gsdt-update" --version 9.9.7 > "$WORK/out" 2>&1
-is  "--version goes back"               "$(points gsdt-list)" 9.9.7
-if [ -d "$RUN/9.9.9" ]; then ok "…keeping the one it left"; else bad "…keeping the one it left"; fi
-if [ -d "$RUN/9.9.8" ]; then bad "…and removing older ones"; else ok "…and removing older ones"; fi
-
-section "refusals"
-if "$BIN/gsdt-update" --version 9.9.6 > "$WORK/out" 2>&1; then bad "a checksum mismatch is refused"; else ok "a checksum mismatch is refused"; fi
-has "…saying so"                        "checksum mismatch" "$WORK/out"
-is  "…commands unchanged"               "$(points gsdt-list)" 9.9.7
-if "$BIN/gsdt-update" --version 1.2.3 > "$WORK/out" 2>&1; then bad "a missing release is refused"; else ok "a missing release is refused"; fi
-if bash "$PKG/install.sh" --version latest > "$WORK/out" 2>&1; then bad "a non-version is refused"; else ok "a non-version is refused"; fi
+is  "--check changes nothing"           "$(points gsdt-list)" 9.9.7
 "$PKG/bin/gsdt-update" > "$WORK/out" 2>&1
 has "a git checkout updates nothing, and names install.sh" "not a release — pull it with git; install the release with: $PKG/install.sh" "$WORK/out"
 
@@ -177,81 +149,8 @@ if python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); u={x["name"]:x["
 GSD_NO_UPDATE_CHECK=1 "$BIN/gsdt-doctor" --repo "$R" --quiet > "$WORK/out" 2>&1
 hasnt "GSD_NO_UPDATE_CHECK=1 → no update lines" "available — update" "$WORK/out"
 
-section "the move: gsd-worktrees 0.7.0 → 0.7.1 (bridge) → gsd-toolkit 0.8.0"
-# The real 0.7.0 (its git tag) installed from the old repo, as users have it;
-# 0.7.1 = 0.7.0 with this install.sh and the new repo in lib/version.sh (the
-# bridge); 0.8.0 = this checkout, from the new repo. Each served under its
-# real slug, so each install.sh finds its own default.
-gh_release() {  # $1=slug $2=package name $3=version $4=source dir
-  local d="$WORK/ghbuild/$2-$3" out="$WORK/gh/$1/v$3"
-  rm -rf "$d"; mkdir -p "$d" "$out"; cp -R "$4/." "$d/"; printf '%s\n' "$3" > "$d/VERSION"
-  tar -czf "$out/$2-$3.tar.gz" -C "$WORK/ghbuild" "$2-$3"
-  (cd "$out" && { sha256sum "$2-$3.tar.gz" 2>/dev/null || shasum -a 256 "$2-$3.tar.gz"; } > SHA256SUMS)
-  printf '%s\n' "$3" > "$WORK/gh/$1/latest"
-}
-if git -C "$PKG" rev-parse -q --verify 'v0.7.0^{commit}' >/dev/null; then
-  OLD="$WORK/src-070"; mkdir -p "$OLD"; git -C "$PKG" archive v0.7.0 | tar -x -C "$OLD"
-  BR="$WORK/src-071"; cp -R "$OLD" "$BR"; cp "$PKG/install.sh" "$BR/install.sh"
-  sed -i.bak 's#^GSD_UPDATE_REPO_DEFAULT=.*#GSD_UPDATE_REPO_DEFAULT=malyeg/gsd-toolkit#' "$BR/lib/version.sh"; rm -f "$BR/lib/version.sh.bak"
-  NEW="$WORK/src-080"; mkdir -p "$NEW"; git -C "$PKG" archive v0.8.0 | tar -x -C "$NEW"
-  CUR="$WORK/src-cur"; mkdir -p "$CUR"; cp -R "$PKG/bin" "$PKG/lib" "$PKG/src" "$PKG/shims" "$PKG/skills" "$PKG/install.sh" "$CUR/"
-  gh_release arconme/gsd-worktrees gsd-worktrees 0.7.0 "$OLD"
-  H="$WORK/hop"; HB="$H/bin"; HS="$H/skills"; mkdir -p "$HB" "$HS"
-  hop() { env -u GSD_UPDATE_REPO GSD_BIN_DIR="$HB" GSD_CLAUDE_SKILL_DIR="$HS" XDG_CACHE_HOME="$H/cache" "$@" > "$WORK/out" 2>&1; }
-  hop bash "$OLD/install.sh" --version 0.7.0 --agent claude
-  is  "0.7.0 installs from the old repo"     "$(cat "$H/share/gsd-worktrees/releases/0.7.0/VERSION" 2>/dev/null)" 0.7.0
-  if [ -f "$HS/gsdw-flow/SKILL.md" ]; then ok "…with its gsdw-* skills"; else bad "…with its gsdw-* skills" "$(cat "$WORK/out")"; fi
-  gh_release arconme/gsd-worktrees gsd-worktrees 0.7.1 "$BR"
-  hop "$HB/gsd-update"
-  is  "hop 1: gsd-update gets the bridge 0.7.1" "$(readlink "$HB/gsd-list" | sed -E 's#.*/releases/([^/]+)/.*#\1#')" 0.7.1
-  gh_release malyeg/gsd-toolkit gsd-toolkit 0.8.0 "$NEW"
-  hop "$HB/gsd-update" --check
-  has "…which sees 0.8.0 in the new repo"    "latest    : 0.8.0  (malyeg/gsd-toolkit)" "$WORK/out"
-  hop "$HB/gsd-update"
-  is  "hop 2: gsd-update gets 0.8.0"         "$(readlink "$HB/gsd-list")" "$H/share/gsd-toolkit/releases/0.8.0/bin/gsd-list"
-  is  "…every command links into the new runtime" "$(for l in "$HB"/gsd-*; do readlink "$l"; done | grep -vc "^$H/share/gsd-toolkit/releases/0.8.0/bin/")" 0
-  if [ -e "$H/share/gsd-worktrees" ]; then bad "…the old runtime folder is removed" "$(find "$H/share" | head)"; else ok "…the old runtime folder is removed"; fi
-  is  "…skills are gsdt-* only"              "$(cd "$HS" && printf "%s " *)" "$(cd "$NEW/skills" && printf "%s " gsdt-*)"
-  has "…marked with the new name"            '^<!-- gsd-toolkit-skill 0.8.0 -->' "$HS/gsdt-flow/SKILL.md"
-  is  "…no .bak anywhere"                    "$(find "$HB" "$HS" -name '*.bak*' | wc -l | tr -d ' ')" 0
-  "$HB/gsd-list" --help >/dev/null 2>&1;  is "…and the commands run" "$?" 0
-  hop "$HB/gsd-update" --check
-  has "then it is up to date"                "up to date" "$WORK/out"
-  # hop 3: the old gsd-update installs the release with the gsdt-* names
-  has "0.8.0 left its --global guard hook"   "gsd-worktree-guard' --global" "$H/settings.json"
-  gh_release malyeg/gsd-toolkit gsd-toolkit 0.10.0 "$CUR"
-  hop "$HB/gsd-update"
-  is  "hop 3: the old gsd-update gets 0.10.0" "$(readlink "$HB/gsdt-list")" "$H/share/gsd-toolkit/releases/0.10.0/bin/gsdt-list"
-  is  "…no gsd-* command is left"            "$(find "$HB" -name 'gsd-*' | wc -l | tr -d ' ')" 0
-  is  "…every gsdt-* command is there"       "$(find "$HB" -name 'gsdt-*' | wc -l | tr -d ' ')" "$(find "$PKG/bin" -type f | wc -l | tr -d ' ')"
-  is  "…one guard hook per event, the new name" "$(grep -c "gsdt-worktree-guard' --global" "$H/settings.json")/$(grep -c 'gsd-worktree-guard' "$H/settings.json")" "2/0"
-  is  "…one gsdt-rules hook"                 "$(grep -c "gsdt-rules' --hook" "$H/settings.json")" 1
-  has "…and says to migrate each repo"       "commands are now gsdt-\*" "$WORK/out"
-  "$HB/gsdt-list" --help >/dev/null 2>&1;  is "…and the new commands run" "$?" 0
-
-  # The old folder stays while something still links into it, or holds
-  # anything but release folders.
-  H="$WORK/hop2"; HB="$H/bin"; HS="$H/skills"; mkdir -p "$HB" "$HS"
-  hop bash "$OLD/install.sh" --version 0.7.0 --agent claude
-  ln -s "$H/share/gsd-worktrees/releases/0.7.0" "$HB/gsd-mine"   # not a command of ours: install leaves it
-  hop bash "$PKG/install.sh" --version 0.8.0
-  if [ -d "$H/share/gsd-worktrees/releases/0.7.0" ]; then ok "a link still into the old folder keeps it"; else bad "a link still into the old folder keeps it"; fi
-  rm -f "$HB/gsd-mine"; mkdir -p "$H/share/gsd-worktrees/notes"
-  hop bash "$PKG/install.sh" --version 0.8.0
-  if [ -d "$H/share/gsd-worktrees/notes" ]; then ok "…and so does anything else in it"; else bad "…and so does anything else in it"; fi
-  rmdir "$H/share/gsd-worktrees/notes"
-  hop bash "$PKG/install.sh" --version 0.8.0
-  if [ -e "$H/share/gsd-worktrees" ]; then bad "…then the next install removes it"; else ok "…then the next install removes it"; fi
-  # going back: the old repo, its tarball name
-  hop env GSD_UPDATE_REPO=arconme/gsd-worktrees bash "$PKG/install.sh" --version 0.7.0
-  is  "install.sh still installs a gsd-worktrees release (going back)" "$(readlink "$HB/gsd-list")" "$H/share/gsd-toolkit/releases/0.7.0/bin/gsd-list"
-elif [ -n "${CI:-}" ]; then
-  bad "the move needs the v0.7.0 tag (checkout with fetch-depth: 0)"
-else
-  printf '  • skipped: no v0.7.0 tag here (git fetch --tags)\n'
-fi
-
 section "gsdt-update — gsd-core too"
+echo 9.9.7 > "$WORK/latest"   # the toolkit is on the latest: only gsd-core is behind
 # A throwaway HOME with gsd-core 1.0.0 for claude; npm says 1.2.0; a stub
 # npx (the gsd-core installer) records its args and writes 1.2.0.
 CH="$WORK/corehome"; mkdir -p "$CH/.claude/gsd-core/bin" "$WORK/npx"

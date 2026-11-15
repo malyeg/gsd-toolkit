@@ -11,7 +11,7 @@ PKG=$(cd "$(dirname "$0")/.." && pwd)
 WORK=$(mktemp -d); WORK=$(cd "$WORK" && pwd -P); trap 'rm -rf "$WORK"' EXIT
 export HOME="$WORK/home"; mkdir -p "$HOME"
 export GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1
-export GSD_NO_CORE=1   # lib/install.sh must not run the real gsd-core installer (npx)
+export GSD_NO_CORE=1   # lib/install-copy.sh must not run the real gsd-core installer (npx)
 export GIT_AUTHOR_NAME=t GIT_AUTHOR_EMAIL=t@t GIT_COMMITTER_NAME=t GIT_COMMITTER_EMAIL=t@t
 export GSD_NO_UPDATE_CHECK=1 GSD_CLAUDE_SKILL_DIR="$WORK/skills" GSD_CLICKUP_CONFIG="$WORK/clickup.env"
 unset CLICKUP_API_TOKEN GSD_SKIP_GUARD GSD_CLI CLAUDE_CONFIG_DIR CODEX_HOME
@@ -566,11 +566,11 @@ hasnt "…and stays quiet when piped" '⚠' "$OUT"
 rm -f "$GSD_CLAUDE_SETTINGS"
 unset GSD_CLAUDE_SETTINGS GSD_CODEX_HOOKS
 
-section "lib/install.sh --reuse-install-config keeps recorded agents"
+section "lib/install-copy.sh --reuse-install-config keeps recorded agents"
 export GSD_BIN_DIR="$WORK/ibin" GSD_CODEX_SKILL_DIR="$WORK/codex-skills"
 export GSD_CLAUDE_SKILL_DIR="$WORK/claude-skills"
-(cd "$PKG" && lib/install.sh --agent claude) > "$OUT" 2>&1 || bad "first install" "$(tail -5 "$OUT")"
-(cd "$PKG" && lib/install.sh --reuse-install-config --agent codex) > "$OUT" 2>&1 || bad "reuse install" "$(tail -5 "$OUT")"
+(cd "$PKG" && lib/install-copy.sh --agent claude) > "$OUT" 2>&1 || bad "first install" "$(tail -5 "$OUT")"
+(cd "$PKG" && lib/install-copy.sh --reuse-install-config --agent codex) > "$OUT" 2>&1 || bad "reuse install" "$(tail -5 "$OUT")"
 prov=$(awk -F'\t' '$1 == "providers" { print $2 }' "$GSD_BIN_DIR/.gsd-install-manifest")
 case ",$prov," in *,claude,*) ok "claude is kept" ;; *) bad "claude is kept" "providers: $prov" ;; esac
 case ",$prov," in *,codex,*) ok "codex is added" ;; *) bad "codex is added" "providers: $prov" ;; esac

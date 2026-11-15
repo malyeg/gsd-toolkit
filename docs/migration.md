@@ -12,8 +12,14 @@ Perl and `jq` are not used; `curl` is optional (ClickUp, the update check).
 **On each machine:**
 
 ```sh
-npm i -g gsd-toolkit && gsdt-setup
+gsdt-update        # the 0.10.x updater; or: curl -fsSL …/install.sh | bash
 ```
+
+The 0.10.x updater downloads the 1.0.0 release and its `lib/install.sh` (the
+bridge) hands over to the new `install.sh`, which installs the npm package from
+the release and runs `gsdt-setup`. Nothing is removed before the package is
+installed: without Node.js 24 it stops and leaves the 0.10.x install as it was.
+`gsdt-setup`:
 
 `gsdt-setup`:
 

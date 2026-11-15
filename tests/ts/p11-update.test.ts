@@ -5,9 +5,11 @@
 // (an npm stub on PATH; its src/launch.mjs logs `setup`), the update notice from the npm stub and
 // from the caches, and that notice against bash's gsd_update_notice.
 // Every run has its own HOME/XDG_*; no real npm install is ever run.
+// The npm mode gets the release's .tgz + SHA256SUMS from the curl stub (no registry call for the toolkit).
 // Run: node --test tests/ts/p11-update.test.ts
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, renameSync, rmSync, statSync, symlinkSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -22,14 +24,28 @@ const REAL_PATH = (process.env.PATH ?? '').split(path.delimiter).filter((d) => !
 const STUBBIN = path.join(W, 'stubbin');
 mkdirSync(STUBBIN);
 const stub = (name: string, body: string): void => writeFileSync(path.join(STUBBIN, name), `#!/bin/sh\n${body}\n`, { mode: 0o755 });
-stub('curl', 'echo "$*" >> "$STUB/curl.log"\ncase "$*" in\n  *releases/latest*) [ -s "$STUB/latest" ] || exit 22; printf \'{"tag_name": "v%s"}\' "$(cat "$STUB/latest")" ;;\n  *) exit 6 ;;\nesac');
+stub(
+  'curl',
+  `echo "$*" >> "$STUB/curl.log"
+out=""; url=""
+while [ $# -gt 0 ]; do case "$1" in -o) out=$2; shift ;; -H|--max-time|--retry|--retry-delay) shift ;; http*) url=$1 ;; esac; shift; done
+case "$url" in
+  *releases/latest*) [ -s "$STUB/latest" ] || exit 22; printf '{"tag_name": "v%s"}' "$(cat "$STUB/latest")" ;;
+  */releases/download/*)
+    f="$STUB/rel/\${url#*/releases/download/}"
+    [ -f "$f" ] || exit 22
+    if [ -n "$out" ]; then cp "$f" "$out"; else cat "$f"; fi ;;
+  *) exit 6 ;;
+esac`,
+);
 stub(
   'npm',
   `echo "$*" >> "$STUB/npm.log"
 case "$1 $2" in
-  "view gsd-toolkit") [ -s "$STUB/npm-toolkit" ] || exit 1; cat "$STUB/npm-toolkit" ;;
   "view @opengsd/gsd-core") [ -s "$STUB/npm-core" ] || exit 1; cat "$STUB/npm-core" ;;
-  "install -g") echo "npm: installing $3"; [ -z "$NPM_INSTALL_RC" ] || { echo "npm ERR! boom" >&2; exit "$NPM_INSTALL_RC"; } ;;
+  "install -g") shift 2; for a in "$@"; do case "$a" in --*) ;; *) t=$a ;; esac; done
+    echo "npm: installing $(basename "$t") ($(shasum -a 256 "$t" 2>/dev/null | cut -c1-8))"; cp "$t" "$STUB/installed.tgz"
+    [ -z "$NPM_INSTALL_RC" ] || { echo "npm ERR! boom" >&2; exit "$NPM_INSTALL_RC"; } ;;
   *) exit 1 ;;
 esac`,
 );
@@ -38,7 +54,8 @@ stub('npx', 'echo "$*" >> "$STUB/npx.log"\nmkdir -p "$HOME/.claude/gsd-core/bin"
 let seq = 0;
 type Scn = {
   latest?: string; // GitHub latest
-  npmToolkit?: string;
+  release?: string; // a release served from GitHub: v<release>/SHA256SUMS + gsd-toolkit-<release>.tgz
+  releaseSums?: 'bad' | 'nopkg'; // …with a wrong checksum, or no .tgz line (a release before 1.0.0)
   npmCore?: string;
   core?: boolean; // run the gsd-core part (else GSD_NO_CORE=1)
   haveCore?: string; // gsd-core installed for claude in HOME
@@ -56,7 +73,14 @@ function ctx(s: Scn): Ctx {
   mkdirSync(st, { recursive: true });
   mkdirSync(home, { recursive: true });
   if (s.latest) writeFileSync(path.join(st, 'latest'), `${s.latest}\n`);
-  if (s.npmToolkit) writeFileSync(path.join(st, 'npm-toolkit'), `${s.npmToolkit}\n`);
+  if (s.release) {
+    const rd = path.join(st, 'rel', `v${s.release}`);
+    mkdirSync(rd, { recursive: true });
+    const name = `gsd-toolkit-${s.release}.tgz`;
+    writeFileSync(path.join(rd, name), `fake package ${s.release}\n`);
+    const sum = createHash('sha256').update(readFileSync(path.join(rd, name))).digest('hex');
+    writeFileSync(path.join(rd, 'SHA256SUMS'), s.releaseSums === 'nopkg' ? `${sum}  gsd-toolkit-${s.release}.tar.gz\n` : `${s.releaseSums === 'bad' ? '0'.repeat(64) : sum}  ${name}\n`);
+  }
   if (s.npmCore) writeFileSync(path.join(st, 'npm-core'), `${s.npmCore}\n`);
   if (s.haveCore) {
     mkdirSync(path.join(home, '.claude/gsd-core/bin'), { recursive: true });
@@ -223,56 +247,79 @@ function npmRun(args: string[], sc: Scn): Res & { npm: string; setup: string; np
   };
 }
 
-test('npm: --check with a newer version', () => {
-  const r = npmRun(['--check'], { npmToolkit: '1.1.0' });
+test('npm: --check with a newer version (from GitHub, never the npm registry)', () => {
+  const r = npmRun(['--check'], { latest: '1.1.0' });
   assert.equal(r.rc, 0);
-  assert.equal(r.out, `installed : 1.0.0  (${NPMPKG})\nlatest    : 1.1.0  (npm gsd-toolkit)\n▶ update available: gsdt-update\n`);
-  assert.equal(r.npm, 'view gsd-toolkit version --fetch-retries=0 --fetch-timeout=5000\n');
+  assert.equal(r.out, `installed : 1.0.0  (${NPMPKG})\nlatest    : 1.1.0  (acme/gsd-toolkit)\n▶ update available: gsdt-update\n`);
+  assert.equal(r.npm, '');
   assert.equal(r.cache, '1.1.0\n|');
   assert.equal(r.setup, '');
 });
-test('npm: --check on the latest, and with npm unreachable', () => {
-  const a = npmRun(['--check'], { npmToolkit: '1.0.0' });
+test('npm: --check on the latest, and with GitHub unreachable', () => {
+  const a = npmRun(['--check'], { latest: '1.0.0' });
   assert.match(a.out, /✔ up to date\n$/);
   const b = npmRun(['--check'], {});
-  assert.match(b.out, /latest    : unknown \(npm not reachable\)  \(npm gsd-toolkit\)\n✔ up to date\n$/);
+  assert.match(b.out, /latest    : unknown \(GitHub not reachable\)  \(acme\/gsd-toolkit\)\n✔ up to date\n$/);
 });
-test('npm: update installs the version, then the new package setup, then reports', () => {
-  const r = npmRun([], { npmToolkit: '1.1.0' });
+test('npm: update downloads the release .tgz, checks it, npm installs it, then the new package setup', () => {
+  const r = npmRun([], { latest: '1.1.0', release: '1.1.0' });
   assert.equal(r.rc, 0, r.err);
-  assert.match(r.out, /▶ npm install -g gsd-toolkit@1\.1\.0\nnpm: installing gsd-toolkit@1\.1\.0\n✔ gsd-toolkit@1\.1\.0 installed\nsetup: ran\n$/);
-  assert.equal(r.npm, 'view gsd-toolkit version --fetch-retries=0 --fetch-timeout=5000\ninstall -g gsd-toolkit@1.1.0\n');
+  assert.match(r.out, /▶ downloading gsd-toolkit 1\.1\.0…\n▶ npm install -g gsd-toolkit-1\.1\.0\.tgz\nnpm: installing gsd-toolkit-1\.1\.0\.tgz \([0-9a-f]{8}\)\n✔ gsd-toolkit 1\.1\.0 installed\nsetup: ran\n$/);
+  assert.match(r.npm, /^install -g --no-audit --no-fund \/.*gsd-toolkit-1\.1\.0\.tgz\n$/);
+  assert.equal(readOr(path.join(r.c.stub, 'installed.tgz')), 'fake package 1.1.0\n');
   assert.equal(r.setup, 'setup --no-core\n');
+  const curl = readOr(path.join(r.c.stub, 'curl.log'));
+  assert.match(curl, /acme\/gsd-toolkit\/releases\/download\/v1\.1\.0\/SHA256SUMS/);
+  assert.match(curl, /acme\/gsd-toolkit\/releases\/download\/v1\.1\.0\/gsd-toolkit-1\.1\.0\.tgz/);
+  assert.doesNotMatch(r.npm, /view/, 'no registry lookup');
 });
 test('npm: already the latest → nothing installed', () => {
-  const r = npmRun([], { npmToolkit: '1.0.0' });
+  const r = npmRun([], { latest: '1.0.0' });
   assert.equal(r.rc, 0);
   assert.match(r.out, /✔ gsd-toolkit is up to date\n$/);
   assert.doesNotMatch(r.npm, /install/);
   assert.equal(r.setup, '');
 });
 test('npm: --version installs that version (also older) and a leading v is dropped', () => {
-  const r = npmRun(['--version', 'v0.9.0'], { npmToolkit: '1.0.0' });
+  const r = npmRun(['--version', 'v0.9.0'], { latest: '1.0.0', release: '0.9.0' });
   assert.equal(r.rc, 0, r.err);
-  assert.match(r.npm, /install -g gsd-toolkit@0\.9\.0\n$/);
+  assert.match(r.npm, /install -g --no-audit --no-fund \/.*gsd-toolkit-0\.9\.0\.tgz\n$/);
   assert.equal(r.setup, 'setup --no-core\n');
 });
-test('npm: --version that is not X.Y.Z is refused before npm runs', () => {
-  const r = npmRun(['--version', 'latest'], { npmToolkit: '1.1.0' });
+test('npm: --version that is not X.Y.Z is refused before anything is downloaded', () => {
+  const r = npmRun(['--version', 'latest'], { latest: '1.1.0', release: '1.1.0' });
   assert.equal(r.rc, 1);
   assert.equal(r.err, 'gsdt-update: --version needs X.Y.Z\n');
   assert.doesNotMatch(r.npm, /install/);
+  assert.doesNotMatch(readOr(path.join(r.c.stub, 'curl.log')), /releases\/download/);
 });
-test('npm: a failed npm install prints the command and exits 1, no setup, gsd-core untouched', () => {
-  const r = npmRun([], { npmToolkit: '1.1.0', npmInstallRc: 7, core: true, haveCore: '1.0.0', npmCore: '1.2.0' });
+test('npm: a checksum mismatch refuses: nothing installed, no setup, gsd-core untouched', () => {
+  const r = npmRun([], { latest: '1.1.0', release: '1.1.0', releaseSums: 'bad', core: true, haveCore: '1.0.0', npmCore: '1.2.0' });
+  assert.equal(r.rc, 1);
+  assert.equal(r.err, 'gsdt-update: checksum mismatch for gsd-toolkit-1.1.0.tgz — not installed\n');
+  assert.doesNotMatch(r.npm, /install/);
+  assert.equal(r.setup, '');
+  assert.equal(r.npx, '');
+});
+test('npm: a release before 1.0.0 (no .tgz in SHA256SUMS) names its own installer; a missing release is a download failure', () => {
+  const a = npmRun(['--version', '0.10.0'], { release: '0.10.0', releaseSums: 'nopkg' });
+  assert.equal(a.rc, 1);
+  assert.equal(a.err, 'gsdt-update: 0.10.0 has no npm package; install it with its own installer: curl -fsSL https://raw.githubusercontent.com/acme/gsd-toolkit/v0.10.0/install.sh | bash\n');
+  assert.doesNotMatch(a.npm, /install/);
+  const b = npmRun(['--version', '7.7.7'], {});
+  assert.equal(b.rc, 1);
+  assert.match(b.err, /gsdt-update: download failed: https:\/\/github\.com\/acme\/gsd-toolkit\/releases\/download\/v7\.7\.7\/SHA256SUMS\n$/);
+});
+test('npm: a failed npm install prints the failure and exits 1, no setup, gsd-core untouched', () => {
+  const r = npmRun([], { latest: '1.1.0', release: '1.1.0', npmInstallRc: 7, core: true, haveCore: '1.0.0', npmCore: '1.2.0' });
   assert.equal(r.rc, 1);
   assert.match(r.err, /npm ERR! boom\n/);
-  assert.match(r.err, /⚠ npm install failed \(exit 7\); run:  npm install -g gsd-toolkit@1\.1\.0\n$/);
+  assert.match(r.err, /⚠ npm install failed \(exit 7\)/);
   assert.equal(r.setup, '');
   assert.equal(r.npx, '');
 });
 test('npm: a failed setup is reported, exit 1, gsd-core still synced', () => {
-  const r = npmRun([], { npmToolkit: '1.1.0', env: { SETUP_RC: '4' }, core: true, haveCore: '1.0.0', npmCore: '1.2.0' });
+  const r = npmRun([], { latest: '1.1.0', release: '1.1.0', env: { SETUP_RC: '4' }, core: true, haveCore: '1.0.0', npmCore: '1.2.0' });
   assert.equal(r.rc, 1);
   assert.match(r.err, /⚠ gsdt-setup failed \(exit 4\); run:  gsdt-setup --no-core\n$/);
   assert.match(r.npx, /gsd-core --claude --global --profile=full/);
@@ -283,16 +330,16 @@ test('npm: offline → refused with --no-core, a note otherwise; --version still
   assert.equal(a.err, 'gsdt-update: cannot find the latest version — try again online, or pass --version X.Y.Z\n');
   const b = npmRun([], { core: true, haveCore: '1.2.0', npmCore: '1.2.0' });
   assert.equal(b.rc, 0);
-  assert.match(b.out, /• gsd-toolkit not checked \(npm not reachable\)\n/);
-  const c = npmRun(['--version', '1.0.1'], {});
+  assert.match(b.out, /• gsd-toolkit not checked \(GitHub not reachable\)\n/);
+  const c = npmRun(['--version', '1.0.1'], { release: '1.0.1' });
   assert.equal(c.rc, 0);
-  assert.match(c.npm, /install -g gsd-toolkit@1\.0\.1\n$/);
+  assert.match(c.npm, /install -g --no-audit --no-fund \/.*gsd-toolkit-1\.0\.1\.tgz\n$/);
 });
 test('npm: gsd-core agents come from the setup manifest, else claude', () => {
-  const a = npmRun(['--check'], { npmToolkit: '1.0.0', core: true, haveCore: '1.0.0', npmCore: '1.2.0', manifest: 'providers\tclaude,codex\nbin\t/x\n' });
+  const a = npmRun(['--check'], { latest: '1.0.0', core: true, haveCore: '1.0.0', npmCore: '1.2.0', manifest: 'providers\tclaude,codex\nbin\t/x\n' });
   assert.match(a.out, /gsd-core  : claude 1\.0\.0, latest 1\.2\.0\ngsd-core  : codex not installed, latest 1\.2\.0\n▶ update available: gsdt-update\n$/);
   assert.equal(a.cache, '1.0.0\n|1.2.0\n');
-  const b = npmRun(['--check'], { npmToolkit: '1.0.0', core: true, haveCore: '1.2.0', npmCore: '1.2.0' });
+  const b = npmRun(['--check'], { latest: '1.0.0', core: true, haveCore: '1.2.0', npmCore: '1.2.0' });
   assert.match(b.out, /gsd-core  : claude 1\.2\.0, latest 1\.2\.0\n✔ up to date\n$/);
   assert.doesNotMatch(b.out, /codex/);
 });
@@ -306,9 +353,9 @@ test('release without a manifest: carries on with claude (the bash stopped silen
 test('npm: --help adds the npm note; the other modes do not', () => {
   const r = npmRun(['--help'], {});
   assert.equal(r.rc, 0);
-  assert.match(r.out, /Installed from npm \(npm i -g gsd-toolkit\)/);
+  assert.match(r.out, /Installed as the npm package/);
   const old = runSide('neu', 'release', 'link', ['--help'], {});
-  assert.doesNotMatch(old.out, /Installed from npm/);
+  assert.doesNotMatch(old.out, /Installed as the npm package/);
 });
 
 // ── the notice ─────────────────────────────────────────────────────────────────
@@ -324,8 +371,8 @@ function waitFor(f: string, ms = 8000): void {
 }
 const ALWAYS = { GSD_UPDATE_NOTICE: 'always' };
 
-test('notice (npm): a stale cache refreshes in the background from npm, then one line names the version', () => {
-  const c = ctx({ npmToolkit: '1.1.0' });
+test('notice (npm): a stale cache refreshes in the background from GitHub, then one line names the version', () => {
+  const c = ctx({ latest: '1.1.0' });
   const cacheF = path.join(c.env.XDG_CACHE_HOME as string, 'gsd-toolkit/latest-version');
   const first = notice(NPMPKG, { ...c.env, ...ALWAYS });
   assert.equal(first.err, '', 'nothing known yet');
@@ -333,18 +380,19 @@ test('notice (npm): a stale cache refreshes in the background from npm, then one
   assert.equal(readOr(cacheF), '1.1.0\n');
   const second = notice(NPMPKG, { ...c.env, ...ALWAYS });
   assert.equal(second.err, '• gsd-toolkit 1.1.0 is out (you have 1.0.0) — update: gsdt-update\n');
-  const calls = readOr(path.join(c.stub, 'npm.log')).split('\n').filter((l) => l.startsWith('view gsd-toolkit')).length;
-  assert.equal(calls, 1, 'a fresh cache → no second npm call');
+  const calls = readOr(path.join(c.stub, 'curl.log')).split('\n').filter((l) => l.includes('releases/latest')).length;
+  assert.equal(calls, 1, 'a fresh cache → no second GitHub call');
+  assert.doesNotMatch(readOr(path.join(c.stub, 'npm.log')), /view gsd-toolkit/, 'the registry is not asked');
 });
 test('notice: not a terminal, or GSD_NO_UPDATE_CHECK → silent and no refresh', () => {
-  const c = ctx({ npmToolkit: '1.1.0' });
+  const c = ctx({ latest: '1.1.0' });
   assert.equal(notice(NPMPKG, c.env).err, '');
   assert.equal(notice(NPMPKG, { ...c.env, ...ALWAYS, GSD_NO_UPDATE_CHECK: '1' }).err, '');
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 500);
-  assert.equal(readOr(path.join(c.stub, 'npm.log')), '');
+  assert.equal(readOr(path.join(c.stub, 'curl.log')), '');
 });
 test('notice (npm): GSD itself gets its own line, from the gsd-core cache', () => {
-  const c = ctx({ npmToolkit: '1.0.0', npmCore: '1.2.0' });
+  const c = ctx({ latest: '1.0.0', npmCore: '1.2.0' });
   const gc = path.join(W, 'gc-npm');
   mkdirSync(path.join(gc, 'gsd-core/bin'), { recursive: true });
   writeFileSync(path.join(gc, 'gsd-core/bin/gsd_run'), '#!/bin/sh\n', { mode: 0o755 });

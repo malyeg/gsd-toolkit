@@ -1,5 +1,5 @@
 // gsdt-setup — machine-level setup for the npm install (npm i -g gsd-toolkit).
-// What lib/install.sh does for skills, the Claude user hooks and gsd-core, for
+// What lib/install-copy.sh (the old copy installer) does for skills, the Claude user hooks and gsd-core, for
 // a package that npm placed (no runtime copy, no links into ~/.local/bin).
 // Decided in P0: a separate command, no npm postinstall; gsdt-init stays
 // repo-only. Machine-level legacy (Gemini, pre-0.8 gsd-worktrees) is dropped;
@@ -205,7 +205,7 @@ function installSkills(pkg: string, provider: string, skillDir: string): void {
 
 // ── the Claude user hooks ────────────────────────────────────────────────────
 
-/** the python `user_hook()` of lib/install.sh, same bytes out */
+/** the python `user_hook()` of lib/install-copy.sh (the old copy installer), same bytes out */
 export function userHook(provider: string, mode: 'on' | 'off', binDir: string): void {
   if (provider !== 'claude') return;
   const settings = providerUserHookFile(provider) as string;
