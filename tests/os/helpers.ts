@@ -1,6 +1,7 @@
 // Cross-platform helpers for the OS suite (tests/os/*.test.ts): the REAL npm
 // package, installed into a throwaway prefix, driven the way a user's shell
 // drives it. Only node:* imports; no bash, perl, python, jq or curl.
+import { resolveWin } from '../../src/spawn.ts';
 import { spawnSync } from 'node:child_process';
 import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -115,7 +116,9 @@ export function installPackage(): void {
     if (WIN) writeFileSync(path.join(AGENTS, `${a}.cmd`), '@exit /b 0\r\n');
     else { writeFileSync(path.join(AGENTS, a), '#!/bin/sh\nexit 0\n'); chmodSync(path.join(AGENTS, a), 0o755); }
   }
-  const npm = WIN ? 'npm.cmd' : 'npm';
+  // the FULL path: cmd.exe running a quoted bare `npm.cmd` sets its %~dp0 to the
+  // current directory, so npm.cmd then looks for node_modules\npm there
+  const npm = WIN ? (resolveWin('npm') ?? 'npm.cmd') : 'npm';
   const cache = path.join(ROOT, 'npm-cache');
   const env = { ...process.env, npm_config_cache: cache };
   const packDir = path.join(ROOT, 'pack'); mkdirSync(packDir);
