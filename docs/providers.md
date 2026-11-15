@@ -148,5 +148,5 @@ configured but `gsdt-rules` is not on PATH, or no user-level `SessionStart`
 hook runs it — re-run `gsdt-setup` (`--no-user-hook` makes it a note).
 
 Doctor checks complete instruction blocks and actual command routes. Native-hook
-states are `present`, `absent`, `invalid`, `unverified` (no jq), or `unsupported`.
+states are `present`, `absent`, `invalid`, or `unsupported`.
 Its remediation uses `gsdt-init --no-launch`, preserving the configured provider set.

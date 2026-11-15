@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # test-doctor.sh — the gsdt-doctor checks added in 0.2.3: missing tools (T005,
-# T006), stale skills (T007), .gsd.conf typos and bad values (T017, T018), a
+# no perl/python findings), stale skills (T007), .gsd.conf typos and bad values (T017, T018), a
 # missing base branch (T015), the pre-merge gate (T019), duplicate phase
 # headings (T025), failed worktree installs (T032), a ClickUp tracker with no
 # token (T073), worktree.baseRef (T034), and the reinstall command it names. Also install.sh
@@ -64,7 +64,8 @@ R="$WORK/repo"; mkrepo "$R"
 section "missing tools"
 json "$R"
 hasnt "gsd-core's gsd_run on PATH → no T005" '"T005"' "$OUT"
-hasnt "perl on PATH → no T006" '"T006"' "$OUT"
+hasnt "no T006 (doctor no longer checks perl)" '"T006"' "$OUT"
+hasnt "no T003 (doctor no longer checks python)" '"T003"' "$OUT"
 farm "$WORK/nosdk" gsd_run gsd-sdk
 DPATH="$WORK/nosdk" json "$R"
 has "no GSD → T005" '"T005"' "$OUT"
@@ -169,7 +170,7 @@ json "$R"
 has "no gsd-core skills: no context entry" '"context":{"agents":\[\]' "$OUT"
 farm "$WORK/noperl" perl
 DPATH="$WORK/noperl" json "$R"
-has "no perl → T006" '"T006"' "$OUT"
+hasnt "no perl → no T006 finding (intended change: nothing needs perl)" '"T006"' "$OUT"
 DPATH="$WORK/noperl" doc "$R"
 has "no perl → the roadmap check still runs (it is TypeScript now): its T022 finding shows" 'Phase 1 has no checklist row' "$OUT"
 hasnt "…and is not skipped" 'roadmap row check skipped' "$OUT"

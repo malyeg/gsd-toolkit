@@ -1,19 +1,19 @@
 // gsdt-bootstrap-repo — install GSD worktree integration into the current repo (conf, shims,
 // instructions, hooks). Port of the bash bin/gsdt-bootstrap-repo (kept as the parity oracle in
 // tests/fixtures/p8-old-bins/). `gsdt-init` calls main() in-process. Still outside this file:
-// `bash -n` (the self-check), `git`, and `jq` (merging the native hook into Claude's settings,
-// as the bash did; without jq the hook is reported as absent and the file is left alone).
-import { SH, spawnSyncX as spawnSync } from '../spawn.ts';
+// `bash -n` (the self-check) and `git`. The native hook merge into Claude's settings is done
+// in-process (no jq), written with the python-exact JSON writer.
+import { SH } from '../spawn.ts';
 import { appendFileSync, copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { removeGuardHook } from '../claude-settings.ts';
+import { dumpJson, removeGuardHook } from '../claude-settings.ts';
+import type { JVal } from '../claude-settings.ts';
 import {
   base,
   baserefEnsure,
   chmodPlusX,
   chomp,
-  commandOnPath,
   confGet,
   git,
   GsdExit,
@@ -34,6 +34,8 @@ import {
   providerEntryBlock,
   providerHookMetadata,
   providerHookState,
+  readHookJson,
+  hooksDisabled,
   providerInstructionFile,
   providerListValidate,
   providerValidate,
@@ -419,7 +421,13 @@ function run(argv: string[]): number {
       say(`• ${shown} already registers the guard`);
       return;
     }
-    if (commandOnPath('jq') === null || spawnSync('jq', ['empty', settings], { stdio: 'ignore' }).status !== 0) {
+    // (jq reads an empty file as no value at all: valid, but not a hook structure)
+    if (/^[ \t\n\r]*$/.test(readFileSync(settings, 'latin1'))) {
+      say(`⚠ incompatible hook structure in ${settings}; preserved unchanged`);
+      return;
+    }
+    const doc = readHookJson(settings);
+    if (doc === undefined) {
       say(`⚠ ${shown} is not mergeable JSON; preserved unchanged (native hook absent)`);
       return;
     }
@@ -428,17 +436,21 @@ function run(argv: string[]): number {
       return;
     }
     // Do not override an explicit user decision to disable native hooks.
-    if (spawnSync('jq', ['-e', '.disableAllHooks == true or .hooksConfig.enabled == false', settings], { stdio: 'ignore' }).status === 0) {
+    if (hooksDisabled(doc)) {
       say(`⚠ native hooks disabled in ${settings}; preserved unchanged`);
       return;
     }
-    const r = spawnSync(
-      'jq',
-      ['--arg', 'e', event, '--arg', 'm', matcher, '--arg', 'c', command, '.hooks //= {} | .hooks[$e] = ((.hooks[$e] // []) + [{matcher:$m,hooks:[{type:"command",command:$c}]}])', settings],
-      { stdio: ['ignore', 'pipe', 'inherit'], maxBuffer: 64 * 1024 * 1024 },
-    );
-    if (r.status !== 0) die(`could not merge native hook into ${settings} (original preserved)`);
-    writeFileSync(settings, r.stdout);
+    // jq: .hooks //= {} | .hooks[$e] = ((.hooks[$e] // []) + [{matcher, hooks:[{type, command}]}])
+    const root = doc as Map<string, JVal>;
+    let hooks = root.get('hooks') ?? null;
+    if (hooks === null || hooks === false) root.set('hooks', (hooks = new Map<string, JVal>()));
+    const hm = hooks as Map<string, JVal>;
+    const cur = hm.get(event);
+    const list: JVal[] = Array.isArray(cur) ? cur : [];
+    list.push(new Map<string, JVal>([['matcher', matcher], ['hooks', [new Map<string, JVal>([['type', 'command'], ['command', command]])]]]));
+    hm.set(event, list);
+    // the python-exact writer (jq's own indent-2 layout, numbers kept as written)
+    writeFileSync(settings, `${dumpJson(root)}\n`);
     say(`✔ ${shown} (${provider} native guard hook)`);
   };
 

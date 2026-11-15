@@ -13,9 +13,10 @@ import {
   RULES_BASE,
   RULES_SCREENS,
 } from './rules-text.ts';
-import { claudeEnv } from './claude-settings.ts';
+import { claudeEnv, parseJson } from './claude-settings.ts';
+import type { JVal } from './claude-settings.ts';
 import { WIN } from './spawn.ts';
-import { chomp, commandOnPath, confGet, eolOf, git, gsdPkg, isExec, isFile, lf, run, toEol } from './common.ts';
+import { chomp, confGet, eolOf, git, gsdPkg, isExec, isFile, lf, toEol } from './common.ts';
 import type { Failure, Result } from './common.ts';
 import { hookPaths } from './hook-paths.ts';
 
@@ -126,42 +127,70 @@ export function providerHookMetadata(p: string): HookMetadata | null {
   return null;
 }
 
-/** gsd_provider_hook_state — present|absent|invalid|unverified|unsupported */
+/** jq's `.key` on a value: null for null or a missing key, an error for anything but an object */
+function jqIdx(v: JVal | undefined, key: string): JVal {
+  if (v === null || v === undefined) return null;
+  if (v instanceof Map) return v.get(key) ?? null;
+  throw new Error('cannot index');
+}
+/** jq's `a // b` */
+const jqAlt = (a: JVal | undefined, b: JVal): JVal => (a === undefined || a === null || a === false ? b : a);
+/** the elements `.[]` yields (an error for a scalar) */
+function jqEach(v: JVal): JVal[] {
+  if (Array.isArray(v)) return v;
+  if (v instanceof Map) return [...v.values()];
+  throw new Error('cannot iterate');
+}
+
+/** the file's JSON the way jq read it: undefined when it does not parse */
+export function readHookJson(file: string): JVal | undefined {
+  try {
+    return parseJson(readFileSync(file, 'utf8'));
+  } catch {
+    return undefined;
+  }
+}
+
+/** jq: `type == "object" and ((.hooks // {}) | type == "object") and ((.hooks[$e] // []) | type == "array")` */
+export function hookStructureOk(d: JVal, event: string): boolean {
+  if (!(d instanceof Map)) return false;
+  if (!(jqAlt(d.get('hooks'), new Map()) instanceof Map)) return false;
+  try {
+    return Array.isArray(jqAlt(jqIdx(d.get('hooks') ?? null, event), []));
+  } catch {
+    return false;
+  }
+}
+
+/** jq: `.disableAllHooks == true or .hooksConfig.enabled == false` (an error counts as no) */
+export function hooksDisabled(d: JVal): boolean {
+  try {
+    return jqIdx(d, 'disableAllHooks') === true || jqIdx(jqIdx(d, 'hooksConfig'), 'enabled') === false;
+  } catch {
+    return false;
+  }
+}
+
+/** gsd_provider_hook_state — present|absent|invalid|unsupported (never `unverified`: no jq is needed) */
 export function providerHookState(repo: string, provider: string): string {
   const meta = providerHookMetadata(provider);
   if (meta === null) return 'unsupported';
   const file = `${repo}/${meta.settings}`;
   if (!isFile(file)) return 'absent';
-  // The documented states include `unverified` (no jq), so the check stays jq's own.
-  if (commandOnPath('jq') === null) return 'unverified';
-  const valid = run('jq', [
-    '-e',
-    '--arg',
-    'e',
-    meta.event,
-    'type == "object" and ((.hooks // {}) | type == "object") and ((.hooks[$e] // []) | type == "array")',
-    file,
-  ]);
-  if (valid.status !== 0) return 'invalid';
-  const present = run('jq', [
-    '-e',
-    '--arg',
-    'e',
-    meta.event,
-    '--arg',
-    'm',
-    meta.matcher,
-    '--arg',
-    'c',
-    meta.command,
-    `
-    (.disableAllHooks != true) and (.hooksConfig.enabled != false) and
-    any((.hooks[$e] // [])[]; .matcher == $m and .disabled != true and
-      any((.hooks // [])[]; .type == "command" and .command == $c and .disabled != true))
-  `,
-    file,
-  ]);
-  return present.status === 0 ? 'present' : 'absent';
+  const d = readHookJson(file);
+  if (d === undefined || !hookStructureOk(d, meta.event)) return 'invalid';
+  try {
+    if (jqIdx(d, 'disableAllHooks') === true || jqIdx(jqIdx(d, 'hooksConfig'), 'enabled') === false) return 'absent';
+    for (const e of jqEach(jqAlt(jqIdx(jqIdx(d, 'hooks'), meta.event), []))) {
+      if (jqIdx(e, 'matcher') !== meta.matcher || jqIdx(e, 'disabled') === true) continue;
+      for (const h of jqEach(jqAlt(jqIdx(e, 'hooks'), []))) {
+        if (jqIdx(h, 'type') === 'command' && jqIdx(h, 'command') === meta.command && jqIdx(h, 'disabled') !== true) return 'present';
+      }
+    }
+  } catch {
+    /* jq errored: not present */
+  }
+  return 'absent';
 }
 
 /** gsd_provider_user_hook_file — the user-level file holding an agent's hooks (null = none) */

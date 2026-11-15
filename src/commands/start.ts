@@ -31,7 +31,6 @@ import {
   migrateRefuse,
   originLacks,
   phaseBranch,
-  python,
   releaseLock,
   workflowFlag,
 } from '../common.ts';
@@ -504,7 +503,6 @@ function run(argv: string[]): number | Promise<number> {
   const tddDefault = (): void => {
     // TDD is the toolkit's default — turn GSD's tdd_mode on in the claim commit. Only an UNSET key is filled.
     if (!isFile(`${MAIN}/.planning/config.json`)) return;
-    if (python() === null) return; // (the bash could not tell unset from false without it)
     if (workflowFlag(MAIN, 'tdd_mode') !== '') return;
     const rc = inherit(GSD_RUN, ['query', 'config-set', 'workflow.tdd_mode', 'true', '--project-dir', MAIN], { stdio: ['inherit', 'ignore', 'ignore'] });
     if (rc === 0) out('▶ TDD mode on for this project (workflow.tdd_mode; turn it off with /gsd-settings)\n');

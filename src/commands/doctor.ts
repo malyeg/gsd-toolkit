@@ -33,7 +33,6 @@ import {
   isFile,
   lf,
   planningStatus,
-  python,
   run,
   skillDiffers,
   validationProblem,
@@ -390,17 +389,6 @@ class Doctor {
     else if (realOrSelf(resolved) !== realOrSelf(pkg)) fail(`PATH commands come from ${resolved}, not this package`, REINSTALL, 'T002');
     else pass(`PATH commands resolve to ${pkg}`);
 
-    const PY = python();
-    if (PY !== null) {
-      const vr = run(PY, ['--version']);
-      const ver = chomp(`${vr.stdout}${vr.stderr}`.split('\n').map((l) => l.trim().split(/\s+/)[1] ?? '').join('\n'));
-      pass(`${PY} ${ver} (the planning repair needs it)`);
-    } else {
-      fail('no python 3.7+ (tried python3, then python) — planning merges fall back to plain union', 'install python3', 'T003');
-    }
-    if (commandOnPath('perl') !== null) pass('perl (the bash commands not yet ported need it)');
-    else fail('perl not found — gsdt-finish, gsdt-init and gsdt-migrate need it', 'install perl', 'T006');
-
     const gsdAgent = DOCTOR_PROVIDER === 'codex' ? 'codex' : 'claude';
     const gsdRun = cli();
     if (gsdRun !== null) pass(`gsd-core ${gsdInstalled()} (${gsdRun})`);
@@ -732,7 +720,6 @@ class Doctor {
             'T073',
           );
         }
-        if (commandOnPath('jq') === null) note('tracker = clickup needs jq for start/finish/snapshot — brew install jq');
       } else {
         const rm = readFileText(`${MAIN}/.planning/ROADMAP.md`);
         if (rm !== null && lineList(rm).some((l) => /^#{2,4} Phase [0-9.]+:.*(^|[^a-zA-Z0-9])[cC][uU][-_][a-zA-Z0-9]{6,}/.test(l))) {

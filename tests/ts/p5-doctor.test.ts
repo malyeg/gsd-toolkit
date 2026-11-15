@@ -188,12 +188,10 @@ function snapshot(dir: string, root = dir, out: Record<string, string> = {}): Re
 }
 
 const norm = (s: string, W: string): string => s.replaceAll(W, '<W>');
-// P6 changed the T006 (perl) wording: the old bin's text is mapped to the new one, nothing else.
-const T006_OLD: Array<[string, string]> = [
-  ['perl (claims add roadmap rows; the roadmap check needs it)', 'perl (the bash commands not yet ported need it)'],
-  ['perl not found — claims cannot add roadmap rows and the roadmap check is skipped', 'perl not found — gsdt-finish, gsdt-init and gsdt-migrate need it'],
-];
-const t006 = (s: string): string => T006_OLD.reduce((t, [a, b]) => t.replaceAll(a, b), s);
+// P13 dropped the python (T003) and perl (T006) tool lines: nothing runs them any more. The old
+// bin's "ok" lines for them are removed from its output; nothing else is mapped.
+const t006 = (s: string): string =>
+  s.replace(/^ {2}\x1b\[32m✔\x1b\[0m (?:\S+ \S+ \(the planning repair needs it\)|perl \(claims add roadmap rows; the roadmap check needs it\))\n/gm, '');
 // The old fail() skips a repeated fix with `printf "$FIXES" | grep -qxF` under pipefail. When
 // grep -q quits before printf is done, printf dies of SIGPIPE (141), the pipe "fails" and the fix
 // is listed twice. Rare, under load (25 in 32000 with 16 at once); a bug, not a contract. The
@@ -238,6 +236,7 @@ async function check(sc: Sc): Promise<void> {
     assert.match(all, sc.expect as RegExp, `${sc.name}: expect`);
     assert.match(all, /T022/, `${sc.name}: the roadmap check ran`);
     assert.doesNotMatch(all, /roadmap row check skipped/, `${sc.name}: not skipped`);
+    assert.doesNotMatch(all, /T003|T006|python|perl/i, `${sc.name}: no word about python or perl`);
     return;
   }
   for (const argv of runs) {
@@ -343,9 +342,10 @@ const S: Sc[] = [
   { name: 'context: skills in codex dir', setup: (c) => { repoSc(c); conf(c, 'base = develop\nproviders = codex\n'); for (const s of FLOW_SKILLS) write(path.join(c.home, `.agents/skills/gsd-${s}/SKILL.md`), `---\nname: gsd-${s}\ndescription: d\n---\n`); write(path.join(c.home, '.codex/agents/gsd-a.toml'), 'name = "a"\ndescription = "d"\n'); } },
   { name: 'big planning files', setup: (c) => { repoSc(c); const big = Array.from({ length: 900 }, (_, i) => `filler line ${i} that is long enough to fill the roadmap up`).join('\n'); writeFileSync(path.join(c.repo, '.planning/ROADMAP.md'), `# Roadmap\n\n### Phase 1: One\n\n### Phase 2: Two\n${big}\n`); writeFileSync(path.join(c.repo, '.planning/STATE.md'), big.repeat(2)); }, expect: /KiB/ },
   { name: 'big AGENTS.md with codex', setup: (c) => { repoSc(c); conf(c, 'base = develop\nproviders = codex\n'); writeFileSync(path.join(c.repo, 'AGENTS.md'), 'x'.repeat(40000)); }, expect: /Codex reads only/ },
-  { name: 'no perl', farm: ['perl'], expect: /T006/, newOnly: true },
+  // P13: no perl and no python is fine now: no T003/T006 finding, no note (newOnly asserts that)
+  { name: 'no perl', farm: ['perl'], expect: /T022/, newOnly: true },
   // P8: the baseRef check no longer needs python, so without it the new doctor still reports T034 (the old one skipped it)
-  { name: 'no python', farm: ['python3', 'python'], expect: /(?=[\s\S]*T003)(?=[\s\S]*T034)/, newOnly: true },
+  { name: 'no python', farm: ['python3', 'python'], expect: /T034/, newOnly: true },
   { name: 'no gsdt-finish on PATH', farm: ['gsdt-finish'], expect: /T001/ },
   { name: 'no gsdt-planning-repair', farm: ['gsdt-planning-repair'], expect: /T004/ },
   { name: 'PATH commands from another package', setup: (c) => { repoSc(c); write(path.join(c.W, 'other/bin/gsdt-finish'), '#!/bin/sh\n', 0o755); }, env: { PATH: (c) => `${c.W}/other/bin:${c.pkg}/bin:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` }, expect: /T002/ },
