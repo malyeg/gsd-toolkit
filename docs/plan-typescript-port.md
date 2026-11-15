@@ -1,9 +1,6 @@
 # Plan: port the toolkit to TypeScript (Windows + Mac + Linux)
 
-Status: **parked** — decided 2026-09-25 to wait; refreshed 2026-11-10 against
-0.10.0 (the `gsdt-*` rename). Windows users use WSL2 until then (README →
-Install → "Windows: use WSL2"). Start this when there is real Windows demand,
-or when the bash starts to hurt.
+Status: built on feat/ts-port; see docs/ts-port-progress.md
 
 ## Why
 

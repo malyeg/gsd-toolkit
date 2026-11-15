@@ -59,6 +59,7 @@ early hand-written attempt at this destroyed seven entries that way, and
 **Fallbacks.** Merge drivers live in git config, which is not versioned, so a
 clone that never ran `gsdt-init` gets plain union — the repair fixes
 that afterwards, and the test suite covers the no-driver path explicitly.
-Without `python3`, the driver does the plain union and warns; that is exactly
-today's behaviour, never worse.
+Without a usable Node (>= 24), the driver does the plain union and warns; that is exactly
+the old behaviour, never worse. On Windows, git runs the driver command through
+Git for Windows' `sh`.
 
