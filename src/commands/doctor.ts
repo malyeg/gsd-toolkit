@@ -1350,7 +1350,8 @@ class Doctor {
       case 'chmod':
         return runInherit('chmod', ['+x', this.pmAbs]) === 0;
       case 'migrate':
-        return runInherit(`${pkg}/bin/gsdt-migrate`, ['--apply', '--repo', MAIN]) === 0;
+        // no stdin: migrate must never ask to commit from inside a doctor run
+        return spawnSync(`${pkg}/bin/gsdt-migrate`, ['--apply', '--repo', MAIN], { stdio: ['ignore', 'inherit', 'inherit'] }).status === 0;
       case 'init':
         return runInherit(`${pkg}/bin/gsdt-init`, ['--no-launch', '--no-commit'], MAIN) === 0;
       case 'repair':

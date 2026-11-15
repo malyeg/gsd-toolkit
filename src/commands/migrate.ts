@@ -10,6 +10,7 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  readSync,
   realpathSync,
   renameSync,
   rmSync,
@@ -18,6 +19,7 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { isatty } from 'node:tty';
 import {
   acquireLock,
   base,
@@ -41,6 +43,7 @@ import {
   providerInstructionMembers,
   providerUserHookFile,
   replaceOwnedBlock,
+  shellQuote,
 } from '../provider.ts';
 import { PyJsonError, pyDumps, pyLoads, type PyJson } from '../pyjson.ts';
 import { err, out } from '../stdio.ts';
@@ -56,8 +59,17 @@ them. Run it in the repo (any checkout; it works on the main one).
 Usage:
   gsdt-migrate             dry run: list every change, change nothing
                            (exit 1 when there is anything to do)
-  gsdt-migrate --apply     make the changes (never commits, pushes or
-                           checks out)
+  gsdt-migrate --apply     make the changes, then offer to commit the repo
+                           files it changed (steps 1-5 only; never pushes,
+                           never checks out). On a terminal it asks
+                           "Commit these N changes? [y/N]"; with no terminal
+                           it does not commit and prints the command. It does
+                           not commit when one of those files already had
+                           uncommitted changes, or when this checkout is not
+                           on the base branch.
+  --commit                 with --apply: commit without asking. Only the
+                           files this run changed, nothing else that is
+                           staged or modified. Steps 6-7 are never committed.
   gsdt-migrate --check     quiet; exit 1 when the repo or this clone still
                            uses an old name (not step 7: install replaces
                            those hooks, and doctor's T008 sees a stale one)
@@ -91,6 +103,25 @@ const OLD_NAMES =
   'init|start|list|finish|doctor|update|bootstrap-repo|planning-repair|tracker|ui|codex-wait|batch|batch-report|wt-new|wt-finish|worktree-guard|flow-next|planning-merge|derive-port|rules|new-worktree-feature|finish-worktree-feature|premerge-check';
 const OLD_RE = new RegExp(`(?:(?<![A-Za-z0-9_./-])|(?<=scripts/)|(?<=hooks/))gsd-(?:${OLD_NAMES})(?![A-Za-z0-9_-])`);
 const PATH_RE_SRC = '(?<![A-Za-z0-9_-])scripts/(?:gsd-(?:new-worktree-feature|finish-worktree-feature|derive-port|planning-repair|premerge-check)\\.sh|hooks/gsd-worktree-guard\\.sh)';
+
+const COMMIT_MSG = 'Switch to gsdt-* toolkit commands';
+
+/** one line from stdin (null at EOF without a newline) */
+function readLine(): string | null {
+  const b = Buffer.alloc(1);
+  let s = '';
+  for (;;) {
+    let n = 0;
+    try {
+      n = readSync(0, b, 0, 1, null);
+    } catch {
+      return null;
+    }
+    if (n === 0) return null;
+    if (b[0] === 10) return s;
+    s += String.fromCharCode(b[0] as number);
+  }
+}
 
 const newName = (p: string): string => p.replace(/(^|\/)gsd-/, '$1gsdt-');
 const latin1 = (f: string): string => readFileSync(f, 'latin1');
@@ -200,6 +231,7 @@ function logicalPwd(): string {
 export function main(argv: string[]): number {
   let mode: 'dry' | 'apply' | 'check' = 'dry';
   let repo = '';
+  let commitFlag = false;
   const die = (msg: string): number => {
     err(`✖ ${msg}\n`);
     return 2;
@@ -212,6 +244,9 @@ export function main(argv: string[]): number {
     } else if (a === '--check') {
       mode = 'check';
       i++;
+    } else if (a === '--commit') {
+      commitFlag = true;
+      i++;
     } else if (a === '--repo') {
       if (argv.length - i < 2) return die('--repo needs a directory');
       repo = argv[i + 1] as string;
@@ -223,6 +258,8 @@ export function main(argv: string[]): number {
       return die(`unknown argument: ${a} (see gsdt-migrate --help)`);
     }
   }
+
+  if (commitFlag && mode !== 'apply') return die('--commit only works with --apply (see gsdt-migrate --help)');
 
   const pkg = gsdPkg();
   const arg = repo || '.';
@@ -251,6 +288,21 @@ export function main(argv: string[]): number {
   };
   const doing = mode === 'apply';
 
+  // The repo files this run changes (relative to MAIN), for the commit. Each is
+  // looked at once, BEFORE the first write to it: a path that already had
+  // uncommitted changes is never committed by us.
+  const repoPaths: string[] = [];
+  const dirty: string[] = [];
+  const seen = new Set<string>();
+  const track = (rel: string, deletes = false): void => {
+    if (!doing || seen.has(rel)) return;
+    seen.add(rel);
+    const stat = git(MAIN, ['--literal-pathspecs', 'status', '--porcelain', '-z', '--', rel]).stdout;
+    if (deletes && stat.startsWith('??')) return; // untracked and about to go: git knows nothing of it
+    if (stat !== '') dirty.push(rel);
+    repoPaths.push(rel);
+  };
+
   if (mode !== 'check') out(`gsdt-migrate${mode === 'apply' ? '' : ' (dry run)'} — ${MAIN}\n`);
 
   // ── 1. shims ──
@@ -266,6 +318,8 @@ export function main(argv: string[]): number {
     }
     change(`${old} → ${nw}`);
     if (doing) {
+      track(old, true);
+      track(nw);
       try {
         mkdirSync(path.dirname(`${MAIN}/${nw}`), { recursive: true });
         const dest = `${MAIN}/${nw}`;
@@ -289,6 +343,8 @@ export function main(argv: string[]): number {
     } else {
       change(`${GSD_OLD_PREMERGE} → ${pmNew} (your pre-merge script, renamed as it is)`);
       if (doing) {
+        track(GSD_OLD_PREMERGE, true);
+        track(pmNew);
         try {
           renameSync(`${MAIN}/${GSD_OLD_PREMERGE}`, `${MAIN}/${pmNew}`);
         } catch {
@@ -318,6 +374,7 @@ export function main(argv: string[]): number {
     if (hits.length === 0) continue;
     for (const h of hits) change(`${f}:${Buffer.from(h, 'latin1').toString('utf8')}`);
     if (doing) {
+      track(f);
       const re = new RegExp(PATH_RE_SRC, 'g');
       writeFileSync(`${MAIN}/${f}`, text.replace(re, (m) => m.replace(/(^|\/)gsd-/, '$1gsdt-')), 'latin1');
     }
@@ -325,11 +382,15 @@ export function main(argv: string[]): number {
 
   // ── 4. the repo hook ──
   say('repo hook:');
-  const settingsStep = (kind: 'repo' | 'user', file: string, label: string): void => {
+  const settingsStep = (kind: 'repo' | 'user', file: string, label: string, heading?: () => void): void => {
     if (!isFile(file)) return;
     if (!settingsFix(kind, file, false)) return;
+    heading?.();
     change(label);
-    if (doing) settingsFix(kind, file, true);
+    if (doing) {
+      if (kind === 'repo') track('.claude/settings.json');
+      settingsFix(kind, file, true);
+    }
   };
   settingsStep('repo', `${MAIN}/.claude/settings.json`, '.claude/settings.json: hook scripts/hooks/gsd-worktree-guard.sh → gsdt-worktree-guard.sh');
 
@@ -346,6 +407,7 @@ export function main(argv: string[]): number {
     }
     change(`${rel}: the gsd-toolkit:${kind} block, rewritten with the gsdt-* names`);
     if (!doing) return;
+    track(rel);
     const dir = mkdtempSync(path.join(tmpdir(), 'gsd-migrate.'));
     try {
       const tmp = `${dir}/block`;
@@ -403,10 +465,10 @@ export function main(argv: string[]): number {
   }
 
   // ── 7. the user's Claude settings ──
-  say('your Claude settings:');
   const userSettings = providerUserHookFile('claude') ?? '';
   if (mode !== 'check' && userSettings !== '') {
-    settingsStep('user', userSettings, `${userSettings}: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*`);
+    // the heading comes with the first line under it, so an empty step prints nothing
+    settingsStep('user', userSettings, `${userSettings}: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*`, () => say('your Claude settings:'));
   }
 
   // ── only reported ──
@@ -463,14 +525,59 @@ export function main(argv: string[]): number {
     out('✔ nothing to migrate: this repo uses the gsdt-* names\n');
     return 0;
   }
+  let failed = false;
   if (CHANGES !== 0) {
-    out(`✔ migrated to gsdt-* (${CHANGES} change(s), not committed)\n`);
-    out(`next:  git -C '${MAIN}' add -A && git -C '${MAIN}' commit -m 'Switch to gsdt-* toolkit commands'\n`);
-    out('       then each teammate: gsdt-update, then gsdt-migrate --apply in their clone\n');
+    const q = (ps: string[]): string => ps.map(shellQuote).join(' ');
+    const byHand = (ps: string[]): string =>
+      `git -C '${MAIN}' add -A -- ${q(ps)} && git -C '${MAIN}' commit -m '${COMMIT_MSG}' -- ${q(ps)}`;
+    const paths = repoPaths;
+    const lines: string[] = [];
+    const interactive = isatty(0) && isatty(1);
+    const wanted = commitFlag || interactive;
+    let committed = false;
+    let blocked = false;
+    if (paths.length > 0) {
+      if (dirty.length > 0) {
+        blocked = true;
+        lines.push('not committing: these files had uncommitted changes before the migration:');
+        for (const d of dirty) lines.push(`  ${d}`);
+      } else {
+        const cur = chomp(git(MAIN, ['branch', '--show-current']).stdout);
+        if (cur !== base(MAIN)) {
+          blocked = true;
+          if (wanted) lines.push(`not committing: this checkout is on '${cur}', not the base branch '${base(MAIN)}'`);
+        }
+      }
+      if (!blocked && wanted) {
+        let yes = commitFlag;
+        if (!yes) {
+          out(`Commit these ${paths.length} changes? [y/N] `);
+          yes = /^y(es)?$/i.test((readLine() ?? '').trim());
+        }
+        if (yes) {
+          const lit = ['--literal-pathspecs'];
+          const add = git(MAIN, [...lit, 'add', '-A', '--', ...paths]);
+          const com = add.status === 0 ? git(MAIN, [...lit, 'commit', '-m', COMMIT_MSG, '--', ...paths]) : add;
+          if (com.status === 0) {
+            committed = true;
+            lines.push(`commit ${chomp(git(MAIN, ['rev-parse', '--short', 'HEAD']).stdout)}: ${COMMIT_MSG} (${paths.length} files)`);
+            lines.push(`push when ready: git -C '${MAIN}' push`);
+          } else {
+            failed = true;
+            lines.push('✖ the commit failed:');
+            for (const l of `${com.stderr}${com.stdout}`.split('\n')) if (l !== '') lines.push(`  ${l}`);
+          }
+        }
+      }
+    }
+    out(`✔ migrated to gsdt-* (${CHANGES} change(s), ${committed ? 'committed' : 'not committed'})\n`);
+    for (const l of lines) out(`${l}\n`);
+    if (!committed && paths.length > 0) out(`to commit by hand:  ${byHand(paths)}\n`);
+    out('then each teammate: gsdt-update, then gsdt-migrate --apply in their clone\n');
   }
   if (PROBLEMS !== 0) {
     out(`${PROBLEMS} item(s) still need a hand fix (✖ above); then run gsdt-migrate again.\n`);
     return 1;
   }
-  return 0;
+  return failed ? 1 : 0;
 }
