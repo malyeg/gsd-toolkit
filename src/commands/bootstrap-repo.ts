@@ -19,9 +19,12 @@ import {
   GsdExit,
   gsdPkg,
   isDir,
+  eolOf,
   isFile,
+  lf,
   planningApply,
   planningHook,
+  toEol,
   wtdir,
 } from '../common.ts';
 import {
@@ -104,12 +107,17 @@ export function main(argv: string[]): number {
 const SPC = '[ \\t\\n\\r\\f\\v]';
 const reEscape = (s: string): string => s.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
 const say = (s = ''): void => out(`${s}\n`);
-const readLatin1 = (f: string): string | null => {
+/** The text as the LF version of the file would read; `rawLatin1` keeps the bytes (for a rewrite in the file's own ending). */
+const rawLatin1 = (f: string): string | null => {
   try {
     return readFileSync(f, 'latin1');
   } catch {
     return null;
   }
+};
+const readLatin1 = (f: string): string | null => {
+  const t = rawLatin1(f);
+  return t === null ? null : lf(t);
 };
 /** perl's per-line view of a file: every line with its "\n" */
 const perlLines = (t: string): string[] => t.match(/[^\n]*\n|[^\n]+$/g) ?? [];
@@ -118,18 +126,20 @@ const keyRe = (k: string): RegExp => new RegExp(`^${SPC}*${reEscape(k)}${SPC}*=`
 // perl -pi: a line that starts with the key becomes `key = value`; no such line: one is appended
 export function setConfKey(conf: string, k: string, v: string): void {
   const re = new RegExp(`^${SPC}*${reEscape(k)}${SPC}*=[^\\n]*`);
-  const t = readLatin1(conf) ?? '';
-  writeFileSync(conf, perlLines(t).map((l) => l.replace(re, () => `${k} = ${v}`)).join(''), 'latin1');
+  // a CRLF .gsd.conf stays CRLF (its dominant ending), edited lines and the appended one included
+  const raw = rawLatin1(conf) ?? '';
+  const eol = eolOf(raw);
+  writeFileSync(conf, toEol(perlLines(lf(raw)).map((l) => l.replace(re, () => `${k} = ${v}`)).join(''), eol), 'latin1');
   const now = readLatin1(conf) ?? '';
   if (!now.split('\n').some((l) => keyRe(k).test(l))) {
     // (the bash glued the new line onto a last line that had no newline: `providers = claudetracker = x`)
-    appendFileSync(conf, `${now !== '' && !now.endsWith('\n') ? '\n' : ''}${k} = ${v}\n`);
+    appendFileSync(conf, toEol(`${now !== '' && !now.endsWith('\n') ? '\n' : ''}${k} = ${v}\n`, eol), 'latin1');
   }
 }
 // perl -ni: drop the lines that start with the key
 export function removeConfKey(conf: string, k: string): void {
-  const t = readLatin1(conf) ?? '';
-  writeFileSync(conf, perlLines(t).filter((l) => !keyRe(k).test(l)).join(''), 'latin1');
+  const raw = rawLatin1(conf) ?? '';
+  writeFileSync(conf, toEol(perlLines(lf(raw)).filter((l) => !keyRe(k).test(l)).join(''), eolOf(raw)), 'latin1');
 }
 
 /** a temp file holding `text` (utf-8), for replaceOwnedBlock */
@@ -376,8 +386,9 @@ function run(argv: string[]): number {
     const text = readLatin1(gi);
     if (text !== null && text.split('\n').includes(pat)) continue;
     // a .gitignore whose last line has no newline would glue our line onto it
-    if (text !== null && text.length > 0 && !text.endsWith('\n')) appendFileSync(gi, '\n');
-    appendFileSync(gi, `${pat}\n`);
+    const giEol = eolOf(rawLatin1(gi) ?? '');
+    if (text !== null && text.length > 0 && !text.endsWith('\n')) appendFileSync(gi, giEol);
+    appendFileSync(gi, `${pat}${giEol}`);
   }
   {
     const line = baserefEnsure(DEST, '.');
@@ -393,7 +404,7 @@ function run(argv: string[]): number {
     copyFileSync(CANON, bak);
     // Migrate the recognizable legacy generated span, retaining additions after it.
     const SOL = '(?<![^\\n])';
-    writeFileSync(CANON, canonText.replace(new RegExp(`${SOL}<!-- gsd-worktrees:canonical -->\\n[\\s\\S]*?${SOL}worktrees \`[^\\n]*\`\\.\\n?`), ''), 'latin1');
+    writeFileSync(CANON, toEol(canonText.replace(new RegExp(`${SOL}<!-- gsd-worktrees:canonical -->\\n[\\s\\S]*?${SOL}worktrees \`[^\\n]*\`\\.\\n?`), ''), eolOf(rawLatin1(CANON) ?? '')), 'latin1');
     say(`• legacy canonical content backed up to ${bak}`);
   }
   if (!existsSync(CANON)) writeFileSync(CANON, '');
@@ -453,8 +464,8 @@ function run(argv: string[]): number {
     const s = `${DEST}/.gemini/settings.json`;
     if (!isLink(f) && ownedBlockGet(f, 'provider') !== '' && ownedMarkersValid(f, 'provider')) {
       replaceBlock(f, 'provider', '');
-      const t = readLatin1(f) ?? '';
-      writeFileSync(f, t.replace(/\n+$/, '\n'), 'latin1');
+      const rawG = rawLatin1(f) ?? '';
+      writeFileSync(f, toEol(lf(rawG).replace(/\n+$/, '\n'), eolOf(rawG)), 'latin1');
       if (!/[^ \t\n\r\f\v]/.test(readLatin1(f) ?? '')) {
         unlinkSync(f);
         say('✔ GEMINI.md removed (only the gsd-toolkit block was in it; Gemini is no longer supported)');

@@ -334,6 +334,10 @@ const eq = (got: string, want: string, label: string): void => {
 };
 
 /** Both sides, each on its own fixture; every step's stdout, stderr and exit code, then the files left behind. */
+/** P12: set while a scenario's NEW side gets CRLF files and the OLD (bash) side their LF version: compared without \r */
+export const lenient = { cr: false };
+const lcr = (t: string): string => (lenient.cr ? t.replace(/\r/g, '') : t);
+
 export function scenario(
   project: Project | ((kind: 'old' | 'new') => Project),
   prep: ((s: Side) => void) | null,
@@ -353,16 +357,16 @@ export function scenario(
     const rn = runStep(n, st);
     settle(o);
     settle(n);
-    eq(norm(n, rn.out), norm(o, ro.out), `${label}: stdout`);
-    eq(norm(n, rn.err), norm(o, ro.err), `${label}: stderr`);
+    eq(lcr(norm(n, rn.out)), lcr(norm(o, ro.out)), `${label}: stdout`);
+    eq(lcr(norm(n, rn.err)), lcr(norm(o, ro.err)), `${label}: stderr`);
     assert.equal(rn.rc, ro.rc, `${label}: exit code (old ${ro.rc})`);
     if (st.rc !== undefined) assert.equal(rn.rc, st.rc, `${label}: expected rc\n${rn.out}${rn.err}`);
     if (st.fail) assert.notEqual(rn.rc, 0, `${label}: expected a failure\n${rn.out}${rn.err}`);
     if (st.out) assert.match(rn.out, st.out, label);
     if (st.err) assert.match(rn.err, st.err, label);
     if (st.not) assert.doesNotMatch(rn.out + rn.err, st.not, label);
-    eq(snapshot(n), snapshot(o), `${label}: files left behind`);
-    if (extraSnapshot) eq(norm(n, extraSnapshot(n)), norm(o, extraSnapshot(o)), `${label}: files left behind (full tree)`);
+    eq(lcr(snapshot(n)), lcr(snapshot(o)), `${label}: files left behind`);
+    if (extraSnapshot) eq(lcr(norm(n, extraSnapshot(n))), lcr(norm(o, extraSnapshot(o))), `${label}: files left behind (full tree)`);
   });
 }
 

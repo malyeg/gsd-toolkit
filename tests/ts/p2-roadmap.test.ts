@@ -7,6 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
+import { eolOf } from '../../src/common.ts';
 import { roadmapAudit, roadmapRows } from '../../src/roadmap.ts';
 import { PKG, tmp, write } from './helpers.ts';
 
@@ -37,14 +38,22 @@ function both(kind: 'audit' | 'rows', content: string | Buffer, extra: string[] 
   p.err = p.err.split(pf).join('<F>');
   t.err = t.err.split(tf).join('<F>');
   void opts;
+  // P12: perl keeps the \r of a CRLF file in what it reports and writes bare-LF rows into it; the port reads
+  // CRLF as LF and writes the file's own ending. Compare against the oracle on that terms.
+  if (eolOf(Buffer.from(content as string).toString('latin1')) === '\r\n') {
+    crlfRuns.add(p);
+  }
   return { p, t };
 }
 
+const crlfRuns = new Set<Run>();
 function sameRun(label: string, p: Run, t: Run): void {
-  assert.equal(t.out.toString('latin1'), p.out.toString('latin1'), `${label}: stdout`);
+  const crlf = crlfRuns.has(p);
+  assert.equal(t.out.toString('latin1'), crlf ? p.out.toString('latin1').replace(/\r/g, '') : p.out.toString('latin1'), `${label}: stdout`);
   assert.equal(t.err, p.err, `${label}: stderr`);
   assert.equal(t.rc, p.rc, `${label}: exit code`);
-  assert.deepEqual(t.file, p.file, `${label}: file bytes`);
+  const want = crlf && p.file ? Buffer.from(p.file.toString('latin1').replace(/\r?\n/g, '\r\n'), 'latin1') : p.file;
+  assert.deepEqual(t.file, want, `${label}: file bytes`);
 }
 
 // ── fixtures ─────────────────────────────────────────────────────────────────
@@ -200,7 +209,7 @@ for (const [label, content] of Object.entries(audits)) {
     sameRun(label, p, t);
     // the in-process function agrees with the CLI
     const f = write(path.join(tmp(), 'R.md'), content as string);
-    assert.equal(Buffer.from(roadmapAudit(f), 'utf8').toString('latin1'), Buffer.from(p.out.toString('utf8'), 'utf8').toString('latin1'));
+    assert.equal(Buffer.from(roadmapAudit(f), 'utf8').toString('latin1'), Buffer.from(crlfRuns.has(p) ? p.out.toString('utf8').replace(/\r/g, '') : p.out.toString('utf8'), 'utf8').toString('latin1'));
   });
 }
 

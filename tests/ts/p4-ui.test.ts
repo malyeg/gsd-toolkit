@@ -551,6 +551,12 @@ test('uiCheckList / uiLookKeys / uiLookAnswers', () => {
   ];
   for (const t of looks) {
     write(look, t);
+    if (t.includes('\r\n')) {
+      // P12: the CRLF file reads as its LF version (the bash oracle chokes on the \r)
+      const lfLook = write(`${pd}/05-UI-LOOK-lf.md`, t.replace(/\r\n/g, '\n'));
+      same(`look_answers CRLF`, 'gsd_ui_look_answers', [lfLook], () => U.uiLookAnswers(look).join('\n'));
+      continue;
+    }
     same(`look_answers ${JSON.stringify(t.slice(0, 40))}`, 'gsd_ui_look_answers', [look], () => U.uiLookAnswers(look).join('\n'));
   }
   same('look_answers missing', 'gsd_ui_look_answers', [`${pd}/none`], () => U.uiLookAnswers(`${pd}/none`).join('\n'));

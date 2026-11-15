@@ -9,6 +9,7 @@
 //  - `.` never matches "\n" only (JS `.` also skips "\r"), so `[^\n]` is used.
 //  - Lines keep "\r"; only a trailing "\n" is dropped (chomp) or kept (rows).
 import { readFileSync, writeFileSync } from 'node:fs';
+import { eolOf, lf } from './common.ts';
 
 // Perl's ASCII \s: space \t \n \r \f \v.
 const SC = ' \\t\\n\\r\\f\\v';
@@ -17,13 +18,19 @@ const NUM = '(\\d+(?:\\.\\d+)?)';
 
 /** Perl's `<$fh>`: lines, each keeping its "\n" (the last may lack one). */
 function readLines(file: string): string[] | null {
+  return readLinesEol(file)?.lines ?? null;
+}
+/** Same, with the file's dominant line ending: CRLF files are read as LF (what perl would see
+ *  on the LF version) and written back with CRLF, so a ROADMAP.md edit never flips a user's file. */
+function readLinesEol(file: string): { lines: string[]; eol: '\r\n' | '\n' } | null {
   let text: string;
   try {
     text = readFileSync(file, 'latin1');
   } catch {
     return null;
   }
-  return text.match(/[^\n]*\n|[^\n]+/g) ?? [];
+  const eol = eolOf(text);
+  return { lines: lf(text).match(/[^\n]*\n|[^\n]+/g) ?? [], eol };
 }
 
 // ── roadmap-audit.pl ────────────────────────────────────────────────────────
@@ -145,8 +152,9 @@ export type RowsResult = { rc: number; stderr: string; changed: boolean };
  *  (die: errno, else 255) and stderr. */
 export function roadmapRows(file: string, phase?: string): RowsResult {
   if (phase === undefined) return { rc: 255, stderr: 'usage: roadmap-rows.pl <ROADMAP.md> <N>\n', changed: false };
-  const L = readLines(file);
-  if (L === null) return { rc: 2, stderr: `cannot read ${file}\n`, changed: false };
+  const rd = readLinesEol(file);
+  if (rd === null) return { rc: 2, stderr: `cannot read ${file}\n`, changed: false };
+  const L = rd.lines;
   // n and the title are byte strings, as in perl.
   const n = Buffer.from(phase, 'utf8').toString('latin1');
   const titleRe = new RegExp(`^#{2,4}${S}*Phase${S}+${quotemeta(n)}${S}*:${S}*([^\\n]*?)${S}*$`);
@@ -212,7 +220,8 @@ export function roadmapRows(file: string, phase?: string): RowsResult {
 
   if (changed) {
     try {
-      writeFileSync(file, Buffer.from(L.join(''), 'latin1'));
+      const out = L.join('');
+      writeFileSync(file, Buffer.from(rd.eol === '\r\n' ? out.replace(/\n/g, '\r\n') : out, 'latin1'));
     } catch {
       return { rc: 2, stderr: `cannot write ${file}\n`, changed: false };
     }

@@ -318,7 +318,8 @@ group('execute, verifier, gaps, UAT, code review', (add) => {
     ['verification second range', { ...sum, '07-VERIFICATION.md': '---\nx: 1\n---\n\n---\nstatus: gaps_found\n---\n' }],
     ['verification unterminated', { ...sum, '07-VERIFICATION.md': '---\nx: 1\nstatus: gaps_found\n' }],
     ['verification status outside fm', { ...sum, '07-VERIFICATION.md': 'status: gaps_found\n' }],
-    ['verification CRLF', { ...sum, '07-VERIFICATION.md': '---\r\nstatus: gaps_found\r\n---\r\n' }],
+    // P12: a CRLF VERIFICATION.md is read as its LF version (the old bash missed the status); tests/ts/p12-crlf.test.ts covers it
+    ['verification LF (was CRLF)', { ...sum, '07-VERIFICATION.md': '---\nstatus: gaps_found\n---\n' }],
     ['verification passed', { ...sum, '07-VERIFICATION.md': fmv('passed') }],
     ['no UAT', { ...sum, '07-VERIFICATION.md': fmv('passed') }],
     ['UAT pending', { ...sum, '07-VERIFICATION.md': fmv('passed'), '07-UAT.md': fmf('pending') }],

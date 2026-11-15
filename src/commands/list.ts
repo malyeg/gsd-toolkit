@@ -9,7 +9,7 @@
 // mojibake; `bytes()` keeps that (never reached by ASCII names).
 import { spawnSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
-import { git, isDir, isFile } from '../common.ts';
+import { git, isDir, isFile, lf } from '../common.ts';
 import { staleHooksNotice } from '../provider.ts';
 import { updateNotice } from '../version.ts';
 
@@ -353,7 +353,7 @@ export function main(argv: string[]): number {
 
     let text: string;
     try {
-      text = readFileSync(roadmap, 'utf8');
+      text = lf(readFileSync(roadmap, 'utf8'));
     } catch (e) {
       err(`cannot read ${roadmap}\n`);
       return (e as NodeJS.ErrnoException).code === 'EACCES' ? 13 : 255;

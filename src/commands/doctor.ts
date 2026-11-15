@@ -31,6 +31,7 @@ import {
   isDir,
   isExec,
   isFile,
+  lf,
   planningStatus,
   python,
   run,
@@ -173,7 +174,7 @@ const lineList = (text: string): string[] => {
 
 function readFileText(f: string): string | null {
   try {
-    return readFileSync(f, 'utf8');
+    return lf(readFileSync(f, 'utf8'));
   } catch {
     return null;
   }
@@ -750,7 +751,7 @@ class Doctor {
         else {
           let same = false;
           try {
-            same = readFileSync(`${pkg}/shims/${rel}`).equals(readFileSync(dest));
+            same = lf(readFileSync(`${pkg}/shims/${rel}`, 'latin1')) === lf(readFileSync(dest, 'latin1')); // a CRLF checkout is not drift
           } catch {
             same = false;
           }

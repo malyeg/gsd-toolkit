@@ -18,7 +18,7 @@ import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { base, commandOnPath, confGet, findMain, git, isDir, isExec, isFile, phaseDir, run } from './common.ts';
+import { base, commandOnPath, confGet, findMain, git, isDir, isExec, isFile, lf, phaseDir, run } from './common.ts';
 
 export const UI_STUB = '<!-- gsd:design-stub';
 /** GSD_UI_WIDTHS (read by bin/gsdt-ui) */
@@ -42,7 +42,7 @@ const TRAIL_SP = new RegExp(`${SP}+$`);
 
 function readText(p: string): string | null {
   try {
-    return readFileSync(p, 'utf8');
+    return lf(readFileSync(p, 'utf8'));
   } catch {
     return null;
   }
