@@ -82,7 +82,8 @@ test('on a terminal: the prompt names the files, y commits only them, with a has
   git(R, 'add', 'unrelated.txt'); // staged, not ours: must stay staged
   const { out, rc } = ptyRun(R, 'y', '--apply');
   assert.equal(rc, 0, out);
-  assert.match(out, /Commit these 2 changes\? \[y\/N\] /);
+  assert.match(out, /Commit these 2 files\? \[y\/N\] /);
+  assert.match(out, /files to commit \(2\):\n {2}D scripts\/gsd-derive-port\.sh\n {2}A scripts\/gsdt-derive-port\.sh\n/);
   assert.match(out, /\(1 change\(s\), committed\)/);
   assert.match(out, /^commit [0-9a-f]{7,}: Switch to gsdt-\* toolkit commands/m);
   assert.ok(out.includes(`push when ready: git -C '${R}' push`));
@@ -97,7 +98,7 @@ test('on a terminal: N, or an empty answer, commits nothing and prints the path-
     const R = repo();
     const { out, rc } = ptyRun(R, answer, '--apply');
     assert.equal(rc, 0, out);
-    assert.match(out, /Commit these 2 changes\? \[y\/N\] /);
+    assert.match(out, /Commit these 2 files\? \[y\/N\] /);
     assert.match(out, /\(1 change\(s\), not committed\)/);
     assert.ok(out.includes(`to commit by hand:  git -C '${R}' add -A -- scripts/gsd-derive-port.sh scripts/gsdt-derive-port.sh && git -C '${R}' commit -m 'Switch to gsdt-* toolkit commands' -- scripts/gsd-derive-port.sh scripts/gsdt-derive-port.sh`), out);
     assert.equal(git(R, 'log', '--format=%s').trim(), 'old setup');
@@ -118,6 +119,6 @@ test('on a terminal: a file that was already modified means no prompt and no com
 test('--help documents --commit and the prompt, and no longer says it never commits', () => {
   const r = spawnSync(BIN, ['--help'], { env: ENV, encoding: 'utf8' });
   assert.match(r.stdout, /--commit +with --apply: commit without asking/);
-  assert.match(r.stdout, /Commit these N changes\? \[y\/N\]/);
+  assert.match(r.stdout, /Commit these N files\? \[y\/N\]/);
   assert.doesNotMatch(r.stdout, /never commits/);
 });

@@ -62,7 +62,7 @@ Usage:
   gsdt-migrate --apply     make the changes, then offer to commit the repo
                            files it changed (steps 1-5 only; never pushes,
                            never checks out). On a terminal it asks
-                           "Commit these N changes? [y/N]"; with no terminal
+                           "Commit these N files? [y/N]"; with no terminal
                            it does not commit and prints the command. It does
                            not commit when one of those files already had
                            uncommitted changes, or when this checkout is not
@@ -549,9 +549,13 @@ export function main(argv: string[]): number {
         }
       }
       if (!blocked && wanted) {
+        const letter = (rel: string): string =>
+          !existsSync(`${MAIN}/${rel}`) ? 'D' : git(MAIN, ['cat-file', '-e', `HEAD:${rel}`]).status === 0 ? 'M' : 'A';
+        out(`files to commit (${paths.length}):\n`);
+        for (const rel of [...paths].sort()) out(`  ${letter(rel)} ${rel}\n`);
         let yes = commitFlag;
         if (!yes) {
-          out(`Commit these ${paths.length} changes? [y/N] `);
+          out(`Commit these ${paths.length} files? [y/N] `);
           yes = /^y(es)?$/i.test((readLine() ?? '').trim());
         }
         if (yes) {
