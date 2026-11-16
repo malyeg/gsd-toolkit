@@ -149,7 +149,7 @@ function files(dir: string, base = dir): string[] {
   for (const e of readdirSync(dir, { withFileTypes: true }).sort((x, y) => x.name.localeCompare(y.name))) {
     const p = path.join(dir, e.name);
     if (e.isDirectory()) o.push(...files(p, base));
-    else o.push(`${path.relative(base, p)} ${(statSync(p).mode & 0o777).toString(8)} ${readFileSync(p, 'utf8')}`);
+    else o.push(`${path.relative(base, p).replace(/\\/g, "/")} ${(statSync(p).mode & 0o777).toString(8)} ${readFileSync(p, 'utf8')}`);
   }
   return o;
 }

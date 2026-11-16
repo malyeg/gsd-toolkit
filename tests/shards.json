@@ -1,0 +1,7 @@
+{
+  "ts-a": ["tests/ts/doctor-output.test.ts", "tests/ts/migrate-commit.test.ts", "tests/ts/p1-*.test.ts", "tests/ts/p10-*.test.ts", "tests/ts/p11-*.test.ts", "tests/ts/p12-*.test.ts", "tests/ts/p2-*.test.ts", "tests/ts/p3-*.test.ts"],
+  "ts-b": ["tests/ts/p4-*.test.ts", "tests/ts/p5-*.test.ts", "tests/ts/p6-*.test.ts", "tests/ts/p7-*.test.ts", "tests/ts/p8-*.test.ts", "tests/ts/p9-*.test.ts", "tests/ts/tty-prompt.test.ts"],
+  "node-a": ["tests/node/[a-l]*.test.ts"],
+  "node-b": ["tests/node/[m-z]*.test.ts"],
+  "os": ["tests/os/*.test.ts"]
+}

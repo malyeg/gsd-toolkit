@@ -76,7 +76,7 @@ const ptyRun = (R: string, answer: string, ...args: string[]): { out: string; rc
   return { out: r.stdout ?? '', rc: r.status ?? -1 };
 };
 
-test('on a terminal: the prompt names the files, y commits only them, with a hash and a push hint', () => {
+test('on a terminal: the prompt names the files, y commits only them, with a hash and a push hint', { skip: process.platform === 'win32' && 'needs python3 pty (POSIX terminals)' }, () => {
   const R = repo();
   writeFileSync(path.join(R, 'unrelated.txt'), 'mine\n');
   git(R, 'add', 'unrelated.txt'); // staged, not ours: must stay staged
@@ -93,7 +93,7 @@ test('on a terminal: the prompt names the files, y commits only them, with a has
   assert.equal(git(R, 'diff', '--cached', '--name-only').trim(), 'unrelated.txt');
 });
 
-test('on a terminal: N, or an empty answer, commits nothing and prints the path-limited command', () => {
+test('on a terminal: N, or an empty answer, commits nothing and prints the path-limited command', { skip: process.platform === 'win32' && 'needs python3 pty (POSIX terminals)' }, () => {
   for (const answer of ['n', '']) {
     const R = repo();
     const { out, rc } = ptyRun(R, answer, '--apply');
@@ -106,7 +106,7 @@ test('on a terminal: N, or an empty answer, commits nothing and prints the path-
   }
 });
 
-test('on a terminal: a file that was already modified means no prompt and no commit', () => {
+test('on a terminal: a file that was already modified means no prompt and no commit', { skip: process.platform === 'win32' && 'needs python3 pty (POSIX terminals)' }, () => {
   const R = repo();
   writeFileSync(path.join(R, 'scripts/gsd-derive-port.sh'), `${spawnSync('cat', [path.join(R, 'scripts/gsd-derive-port.sh')], { encoding: 'utf8' }).stdout}\n`);
   const { out, rc } = ptyRun(R, 'y', '--apply');

@@ -124,6 +124,19 @@ const out = (s: string): void => writeAll(1, s);
 const err = (s: string): void => writeAll(2, s);
 
 /** the header comment of bin/gsdt-doctor up to its `set -uo` line, `# ` stripped (bash `usage`) */
+/** win32: the package folder a command shim runs (npm's shim names <prefix>\node_modules\gsd-toolkit\…; a node launch.mjs line names src\launch.mjs), else null */
+function shimPackage(shim: string): string | null {
+  let text: string;
+  try {
+    text = readFileSync(shim, 'utf8');
+  } catch {
+    return null;
+  }
+  if (/node_modules[\\/]gsd-toolkit[\\/]/.test(text)) return path.join(path.dirname(shim), 'node_modules', 'gsd-toolkit');
+  const m = /"([^"\r\n]*[\\/]src[\\/]launch\.mjs)"/.exec(text);
+  return m ? path.dirname(path.dirname(m[1] as string)) : null;
+}
+
 export function usageText(pkg: string = gsdPkg()): string {
   let t = '';
   try {
@@ -182,7 +195,7 @@ function readFileText(f: string): string | null {
 
 const realOrSelf = (p: string): string => {
   try {
-    return normalizePath(realpathSync(p));
+    return normalizePath(realpathSync.native(p));
   } catch {
     return p;
   }
@@ -397,6 +410,12 @@ class Doctor {
       // the npm entries live in <pkg>/dist/bin/
       if (path.basename(cand) === 'dist' && path.basename(path.dirname(live)) === 'bin') cand = path.dirname(cand);
       if (isDir(path.dirname(live))) resolved = cand;
+      if (WIN) {
+        // Windows: PATH finds a shim (npm's gsdt-x.cmd / extensionless sh shim, next to the prefix's node_modules),
+        // not a link into the package. Read the package folder out of the shim.
+        const pkgOfShim = shimPackage(live);
+        if (pkgOfShim !== null) resolved = pkgOfShim;
+      }
     }
     if (resolved === '') fail('gsd commands are not on PATH', REINSTALL, 'T001');
     else if (realOrSelf(resolved) !== realOrSelf(pkg)) fail(`PATH commands come from ${resolved}, not this package`, REINSTALL, 'T002');

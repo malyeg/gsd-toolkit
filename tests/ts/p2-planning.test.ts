@@ -35,7 +35,7 @@ function snapshot(dir: string): Record<string, string> {
       const p = path.join(d, n);
       if (n === '.git') continue;
       if (statSync(p).isDirectory()) walk(p);
-      else out[path.relative(dir, p)] = readFileSync(p).toString('base64');
+      else out[path.relative(dir, p).replace(/\\/g, '/')] = readFileSync(p).toString('base64');
     }
   };
   walk(dir);
@@ -593,8 +593,19 @@ test('launchers: no node means a clear message from repair', () => {
   assert.match(r.err, /needs Node\.js >= 24/);
 });
 
-test('the workflow still runs the node tests', () => {
-  assert.match(read(path.join(PKG, '.github', 'workflows', 'tests.yml')), /node --test (--test-reporter=tap )?(--test-timeout=\d+ )?'tests\/node\/\*\.test\.ts' 'tests\/ts\/\*\.test\.ts' 'tests\/os\/\*\.test\.ts'/);
+test('the workflow still runs every node test, in shards', () => {
+  const yml = read(path.join(PKG, '.github', 'workflows', 'tests.yml'));
+  assert.match(yml, /node --test .*tests\/bail-reporter\.mjs .*--test-timeout=\d+ \$FILES/);
+  assert.match(yml, /GSD_TEST_MAX_FAILS: \d+/);
+  const shards = JSON.parse(read(path.join(PKG, 'tests', 'shards.json'))) as Record<string, string[]>;
+  const listed = /shard: \[([^\]]*)\]/.exec(yml)?.[1]?.split(',').map((s) => s.trim()).sort();
+  assert.deepEqual(listed, Object.keys(shards).sort());
+  const res = Object.values(shards).flat().map((g) => new RegExp(`^${g.replace(/[.+^$(){}|\\]/g, '\\$&').replace(/\*/g, '[^/]*')}$`));
+  for (const dir of ['node', 'ts', 'os']) {
+    for (const f of readdirSync(path.join(PKG, 'tests', dir)).filter((n) => n.endsWith('.test.ts'))) {
+      assert.ok(res.some((r) => r.test(`tests/${dir}/${f}`)), `tests/${dir}/${f} is in no shard`);
+    }
+  }
 });
 
 // Not in the oracle: gsd-core's phase.add appends "### Phase N" after the Progress table, and a merge can then

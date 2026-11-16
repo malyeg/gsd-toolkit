@@ -171,7 +171,7 @@ function snapshot(dir: string, root = dir, out: Record<string, string> = {}): Re
   }
   for (const n of names) {
     const p = path.join(dir, n);
-    const rel = path.relative(root, p);
+    const rel = path.relative(root, p).replace(/\\/g, "/");
     if (rel === 'pkg' || rel === 'farm' || rel === 'stub' || rel === 'home/Library' || rel.startsWith('home/.npm')) continue;
     if (rel.includes('.git/') && !/\.git\/(config|hooks\/post-merge)$/.test(rel)) continue;
     if (n === '.git' || (rel.startsWith('repo') && rel.endsWith('.git') && false)) {

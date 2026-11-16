@@ -11,6 +11,9 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { projdir } from '../../src/batch-report.ts';
 import { rulesText, shellQuote } from '../../src/provider.ts';
+
+/** the product writes paths into commands with `/` (shellPath) */
+const fwd = (p: string): string => p.replace(/\\/g, '/');
 import {
   PKG, WIN, baseEnv, fileHas, fileHasnt, gitOk, gitOut, gsdt, has, hasnt, initRepo, is, lf, mkWork, ok, pathWith, real, run, w,
 } from './g4-env.ts';
@@ -324,7 +327,7 @@ test('gsdt-batch — the launcher', () => {
   is('not a repo → 64', GB(['--repo', path.join(WORK, 'nope'), '--print', 'x']).status, 64);
   r = GB(['--repo', L, '--print', '- fix a\n- fix b', '--validate']);
   is('claude: a fresh Sonnet session in the batch worktree, flags before the list', lf(r.stdout).replace(/\n+$/, ''),
-    `cd ${shellQuote(path.join(LW(), `batch-${D}-fix-a`))} && claude --model sonnet $'/gsdt-batch --validate\\n- fix a\\n- fix b'`);
+    `cd ${shellQuote(fwd(path.join(LW(), `batch-${D}-fix-a`)))} && claude --model sonnet $'/gsdt-batch --validate\\n- fix a\\n- fix b'`);
   has('--print says which worktree it would make', r.stderr, new RegExp(`would make worktree .*batch-${D}-fix-a \\(branch 'batch-${D}-fix-a' off main\\)`));
   is('--print makes nothing', gitOut(ENV, L, ['branch', '--list', 'batch-*']).split('\n').filter((x) => x !== '').length, 0);
   r = GB(['--print', '--model', 'opus', '--file', 'a.md'], { cwd: L });
@@ -355,7 +358,7 @@ test('gsdt-batch — its own batch-* worktree', () => {
   const bw = BW();
   let r = GB(['--repo', L, '- fix a']);
   is('no terminal → worktree made, command printed, exit 0', r.status, 0);
-  is('…the command opens the session in the worktree', r.stdout.split(' ').slice(0, 2).join(' '), `cd ${shellQuote(bw)}`);
+  is('…the command opens the session in the worktree', r.stdout.split(' ').slice(0, 2).join(' '), `cd ${shellQuote(fwd(bw))}`);
   is('…on its own branch, off main', `${gitOut(ENV, bw, ['branch', '--show-current'])}:${gitOut(ENV, L, ['merge-base', 'main', `batch-${D}-fix-a`])}`, `batch-${D}-fix-a:${gitOut(ENV, L, ['rev-parse', 'main'])}`);
   fileHas('…with worktree.baseRef = head (quick-batch runs items in parallel)', path.join(bw, '.claude/settings.local.json'), '"baseRef": "head"');
   is('…a clean worktree', gitOut(ENV, bw, ['status', '--porcelain']).split('\n').filter((x) => x !== '').length, 0);
@@ -366,7 +369,7 @@ test('gsdt-batch — its own batch-* worktree', () => {
   has('--name: that worktree is reused', r.stderr, 'already has a worktree');
   is('…no -3', gitOut(ENV, L, ['branch', '--list', `batch-${D}-fix-a-3`]).split('\n').filter((x) => x !== '').length, 0);
   r = GB(['--print', '--resume'], { cwd: bw });
-  is('from inside a batch worktree: the session runs there', r.stdout.split(' ').slice(0, 2).join(' '), `cd ${shellQuote(bw)}`);
+  is('from inside a batch worktree: the session runs there', r.stdout.split(' ').slice(0, 2).join(' '), `cd ${shellQuote(fwd(bw))}`);
   has('…and makes nothing', r.stderr, 'would use worktree');
   const U = path.join(WORK, 'unplanned');
   initRepo(ENV, U, 'main');

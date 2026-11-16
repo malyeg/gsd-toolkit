@@ -82,15 +82,43 @@ export const test: TestFn = Object.assign(make(nodeTest as never), {
   only: make(nodeTest.only as never),
 });
 
+const reEsc = (d: string): string => d.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const WIN = process.platform === 'win32';
+
+/** a folder as it can appear in output on Windows: native, with `/` (git), JSON-escaped (`\\\\`); long and 8.3 (RUNNER~1) spellings */
+function spellings(d: string): string[] {
+  if (!WIN) return [d];
+  const out = new Set<string>();
+  for (const x of [d, d.replace(/\\/g, '/')]) {
+    out.add(x.replace(/\\/g, '\\\\'));
+    out.add(x);
+  }
+  return [...out].sort((a, b) => b.length - a.length);
+}
+function folders(...ds: string[]): string[] {
+  const set = new Set<string>();
+  for (const d of ds) for (const s of spellings(d)) set.add(s);
+  return [...set].sort((a, b) => b.length - a.length);
+}
+
 /** replace what differs from machine to machine */
 export function goldenNorm(s: string): string {
   let t = s.replace(/\r\n/g, '\n');
-  const tmps = new Set<string>([realpathSync(tmpdir()), tmpdir()]);
-  for (const d of tmps) {
-    const re = new RegExp(`${d.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\\\/]gsd-[A-Za-z0-9-]*?-?[A-Za-z0-9]{6}`, 'g');
+  const roots = [realpathSync(tmpdir()), tmpdir()];
+  if (WIN) roots.push(realpathSync.native(tmpdir()));
+  const flags = WIN ? 'gi' : 'g';
+  const sep = WIN ? '(?:\\\\\\\\|[\\\\/])' : '[\\\\/]';
+  for (const d of folders(...roots)) {
+    const re = new RegExp(`${reEsc(d)}${sep}gsd-[A-Za-z0-9-]*?-?[A-Za-z0-9]{6}`, flags);
     t = t.replace(re, '<TMP>');
   }
-  t = t.split(PKG).join('<PKG>');
+  for (const d of folders(PKG)) t = t.replace(new RegExp(reEsc(d), flags), '<PKG>');
+  if (WIN) {
+    // a path after a placeholder (<TMP>, <PKG>, <D>, <W> …): the macOS spelling, `/` between folders
+    t = t.replace(/(<[A-Za-z]+>)((?:\\\\|\\|\/)[^\s"'`<>|*?]*)/g, (_m, p: string, rest: string) =>
+      p + (rest.includes('\\\\') ? rest.replaceAll('\\\\', '/') : rest.replaceAll('\\', '/')),
+    );
+  }
   return t;
 }
 

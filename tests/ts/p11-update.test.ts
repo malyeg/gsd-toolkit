@@ -13,6 +13,7 @@ import { createHash } from 'node:crypto';
 import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, renameSync, rmSync, statSync, symlinkSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { test, golden } from './golden.ts';
 import { PKG } from './helpers.ts';
 
@@ -351,7 +352,7 @@ test('npm: --help adds the npm note; the other modes do not', () => {
 
 // ── the notice ─────────────────────────────────────────────────────────────────
 function notice(pkg: string, env: NodeJS.ProcessEnv): Res {
-  return exec(process.execPath, ['--input-type=module', '-e', `const m = await import(${JSON.stringify(path.join(pkg, 'src/version.ts'))}); m.updateNotice();`], env);
+  return exec(process.execPath, ['--input-type=module', '-e', `const m = await import(${JSON.stringify(pathToFileURL(path.join(pkg, 'src/version.ts')).href)}); m.updateNotice();`], env);
 }
 function waitFor(f: string, ms = 8000): void {
   const t0 = Date.now();

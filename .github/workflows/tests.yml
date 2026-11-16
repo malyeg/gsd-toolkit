@@ -52,8 +52,9 @@ jobs:
       fail-fast: false
       matrix:
         os: ${{ fromJSON(needs.matrix.outputs.os) }}
+        shard: [ts-a, ts-b, node-a, node-b, os]   # the file groups are in tests/shards.json
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
+    timeout-minutes: 40
     defaults:
       run:
         shell: bash
@@ -86,10 +87,16 @@ jobs:
           printf '{"name":"pw","private":true}\n' > package.json
           npm install --no-audit --no-fund playwright@1.63.0
           if [ "$RUNNER_OS" = Linux ]; then npx playwright install --with-deps chromium; else npx playwright install chromium; fi
-      - name: tests (node --test)
+      - name: tests (node --test, shard ${{ matrix.shard }})
         env:
           GSD_TEST_REQUIRE_GSD: 1       # a skip here would mean an untested claim path
           GSD_TEST_REQUIRE_BROWSER: 1   # a skip here would mean an untested checker
+          GSD_TEST_MAX_FAILS: 15        # tests/bail-reporter.mjs stops the run after this many failed tests
+          SHARD: ${{ matrix.shard }}
         run: |
           export GSD_PLAYWRIGHT_ROOT="$RUNNER_TEMP/pw"
-          node --test --test-reporter=tap --test-timeout=300000 'tests/node/*.test.ts' 'tests/ts/*.test.ts' 'tests/os/*.test.ts'
+          FILES=$(node -e "console.log(require('./tests/shards.json')[process.env.SHARD].join(' '))")
+          PRE=
+          if [ "$RUNNER_OS" = Windows ]; then PRE="--import ./tests/win-preload.ts"; fi
+          # shellcheck disable=SC2086
+          node --test $PRE --test-reporter=tap --test-reporter-destination=stdout --test-reporter=./tests/bail-reporter.mjs --test-reporter-destination=stderr --test-timeout=120000 $FILES

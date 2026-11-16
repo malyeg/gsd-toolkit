@@ -1,2 +1,6 @@
 # Left out of the release tarball (git archive): CI config only.
 .github export-ignore
+
+# Fixtures and goldens are compared byte for byte: never convert their line endings (Windows checkouts, core.autocrlf).
+tests/fixtures/** -text
+tests/golden/** -text

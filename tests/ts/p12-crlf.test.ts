@@ -153,7 +153,7 @@ function run(w: World, argv: string[], extraEnv: Record<string, string> = {}, in
     encoding: 'utf8',
     input: input ?? '',
   });
-  const norm = (s: string): string => s.split(w.root).join('<W>');
+  const norm = (s: string): string => s.split(w.root).join('<W>').split(w.root.replace(/\\/g, '/')).join('<W>'); // doctor prints git's `/` form on Windows
   return { out: norm(r.stdout ?? ''), err: norm(r.stderr ?? ''), rc: r.status ?? -1 };
 }
 /** the same command in both worlds: identical stdout, stderr, exit code */

@@ -297,6 +297,12 @@ function run(argv: string[]): number {
       out('• removing files the tests left in the worktree:\n');
       for (const l of leftLines) out(`${l.replace(/^\?\? /, '    ')}\n`);
     }
+    // Windows cannot delete a folder that is some process's working directory, and this one may be run from inside it.
+    try {
+      process.chdir(MAIN);
+    } catch {
+      /* the removal then reports what it cannot do */
+    }
     const rc = inherit('git', ['-C', MAIN, 'worktree', 'remove', '--force', DEST]);
     if (rc !== 0) return rc;
   } else {

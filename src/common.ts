@@ -160,6 +160,7 @@ const escapeRe = (s: string): string => s.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'
 
 /** bash `basename` */
 function basenameOf(p: string): string {
+  if (WIN) p = p.replace(/\\/g, '/'); // a native C:\... path: its last folder, not the whole path
   const t = p.replace(/\/+$/, '');
   if (t === '') return p.startsWith('/') ? '/' : '';
   return t.slice(t.lastIndexOf('/') + 1);

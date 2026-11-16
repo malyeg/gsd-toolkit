@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { chmodSync, existsSync, mkdirSync, readFileSync, readlinkSync, realpathSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { golden, test } from './golden.ts';
 import * as C from '../../src/common.ts';
 import * as P from '../../src/provider.ts';
@@ -495,7 +496,7 @@ test('lock: acquire in a child, stale reclaim, re-entrant', () => {
     [
       '--input-type=module',
       '-e',
-      `import * as C from ${JSON.stringify(path.join(PKG, 'src/common.ts'))};
+      `import * as C from ${JSON.stringify(pathToFileURL(path.join(PKG, 'src/common.ts')).href)};
        import { existsSync, readFileSync } from 'node:fs';
        const ok = C.acquireLock(${JSON.stringify(r)});
        const pid = readFileSync(${JSON.stringify(path.join(lock, 'pid'))}, 'utf8');
