@@ -68,7 +68,8 @@ if (process.platform === 'win32' && !(cp as { __gsdWin?: boolean }).__gsdWin) {
     if (opts) opts = fixEnv(opts);
     const p = planSpawn(FIX[file] ?? file, args, { env: opts?.env ?? process.env });
     // a script run by Git's sh must not have its /-leading arguments (/bin/true, /nonexistent) rewritten into C:/Program Files/Git/...
-    if (/^(?:.*[\\/])?(?:sh|bash)(?:\.exe)?$/i.test(p.file)) opts = { ...(opts ?? {}), env: { ...(opts?.env ?? process.env), MSYS2_ARG_CONV_EXCL: '*' } };
+    // (only those arguments are excluded: the launchers' own /d/a/... paths still need the conversion to D:/a/...)
+    if (/^(?:.*[\\/])?(?:sh|bash)(?:\.exe)?$/i.test(p.file) && p.args.slice(1).some((x) => /^\/[^/]/.test(x))) opts = { ...(opts ?? {}), env: { ...(opts?.env ?? process.env), MSYS2_ARG_CONV_EXCL: p.args.slice(1).filter((x) => /^\/[^/]/.test(x)).join(';') } };
     return { file: p.file, args: p.args, opts: p.windowsVerbatimArguments ? { ...(opts ?? {}), windowsVerbatimArguments: true } : opts, optIdx };
   }
   const wrap = (name: 'spawn' | 'spawnSync' | 'execFile' | 'execFileSync'): void => {
