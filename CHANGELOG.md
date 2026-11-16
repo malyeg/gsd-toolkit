@@ -7,6 +7,20 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## 0.11.1 (unreleased)
+
+**gsdt-migrate fixes** (found migrating a real repo):
+
+- One `--apply` is enough with a pre-merge script: the old paths inside the
+  renamed `scripts/gsdt-premerge-check.sh` are now fixed in the same run (git
+  grep skipped it: the old file is gone and the new one is not tracked yet).
+  `--check` (and doctor T090) now see such a file too; before, they said
+  "clean" while old paths were left in it.
+- A step's heading (`repo hook:`, `instruction blocks:`, `this clone
+  (.git/config):`, …) is printed only when something is under it.
+- "then each teammate: …" is printed only when HEAD has a commit by someone
+  else.
+
 ## 0.11.0
 
 **Breaking: the toolkit is now TypeScript on Node.js 24 or newer, installed

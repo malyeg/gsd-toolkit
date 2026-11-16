@@ -88,7 +88,7 @@ test('on a terminal: the prompt names the files, y commits only them, with a has
   assert.match(out, /^commit [0-9a-f]{7,}: Switch to gsdt-\* toolkit commands/m);
   assert.ok(out.includes(`push when ready: git -C '${R}' push`));
   assert.doesNotMatch(out, /add -A &&/);
-  assert.match(out, /then each teammate: gsdt-update, then gsdt-migrate --apply in their clone/);
+  assert.doesNotMatch(out, /then each teammate/); // every commit here is by t@t: no teammates
   assert.equal(git(R, 'show', '--no-renames', '--name-status', '--format=', 'HEAD').trim().split('\n').sort().join('|'), 'A\tscripts/gsdt-derive-port.sh|D\tscripts/gsd-derive-port.sh');
   assert.equal(git(R, 'diff', '--cached', '--name-only').trim(), 'unrelated.txt');
 });

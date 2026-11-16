@@ -218,6 +218,16 @@ function settingsFixInner(kind: 'repo' | 'user', file: string, apply: boolean): 
 
 // ── main ────────────────────────────────────────────────────────────────────
 
+/** Someone besides this clone's user (git var GIT_AUTHOR_IDENT: env, then config) authored a commit on HEAD; the teammates' line is for them. */
+function otherCommitters(main: string): boolean {
+  const ident = git(main, ['var', 'GIT_AUTHOR_IDENT']);
+  if (ident.status !== 0) return true; // who "I" am is unknown: keep the line
+  const me = (/<([^>]*)>/.exec(ident.stdout)?.[1] ?? '').toLowerCase();
+  const log = git(main, ['log', '--format=%ae', '-n', '2000', 'HEAD']);
+  if (log.status !== 0) return false;
+  return log.stdout.split('\n').some((e) => e !== '' && e.toLowerCase() !== me);
+}
+
 function logicalPwd(): string {
   const cwd = process.cwd();
   const p = process.env.PWD;
@@ -276,13 +286,24 @@ export function main(argv: string[]): number {
   const say = (s: string): void => {
     if (mode !== 'check') out(`${s}\n`);
   };
+  // A step's heading is printed with the first line under it: a step with
+  // nothing to change prints nothing.
+  let heading = '';
+  const head = (s: string): void => {
+    heading = s;
+  };
+  const line = (s: string): void => {
+    if (heading !== '') say(heading);
+    heading = '';
+    say(s);
+  };
   const change = (s: string): void => {
     CHANGES++;
-    say(`  ${s}`);
+    line(`  ${s}`);
   };
   const problem = (s: string): void => {
     PROBLEMS++;
-    say(`  ✖ ${s}`);
+    line(`  ✖ ${s}`);
   };
   const note = (s: string): void => {
     NOTES += `  • ${s}\n`;
@@ -307,7 +328,7 @@ export function main(argv: string[]): number {
   if (mode !== 'check') out(`gsdt-migrate${mode === 'apply' ? '' : ' (dry run)'} — ${MAIN}\n`);
 
   // ── 1. shims ──
-  say('shims:');
+  head('shims:');
   const oldShims = GSD_OLD_SHIMS.split(' ');
   for (const old of oldShims) {
     if (!isFile(`${MAIN}/${old}`)) continue;
@@ -356,11 +377,19 @@ export function main(argv: string[]): number {
   }
 
   // ── 3. references to those paths in other tracked files ──
-  say('references:');
+  head('references:');
   const grep = git(MAIN, ['grep', '-lIE', 'scripts/(hooks/)?gsd-[a-z-]+\\.sh']);
+  const refFiles: string[] = [];
   for (let f of grep.status === 0 || grep.stdout !== '' ? grep.stdout.split('\n') : []) {
     if (f === '') continue;
     if (!isFile(`${MAIN}/${f}`) && f === GSD_OLD_PREMERGE) f = pmNew;
+    if (!refFiles.includes(f)) refFiles.push(f);
+  }
+  // git grep searches tracked files that are on disk: once the pre-merge
+  // script is renamed (step 2 above, or an earlier run) the old path is gone
+  // and the new one is not tracked yet, so it would be skipped. Look at it too.
+  if (isFile(`${MAIN}/${pmNew}`) && !refFiles.includes(pmNew)) refFiles.push(pmNew);
+  for (const f of refFiles) {
     if (!isFile(`${MAIN}/${f}`)) continue;
     if (f.startsWith('.planning/') || /\.(md|markdown|txt)$/.test(f) || f === '.claude/settings.json') continue;
     if (oldShims.includes(f)) continue;
@@ -382,11 +411,10 @@ export function main(argv: string[]): number {
   }
 
   // ── 4. the repo hook ──
-  say('repo hook:');
-  const settingsStep = (kind: 'repo' | 'user', file: string, label: string, heading?: () => void): void => {
+  head('repo hook:');
+  const settingsStep = (kind: 'repo' | 'user', file: string, label: string): void => {
     if (!isFile(file)) return;
     if (!settingsFix(kind, file, false)) return;
-    heading?.();
     change(label);
     if (doing) {
       if (kind === 'repo') track('.claude/settings.json');
@@ -396,7 +424,7 @@ export function main(argv: string[]): number {
   settingsStep('repo', `${MAIN}/.claude/settings.json`, '.claude/settings.json: hook scripts/hooks/gsd-worktree-guard.sh → gsdt-worktree-guard.sh');
 
   // ── 5. the marked blocks ──
-  say('instruction blocks:');
+  head('instruction blocks:');
   let providers = confProviders(MAIN).replace(/\s/g, '').replace(/,gemini,/g, ',').replace(/^gemini,/, '').replace(/,gemini$/, '').replace(/^gemini$/, '');
   if (providers === '') providers = 'claude';
   const blockStep = (rel: string, kind: string, members: string): void => {
@@ -434,7 +462,7 @@ export function main(argv: string[]): number {
   }
 
   // ── 6. this clone's git config + post-merge hook ──
-  say('this clone (.git/config):');
+  head('this clone (.git/config):');
   if (chomp(git(MAIN, ['config', '--get', 'merge.gsd-planning.driver']).stdout) === 'gsd-planning-merge %O %A %B %P') {
     change('merge.gsd-planning.driver: gsd-planning-merge → gsdt-planning-merge (the driver key stays gsd-planning)');
     if (doing) git(MAIN, ['config', 'merge.gsd-planning.driver', 'gsdt-planning-merge %O %A %B %P']);
@@ -468,8 +496,8 @@ export function main(argv: string[]): number {
   // ── 7. the user's Claude settings ──
   const userSettings = providerUserHookFile('claude') ?? '';
   if (mode !== 'check' && userSettings !== '') {
-    // the heading comes with the first line under it, so an empty step prints nothing
-    settingsStep('user', userSettings, `${userSettings}: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*`, () => say('your Claude settings:'));
+    head('your Claude settings:');
+    settingsStep('user', userSettings, `${userSettings}: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*`);
   }
 
   // ── only reported ──
@@ -578,7 +606,7 @@ export function main(argv: string[]): number {
     out(`✔ migrated to gsdt-* (${CHANGES} change(s), ${committed ? 'committed' : 'not committed'})\n`);
     for (const l of lines) out(`${l}\n`);
     if (!committed && paths.length > 0) out(`to commit by hand:  ${byHand(paths)}\n`);
-    out('then each teammate: gsdt-update, then gsdt-migrate --apply in their clone\n');
+    if (otherCommitters(MAIN)) out('then each teammate: gsdt-update, then gsdt-migrate --apply in their clone\n');
   }
   if (PROBLEMS !== 0) {
     out(`${PROBLEMS} item(s) still need a hand fix (✖ above); then run gsdt-migrate again.\n`);

@@ -125,7 +125,7 @@ cp "$R/scripts/gsd-premerge-check.sh" "$WORK/pm.before"
 (cd "$R" && gsdt-migrate --apply) > "$OUT" 2>&1; rc=$?
 is  "exit 0" "$rc" 0
 has "says what to commit" "✔ migrated to gsdt-\* (15 change(s), not committed)" "$OUT"
-has "…and the teammates' step" "gsdt-migrate --apply in their clone" "$OUT"
+hasnt "…no teammates' step (every commit is by t@t)" "then each teammate" "$OUT"
 for rel in $SHIMS; do
   if cmp -s "$PKG/shims/$rel" "$R/$rel" && [ -x "$R/$rel" ] && [ ! -e "$R/$(old_of "$rel")" ]; then ok "$rel: this release's shim, old one gone"
   else bad "$rel: this release's shim, old one gone" "$(ls -l "$R/scripts" "$R/scripts/hooks")"; fi
@@ -216,7 +216,7 @@ is  "exit 0" "$rc" 0
 has "says committed" "(14 change(s), committed)" "$OUT"
 has "prints the short hash" "^commit [0-9a-f]\{7,\}: Switch to gsdt-\* toolkit commands" "$OUT"
 has "prints the push hint (only a hint)" "push when ready: git -C '$R5' push" "$OUT"
-has "keeps the teammates' line" "then each teammate: gsdt-update, then gsdt-migrate --apply in their clone" "$OUT"
+hasnt "no teammates' line (every commit is by t@t)" "then each teammate" "$OUT"
 has "lists the files first, git-style" "^files to commit (17):$" "$OUT"
 has "…a deletion" "^  D scripts/gsd-premerge-check.sh$" "$OUT"
 has "…an add"     "^  A scripts/gsdt-premerge-check.sh$" "$OUT"
@@ -303,6 +303,43 @@ has "a dry run with an old user hook: heading + its line" "^your Claude settings
 rm -f "$GSD_CLAUDE_SETTINGS"
 (cd "$R10" && gsdt-migrate) > "$OUT" 2>&1
 hasnt "…and without one: no heading" "your Claude settings" "$OUT"
+
+section "one --apply is enough: the renamed pre-merge script's own old paths"
+R11="$WORK/proj11"; git init -q -b main "$R11"; mkdir -p "$R11/scripts"
+printf 'providers = claude\n' > "$R11/.gsd.conf"
+printf '#!/bin/sh\n# scripts/gsd-premerge-check.sh: run before the merge\n# try it: bash scripts/gsd-premerge-check.sh\nexit 0\n' > "$R11/scripts/gsd-premerge-check.sh"
+chmod +x "$R11/scripts/gsd-premerge-check.sh"
+git -C "$R11" add -A && git -C "$R11" commit -qm init
+(cd "$R11" && gsdt-migrate --apply) > "$OUT" 2>&1; is "--apply: exit 0" "$?" 0
+cp "$OUT" "$WORK/r11.out"
+has "…lists the renamed script's references" "^  scripts/gsdt-premerge-check.sh:2: " "$OUT"
+hasnt "…no old path left in it" "scripts/gsd-premerge-check" "$R11/scripts/gsdt-premerge-check.sh"
+has "…its other text kept" "^# try it: bash scripts/gsdt-premerge-check.sh$" "$R11/scripts/gsdt-premerge-check.sh"
+[ -x "$R11/scripts/gsdt-premerge-check.sh" ] && ok "…still executable" || bad "…still executable"
+(cd "$R11" && gsdt-migrate --check); is "…then --check exits 0" "$?" 0
+(cd "$R11" && gsdt-migrate) > "$OUT" 2>&1
+has "…and a dry run finds nothing" "nothing to migrate" "$OUT"
+# the renamed script, left untracked by an earlier run of an older release, with its old paths
+R12="$WORK/proj12"; git init -q -b main "$R12"; mkdir -p "$R12/scripts"
+printf 'providers = claude\n' > "$R12/.gsd.conf"; git -C "$R12" add -A && git -C "$R12" commit -qm init
+printf '#!/bin/sh\n# scripts/gsd-premerge-check.sh\nexit 0\n' > "$R12/scripts/gsdt-premerge-check.sh"
+(cd "$R12" && gsdt-migrate --check); is "an untracked renamed script with old paths: --check exits 1" "$?" 1
+
+section "a step heading comes only with a line under it"
+# the --apply of the first case above changed only the shims and references steps
+has "the steps with changes are there" "^references:$" "$WORK/r11.out"
+for h in "repo hook:" "instruction blocks:" "this clone (.git/config):" "your Claude settings:"; do
+  hasnt "no empty '$h'" "^$h$" "$WORK/r11.out"
+done
+
+section "the teammates' line: only when HEAD has another author"
+R13="$WORK/proj13"; git init -q -b main "$R13"; mkdir -p "$R13/scripts"
+printf 'providers = claude\n' > "$R13/.gsd.conf"
+printf '#!/bin/sh\nexit 0\n' > "$R13/scripts/gsd-premerge-check.sh"
+git -C "$R13" add -A && git -C "$R13" commit -qm init
+GIT_AUTHOR_EMAIL=mate@x git -C "$R13" commit -q --allow-empty -m "a teammate's commit"
+(cd "$R13" && gsdt-migrate --apply) > "$OUT" 2>&1
+has "another author: the line is there" "^then each teammate: gsdt-update, then gsdt-migrate --apply in their clone$" "$OUT"
 
 section "a repo bootstrapped by the real 0.9.0"
 if git -C "$PKG" rev-parse -q --verify 'v0.9.0^{commit}' >/dev/null; then

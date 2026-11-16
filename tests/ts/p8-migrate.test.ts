@@ -204,9 +204,9 @@ function runStep(s: Side, step: Step): Ran {
  * INTENDED DIFFERENCES from the old bash command (the commit offer, spec in
  * docs/ts-port-progress.md follow-ups): the old `next:  git … add -A && …
  * commit` hint is replaced by a path-limited `to commit by hand:` line, plus
- * optional `not committing:` reason lines; the teammates' line is no longer
- * indented; the `your Claude settings:` heading is printed only when a
- * line follows it; and --help documents --commit and the prompt (its text is
+ * optional `not committing:` reason lines; the teammates' line is printed
+ * only when HEAD has another author (it is dropped on both sides); a step's
+ * heading is printed only when a line follows it (an empty one is dropped); and --help documents --commit and the prompt (its text is
  * not compared; migrate-commit.test.ts checks it). Both sides are normalized the same way before comparing;
  * everything else must still be byte-identical (tests/ts/migrate-commit.test.ts
  * checks the new lines themselves).
@@ -215,8 +215,8 @@ const intended = (t: string): string =>
   t
     .replace(/^(next:  |to commit by hand:  )git -C .* add -A.*\n/gm, '')
     .replace(/^not committing: .*\n(  .*\n)*/gm, '')
-    .replace(/^ +then each teammate/gm, 'then each teammate')
-    .replace(/^your Claude settings:\n(?!  )/gm, '')
+    .replace(/^ *then each teammate: .*\n/gm, '')
+    .replace(/^[a-z][^\n]*:\n(?!  )/gm, '')
     .replace(/^\ngsdt-migrate — move a repo[\s\S]*$/, '<HELP>');
 
 type Setup = (s: Side) => void;
