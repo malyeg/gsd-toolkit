@@ -3,7 +3,7 @@ name: release
 # A push to main that changes VERSION → check it is a new version with release
 # notes → run the full test suite → tag that commit and publish a GitHub release
 # with gsd-toolkit-X.Y.Z.tgz (the npm package, `npm pack`), gsd-toolkit-X.Y.Z.tar.gz
-# (git archive) and SHA256SUMS listing both. install.sh and gsdt-update (1.0.0
+# (git archive) and SHA256SUMS listing both. install.sh and gsdt-update (0.11.0
 # onwards) download SHA256SUMS + the .tgz and `npm install -g` it; the npm
 # registry is not involved. The .tar.gz stays for installed 0.10.x versions: their
 # install.sh / gsdt-update download it and run its lib/install.sh, which hands

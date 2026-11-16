@@ -79,7 +79,7 @@ gsdt-list                # what is in flight
 gsdt-doctor              # what is wrong, and how to fix it
 ```
 
-> **On 0.10.x (the bash version)?** Run `gsdt-update`: it moves you to the 1.0.0 npm package.
+> **On 0.10.x (the bash version)?** Run `gsdt-update`: it moves you to the 0.11.0 npm package.
 > Your repos need no change. See [Moving from 0.10.x](#moving-from-010x).
 >
 > **Upgrading from 0.9 or older?** The commands are now `gsdt-*` (`gsd-start`
@@ -259,7 +259,7 @@ day; `GSD_NO_UPDATE_CHECK=1` turns it off).
 ```sh
 gsdt-update --check            # installed vs latest
 gsdt-update                    # the latest toolkit + gsd-core
-gsdt-update --version 1.0.0    # a given version; going back works too
+gsdt-update --version 0.11.0    # a given version; going back works too
 ```
 
 `gsdt-update` finds the latest release on GitHub, downloads its `.tgz` and
@@ -269,14 +269,14 @@ the new version's `gsdt-setup`, so skills and hooks always match. See
 
 ### Moving from 0.10.x
 
-0.10.x was installed with `install.sh` into `~/.local/bin`. From 1.0.0 the
+0.10.x was installed with `install.sh` into `~/.local/bin`. From 0.11.0 the
 toolkit is an npm package. On the machine, just run the 0.10.x updater:
 
 ```sh
 gsdt-update
 ```
 
-(or the curl line above). The 0.10.x updater downloads the 1.0.0 release, whose
+(or the curl line above). The 0.10.x updater downloads the 0.11.0 release, whose
 `lib/install.sh` hands over to the new `install.sh`; that installs the npm
 package and runs `gsdt-setup`. Nothing is removed until the npm package is
 installed, so a missing Node.js leaves the 0.10.x install as it was.
@@ -286,7 +286,7 @@ user hooks to the npm path, and re-installs the skills. Repos need no change
 when `gsdt-doctor` shows no T090. If it does, run `gsdt-migrate --apply`
 first, best on 0.10.x. Details: [docs/migration.md](docs/migration.md#100-npm-package-nodejs-24-windows).
 
-> **Coming from `gsd-worktrees`** (before 0.8.0)? 1.0.0 does not move that
+> **Coming from `gsd-worktrees`** (before 0.8.0)? 0.11.0 does not move that
 > install. Go through 0.10.x first, as in
 > [Moving from gsd-worktrees](docs/releases.md#moving-from-gsd-worktrees).
 
@@ -336,7 +336,7 @@ Architecture: [docs/architecture.md](docs/architecture.md).
 | [trackers.md](docs/trackers.md) | Tickets: ClickUp, custom trackers |
 | [planning-merge.md](docs/planning-merge.md) | How `.planning/` files merge |
 | [releases.md](docs/releases.md) | Releases, updates, moving from gsd-worktrees |
-| [migration.md](docs/migration.md) | Moving to 1.0.0, 0.10.0 and 0.5.0 |
+| [migration.md](docs/migration.md) | Moving to 0.11.0, 0.10.0 and 0.5.0 |
 | [copy-install.md](docs/copy-install.md) | Retired: the 0.10.x installer |
 
 ## Development

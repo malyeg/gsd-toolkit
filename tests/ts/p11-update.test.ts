@@ -55,7 +55,7 @@ let seq = 0;
 type Scn = {
   latest?: string; // GitHub latest
   release?: string; // a release served from GitHub: v<release>/SHA256SUMS + gsd-toolkit-<release>.tgz
-  releaseSums?: 'bad' | 'nopkg'; // …with a wrong checksum, or no .tgz line (a release before 1.0.0)
+  releaseSums?: 'bad' | 'nopkg'; // …with a wrong checksum, or no .tgz line (a release before 0.11.0)
   npmCore?: string;
   core?: boolean; // run the gsd-core part (else GSD_NO_CORE=1)
   haveCore?: string; // gsd-core installed for claude in HOME
@@ -301,7 +301,7 @@ test('npm: a checksum mismatch refuses: nothing installed, no setup, gsd-core un
   assert.equal(r.setup, '');
   assert.equal(r.npx, '');
 });
-test('npm: a release before 1.0.0 (no .tgz in SHA256SUMS) names its own installer; a missing release is a download failure', () => {
+test('npm: a release before 0.11.0 (no .tgz in SHA256SUMS) names its own installer; a missing release is a download failure', () => {
   const a = npmRun(['--version', '0.10.0'], { release: '0.10.0', releaseSums: 'nopkg' });
   assert.equal(a.rc, 1);
   assert.equal(a.err, 'gsdt-update: 0.10.0 has no npm package; install it with its own installer: curl -fsSL https://raw.githubusercontent.com/acme/gsd-toolkit/v0.10.0/install.sh | bash\n');

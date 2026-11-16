@@ -1,8 +1,8 @@
 # Migration guide
 
-## 1.0.0: npm package, Node.js 24, Windows
+## 0.11.0: npm package, Node.js 24, Windows
 
-1.0.0 is a rewrite in TypeScript. The commands, their flags, output and exit
+0.11.0 is a rewrite in TypeScript. The commands, their flags, output and exit
 codes, `.gsd.conf`, the shims and the generated blocks stay the same. What
 changes is how it is installed and what it needs.
 
@@ -15,7 +15,7 @@ Perl and `jq` are not used; `curl` is optional (ClickUp, the update check).
 gsdt-update        # the 0.10.x updater; or: curl -fsSL …/install.sh | bash
 ```
 
-The 0.10.x updater downloads the 1.0.0 release and its `lib/install.sh` (the
+The 0.10.x updater downloads the 0.11.0 release and its `lib/install.sh` (the
 bridge) hands over to the new `install.sh`, which installs the npm package from
 the release and runs `gsdt-setup`. Nothing is removed before the package is
 installed: without Node.js 24 it stops and leaves the 0.10.x install as it was.
@@ -36,7 +36,7 @@ After that, `gsdt-update` updates from npm.
 
 **In each repo:** nothing, when `gsdt-doctor` shows no T090. If it does show
 T090 (the repo is from before 0.10.0), run `gsdt-migrate --apply` first. Do it
-on 0.10.x if you can: 1.0.0 no longer reads the machine-level old forms
+on 0.10.x if you can: 0.11.0 no longer reads the machine-level old forms
 (the `gsd-worktrees` install paths and tarball name, the `gsdw-*` skills,
 the pre-0.10 command names on the machine). Config legacy still works:
 `provider`, `agent_command`, `--agent` and `GSD_AGENT`. The repo-level
@@ -49,7 +49,7 @@ is separate.
 
 ### `gsdt-migrate --apply` now offers to commit
 
-In 1.0.0, `gsdt-migrate --apply` lists the repo files it changed and, in a
+In 0.11.0, `gsdt-migrate --apply` lists the repo files it changed and, in a
 terminal, asks `Commit these N files? [y/N]`. `--commit` answers yes without
 asking.
 
@@ -80,7 +80,7 @@ installs.
 2. **In each repo's main checkout:**
    ```sh
    gsdt-migrate             # dry run: every change, nothing changed
-   gsdt-migrate --apply     # make them; in 1.0.0 it offers to commit (see above)
+   gsdt-migrate --apply     # make them; in 0.11.0 it offers to commit (see above)
    ```
    On 0.10.x, `--apply` never commits: run
    `git add -A && git commit -m "Switch to gsdt-* toolkit commands"` yourself.

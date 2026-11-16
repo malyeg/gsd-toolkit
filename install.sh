@@ -24,7 +24,7 @@
 #                       last install chose)
 #
 # A 0.10.x install is moved over by gsdt-setup (the ~/.local/bin links and
-# ~/.local/share/gsd-toolkit are removed). Releases before 1.0.0 have no npm
+# ~/.local/share/gsd-toolkit are removed). Releases before 0.11.0 have no npm
 # package: install them with their own install.sh.
 #
 # Env: GSD_UPDATE_REPO (owner/name, default malyeg/gsd-toolkit); npm's own

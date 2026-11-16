@@ -142,7 +142,7 @@ o=$(run bash "$PKG/install.sh" --version 75.0.0 --no-core 2>&1 </dev/null); rc=$
 is "a checksum mismatch is refused" "$rc" "1"; has "…saying so" "$o" "checksum mismatch"
 [ -e "$PFX/lib/node_modules/gsd-toolkit" ] && bad "…nothing installed" || ok "…nothing installed"
 [ -e "$H/.claude" ] && bad "…no skills or hooks written" || ok "…no skills or hooks written"
-# a release before 1.0.0: its SHA256SUMS lists only the .tar.gz
+# a release before 0.11.0: its SHA256SUMS lists only the .tar.gz
 mkdir -p "$REL/v0.10.0"; printf 'old\n' > "$REL/v0.10.0/gsd-toolkit-0.10.0.tar.gz"; sums "$REL/v0.10.0" gsd-toolkit-0.10.0.tar.gz
 o=$(run bash "$PKG/install.sh" --version 0.10.0 --no-core 2>&1 </dev/null); rc=$?
 is "a release with no npm package is refused" "$rc" "1"

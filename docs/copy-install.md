@@ -5,7 +5,7 @@ This page is retired. It described `lib/install-copy.sh` (then `lib/install.sh`)
 into `~/.local/share/gsd-toolkit/releases/X.Y.Z/` and linked the commands into
 `~/.local/bin`. It needed Python 3.7+, Perl, Bash and Git.
 
-From 1.0.0 the toolkit is an npm package and nothing here applies:
+From 0.11.0 the toolkit is an npm package and nothing here applies:
 
 ```sh
 npm i -g gsd-toolkit

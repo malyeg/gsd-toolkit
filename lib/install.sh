@@ -2,7 +2,7 @@
 #
 # lib/install.sh — the bridge from 0.10.x. A 0.10.x install.sh (and so a 0.10.x
 # gsdt-update) downloads the newest release's .tar.gz, unpacks it and runs this
-# file with GSD_BIN_DIR / GSD_COPY_DIR set and stdin on /dev/null. From 1.0.0
+# file with GSD_BIN_DIR / GSD_COPY_DIR set and stdin on /dev/null. From 0.11.0
 # the toolkit is an npm package, so this hands over to the install.sh of the
 # SAME unpacked package, which downloads that release's gsd-toolkit-X.Y.Z.tgz,
 # runs `npm install -g` and then gsdt-setup (which removes the 0.10.x install:

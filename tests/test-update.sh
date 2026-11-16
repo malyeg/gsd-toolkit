@@ -6,7 +6,7 @@
 # The 0.10.x release line (the old install.sh: fresh install, update, go back,
 # prune, checksum refusals, the gsd-worktrees → gsd-toolkit move) is frozen and
 # no longer built here; tests/test-install.sh runs the REAL v0.10.0 install.sh
-# and gsdt-update against a 1.0.0 release, and the npm mode of gsdt-update is
+# and gsdt-update against a 0.11.0 release, and the npm mode of gsdt-update is
 # in tests/test-npm.sh and tests/ts/p11-update.test.ts.
 set -uo pipefail
 PKG=$(cd "$(dirname "$0")/.." && pwd)

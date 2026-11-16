@@ -2,7 +2,7 @@
 
 Two lines exist:
 
-- **1.0.0 onwards: an npm package, shipped as a GitHub release.** TypeScript on
+- **0.11.0 onwards: an npm package, shipped as a GitHub release.** TypeScript on
   Node 24 or newer. The release carries `gsd-toolkit-X.Y.Z.tgz` (`npm pack`) and
   `SHA256SUMS`; `install.sh` and `gsdt-update` download that file and run
   `npm install -g` on it. The npm registry is optional (the package may be
@@ -26,7 +26,7 @@ downloads `SHA256SUMS` and `gsd-toolkit-X.Y.Z.tgz`, checks the checksum,
 runs `npm install -g --no-audit --no-fund <tgz>`, then the new package's
 `gsdt-setup` with the options it was given (`--agent`, `--all-agents`,
 `--no-core`, `--no-user-hook`; `--reuse-install-config` is accepted and ignored).
-A release without a `.tgz` line in `SHA256SUMS` (before 1.0.0) is refused with
+A release without a `.tgz` line in `SHA256SUMS` (before 0.11.0) is refused with
 the line that installs it with its own installer. Windows without bash:
 `npm i -g https://github.com/<repo>/releases/download/vX.Y.Z/gsd-toolkit-X.Y.Z.tgz`
 then `gsdt-setup`. Env: `GSD_UPDATE_REPO` (owner/name), and npm's own settings.
@@ -61,7 +61,7 @@ impossible install (no `npx`) prints the command and never fails the setup.
 ```sh
 gsdt-update --check            # installed vs latest, changes nothing
 gsdt-update                    # the latest toolkit (keeps your agents), then gsd-core
-gsdt-update --version 1.0.0    # a given version, also how you go back
+gsdt-update --version 0.11.0    # a given version, also how you go back
 gsdt-update --no-core          # leave gsd-core as it is
 ```
 
@@ -93,17 +93,17 @@ the update command is `npx @opengsd/gsd-core@latest --claude --global`).
   background, so they never wait on the network.
 - `GSD_NO_UPDATE_CHECK=1` turns all of this off.
 
-### Moving from 0.10.x to 1.0.0
+### Moving from 0.10.x to 0.11.0
 
 ```sh
 gsdt-update          # the 0.10.x updater; or the curl line above
 ```
 
-The 0.10.x `install.sh` / `gsdt-update` download the 1.0.0 release's
-`gsd-toolkit-1.0.0.tar.gz` and run its `lib/install.sh` (the bridge) with
+The 0.10.x `install.sh` / `gsdt-update` download the 0.11.0 release's
+`gsd-toolkit-0.11.0.tar.gz` and run its `lib/install.sh` (the bridge) with
 `GSD_BIN_DIR` / `GSD_COPY_DIR` set. The bridge unsets those (`gsdt-setup` reads
 `GSD_BIN_DIR` as the folder its hooks point at) and runs the release's
-`install.sh --version 1.0.0` with the agent, hook and core options. That
+`install.sh --version 0.11.0` with the agent, hook and core options. That
 installs the package from npm's side and `gsdt-setup` removes the old `~/.local/bin/gsdt-*` links and
 `~/.local/share/gsd-toolkit/` (only what the old install made), rewrites the
 user hooks in `~/.claude/settings.json` to the npm path, and re-installs the
@@ -113,7 +113,7 @@ skills. Repos need no change when `gsdt-doctor` shows no T090 (else
 
 ### Moving from gsd-worktrees
 
-This is the 0.10.x line. 1.0.0 no longer reads a gsd-worktrees install on the
+This is the 0.10.x line. 0.11.0 no longer reads a gsd-worktrees install on the
 machine (its old paths, `gsdw-*` skills, tarball name): go through 0.10.x first.
 The repo-level `gsd-worktrees:` instruction markers are still read.
 
@@ -191,7 +191,7 @@ the package's `lib/install.sh` into
 `~/.local/share/gsd-toolkit/releases/X.Y.Z/` (links in `~/.local/bin`, skills
 copied), and keeps the previous release. `gsdt-update` there re-runs its own
 runtime's `install.sh`. `tests/test-install.sh` runs the real v0.10.0
-`install.sh` and `gsdt-update` against a 1.0.0 release (the bridge); the old
+`install.sh` and `gsdt-update` against a 0.11.0 release (the bridge); the old
 copy installer is `lib/install-copy.sh`, kept as the oracle for `gsdt-setup`
 (`tests/test-install-copy.sh`). See
 [copy-install.md](copy-install.md).

@@ -1,13 +1,13 @@
 # Changelog
 
-From 1.0.0 the toolkit is an npm package, shipped as a GitHub release
+From 0.11.0 the toolkit is an npm package, shipped as a GitHub release
 (`gsd-toolkit-X.Y.Z.tgz`, installed by `install.sh`; the npm registry is
 optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-toolkit-X.Y.Z.tar.gz`
 (`gsd-worktrees-X.Y.Z.tar.gz` before 0.8.0, in `arconme/gsd-worktrees`) and
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## 1.0.0
+## 0.11.0
 
 **Breaking: the toolkit is now TypeScript on Node.js 24 or newer, installed
 from npm.** Commands, flags, output, exit codes, `.gsd.conf`, the shims and the
