@@ -6,9 +6,10 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { uiCodeState } from '../../src/ui.ts';
 import {
-  count, env, git, gitAt, gsdt, lf, lines, tmp, touch, uiFixApproval, uiFixCheck, uiFixLook, vals, write,
+  count, env, git, gitAt, gsdt, lf, lines, tmp, touch, vals, write,
 } from './g1-helpers.ts';
 import type { Run } from './g1-helpers.ts';
+import { uiFixApproval, uiFixCheck, uiFixLook } from './ui-fixture.ts';
 
 const REPO = tmp('r');
 const PD = path.join(REPO, '.planning', 'phases', '07-thing');

@@ -11,11 +11,6 @@ import path from 'node:path';
 export const PKG = path.resolve(import.meta.dirname, '..', '..');
 export const WIN = process.platform === 'win32';
 export const LAUNCH = path.join(PKG, 'src', 'launch.mjs');
-/** The reason a test that needs a POSIX script stub spawned by the toolkit itself cannot run on Windows. */
-export const WIN_STUB: string | false = WIN && 'the toolkit spawns GSD_PLAYWRIGHT / GSD_UI_RUNNER stubs directly (spawnSync, no .cmd/.sh handling on Windows); a stub there would have to be an .exe';
-
-/** Read BEFORE the host's GSD_* settings are dropped from the test env. */
-export const HOST_PLAYWRIGHT_ROOT: string = process.env.GSD_PLAYWRIGHT_ROOT ?? '';
 
 // ── counting, so the report can compare with the bash suite's "N passed" ──
 let COUNT = 0;

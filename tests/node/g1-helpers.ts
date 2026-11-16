@@ -129,31 +129,3 @@ export function vals(t: string, key: string): string[] {
 }
 /** Strip ANSI colour codes. */
 export const plain = (t: string): string => t.replace(/\x1b\[[0-9;]*m/g, '');
-
-// ── the files gsdt-ui would write (tests/ui-fixture.sh) ─────────────────────
-
-/** <P>-UI-CHECK.md for the pages / and /cart at 375px. An empty code means "not compared". */
-export function uiFixCheck(dir: string, p: string, status = 'passed', capture = 'cap1', code = ''): void {
-  write(
-    path.join(dir, `${p}-UI-CHECK.md`),
-    `---\nstatus: ${status}\ncapture: ${capture}\ntaken: 2026-01-01T00:00:00Z\ncode: ${code}\n` +
-      `url: http://localhost:3005\nfailures: ${status === 'failed' ? 2 : 0}\nwaived: 0\nquestions: 1\nunchecked: 0\n---\n\n` +
-      '## Failures\n\nNone.\n\n## Questions\n\n- Q1 | /cart | 375 | C2 | possible clipped text in 1 element(s): div.box "long"\n\n' +
-      '## Shots\n\n- / | 375 | home-375-aaaaaa.png\n- /cart | 375 | cart-375-bbbbbb.png\n',
-  );
-}
-
-/** <P>-UI-LOOK.md answering every rule for both pictures. */
-export function uiFixLook(dir: string, p: string, capture = 'cap1', verdict = 'ok', rules = 'R1 R2 R3 R4 R5 R6 R7 R8 R9 R10'): void {
-  const rs = rules.split(/\s+/).filter((r) => r !== '');
-  let t = `---\ncapture: ${capture}\n---\n\n# look\n\n## / at 375px\n\n`;
-  for (const r of rs) t += `- ${r}: ${verdict} — seen in the picture\n`;
-  t += '\n## /cart at 375px\n\n';
-  for (const r of rs) t += `- ${r}: ok — seen in the picture\n`;
-  t += '- Q1: n/a — the box scrolls\n';
-  write(path.join(dir, `${p}-UI-LOOK.md`), t);
-}
-
-export function uiFixApproval(dir: string, p: string, capture = 'cap1'): void {
-  write(path.join(dir, `${p}-UI-APPROVAL.md`), `---\nstatus: approved\ncapture: ${capture}\nby: t\napproved: 2026-01-01T00:00:00Z\n---\n`);
-}

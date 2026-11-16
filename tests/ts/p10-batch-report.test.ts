@@ -1,5 +1,5 @@
 // gsdt-batch-report (src/batch-report.ts, behind bin/gsdt-batch-report) against saved goldens in
-// tests/golden/p10-batch-report/. It reads transcript folders: the generator of tests/test-batch.sh,
+// tests/golden/p10-batch-report/. It reads transcript folders: the generator tests/fixtures/batch-gen.py,
 // plus folders made here (floats/bools in usage, timestamps in odd spellings, a non-ASCII session id,
 // ties for "%.1f", /clear, next-batch and done-line endings, unlinked helpers, odd agent names).
 // Golden per call: args, exit code, stdout, stderr. Normalized: the temp dir (<W>) and every date,
@@ -42,14 +42,13 @@ function same(args: string[], o: { cwd?: string; env?: Record<string, string> } 
   return b;
 }
 
-// ── the generator of tests/test-batch.sh ────────────────────────────────────
-const shText = readFileSync(path.join(PKG, 'tests/test-batch.sh'), 'utf8');
-const gen = /cat > "\$WORK\/gen\.py" <<'PY'\n([\s\S]*?)\nPY\n/.exec(shText)?.[1];
-assert.ok(gen, 'generator found in tests/test-batch.sh');
+// ── the generator (tests/fixtures/batch-gen.py) ─────────────────────────────
 const P = path.join(W, 'proj');
 mkdirSync(P, { recursive: true });
-writeFileSync(path.join(W, 'gen.py'), gen);
-assert.equal(spawnSync('python3', [path.join(W, 'gen.py'), P]).status, 0);
+const pyGen = [['python3'], ['python'], ['py', '-3']]
+  .map(([c, ...a]) => spawnSync(c, [...a, path.join(PKG, 'tests/fixtures/batch-gen.py'), P]))
+  .find((r) => r.status === 0);
+assert.ok(pyGen, 'python generator ran');
 
 // ── folders made here ───────────────────────────────────────────────────────
 const NOW = Math.floor(Date.now() / 1000);

@@ -1,4 +1,4 @@
-// The fixture files for the checks of the rendered pages (tests/ui-fixture.sh, ported): written as gsdt-ui would write them, no browser.
+// The fixture files for the checks of the rendered pages (ported from the old ui-fixture.sh): written as gsdt-ui would write them, no browser.
 //   uiFixCheck(dir, P, status, capture, code)   <P>-UI-CHECK.md for / and /cart at 375px. An empty code = "not compared".
 //   uiFixLook(dir, P, capture, verdict, rules)  <P>-UI-LOOK.md answering every rule for both pictures
 //   uiFixApproval(dir, P, capture)

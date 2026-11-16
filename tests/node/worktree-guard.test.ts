@@ -8,7 +8,8 @@ import assert from 'node:assert/strict';
 import { accessSync, appendFileSync, constants, mkdirSync, rmSync, symlinkSync } from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
-import { PKG, WIN, env, git, gsdt, run, tmp, touch, uiFixApproval, uiFixCheck, uiFixLook, write } from './g1-helpers.ts';
+import { PKG, WIN, env, git, gsdt, run, tmp, touch, write } from './g1-helpers.ts';
+import { uiFixApproval, uiFixCheck, uiFixLook } from './ui-fixture.ts';
 import type { Run } from './g1-helpers.ts';
 
 let REPO = '';

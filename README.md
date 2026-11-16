@@ -345,7 +345,7 @@ Architecture: [docs/architecture.md](docs/architecture.md).
 git clone git@github.com:malyeg/gsd-toolkit.git && cd gsd-toolkit
 npm ci                        # TypeScript and the Node types (dev only)
 npx tsc --noEmit              # type check
-tests/test-commands.sh        # each suite is standalone
+node --test tests/node/commands.test.ts   # one file; all: see CLAUDE.md
 ```
 
 The commands are TypeScript. A checkout runs `src/*.ts` directly (Node 24
@@ -360,9 +360,8 @@ while a batch runs) is not installed yet; try it with
 `claude --plugin-dir <checkout>/mods/gsdt-batch-sonnet`.
 
 The test suites, lint commands and release steps are listed in
-[CLAUDE.md](CLAUDE.md#commands). CI runs the bash suites on Linux and macOS,
-and a cross-platform suite (`node --test tests/os/os.test.ts`, the real npm
-package) on Linux, macOS and Windows.
+[CLAUDE.md](CLAUDE.md#commands). CI runs all of them (`node:test`) on Linux and Windows, and on macOS
+for a release.
 
 ## License
 

@@ -8,11 +8,11 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { uiCodeState } from '../../src/ui.ts';
 import {
-  PKG, WIN, WIN_STUB, add, baseEnv, fileHas, fileHasnt, files, fmv, freePort, gitHashObject, gitHashText, gitOk, gitOut, gsdt,
+  PKG, WIN, add, baseEnv, fileHas, fileHasnt, files, fmv, freePort, gitHashObject, gitHashText, gitOk, gitOut, gsdt,
   has, hasnt, initRepo, is, linkProgram, lf, mkWork, mkexec, ok, pathWith, read, run, startServer, w,
 } from './g4-env.ts';
 import type { Env, Run, Server } from './g4-env.ts';
-import { uiFixAll, uiFixApproval, uiFixCheck } from './g4-ui-fixture.ts';
+import { uiFixAll, uiFixApproval, uiFixCheck } from './ui-fixture.ts';
 
 const W = mkWork('g4ui-');
 const ENV: Env = baseEnv(W, { GSD_CLAUDE_SKILL_DIR: path.join(W, 'skills'), GSD_NPM_GLOBAL_ROOT: path.join(W, 'global', 'node_modules') });
@@ -99,7 +99,7 @@ test('gsdt-ui shots — refusals', () => {
   ok('…and records nothing', !existsSync(path.join(PD, '05-SHOTS.md')));
 });
 
-test('gsdt-ui shots — against a running app', { skip: WIN_STUB }, async () => {
+test('gsdt-ui shots — against a running app', async () => {
   mkdirSync(path.join(W, 'site', 'cart'), { recursive: true });
   w(path.join(W, 'site', 'index.html'), 'home\n');
   w(path.join(W, 'site', 'cart', 'index.html'), 'cart\n');
@@ -130,7 +130,7 @@ test('gsdt-ui shots — against a running app', { skip: WIN_STUB }, async () => 
   void r;
 });
 
-test('gsdt-ui shots — a project with several apps', { skip: WIN_STUB }, () => {
+test('gsdt-ui shots — a project with several apps', () => {
   mkdirSync(path.join(R, 'apps', 'admin'), { recursive: true });
   w(path.join(R, 'apps/admin/package.json'), '{ "scripts": { "dev": "PORT=$(bash ../../scripts/gsdt-derive-port.sh 3100) next dev" } }\n');
   let r = g('gsdt-ui', ['shots', '5'], R);
@@ -192,7 +192,7 @@ const job = (k: string): string => jobv(k).join('\n');
 const checkWith = (env: Env = {}): Run => g('gsdt-ui', ['check', '5'], R, env);
 const sha = (f: string): string => gitHashObject(ENV, R, f);
 
-test('gsdt-ui check — with a stub runner', { skip: WIN_STUB }, () => {
+test('gsdt-ui check — with a stub runner', () => {
   mkexec(path.join(STUB, 'runner'), RUNNER);
   ENV.GSD_UI_RUNNER = path.join(STUB, 'runner');
   rmSync(path.join(PD, '05-SHOTS'), { recursive: true, force: true });
@@ -231,7 +231,7 @@ test('gsdt-ui check — with a stub runner', { skip: WIN_STUB }, () => {
   is('…the report says failed', status(CHECK), 'failed');
 });
 
-test('gsdt-ui check — a run that could not finish leaves no old pass', { skip: WIN_STUB }, () => {
+test('gsdt-ui check — a run that could not finish leaves no old pass', () => {
   checkWith();
   let r = checkWith({ STUB_MODE: 'cannot' });
   is('the runner cannot run → exit 2', r.status, 2);
@@ -267,7 +267,7 @@ test('gsdt-ui check — a run that could not finish leaves no old pass', { skip:
   rmSync(appr);
 });
 
-test('gsdt-ui look and approve', { skip: WIN_STUB }, () => {
+test('gsdt-ui look and approve', () => {
   const LOOK = path.join(PD, '05-UI-LOOK.md');
   const APPR = path.join(PD, '05-UI-APPROVAL.md');
   checkWith({ STUB_MODE: 'fail' });
