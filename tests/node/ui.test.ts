@@ -105,7 +105,7 @@ test('gsdt-ui shots — against a running app', async () => {
   w(path.join(W, 'site', 'cart', 'index.html'), 'cart\n');
   server = await startServer(path.join(W, 'site'), PORT);
   let r = g('gsdt-ui', ['shots', '5'], R);
-  is('shots succeed', r.status, 0);
+  is(`shots succeed: ${r.out}`, r.status, 0);
   has('2 pages × 3 sizes', r.out, '6 screenshot(s)');
   const shots = readdirSync(path.join(PD, '05-SHOTS'));
   for (const f of ['home-375', 'home-768', 'home-1440', 'cart-375', 'cart-768', 'cart-1440']) {
@@ -138,7 +138,7 @@ test('gsdt-ui shots — a project with several apps', () => {
   has('…asks for url: in the phase LAYOUT', r.out, 'in 05-LAYOUT.md:  url: http://localhost:{port:<base>}');
   w(LAYOUT, `pages: /, /cart\nurl: http://localhost:{port:${BASEPORT}}\n`);
   r = g('gsdt-ui', ['shots', '5'], R);
-  is('url: in LAYOUT picks the app', r.status, 0);
+  is(`url: in LAYOUT picks the app: ${r.out}`, r.status, 0);
   fileHas('…with this phase\'s port', path.join(PD, '05-SHOTS.md'), `url: http://localhost:${PORT}`);
   conf(R, 'ui_url = http://localhost:1\n');
   r = g('gsdt-ui', ['shots', '5'], R);
@@ -200,7 +200,7 @@ test('gsdt-ui check — with a stub runner', () => {
   w(LAYOUT, 'sketch: skip a test\npages: /, cart\napp: apps/web\nmain_button: / = Start now\nmain_button: /cart = none\nexpect: /cart = cart\nwaive: C3 | * | * | .brand | agreed with the user\n');
   git(R, 'add', '-A'); git(R, 'commit', '-qm', 'layout');
   let r = checkWith();
-  is('a passed run → exit 0', r.status, 0);
+  is(`a passed run → exit 0: ${r.out}`, r.status, 0);
   has('…says passed and names the capture', r.out, 'passed — capture capA');
   has('…and the next step', r.out, 'Next: gsdt-ui look 5');
   is('the report is published', status(CHECK), 'passed');

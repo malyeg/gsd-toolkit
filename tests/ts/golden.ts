@@ -44,6 +44,12 @@ function callerFile(): string {
   return 'unknown';
 }
 
+const SKIP_FILES = new Map<string, string>();
+/** call at the top of a test file: on Windows every test in it is skipped, with this reason */
+export function skipFileOnWindows(reason: string): void {
+  if (process.platform === 'win32') SKIP_FILES.set(callerFile(), reason);
+}
+
 type Fn = (...a: never[]) => unknown;
 function wrap(fn: Fn, dir: string, name: string): Fn {
   return async (...a: never[]) => {
@@ -68,9 +74,15 @@ function make(base: (...a: never[]) => unknown): TestFn {
   const f = ((...args: unknown[]) => {
     const dir = callerFile();
     const i = args.findIndex((a) => typeof a === 'function');
-    if (i >= 0) {
+    const sk = SKIP_FILES.get(dir);
+    if (sk !== undefined && i >= 0) {
+      if (typeof args[i - 1] === 'object' && args[i - 1] !== null) args[i - 1] = { ...(args[i - 1] as object), skip: sk };
+      else args.splice(i, 0, { skip: sk });
+    }
+    const j = args.findIndex((a) => typeof a === 'function');
+    if (j >= 0) {
       const name = typeof args[0] === 'string' ? (args[0] as string) : ((args[0] as { name?: string })?.name ?? 'test');
-      args[i] = wrap(args[i] as Fn, dir, name);
+      args[j] = wrap(args[j] as Fn, dir, name);
     }
     return (base as (...a: unknown[]) => unknown)(...args);
   }) as unknown as TestFn;
@@ -144,7 +156,7 @@ function load(file: string): string[] {
 export function golden(actual: string, old?: () => string): void {
   assert.ok(current, 'golden() outside a test');
   // Windows has no mode bits: a mode shown in a golden cannot be compared there
-  const nomode = (s: string): string => (WIN ? s.replace(/\bmode=[0-7]{3,4}\b/g, 'mode=*') : s);
+  const nomode = (s: string): string => (WIN ? s.replace(/\bmode[= ][0-7]{3,4}\b| \[(?:600|644|666|755|777)\]/g, ' mode=*') : s);
   const text = nomode(goldenNorm(actual));
   assert.ok(!text.split('\n').some((l) => DELIM.test(l)), 'text looks like a golden delimiter');
   const n = ++current.n;

@@ -464,7 +464,7 @@ export function report(job: Job, conf: Conf, pw: Playwright, shots: Shot[]): Rep
   const failed = failures.length > 0 || (job.strict && unchecked.length > 0);
   const status = failed ? 'failed' : 'passed';
   const taken = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
-  const runner = `${pw.name} ${pw.version} (${pw.global ? 'global' : path.relative(job.repo, pw.root) || '.'})`;
+  const runner = `${pw.name} ${pw.version} (${pw.global ? 'global' : (path.relative(job.repo, pw.root) || '.').replace(/\\/g, '/')})`;
   const section = (title: string, list: string[], empty: string) => `## ${title}\n\n${list.length ? list.map((l) => '- ' + l).join('\n') : empty}\n`;
 
   const md = [

@@ -580,7 +580,7 @@ test('gsdt-doctor does not demand GSD from repos that do not use it', () => {
   git(PLAIN, 'commit', '-qm', 'init');
 
   let r = g('doctor', ['--verbose', '--repo', PLAIN]);
-  assert.equal(r.status, 0, 'a plain repo has no findings');
+  assert.equal(r.status, 0, `a plain repo has no findings:\n${r.out}`);
   assert.equal(count(r.out, /does not use GSD/), 1, 'it says the repo does not use GSD');
   assert.equal(count(r.out, /gitattributes/), 0, 'no red line about .gitattributes');
   assert.equal(count(r.out, /merge driver not registered/), 0, 'no red line about the driver');

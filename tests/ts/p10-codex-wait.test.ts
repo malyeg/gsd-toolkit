@@ -130,7 +130,7 @@ parity('plain failure passes the code', { args: ['--', 'sh', '-c', 'echo nope >&
 parity('plain failure, no output', { args: ['--', 'sh', '-c', 'exit 7'] }, (r) => assert.equal(r.rc, 7));
 parity('limit text but exit 0 (a review quoting it)', { args: ['--', 'sh', '-c', 'echo "a review quoting: You have hit your usage limit"; exit 0'] });
 // bash adds its own "line N: PID Killed" job note on stderr (not reproducible): only the code is compared
-test('killed by a signal → 128+n (new side only: the old bash added a job note on stderr)', () => {
+test('killed by a signal → 128+n (new side only: the old bash added a job note on stderr)', { skip: process.platform === 'win32' && 'POSIX signals: kill -9 $$ is not a signal exit on Windows' }, () => {
   seq++;
   const n = exec('neu', 'UTC', { args: ['--', 'sh', '-c', 'kill -9 $$'] });
   assert.equal(n.rc, 137);
@@ -369,13 +369,13 @@ test('new side: a command that does not exist → 127 and a note (bash printed `
   assert.match(m.err, /No such file or directory/);
 });
 
-test('new side: without node the launcher says so and exits 1', () => {
+test('new side: without node the launcher says so and exits 1', { skip: process.platform === 'win32' && 'tests the bash launcher with no node on a POSIX PATH' }, () => {
   const r = spawnSync('/bin/bash', [BINS.neu, '--help'], { encoding: 'utf8', env: { PATH: '/nonexistent' } });
   assert.equal(r.status, 1);
   assert.equal(r.stderr, 'gsdt-codex-wait: needs Node.js >= 24 (node not found on PATH)\n');
 });
 
-test('new side: no python needed (python absent from PATH)', () => {
+test('new side: no python needed (python absent from PATH)', { skip: process.platform === 'win32' && 'builds a PATH of symlinks to POSIX tools' }, () => {
   const bin = path.join(W, 'nopy');
   mkdirSync(bin, { recursive: true });
   for (const t of ['node', 'bash', 'date', 'sh', 'cat', 'uname', 'dirname', 'readlink']) {

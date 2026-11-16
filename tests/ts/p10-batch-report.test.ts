@@ -312,7 +312,10 @@ test('--repo, --dir, CLAUDE_CONFIG_DIR, the projdir rule', () => {
   const H = path.join(W, 'claudehome');
   mkdirSync(path.join(H, 'projects'), { recursive: true });
   const name = (p: string): string => p.replace(/[^A-Za-z0-9]/gu, '-');
-  symlinkSync(P, path.join(H, 'projects', name(R)));
+  // Windows: the product sees the long-name spelling of R (RUNNER~1 -> runneradmin) and links need `junction`
+  for (const spelling of new Set([R, realpathSync.native(R)])) {
+    symlinkSync(P, path.join(H, 'projects', name(spelling)), process.platform === 'win32' ? 'junction' : undefined);
+  }
   const env = { CLAUDE_CONFIG_DIR: H };
   same(['--last', '9', '--json'], { cwd: R, env });
   same(['--last', '9'], { cwd: R, env });
@@ -365,11 +368,12 @@ test('projdir() of the engine: the long path rule, first spelling when none exis
   const long = `/${'x'.repeat(230)}`;
   const lname = long.replace(/[^A-Za-z0-9]/gu, '-');
   mkdirSync(path.join(H, 'projects', `${lname.slice(0, 200)}-abc123`), { recursive: true });
-  assert.equal(projdir(H, [long]), path.join(H, 'projects', `${lname.slice(0, 200)}-abc123`));
-  assert.equal(projdir(H, ['/no/such dir']), path.join(H, 'projects', '-no-such-dir'));
+  const slashes = (p: string): string => p.replace(/\\/g, '/'); // the product joins with `/`
+  assert.equal(slashes(projdir(H, [long])), slashes(path.join(H, 'projects', `${lname.slice(0, 200)}-abc123`)));
+  assert.equal(slashes(projdir(H, ['/no/such dir'])), slashes(path.join(H, 'projects', '-no-such-dir')));
 });
 
-test('the launcher: no node on PATH', () => {
+test('the launcher: no node on PATH', { skip: process.platform === 'win32' && 'tests the bash launcher with no node on a POSIX PATH' }, () => {
   const r = spawnSync('/bin/bash', [BINS.neu, '--help'], { encoding: 'utf8', env: { PATH: '/nonexistent' } });
   assert.equal(r.status, 1);
   assert.equal(r.stderr, 'gsdt-batch-report: needs Node.js >= 24 (node not found on PATH)\n');

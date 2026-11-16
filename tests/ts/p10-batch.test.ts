@@ -6,7 +6,12 @@
 import { spawnSync } from 'node:child_process';
 import { chmodSync, existsSync, mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { test, golden } from './golden.ts';
+import { test, golden, skipFileOnWindows } from './golden.ts';
+
+// The goldens run the bash launcher through Git's sh, which turns /-leading arguments into C:/Program Files/Git/... and
+// drops argument newlines, and drive its terminal cases with python pty. tests/node/batch.test.ts runs the same command
+// through launch.mjs on Windows.
+skipFileOnWindows('bash launcher through msys sh + python pty; covered by tests/node/batch.test.ts');
 import assert from 'node:assert/strict';
 import { main, slugify, firstItem, isListItem } from '../../src/commands/batch.ts';
 import { PKG, commitAll, envFor, git, makeSide, norm, settle, snapshot, tmp, write, type Project, type R, type Side } from './p6-helpers.ts';

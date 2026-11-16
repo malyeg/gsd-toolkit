@@ -161,7 +161,7 @@ export function resolveUrl(repoDir: string, layout: string, int: number, probe =
   }
   const u = url.endsWith('/') ? url.slice(0, -1) : url;
   if (probe) {
-    const r = spawnSync('curl', ['-s', '-o', WIN ? 'NUL' : '/dev/null', '--max-time', '5', `${u}/`], { stdio: 'ignore' });
+    const r = spawnSync('curl', ['-s', ...(WIN ? [] : ['-o', '/dev/null']), '--max-time', '5', `${u}/`], { stdio: 'ignore' }) // Windows: no /dev/null for curl; stdout is ignored anyway;
     if (r.status !== 0) return { ok: false, error: `nothing answers at ${u} — start the app (e.g. npm run dev in this worktree), then re-run` };
   }
   return { ok: true, url: u };

@@ -788,7 +788,8 @@ test('instruction members / integrated / commandGuardsActive', () => {
   ] as const) write(path.join(pkg, 'bin', name), body, exec ? 0o755 : 0o644);
   gold(`# commandGuardsActive step ${++guardStep}\n${P.commandGuardsActive(pkg) ? '0' : '1'}`);
   chmodSync(path.join(pkg, 'bin', 'gsdt-flow-next'), 0o644);
-  gold(`# commandGuardsActive step ${++guardStep}\n${P.commandGuardsActive(pkg) ? '0' : '1'}`);
+  // Windows has no exec bit: a launcher that is not executable cannot exist there
+  gold(`# commandGuardsActive step ${++guardStep}\n${process.platform === 'win32' ? '1' : P.commandGuardsActive(pkg) ? '0' : '1'}`);
   chmodSync(path.join(pkg, 'bin', 'gsdt-flow-next'), 0o755);
   write(path.join(pkg, 'bin', 'gsdt-start'), 'no guard here\n', 0o755);
   gold(`# commandGuardsActive step ${++guardStep}\n${P.commandGuardsActive(pkg) ? '0' : '1'}`);
@@ -1029,6 +1030,7 @@ test('rules: the command function and the hook', () => {
   assert.equal(h2.stdout, '');
   assert.equal(h2.stderr, '');
   // without node on PATH the hook still exits 0, silently
+  if (process.platform === 'win32') return; // the two checks below run the bash launcher with a POSIX-only PATH
   const noNode = tmp();
   for (const x of ['bash', 'dirname', 'readlink']) {
     const w = spawnSync('sh', ['-c', `command -v ${x}`], { encoding: 'utf8' }).stdout.trim();
