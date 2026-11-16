@@ -27,6 +27,14 @@ import { createHash } from 'node:crypto';
 import { golden, test } from './golden.ts';
 import { AWK_DIR, PKG, tmp, write, LOCALE_ENV } from './helpers.ts';
 
+// A PATH folder holding only `node`: the folder node lives in can hold a global gsd_run
+// (CI installs gsd-core there), and "no gsd-core" scenarios must not find it.
+const NODE_BIN = ((): string => {
+  const d = tmp();
+  symlinkSync(process.execPath, path.join(d, 'node'));
+  return d;
+})();
+
 Object.assign(process.env, {
   GIT_CONFIG_GLOBAL: '/dev/null',
   GIT_CONFIG_NOSYSTEM: '1',
@@ -94,7 +102,7 @@ function runBin(c: Ctx, sc: Sc, argv: string[], cwd: string): Promise<{ out: str
   const dirs = [path.join(c.pkg, 'bin')];
   if (!sc.nostub) dirs.push(c.stub);
   if (AWK_DIR) dirs.push(AWK_DIR); // gawk counts bytes, as BSD awk and mawk do (helpers.ts)
-  const node = path.dirname(process.execPath);
+  const node = NODE_BIN;
   dirs.push(node);
   const jq = spawnSync('sh', ['-c', 'command -v jq'], { encoding: 'utf8' }).stdout.trim();
   if (jq) dirs.push(path.dirname(jq));
@@ -265,14 +273,14 @@ const S: Sc[] = [
   {
     name: 'symlinked PATH install (like ~/.local/bin)',
     setup: (c) => { repoSc(c); mkdirSync(path.join(c.W, 'ibin')); for (const n of readdirSync(path.join(c.pkg, 'bin'))) symlinkSync(path.join(c.pkg, 'bin', n), path.join(c.W, 'ibin', n)); },
-    env: { PATH: (c) => `${c.W}/ibin:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` },
+    env: { PATH: (c) => `${c.W}/ibin:${c.stub}:${NODE_BIN}:/usr/bin:/bin` },
     runs: [['--repo', '{R}'], ['--quiet', '--repo', '{R}'], ['--json', '--repo', '{R}']],
     expect: /PATH commands resolve to/,
   },
   { name: 'quiet and -q', runs: [['--quiet', '--repo', '{R}'], ['-q', '--repo', '{R}']], expect: /finding/ },
   { name: 'CRLF .gsd.conf', setup: (c) => { repoSc(c); conf(c, 'base = develop\r\nflow = strict\r\nui_gates = warn\r\n'); } },
   { name: 'no gsd-core', nostub: true, expect: /T005/ },
-  { name: 'gsd_run that is not gsd-core', nostub: true, setup: (c) => { repoSc(c); write(path.join(c.W, 'fake/gsd_run'), '#!/bin/sh\necho nope\n', 0o755); }, env: { PATH: (c) => `${c.pkg}/bin:${c.W}/fake:${path.dirname(process.execPath)}:/usr/bin:/bin` }, expect: /T005/ },
+  { name: 'gsd_run that is not gsd-core', nostub: true, setup: (c) => { repoSc(c); write(path.join(c.W, 'fake/gsd_run'), '#!/bin/sh\necho nope\n', 0o755); }, env: { PATH: (c) => `${c.pkg}/bin:${c.W}/fake:${NODE_BIN}:/usr/bin:/bin` }, expect: /T005/ },
   { name: 'npx-installed gsd-core', nostub: true, setup: (c) => { repoSc(c); write(path.join(c.home, '.claude/gsd-core/bin/gsd_run'), '#!/bin/sh\necho \'{"packageName":"@opengsd/gsd-core","version":"1.18.0"}\'\n', 0o755); write(path.join(c.home, '.claude/gsd-core/VERSION'), '1.18.0\n'); }, expect: /gsd-core 1\.18\.0/ },
   { name: 'T009 profile core', setup: (c) => { repoSc(c); write(path.join(c.home, '.claude/.gsd-profile'), 'core\n'); write(path.join(c.home, '.codex/.gsd-profile'), 'core,audit\n'); }, expect: /T009/ },
   { name: 'T009 profile full / includes full', setup: (c) => { repoSc(c); write(path.join(c.home, '.claude/.gsd-profile'), 'core,full\n'); } },
@@ -321,7 +329,7 @@ const S: Sc[] = [
   { name: 'no python', farm: ['python3', 'python'], expect: /T034/, newOnly: true },
   { name: 'no gsdt-finish on PATH', farm: ['gsdt-finish'], expect: /T001/ },
   { name: 'no gsdt-planning-repair', farm: ['gsdt-planning-repair'], expect: /T004/ },
-  { name: 'PATH commands from another package', setup: (c) => { repoSc(c); write(path.join(c.W, 'other/bin/gsdt-finish'), '#!/bin/sh\n', 0o755); }, env: { PATH: (c) => `${c.W}/other/bin:${c.pkg}/bin:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` }, expect: /T002/ },
+  { name: 'PATH commands from another package', setup: (c) => { repoSc(c); write(path.join(c.W, 'other/bin/gsdt-finish'), '#!/bin/sh\n', 0o755); }, env: { PATH: (c) => `${c.W}/other/bin:${c.pkg}/bin:${c.stub}:${NODE_BIN}:/usr/bin:/bin` }, expect: /T002/ },
   { name: 'T007 stale skills', setup: (c) => { repoSc(c); const sk = path.join(c.W, 'skills'); cpSync(path.join(c.pkg, 'skills'), sk, { recursive: true }); writeFileSync(path.join(sk, 'gsdt-flow/SKILL.md'), `${readFileSync(path.join(sk, 'gsdt-flow/SKILL.md'), 'utf8')}old step\n`); }, env: { GSD_CLAUDE_SKILL_DIR: (c) => path.join(c.W, 'skills') }, expect: /T007/ },
   { name: 'skills current', setup: (c) => { repoSc(c); cpSync(path.join(c.pkg, 'skills'), path.join(c.W, 'skills'), { recursive: true }); }, env: { GSD_CLAUDE_SKILL_DIR: (c) => path.join(c.W, 'skills') }, expect: /skills installed and current/ },
   { name: 'skills not installed (codex too)', setup: (c) => { repoSc(c); conf(c, 'base = develop\nproviders = claude,codex,custom\n'); }, expect: /skills not installed|no installable/ },
@@ -530,7 +538,7 @@ const S: Sc[] = [
       write(path.join(c.W, 'net/curl'), `#!/bin/sh\necho '{"tag_name": "v99.0.0", "x": 1}'\n`, 0o755);
       write(path.join(c.W, 'net/npm'), '#!/bin/sh\necho 99.1.0\n', 0o755);
     },
-    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` },
+    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${NODE_BIN}:/usr/bin:/bin` },
     expect: /99\.0\.0/,
   },
   {
@@ -541,7 +549,7 @@ const S: Sc[] = [
       write(path.join(c.W, 'net/curl'), `#!/bin/sh\nprintf '{"tag_name": "v%s"}\\n' "$(cat ${c.pkg}/VERSION)"\n`, 0o755);
       write(path.join(c.W, 'net/npm'), '#!/bin/sh\necho 1.0.0\n', 0o755);
     },
-    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` },
+    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${NODE_BIN}:/usr/bin:/bin` },
     expect: /latest release/,
   },
   {
@@ -552,7 +560,7 @@ const S: Sc[] = [
       write(path.join(c.W, 'net/curl'), '#!/bin/sh\nexit 22\n', 0o755);
       write(path.join(c.W, 'net/npm'), '#!/bin/sh\nexit 1\n', 0o755);
     },
-    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` },
+    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${NODE_BIN}:/usr/bin:/bin` },
     expect: /not reachable/,
   },
 ];

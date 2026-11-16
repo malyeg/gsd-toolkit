@@ -12,6 +12,7 @@ import {
   cpSync,
   existsSync,
   lstatSync,
+  statSync,
   mkdirSync,
   mkdtempSync,
   readdirSync,
@@ -169,7 +170,7 @@ function snap(s: Side): string {
   };
   if (existsSync(s.repo)) walk(s.repo, '');
   for (const f of [s.settings, `${s.settings}.gsd-tmp`]) {
-    if (existsSync(f)) lines.push(`USER ${path.basename(f)}: ${(lstatSync(f).mode & 0o7777).toString(8)} ${readFileSync(f, 'latin1')}`);
+    if (existsSync(f)) lines.push(`USER ${path.basename(f)}: ${(statSync(f).mode & 0o7777).toString(8)} ${readFileSync(f, 'latin1')}`);
   }
   return lines.join('\n');
 }

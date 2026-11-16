@@ -63,7 +63,7 @@ your Claude settings:
 	logallrefupdates = true
 
 lock: false
-USER user-settings.json: 755 {
+USER user-settings.json: 644 {
   "model": "opus",
   "hooks": {
     "PreToolUse": [
@@ -109,7 +109,7 @@ gsdt-migrate — <S>/proj
 	logallrefupdates = true
 
 lock: false
-USER user-settings.json: 755 {
+USER user-settings.json: 644 {
   "model": "opus",
   "hooks": {
     "PreToolUse": [
