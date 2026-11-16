@@ -32,6 +32,7 @@ import {
   mkdtempSync,
   readdirSync,
   readFileSync,
+  readSync,
   renameSync,
   rmSync,
   statSync,
@@ -40,7 +41,7 @@ import {
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { baserefState } from './claude-settings.ts';
-import { WIN, resolveWin, spawnSyncX as spawnSync } from './spawn.ts';
+import { WIN, relUnder, resolveWin, spawnSyncX as spawnSync } from './spawn.ts';
 import { uiFinishGate } from './ui.ts'; // import cycle: ui.ts uses common.ts too; both only call at run time
 
 /** A bash `exit N` inside a library function. */
@@ -159,6 +160,7 @@ const escapeRe = (s: string): string => s.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'
 
 /** bash `basename` */
 function basenameOf(p: string): string {
+  if (WIN) p = p.replace(/\\/g, '/'); // a native C:\... path: its last folder, not the whole path
   const t = p.replace(/\/+$/, '');
   if (t === '') return p.startsWith('/') ? '/' : '';
   return t.slice(t.lastIndexOf('/') + 1);
@@ -534,7 +536,7 @@ export const GSD_CORE_INSTALL = 'npx @opengsd/gsd-core@latest';
 
 /** gsd_cli — gsd-core's gsd_run (null when none) */
 export function cli(): string | null {
-  const home = process.env.HOME ?? '';
+  const home = (process.env.HOME ?? process.env.USERPROFILE ?? '');
   const cands = [
     process.env.GSD_CLI ?? '',
     commandOnPath('gsd_run') ?? '',
@@ -630,7 +632,7 @@ export function skillDiffers(src0: string, dest0: string): boolean {
 // ── worktree.baseRef in Claude's local settings ─────────────────────────────
 
 function baserefFiles(dir: string): string[] {
-  const claudeDir = envOr('CLAUDE_CONFIG_DIR', `${process.env.HOME ?? ''}/.claude`);
+  const claudeDir = envOr('CLAUDE_CONFIG_DIR', `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.claude`);
   return [`${dir}/.claude/settings.local.json`, `${dir}/.claude/settings.json`, `${claudeDir}/settings.json`];
 }
 
@@ -683,7 +685,7 @@ export function planningHook(repo: string): PlanningHook {
   else if (`${dir}/`.startsWith(`${root}/`)) versioned = true;
   let label: string;
   if (versioned) {
-    label = hookPath.startsWith(`${root}/`) ? hookPath.slice(root.length + 1) : hookPath;
+    label = relUnder(root, hookPath);
   } else {
     label = `${chomp(git(repo, ['rev-parse', '--git-path', 'hooks']).stdout)}/post-merge (not versioned)`;
   }
@@ -956,4 +958,32 @@ export function installCmd(repo: string): string {
   if (isFile(`${repo}/yarn.lock`)) return 'yarn install';
   if (isFile(`${repo}/package-lock.json`) || isFile(`${repo}/package.json`)) return 'npm install';
   return '';
+}
+
+/**
+ * `IFS= read -r line` on fd 0, for the y/N prompts: one line, byte by byte (nothing past it is consumed);
+ * null at end of input (also with a partial line, as bash's read returns 1 then).
+ * A terminal's fd 0 can be non-blocking (Node's own tty setup, or the shell that started it): readSync then
+ * throws EAGAIN until a key is typed. Wait and retry: taking EAGAIN as "no answer" made every prompt say
+ * no at once (gsdt-doctor --fix "Run these? [y/N] Nothing changed.").
+ */
+export function readStdinLine(): string | null {
+  const b = Buffer.alloc(1);
+  const bytes: number[] = [];
+  const nap = new Int32Array(new SharedArrayBuffer(4));
+  for (;;) {
+    let n: number;
+    try {
+      n = readSync(0, b, 0, 1, null);
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException).code === 'EAGAIN') {
+        Atomics.wait(nap, 0, 0, 20);
+        continue;
+      }
+      return null;
+    }
+    if (n === 0) return null;
+    if (b[0] === 10) return Buffer.from(bytes).toString('utf8');
+    bytes.push(b[0] as number);
+  }
 }

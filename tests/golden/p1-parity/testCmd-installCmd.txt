@@ -1,0 +1,126 @@
+@@@ 1 @@@
+# testCmd empty
+
+@@@ 2 @@@
+# installCmd empty
+
+@@@ 3 @@@
+# testCmd make
+make test
+@@@ 4 @@@
+# installCmd make
+
+@@@ 5 @@@
+# testCmd make-no-test
+
+@@@ 6 @@@
+# installCmd make-no-test
+
+@@@ 7 @@@
+# testCmd just
+just test
+@@@ 8 @@@
+# installCmd just
+
+@@@ 9 @@@
+# testCmd Just
+just test
+@@@ 10 @@@
+# installCmd Just
+
+@@@ 11 @@@
+# testCmd cargo
+cargo test
+@@@ 12 @@@
+# installCmd cargo
+
+@@@ 13 @@@
+# testCmd go
+go test ./...
+@@@ 14 @@@
+# installCmd go
+
+@@@ 15 @@@
+# testCmd npm
+npm test
+@@@ 16 @@@
+# installCmd npm
+npm install
+@@@ 17 @@@
+# npmHasTest npm
+0
+@@@ 18 @@@
+# testCmd npm-dep
+
+@@@ 19 @@@
+# installCmd npm-dep
+npm install
+@@@ 20 @@@
+# npmHasTest npm-dep
+1
+@@@ 21 @@@
+# testCmd npm-multi
+npm test
+@@@ 22 @@@
+# installCmd npm-multi
+npm install
+@@@ 23 @@@
+# npmHasTest npm-multi
+0
+@@@ 24 @@@
+# testCmd py
+python -m pytest
+@@@ 25 @@@
+# installCmd py
+
+@@@ 26 @@@
+# testCmd pytest
+python -m pytest
+@@@ 27 @@@
+# installCmd pytest
+
+@@@ 28 @@@
+# testCmd pnpm
+
+@@@ 29 @@@
+# installCmd pnpm
+pnpm install
+@@@ 30 @@@
+# npmHasTest pnpm
+1
+@@@ 31 @@@
+# testCmd yarn
+
+@@@ 32 @@@
+# installCmd yarn
+yarn install
+@@@ 33 @@@
+# testCmd pkglock
+
+@@@ 34 @@@
+# installCmd pkglock
+npm install
+@@@ 35 @@@
+# testCmd conf-test
+pytest -x
+@@@ 36 @@@
+# installCmd conf-test
+uv sync
+@@@ 37 @@@
+# testCmd conf-none
+
+@@@ 38 @@@
+# installCmd conf-none
+
+@@@ 39 @@@
+# testCmd xcode
+xcodebuild test
+@@@ 40 @@@
+# installCmd xcode
+
+@@@ 41 @@@
+# testCmd dot-xcode
+go test ./...
+@@@ 42 @@@
+# installCmd dot-xcode
+

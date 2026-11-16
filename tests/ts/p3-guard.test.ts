@@ -1,30 +1,17 @@
-// P3a parity (worktree guard): src/guard.ts behind the launcher bin/gsdt-worktree-guard
-// against the pre-P3 bash guard (tests/fixtures/p3-old-bins/gsdt-worktree-guard,
-// run next to a copy of lib/). Same inputs side by side: stdout, stderr and the
-// exit status must match byte for byte.
+// Worktree guard: src/guard.ts behind the launcher bin/gsdt-worktree-guard. Each case's
+// rc, stdout and stderr are checked against the saved goldens in tests/golden/p3-guard/.
+// Regenerate with UPDATE_GOLDEN=1 (from the current code); review the golden diff by hand.
 // Run: node --test 'tests/ts/*.test.ts'
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
-import { chmodSync, copyFileSync, cpSync, mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
+import { chmodSync, copyFileSync, mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { test } from 'node:test';
+import { golden, test } from './golden.ts';
 import { guard, guardArgv, parseArgs } from '../../src/guard.ts';
 import { main as guardMain } from '../../src/commands/worktree-guard.ts';
 import { PKG, repo, sh, tmp, write } from './helpers.ts';
 
 const NEW = path.join(PKG, 'bin', 'gsdt-worktree-guard');
-const OLD_SRC = path.join(PKG, 'tests', 'fixtures', 'p3-old-bins', 'gsdt-worktree-guard');
-
-/** a package dir with the OLD guard next to a copy of lib/ (it sources lib/common.sh, lib/ui.sh and runs lib/gsd_hook_payload.py) */
-function oldPackage(): string {
-  const d = path.join(tmp(), 'old-pkg');
-  mkdirSync(path.join(d, 'bin'), { recursive: true });
-  cpSync(path.join(PKG, 'lib'), path.join(d, 'lib'), { recursive: true });
-  copyFileSync(OLD_SRC, path.join(d, 'bin', 'gsdt-worktree-guard'));
-  chmodSync(path.join(d, 'bin', 'gsdt-worktree-guard'), 0o755);
-  return path.join(d, 'bin', 'gsdt-worktree-guard');
-}
-const OLD = oldPackage();
 
 type R = { out: string; err: string; rc: number };
 type Case = { label: string; argv: string[]; stdin: string; cwd: string; env: Record<string, string | undefined>; pathDirs?: string; rcOnly?: boolean };
@@ -45,27 +32,27 @@ function runAsync(bin: string, c: Case): Promise<R> {
   });
 }
 
-/** run every case on both guards (8 at a time) and report all mismatches together */
+/** run every case (8 at a time) on the new guard, then compare each result with its golden */
 async function runAll(cases: Case[]): Promise<void> {
-  const bad: string[] = [];
+  const res: R[] = new Array(cases.length);
   let next = 0;
   await Promise.all(
     Array.from({ length: 8 }, async () => {
       while (next < cases.length) {
-        const c = cases[next++] as Case;
-        const [o, n] = await Promise.all([runAsync(OLD, c), runAsync(NEW, c)]);
-        if (c.rcOnly ? o.rc !== n.rc : o.out !== n.out || o.err !== n.err || o.rc !== n.rc) {
-          bad.push(`${c.label}\n  old: rc=${o.rc} out=${JSON.stringify(o.out)} err=${JSON.stringify(o.err)}\n  new: rc=${n.rc} out=${JSON.stringify(n.out)} err=${JSON.stringify(n.err)}`);
-        }
+        const i = next++;
+        const c = cases[i] as Case;
+        res[i] = await runAsync(NEW, c);
       }
     }),
   );
-  assert.equal(bad.length, 0, `${bad.length} of ${cases.length} cases differ:\n${bad.join('\n')}`);
+  const text = (c: Case, r: R): string => (c.rcOnly ? `${c.label}\nrc=${r.rc}` : `${c.label}\nrc=${r.rc}\nout=${JSON.stringify(r.out)}\nerr=${JSON.stringify(r.err)}`);
+  cases.forEach((c, i) => golden(text(c, res[i] as R)));
 }
 
 type Add = (label: string, argv: string[], opts?: { stdin?: string; cwd?: string; env?: Record<string, string | undefined>; pathDirs?: string; rcOnly?: boolean }) => void;
-function group(name: string, build: (add: Add, cases: Case[]) => void): void {
-  test(name, async () => {
+function group(name: string, build: (add: Add, cases: Case[]) => void, skip: string | false = false): void {
+  // (8 launches at a time through Git's sh on Windows: a big group needs more than the shard's 120 s)
+  test(name, { skip, timeout: 600000 }, async () => {
     const cases: Case[] = [];
     const add: Add = (label, argv, o = {}) =>
       cases.push({ label, argv, stdin: o.stdin ?? '', cwd: o.cwd ?? tmp(), env: o.env ?? {}, pathDirs: o.pathDirs, rcOnly: o.rcOnly });
@@ -439,7 +426,7 @@ group('rule 4: flow = strict', (add) => {
 group('rule 5: ui_gates = strict', (add) => {
   const mkUi = (files: Record<string, string>, extra = '', branch = 'phase-5-thing'): string =>
     mk({ conf: `base = develop\ninstall = none\nui_gates = strict\n${extra}`, branch, files });
-  const STUB = readStub();
+  const STUB = '<!-- gsd:design-stub';
   const sketchReadme = '---\nwinner: a\n---\n';
   const layoutOk = 'sketch: .planning/sketches/s1\npages: /home\nurl: http://localhost:3000\n';
   const sets: Record<string, Record<string, string>> = {
@@ -496,13 +483,8 @@ group('rule 5: ui_gates = strict', (add) => {
   add('ui main off, worktree strict', ['--command', 'gsd-ui-phase', '--args', '5', '--repo', wt]);
 });
 
-function readStub(): string {
-  const r = spawnSync('bash', ['-c', '. "$GSD_PKG/lib/common.sh"; . "$GSD_PKG/lib/ui.sh"; printf %s "$GSD_UI_STUB"'], { encoding: 'utf8', env: { ...process.env, GSD_PKG: PKG } });
-  return r.stdout;
-}
-
-// ── a PATH without jq (the old guard then used lib/gsd_hook_payload.py) ──────
-group('a PATH without jq: the old Python reader against the new guard', (add) => {
+// ── a PATH without jq  ──────
+group('a PATH without jq: the Python-free reader', (add) => {
   const stubs = tmp();
   for (const t of ['bash', 'env', 'cat', 'dirname', 'sed', 'head', 'grep', 'git', 'tr', 'awk', 'readlink', 'python3', 'node', 'ls', 'sort', 'uniq', 'cut', 'wc', 'basename', 'mkdir', 'rm', 'tail', 'sleep', 'date', 'find', 'mktemp', 'cmp', 'diff', 'xargs', 'od', 'tee', 'printf', 'expr']) {
     const p = spawnSync('sh', ['-c', `command -v ${t}`], { encoding: 'utf8' }).stdout.trim();
@@ -512,7 +494,7 @@ group('a PATH without jq: the old Python reader against the new guard', (add) =>
   const r7 = mk({ branch: 'phase-7-thing', files: { '.planning/phases/07-thing/.keep': '' } });
   const bare = mk({ conf: null });
   const setup = mk();
-  // the Python reader names why it blocked ("payload is not an object"); only the exit status is compared for those
+  // the reader names why it blocked ("payload is not an object"); only the exit status is compared for those
   const go = (label: string, argv: string[], stdin: string, env: Record<string, string | undefined> = {}, cwd?: string, rcOnly = false): void =>
     add(`nojq ${label}`, argv, { stdin, env, cwd, pathDirs: stubs, rcOnly });
   for (const g of [[], ['--global']]) {
@@ -534,7 +516,7 @@ group('a PATH without jq: the old Python reader against the new guard', (add) =>
     go(`${t} explicit command`, [...g, '--command', 'gsd-plan-phase', '--phase', '8', '--repo', r7], '');
     go(`${t} skip guard`, g, 'x', { GSD_SKIP_GUARD: '1' });
   }
-});
+}, process.platform === 'win32' && 'bash launcher internals: symlinked stub tools, no Windows equivalent');
 
 // ── the launcher ────────────────────────────────────────────────────────────
 function linkTools(tools: string[]): string {
@@ -550,7 +532,7 @@ const runSync = (bin: string, argv: string[], env: Record<string, string>, input
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? 1 };
 };
 
-test('launcher: no node blocks, --global lets it through, GSD_SKIP_GUARD escapes', () => {
+test('launcher: no node blocks, --global lets it through, GSD_SKIP_GUARD escapes', { skip: process.platform === 'win32' && 'bash launcher internals: symlinked stub tools, no Windows equivalent' }, () => {
   const stubs = linkTools(['bash', 'env', 'dirname', 'readlink', 'git']);
   const r7 = mk({ branch: 'phase-7-thing' });
   const a = runSync(NEW, ['--command', 'gsd-plan-phase', '--phase', '8', '--repo', r7], { PATH: stubs });

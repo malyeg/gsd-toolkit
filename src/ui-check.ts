@@ -172,7 +172,7 @@ function resolveAt(root: string): Playwright | null {
 }
 
 export function findPlaywright(job: Job): Playwright {
-  const rel = (d: string) => path.relative(job.repo, d) || '.';
+  const rel = (d: string) => (path.relative(job.repo, d) || '.').replace(/\\/g, '/');
   if (job.approot) {
     const root = path.resolve(job.repo, job.approot);
     return resolveAt(root) || cannot(`no Playwright in ${rel(root)} (${job.approot_from || 'app:'}). Install it there: npm i -D playwright && npx playwright install chromium`);
@@ -464,7 +464,7 @@ export function report(job: Job, conf: Conf, pw: Playwright, shots: Shot[]): Rep
   const failed = failures.length > 0 || (job.strict && unchecked.length > 0);
   const status = failed ? 'failed' : 'passed';
   const taken = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
-  const runner = `${pw.name} ${pw.version} (${pw.global ? 'global' : path.relative(job.repo, pw.root) || '.'})`;
+  const runner = `${pw.name} ${pw.version} (${pw.global ? 'global' : (path.relative(job.repo, pw.root) || '.').replace(/\\/g, '/')})`;
   const section = (title: string, list: string[], empty: string) => `## ${title}\n\n${list.length ? list.map((l) => '- ' + l).join('\n') : empty}\n`;
 
   const md = [

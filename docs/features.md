@@ -207,4 +207,4 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | `src/commands/` | one file per command, each exporting `main(argv)` |
 | `src/launch.mjs` | the entry every command goes through: checks Node >= 24, loads the TypeScript (from a checkout) or the compiled `dist/` (from npm) |
 
-The bash files in `lib/` (`common.sh`, `provider.sh`, `ui.sh`, `tracker/*.sh`, the Python and Perl helpers) are no longer run by any command. The tests keep them as parity oracles (see [architecture.md](architecture.md)).
+The old bash, Python and Perl files are deleted; `lib/install.sh` (the bridge from 0.10.x) and `lib/vendor/` stay (see [architecture.md](architecture.md)).

@@ -1,0 +1,72 @@
+@@@ 1 @@@
+# migrate 0
+needed=1
+refuse rc=0
+message:
+
+@@@ 2 @@@
+# migrate 1
+needed=0
+refuse rc=1
+message:
+✖ this repo uses the old gsd-* names (before 0.10.0) — run: gsdt-migrate --apply
+  (in <TMP>/mg; plain gsdt-migrate first shows what it changes)
+
+@@@ 3 @@@
+# migrate 2
+needed=0
+refuse rc=1
+message:
+✖ this repo uses the old gsd-* names (before 0.10.0) — run: gsdt-migrate --apply
+  (in <TMP>/mg; plain gsdt-migrate first shows what it changes)
+
+@@@ 4 @@@
+# migrate 3
+needed=0
+refuse rc=1
+message:
+✖ this repo uses the old gsd-* names (before 0.10.0) — run: gsdt-migrate --apply
+  (in <TMP>/mg; plain gsdt-migrate first shows what it changes)
+
+@@@ 5 @@@
+# migrate 4
+needed=0
+refuse rc=1
+message:
+✖ this repo uses the old gsd-* names (before 0.10.0) — run: gsdt-migrate --apply
+  (in <TMP>/mg; plain gsdt-migrate first shows what it changes)
+
+@@@ 6 @@@
+# migrate 5
+needed=1
+refuse rc=0
+message:
+
+@@@ 7 @@@
+# migrate 6
+needed=0
+refuse rc=1
+message:
+✖ this repo uses the old gsd-* names (before 0.10.0) — run: gsdt-migrate --apply
+  (in <TMP>/mg; plain gsdt-migrate first shows what it changes)
+
+@@@ 8 @@@
+# migrate 7
+needed=1
+refuse rc=0
+message:
+
+@@@ 9 @@@
+# migrate 8
+needed=0
+refuse rc=1
+message:
+✖ this repo uses the old gsd-* names (before 0.10.0) — run: gsdt-migrate --apply
+  (in <TMP>/mg; plain gsdt-migrate first shows what it changes)
+
+@@@ 10 @@@
+# migrate 9
+needed=1
+refuse rc=0
+message:
+

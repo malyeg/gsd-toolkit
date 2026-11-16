@@ -1,0 +1,24 @@
+@@@ 1 @@@
+# none
+false
+@@@ 2 @@@
+# phase none
+false
+@@@ 3 @@@
+# layout
+true
+@@@ 4 @@@
+# phase layout
+true
+@@@ 5 @@@
+# spec
+true
+@@@ 6 @@@
+# phase spec
+true
+@@@ 7 @@@
+# other files
+false
+@@@ 8 @@@
+# hidden dir ignored
+false

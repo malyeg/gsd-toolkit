@@ -1,0 +1,42 @@
+@@@ 1 @@@
+{
+  "a": 1,
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '<TMP>/bin/gsdt-worktree-guard' ] || exec '<TMP>/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "UserPromptExpansion": [
+      {
+        "matcher": "gsd.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '<TMP>/bin/gsdt-worktree-guard' ] || exec '<TMP>/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '<TMP>/bin/gsdt-rules' ] || exec '<TMP>/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+--
+✔ claude user hook: /gsd-new-project only after gsdt-init → <H>/.claude/settings.json
+✔ claude user hook: sessions in a set-up repo load gsdt-rules → <H>/.claude/settings.json

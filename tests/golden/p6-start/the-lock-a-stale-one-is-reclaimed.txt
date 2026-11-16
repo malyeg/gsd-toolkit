@@ -1,0 +1,84 @@
+@@@ 1 @@@
+step 1 (gsdt-start -p 1 --no-launch)
+rc=0
+--- stdout
+▶ reclaimed stale gsd lock (owner PID 2999999 no longer running)
+▶ attaching to existing phase 1: catalog
+▶ creating worktree: <T>/shop-worktrees/phase-1-catalog   (branch 'phase-1-catalog' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-1-catalog/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
+
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+
+--- stderr
+Preparing worktree (new branch 'phase-1-catalog')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-catalog/.gsd-install.status
+skipped
+
+── wt phase-1-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+

@@ -1,0 +1,201 @@
+@@@ 1 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Auto-merging f.txt
+CONFLICT (add/add): Merge conflict in f.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr
+✗ merge conflict with 'main' — aborted, 'main' left clean. Conflicts: f.txt 
+  Resolve in the worktree: git -C <T>/shop-worktrees/phase-1-catalog merge main, fix conflicts, commit, then re-run finish.
+
+--- files left behind
+── log
+main change
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+main change
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 2 @@@
+step 2 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Auto-merging f.txt
+CONFLICT (add/add): Merge conflict in f.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr
+✗ merge conflict with 'main' — aborted, 'main' left clean. Conflicts: f.txt 
+  Resolve in the worktree: git -C <T>/shop-worktrees/phase-1-catalog merge main, fix conflicts, commit, then re-run finish.
+
+--- files left behind
+── log
+main change
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+main change
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 3 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Auto-merging a.txt
+CONFLICT (add/add): Merge conflict in a.txt
+Auto-merging b.txt
+CONFLICT (add/add): Merge conflict in b.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr
+✗ merge conflict with 'main' — aborted, 'main' left clean. Conflicts: a.txt b.txt 
+  Resolve in the worktree: git -C <T>/shop-worktrees/phase-1-catalog merge main, fix conflicts, commit, then re-run finish.
+
+--- files left behind
+── log
+main change
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+main change
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+a.txt
+b.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+

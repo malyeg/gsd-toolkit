@@ -1,0 +1,4 @@
+@@@ 1 @@@
+{"disableAllHooks": true, "x": 1}
+--
+• hooks are turned off in <H>/.claude/settings.json; claude user hook not added

@@ -1,31 +1,14 @@
-// P3b parity (gsdt-flow-next): the TypeScript command behind bin/gsdt-flow-next
-// against the pre-P3 bash script (tests/fixtures/p3-old-bins/, run in a package
-// dir with a copy of lib/, the OLD guard and gsdt-tracker). Same repo, same argv,
-// same env: stdout, stderr and the exit status must match byte for byte.
+// gsdt-flow-next: the TypeScript command behind bin/gsdt-flow-next. Each case's rc, stdout
+// and stderr are checked against the saved goldens in tests/golden/p3-flow-next/.
+// Regenerate with UPDATE_GOLDEN=1 (from the current code); review the golden diff by hand.
 // Run: node --test 'tests/ts/*.test.ts'
-import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { chmodSync, copyFileSync, cpSync, mkdirSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
 import path from 'node:path';
-import { test } from 'node:test';
+import { golden, test } from './golden.ts';
 import { PKG, repo, sh, tmp, write } from './helpers.ts';
 
 const NEW = path.join(PKG, 'bin', 'gsdt-flow-next');
-const FIX = path.join(PKG, 'tests', 'fixtures', 'p3-old-bins');
-
-/** a package dir: the OLD flow-next + the OLD guard + the tracker, next to a copy of lib/ */
-function oldPackage(): string {
-  const d = path.join(tmp(), 'old-pkg');
-  mkdirSync(path.join(d, 'bin'), { recursive: true });
-  cpSync(path.join(PKG, 'lib'), path.join(d, 'lib'), { recursive: true });
-  cpSync(path.join(PKG, 'src'), path.join(d, 'src'), { recursive: true }); // bin/gsdt-tracker is a launcher since P9
-  for (const [src, name] of [[path.join(FIX, 'gsdt-flow-next'), 'gsdt-flow-next'], [path.join(FIX, 'gsdt-worktree-guard'), 'gsdt-worktree-guard'], [path.join(PKG, 'bin', 'gsdt-tracker'), 'gsdt-tracker']] as const) {
-    copyFileSync(src, path.join(d, 'bin', name));
-    chmodSync(path.join(d, 'bin', name), 0o755);
-  }
-  return path.join(d, 'bin', 'gsdt-flow-next');
-}
-const OLD = oldPackage();
 
 type R = { out: string; err: string; rc: number };
 type Case = { label: string; argv: string[]; cwd: string; env: Record<string, string | undefined>; rcOnly?: boolean };
@@ -44,27 +27,26 @@ function runAsync(bin: string, c: Case): Promise<R> {
 }
 
 async function runAll(cases: Case[]): Promise<void> {
-  const bad: string[] = [];
+  const res: R[] = new Array(cases.length);
   let next = 0;
   await Promise.all(
     Array.from({ length: 12 }, async () => {
       while (next < cases.length) {
-        const c = cases[next++] as Case;
-        const [o, n] = await Promise.all([runAsync(OLD, c), runAsync(NEW, c)]);
-        if (c.rcOnly ? o.rc !== n.rc : o.out !== n.out || o.err !== n.err || o.rc !== n.rc) {
-          bad.push(`${c.label}\n  old: rc=${o.rc} out=${JSON.stringify(o.out)} err=${JSON.stringify(o.err)}\n  new: rc=${n.rc} out=${JSON.stringify(n.out)} err=${JSON.stringify(n.err)}`);
-        }
+        const i = next++;
+        const c = cases[i] as Case;
+        res[i] = await runAsync(NEW, c);
       }
     }),
   );
-  assert.equal(bad.length, 0, `${bad.length} of ${cases.length} cases differ:\n${bad.join('\n')}`);
+  const text = (c: Case, r: R): string => (c.rcOnly ? `${c.label}\nrc=${r.rc}` : `${c.label}\nrc=${r.rc}\nout=${JSON.stringify(r.out)}\nerr=${JSON.stringify(r.err)}`);
+  cases.forEach((c, i) => golden(text(c, res[i] as R)));
 }
 
-type Add = (label: string, repoDir: string, argv: string[], o?: { env?: Record<string, string | undefined>; cwd?: string; rcOnly?: boolean }) => void;
+type Add = (label: string, repoDir: string, argv: string[], o?: { env?: Record<string, string | undefined>; cwd?: string; rcOnly?: boolean; noRepo?: boolean }) => void;
 function group(name: string, build: (add: Add) => void): void {
   test(name, async () => {
     const cases: Case[] = [];
-    const add: Add = (label, repoDir, argv, o = {}) => cases.push({ label, argv: ['--repo', repoDir, ...argv], cwd: o.cwd ?? tmp(), env: o.env ?? {}, rcOnly: o.rcOnly });
+    const add: Add = (label, repoDir, argv, o = {}) => cases.push({ label, argv: o.noRepo ? argv : ['--repo', repoDir, ...argv], cwd: o.cwd ?? tmp(), env: o.env ?? {}, rcOnly: o.rcOnly });
     build(add);
     await runAll(cases);
   });
@@ -398,10 +380,9 @@ group('phase numbers, branches and errors', (add) => {
   add('--repo takes the next arg', x.r, ['7', '--repo', '--all']);
   add('--repo empty falls back to PWD', x.r, ['7', '--repo', ''], { cwd: x.r });
   // no --repo at all: PWD
-  test('PWD default', async () => {
-    const cases: Case[] = [{ label: 'pwd', argv: ['7', '--no-ui'], cwd: x.r, env: {} }, { label: 'pwd branch', argv: ['--all'], cwd: x.r, env: {} }, { label: 'pwd subdir', argv: ['--all', '7'], cwd: x.pd, env: {} }];
-    await runAll(cases);
-  });
+  add('pwd', x.r, ['7', '--no-ui'], { cwd: x.r, noRepo: true });
+  add('pwd branch', x.r, ['--all'], { cwd: x.r, noRepo: true });
+  add('pwd subdir', x.r, ['--all', '7'], { cwd: x.pd, noRepo: true });
   // not a repo, missing phase dir
   const nr = tmp();
   add('not a git repo', nr, ['7']);

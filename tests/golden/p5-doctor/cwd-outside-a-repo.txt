@@ -1,0 +1,31 @@
+@@@ 1 @@@
+run []
+rc=1
+--- stdout
+--- stderr
+✖ not inside a git repository — pass --repo <path>
+
+@@@ 2 @@@
+### repo/.git/config
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = <W>/repo.origin.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "develop"]
+	remote = origin
+	merge = refs/heads/develop
+
+### repo/.gsd.conf
+base = develop
+
+### repo/.planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: One
+
+### Phase 2: Two
+

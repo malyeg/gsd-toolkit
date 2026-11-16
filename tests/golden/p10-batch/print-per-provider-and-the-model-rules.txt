@@ -1,0 +1,1459 @@
+@@@ 1 @@@
+step 1 (gsdt-batch --print - fix a
+- fix b)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-fix-a && claude --model sonnet $'/gsdt-batch - fix a\n- fix b'
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-fix-a (branch 'batch-<DATE>-fix-a' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-batch --print Read plan/FIX-BRIEF-7.md. Validate every item.)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-read-plan-fix-brief-7 && claude --model sonnet /gsdt-batch\ Read\ plan/FIX-BRIEF-7.md.\ Validate\ every\ item.
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-read-plan-fix-brief-7 (branch 'batch-<DATE>-read-plan-fix-brief-7' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 3 @@@
+step 3 (gsdt-batch --print --model opus x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model opus /gsdt-batch\ x
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 4 @@@
+step 4 (gsdt-batch --print --model default x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && claude /gsdt-batch\ x
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 5 @@@
+step 5 (gsdt-batch --print --model sonnet x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ x
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 6 @@@
+step 6 (gsdt-batch --print --model bad model x)
+rc=64
+--- stdout
+
+--- stderr
+model must be one model ID or alias, without whitespace or a leading '-'
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 7 @@@
+step 7 (gsdt-batch --print --model -x x)
+rc=64
+--- stdout
+
+--- stderr
+model must be one model ID or alias, without whitespace or a leading '-'
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 8 @@@
+step 8 (gsdt-batch --print --model  x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && claude /gsdt-batch\ x
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 9 @@@
+step 9 (gsdt-batch --print --provider claude x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ x
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 10 @@@
+step 10 (gsdt-batch --print --provider codex x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && codex Use\ the\ gsdt-batch\ skill\ to\ run\ this\ task\ list\ or\ brief\ as\ one\ batch:\ x
+
+--- stderr
+gsdt-batch: the switch to Sonnet is Claude-only; codex runs with its usual model.
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 11 @@@
+step 11 (gsdt-batch --print --provider codex --model gpt-5 x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && codex --model gpt-5 Use\ the\ gsdt-batch\ skill\ to\ run\ this\ task\ list\ or\ brief\ as\ one\ batch:\ x
+
+--- stderr
+gsdt-batch: the switch to Sonnet is Claude-only; codex runs with its usual model.
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 12 @@@
+step 12 (gsdt-batch --print --provider codex --model default x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && codex Use\ the\ gsdt-batch\ skill\ to\ run\ this\ task\ list\ or\ brief\ as\ one\ batch:\ x
+
+--- stderr
+gsdt-batch: the switch to Sonnet is Claude-only; codex runs with its usual model.
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 13 @@@
+step 13 (gsdt-batch --print --provider codex --model a b x)
+rc=64
+--- stdout
+
+--- stderr
+model must be one model ID or alias, without whitespace or a leading '-'
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 14 @@@
+step 14 (gsdt-batch --print --provider custom --agent-command myagent x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && myagent Run\ this\ task\ list\ or\ brief\ as\ one\ batch\,\ following\ the\ gsdt-batch\ skill\ steps\ \(scout\,\ sort\,\ gsd-quick-batch\,\ gsd-fast\,\ gsdt-batch-report\):\ x
+
+--- stderr
+gsdt-batch: the switch to Sonnet is Claude-only; custom runs with its usual model.
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 15 @@@
+step 15 (gsdt-batch --print --provider custom --agent-command myagent --model opus x)
+rc=64
+--- stdout
+
+--- stderr
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 16 @@@
+step 16 (gsdt-batch --print --provider custom --agent-command myagent --model default x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && myagent Run\ this\ task\ list\ or\ brief\ as\ one\ batch\,\ following\ the\ gsdt-batch\ skill\ steps\ \(scout\,\ sort\,\ gsd-quick-batch\,\ gsd-fast\,\ gsdt-batch-report\):\ x
+
+--- stderr
+gsdt-batch: the switch to Sonnet is Claude-only; custom runs with its usual model.
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 17 @@@
+step 17 (gsdt-batch --print --provider custom x)
+rc=64
+--- stdout
+
+--- stderr
+provider 'custom' requires an explicit agent command
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 18 @@@
+step 18 (gsdt-batch --print --provider gemini x)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: Gemini is no longer supported (gsd-core, the new GSD, dropped it)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 19 @@@
+step 19 (gsdt-batch --print --provider nope x)
+rc=64
+--- stdout
+
+--- stderr
+unknown provider 'nope' (expected claude, codex, or custom)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 20 @@@
+step 20 (gsdt-batch --print --agent-command /opt/my bin/claude x)
+rc=64
+--- stdout
+
+--- stderr
+agent command must be one executable path/name, not a shell template
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 21 @@@
+step 21 (gsdt-batch --print --agent-command cl$ude x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && cl\$ude --model sonnet /gsdt-batch\ x
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 22 @@@
+step 22 (gsdt-batch --print --agent-command  x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ x
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 23 @@@
+step 1 (gsdt-batch --print x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && codex --model gpt-x Use\ the\ gsdt-batch\ skill\ to\ run\ this\ task\ list\ or\ brief\ as\ one\ batch:\ x
+
+--- stderr
+gsdt-batch: the switch to Sonnet is Claude-only; codex runs with its usual model.
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 24 @@@
+step 2 (gsdt-batch --print --provider claude x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ x
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 25 @@@
+step 3 (gsdt-batch --print --model default x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && codex Use\ the\ gsdt-batch\ skill\ to\ run\ this\ task\ list\ or\ brief\ as\ one\ batch:\ x
+
+--- stderr
+gsdt-batch: the switch to Sonnet is Claude-only; codex runs with its usual model.
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 26 @@@
+step 1 (gsdt-batch --print x)
+rc=64
+--- stdout
+
+--- stderr
+unknown provider 'bogus' in providers; expected claude, codex, or custom
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 27 @@@
+step 1 (gsdt-batch --print x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ x
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 28 @@@
+step 1 (gsdt-batch --print x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && codex --model zz Use\ the\ gsdt-batch\ skill\ to\ run\ this\ task\ list\ or\ brief\ as\ one\ batch:\ x
+
+--- stderr
+gsdt-batch: the switch to Sonnet is Claude-only; codex runs with its usual model.
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 29 @@@
+step 2 (gsdt-batch --print x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && mine Run\ this\ task\ list\ or\ brief\ as\ one\ batch\,\ following\ the\ gsdt-batch\ skill\ steps\ \(scout\,\ sort\,\ gsd-quick-batch\,\ gsd-fast\,\ gsdt-batch-report\):\ x
+
+--- stderr
+gsdt-batch: the switch to Sonnet is Claude-only; custom runs with its usual model.
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 30 @@@
+step 3 (gsdt-batch --print x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && weird-agent Run\ this\ task\ list\ or\ brief\ as\ one\ batch\,\ following\ the\ gsdt-batch\ skill\ steps\ \(scout\,\ sort\,\ gsd-quick-batch\,\ gsd-fast\,\ gsdt-batch-report\):\ x
+
+--- stderr
+gsdt-batch: the switch to Sonnet is Claude-only; custom runs with its usual model.
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 31 @@@
+step 4 (gsdt-batch --print x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ x
+
+--- stderr
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+

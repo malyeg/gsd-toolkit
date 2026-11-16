@@ -1,0 +1,12 @@
+@@@ 1 @@@
+rc=0
+--stdout--
+installed : 1.0.0  (<R>/copy/rt)
+latest    : unknown (GitHub not reachable)  (acme/gsd-toolkit)
+• this is a git checkout, not a release — pull it with git; install the release with: <R>/copy/rt/install.sh
+--stderr--
+--install.sh--
+--npm--
+--npx--
+--caches--
+|

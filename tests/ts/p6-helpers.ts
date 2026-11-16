@@ -1,13 +1,14 @@
-// Shared by the P6 parity suites (gsdt-start, gsdt-wt-new): the pre-P6 bash commands
-// (tests/fixtures/p6-old-bins/, run inside a package dir that holds lib/ + the
-// current launchers) against the TypeScript commands, each on its OWN copy of the
-// same fixture project, so what they WRITE can be compared too. Only temp paths
-// (each side's root), the package dirs and commit ids are normalized.
+// Shared by the gsdt-start / gsdt-wt-new / gsdt-finish / gsdt-init suites: a fixture project
+// (repo + bare origin + stub tools), a step runner, and scenario(), which compares every
+// step's stdout, stderr, exit code and the files left behind with the saved goldens
+// (tests/golden/<test file>/; regenerate with UPDATE_GOLDEN=1 and review the diff).
+// Only temp paths, the package dir and commit ids are normalized.
 import { spawnSync } from 'node:child_process';
-import { chmodSync, copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { PKG, sh, tmp, write, LOCALE_ENV } from './helpers.ts';
+import { PKG, sh, tmp, write, LOCALE_ENV, subst } from './helpers.ts';
+import { golden } from './golden.ts';
 
 export { PKG, sh, tmp, write };
 
@@ -24,21 +25,6 @@ process.env.GIT_CONFIG_NOSYSTEM = '1';
 process.env.XDG_CONFIG_HOME = '/nonexistent-xdg';
 
 const root = tmp();
-const OLD_FIX = path.join(PKG, 'tests', 'fixtures', 'p6-old-bins');
-const OLD_FIX7 = path.join(PKG, 'tests', 'fixtures', 'p7-old-bins');
-const OLD_FIX8 = path.join(PKG, 'tests', 'fixtures', 'p8-old-bins');
-
-/** the old package: lib/ and src/ copied, the current launchers, and the two old bins on top */
-export const oldPkg = path.join(root, 'oldpkg');
-mkdirSync(path.join(oldPkg, 'bin'), { recursive: true });
-for (const d of ['lib', 'src', 'shims']) cpSync(path.join(PKG, d), path.join(oldPkg, d), { recursive: true });
-cpSync(path.join(PKG, 'bin'), path.join(oldPkg, 'bin'), { recursive: true });
-for (const f of ['VERSION', 'package.json']) copyFileSync(path.join(PKG, f), path.join(oldPkg, f));
-for (const [dir, n] of [[OLD_FIX, 'gsdt-start'], [OLD_FIX, 'gsdt-wt-new'], [OLD_FIX7, 'gsdt-finish'], [OLD_FIX7, 'gsdt-wt-finish'], [OLD_FIX8, 'gsdt-init'], [OLD_FIX8, 'gsdt-bootstrap-repo']] as const) {
-  copyFileSync(path.join(dir, n), path.join(oldPkg, 'bin', n));
-  chmodSync(path.join(oldPkg, 'bin', n), 0o755);
-}
-writeFileSync(path.join(oldPkg, '.git'), '');
 
 // gsd_run: phase.add appends the next integer phase; phase.insert adds a
 // zero-padded decimal after phase $3 and prints JSON; RACE_CLONE makes a
@@ -151,7 +137,7 @@ export function makeSide(kind: 'old' | 'new', p: Project = {}): Side {
     sh(R, 'git', ['remote', 'add', 'origin', origin]);
     sh(R, 'git', ['push', '-qu', 'origin', 'main']);
   }
-  return { kind, root: rootDir, R, origin, wtdir: path.join(rootDir, 'shop-worktrees'), home, stub, pkg: kind === 'old' ? oldPkg : PKG };
+  return { kind, root: rootDir, R, origin, wtdir: path.join(rootDir, 'shop-worktrees'), home, stub, pkg: PKG };
 }
 
 // The test PATH: this machine's, minus every agent CLI, gsd-core's gsd_run (a launch
@@ -160,7 +146,13 @@ export function makeSide(kind: 'old' | 'new', p: Project = {}): Side {
 // "no gsdt-doctor on PATH" must mean it). A directory that holds one of them is replaced
 // by a farm of links to everything else in it.
 const BLOCKED = ['claude', 'codex', 'gsd_run'];
-const blocked = (n: string): boolean => BLOCKED.includes(n) || n.startsWith('gsdt-');
+/** tests that run a session under a terminal need python's pty module: no such thing on Windows */
+export const NOPTY: string | false = process.platform === 'win32' && 'needs a pty (python pty module); none on Windows';
+// Windows names a program claude.exe / gsd_run.cmd
+const stem = (n: string): string => (process.platform === 'win32' ? n.replace(/\.(?:exe|cmd|bat|com|ps1)$/i, '') : n);
+// ...and any gsdt-* command: a checkout's bin/ or an installed release on this machine's PATH would
+// answer for a tool a test says is missing ("no gsdt-planning-repair on PATH")
+const blocked = (n: string): boolean => BLOCKED.includes(stem(n)) || stem(n).startsWith('gsdt-');
 const farmRoot = path.join(root, 'pathfarm');
 const readdirSafe = (d: string): string[] => {
   try {
@@ -173,6 +165,8 @@ export const cleanPath = (process.env.PATH ?? '')
   .split(path.delimiter)
   .map((d, i) => {
     if (!d || !existsSync(d) || !readdirSafe(d).some(blocked)) return d;
+    // no symlinks on Windows: such a folder is left out of the PATH (the preload puts node's own back, minus the agents)
+    if (process.platform === 'win32') return '';
     const farm = path.join(farmRoot, String(i));
     mkdirSync(farm, { recursive: true });
     for (const n of readdirSync(d)) {
@@ -185,6 +179,7 @@ export const cleanPath = (process.env.PATH ?? '')
     }
     return farm;
   })
+  .filter((d) => d !== '' || process.platform !== 'win32')
   .join(path.delimiter);
 
 export function envFor(s: Side, extra: Record<string, string | undefined> = {}): NodeJS.ProcessEnv {
@@ -277,11 +272,7 @@ export function settle(s: Side): void {
 }
 
 export const norm = (s: Side, text: string): string =>
-  text
-    .split(s.root)
-    .join('<T>')
-    .split(s.pkg)
-    .join('<PKG>')
+  subst(subst(text, s.root, '<T>'), s.pkg, '<PKG>')
     .replace(/HEAD is now at [0-9a-f]+/g, 'HEAD is now at <sha>')
     .replace(/\b[0-9a-f]{40}\b/g, '<sha40>');
 
@@ -335,14 +326,6 @@ export function snapshot(s: Side): string {
   return norm(s, parts.join('\n'));
 }
 
-const eq = (got: string, want: string, label: string): void => {
-  if (got === want) return;
-  const a = got.split('\n');
-  const b = want.split('\n');
-  const i = a.findIndex((l, k) => l !== b[k]);
-  assert.fail(`${label}: line ${i + 1}\n  new: ${JSON.stringify(a[i])}\n  old: ${JSON.stringify(b[i])}`);
-};
-
 /** Both sides, each on its own fixture; every step's stdout, stderr and exit code, then the files left behind. */
 /** P12: set while a scenario's NEW side gets CRLF files and the OLD (bash) side their LF version: compared without \r */
 export const lenient = { cr: false };
@@ -355,28 +338,22 @@ export function scenario(
   extraSnapshot?: (s: Side) => string,
 ): void {
   const mk = (k: 'old' | 'new'): Side => makeSide(k, typeof project === 'function' ? project(k) : project);
-  const o = mk('old');
   const n = mk('new');
   if (prep) {
-    prep(o);
     prep(n);
   }
+  const report = (s: Side, label: string, r: R): string =>
+    [`${label}`, `rc=${r.rc}`, '--- stdout', lcr(norm(s, r.out)), '--- stderr', lcr(norm(s, r.err)), '--- files left behind', lcr(snapshot(s)), ...(extraSnapshot ? ['--- full tree', lcr(norm(s, extraSnapshot(s)))] : [])].join('\n');
   steps.forEach((st, i) => {
     const label = `step ${i + 1} (gsdt-${st.cmd} ${(typeof st.args === 'function' ? st.args(n) : st.args).map((a) => norm(n, a)).join(' ')})`;
-    const ro = runStep(o, st);
     const rn = runStep(n, st);
-    settle(o);
     settle(n);
-    eq(lcr(norm(n, rn.out)), lcr(norm(o, ro.out)), `${label}: stdout`);
-    eq(lcr(norm(n, rn.err)), lcr(norm(o, ro.err)), `${label}: stderr`);
-    assert.equal(rn.rc, ro.rc, `${label}: exit code (old ${ro.rc})`);
     if (st.rc !== undefined) assert.equal(rn.rc, st.rc, `${label}: expected rc\n${rn.out}${rn.err}`);
     if (st.fail) assert.notEqual(rn.rc, 0, `${label}: expected a failure\n${rn.out}${rn.err}`);
     if (st.out) assert.match(rn.out, st.out, label);
     if (st.err) assert.match(rn.err, st.err, label);
     if (st.not) assert.doesNotMatch(rn.out + rn.err, st.not, label);
-    eq(lcr(snapshot(n)), lcr(snapshot(o)), `${label}: files left behind`);
-    if (extraSnapshot) eq(lcr(norm(n, extraSnapshot(n))), lcr(norm(o, extraSnapshot(o))), `${label}: files left behind (full tree)`);
+    golden(report(n, label, rn));
   });
 }
 

@@ -1,13 +1,12 @@
-// P6 parity (gsdt-start): the TypeScript command behind bin/gsdt-start against the
-// pre-P6 bash command (tests/fixtures/p6-old-bins/gsdt-start), each on its own
-// copy of the same fixture project. Compared: stdout, stderr, exit code of every
-// step, and the files/commits/branches/worktrees left behind.
+// gsdt-start: the TypeScript command behind bin/gsdt-start on its own copy of a fixture project. Every step's
+// stdout, stderr, exit code and the files/commits/branches/worktrees left behind are compared with
+// the saved goldens in tests/golden/p6-start/. Regenerate with UPDATE_GOLDEN=1 and review the diff.
 // Run: node --test tests/ts/p6-start.test.ts
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
+import { test } from './golden.ts';
 import {
   ROADMAP_RICH,
   cleanPath,
@@ -20,6 +19,7 @@ import {
   write,
   type Side,
   type Step,
+  NOPTY,
 } from './p6-helpers.ts';
 
 const NL = '--no-launch';
@@ -73,6 +73,7 @@ test('refusals: not a repo, --repo, no ROADMAP, old names, no gsd-core', () => {
   // the 0.10.0 rename: an old shim → refused
   scenario({ files: { 'scripts/gsd-derive-port.sh': '#!/bin/sh\n' } }, null, [start(['-n', 'x', NL], { rc: 1, err: /old gsd-\* names/ })]);
   // no gsd-core anywhere: a claim is refused with the install line, an attach does not need it
+  // (Windows: npm puts gsd_run next to node.exe, which every test PATH needs; the preload shadows node there, see BASE)
   scenario({}, null, [
     start(['-n', 'cart', NL], { env: { GSD_CLI: undefined, PATH: cleanPath }, rc: 1, err: /GSD \(gsd-core\) not found/ }),
   ]);
@@ -259,7 +260,7 @@ test('provider and model resolution; the session command that is printed', () =>
   scenario({}, (s) => write(sub(s, '.claude/settings.local.json'), '{"a": 1}\n'), [start(['-p', '1', NL], { rc: 0 })]);
 });
 
-test('the launch: a stub agent under a terminal, the executable check without one', () => {
+test('the launch: a stub agent under a terminal, the executable check without one', { skip: NOPTY }, () => {
   scenario({}, null, [
     // a terminal: the agent runs in the worktree, after the lock is released, and its exit code comes back
     start((s) => ['-p', '1', '--agent-command', path.join(s.stub, 'agent')], { tty: true, rc: 5, out: /opening claude session in/ }),

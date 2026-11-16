@@ -1,0 +1,47 @@
+@@@ 1 @@@
+# "base = develop\n"
+new-project
+ingest-docs
+discuss-phase
+plan-phase
+review
+execute-phase
+code-review
+verify-work
+validate-phase
+secure-phase
+ui-phase
+ui-review
+sketch
+
+@@@ 2 @@@
+# "base = develop\nui_gates = off\n"
+new-project
+ingest-docs
+discuss-phase
+plan-phase
+review
+execute-phase
+code-review
+verify-work
+validate-phase
+secure-phase
+ui-phase
+ui-review
+
+@@@ 3 @@@
+# "ui_gates = strict\n"
+new-project
+ingest-docs
+discuss-phase
+plan-phase
+review
+execute-phase
+code-review
+verify-work
+validate-phase
+secure-phase
+ui-phase
+ui-review
+sketch
+

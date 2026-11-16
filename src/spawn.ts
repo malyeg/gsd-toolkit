@@ -16,7 +16,7 @@ import type {
   SpawnSyncOptionsWithStringEncoding,
   SpawnSyncReturns,
 } from 'node:child_process';
-import { statSync } from 'node:fs';
+import { readFileSync, realpathSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 export const WIN = process.platform === 'win32';
@@ -30,6 +30,26 @@ export function normalizePath(p: string, platform: string = process.platform): s
   if (/^[a-zA-Z]:/.test(s)) s = s[0]!.toUpperCase() + s.slice(1);
   if (s.length > 1 && !/^[A-Za-z]:\/$/.test(s)) s = s.replace(/\/+$/, '');
   return s;
+}
+
+/**
+ * `p` relative to `root` (with `/`) when it lies under it, else `p` as it was. POSIX: a plain prefix test. Windows: the two paths
+ * may be spelled differently (`C:\x` and `C:/x`, a short RUNNER~1 name and the long one, another case), so they are
+ * normalised and, failing that, resolved to their real paths first.
+ */
+export function relUnder(root: string, p: string): string {
+  if (!WIN) return p.startsWith(`${root}/`) ? p.slice(root.length + 1) : p;
+  const under = (c: string, d: string): string | null => {
+    const a = normalizePath(c), b = normalizePath(d);
+    return b.toLowerCase().startsWith(`${a.toLowerCase()}/`) ? b.slice(a.length + 1) : null;
+  };
+  const r = under(root, p);
+  if (r !== null) return r;
+  try {
+    return under(realpathSync.native(root), realpathSync.native(p)) ?? p;
+  } catch {
+    return p;
+  }
 }
 
 /** A path to write into a hook / script text: forward slashes on win32, unchanged elsewhere. */
@@ -55,6 +75,16 @@ export function cmdEscapeArg(arg: string): string {
   a = a.replace(/(\\+)$/, '$1$1');
   a = `"${a}"`;
   return a.replace(/([()[\]%!^"`<>&|;, *?])/g, '^$1');
+}
+
+/**
+ * Arguments for Git for Windows' `sh` (MSYS): its command-line parser treats `'` as a quote too, which Node's own quoting
+ * (only for a space, tab or `"`) leaves bare, so `Don't` swallowed the arguments after it; a newline split an argument.
+ * Anything but plain characters is wrapped in `"…"` with `\\` and `"` backslash-escaped (MSYS reads the line shell-like, not by
+ * the CRT rules: a bare `\\\\` came out as one backslash), and the line is passed verbatim.
+ */
+export function shArgs(args: string[]): string[] {
+  return args.map((a) => (/^[\w./:=@%+,-]+$/.test(a) ? a : `"${a.replace(/[\\"]/g, '\\$&')}"`));
 }
 
 /** The command line for `cmd.exe /d /s /c` (outer quotes are removed by /s). */
@@ -102,8 +132,18 @@ export function planSpawn(cmd: string, args: string[], o: PlanEnv = {}): Plan {
     const comspec = (o.env ?? process.env).ComSpec ?? (o.env ?? process.env).COMSPEC ?? 'cmd.exe';
     return { file: comspec, args: ['/d', '/s', '/c', cmdLine(r, args)], windowsVerbatimArguments: true };
   }
+  // a script whose first line asks for node (`#!/usr/bin/env node`): node runs it, as a POSIX exec would
+  if (ext === '' || ext === '.js' || ext === '.mjs') {
+    let head = '';
+    try {
+      head = readFileSync(r, 'latin1').slice(0, 120).split('\n', 1)[0] ?? '';
+    } catch {
+      /* not readable: sh reports it */
+    }
+    if (/^#!\s*(?:\S*\/env\s+(?:-S\s+)?)?(?:\S*\/)?node(?:\s|$)/.test(head)) return { file: process.execPath, args: [shellPath(r, 'win32'), ...args] };
+  }
   // extensionless, .sh, anything else: a shell script
-  return { file: 'sh', args: [shellPath(r, 'win32'), ...args] };
+  return { file: 'sh', args: shArgs([shellPath(r, 'win32'), ...args]), windowsVerbatimArguments: true };
 }
 
 /** spawnSync through planSpawn. */

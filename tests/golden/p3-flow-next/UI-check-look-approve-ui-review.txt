@@ -1,0 +1,320 @@
+@@@ 1 @@@
+ui-gates [] no check 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the rendered pages were never checked (no 07-UI-CHECK.md); start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \"<reason>\"\n"
+err=""
+@@@ 2 @@@
+ui-gates [] no check --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the rendered pages were never checked (no 07-UI-CHECK.md); start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \\\"<reason>\\\"\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 3 @@@
+ui-gates [] check error 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the last check could not run: nothing answers at http://localhost:3005; start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \"<reason>\"\n"
+err=""
+@@@ 4 @@@
+ui-gates [] check error --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the last check could not run: nothing answers at http://localhost:3005; start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \\\"<reason>\\\"\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 5 @@@
+ui-gates [] check failed 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the check found 2 problem(s) — see 07-UI-CHECK.md: fix the pages, then check again. A finding the user accepts becomes a waive: line in 07-LAYOUT.md — never waive without asking\n"
+err=""
+@@@ 6 @@@
+ui-gates [] check failed --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the check found 2 problem(s) — see 07-UI-CHECK.md: fix the pages, then check again. A finding the user accepts becomes a waive: line in 07-LAYOUT.md — never waive without asking\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 7 @@@
+ui-gates [] check bogus status 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the last check could not run: ; start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \"<reason>\"\n"
+err=""
+@@@ 8 @@@
+ui-gates [] check bogus status --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the last check could not run: ; start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \\\"<reason>\\\"\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 9 @@@
+ui-gates [] check passed, stale code 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the code or 07-LAYOUT.md changed after the last check; start the app in this worktree first. Pages that look the same keep their look and approval\n"
+err=""
+@@@ 10 @@@
+ui-gates [] check passed, stale code --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the code or 07-LAYOUT.md changed after the last check; start the app in this worktree first. Pages that look the same keep their look and approval\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 11 @@@
+ui-gates [] check passed, stale inputs 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the code or 07-LAYOUT.md changed after the last check; start the app in this worktree first. Pages that look the same keep their look and approval\n"
+err=""
+@@@ 12 @@@
+ui-gates [] check passed, stale inputs --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the code or 07-LAYOUT.md changed after the last check; start the app in this worktree first. Pages that look the same keep their look and approval\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 13 @@@
+ui-gates [] check passed 
+rc=0
+out="step=ui-look\nrun=gsdt-ui look 7\nnote=nobody wrote down what the pictures show (no 07-UI-LOOK.md): open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\n"
+err=""
+@@@ 14 @@@
+ui-gates [] check passed --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"nobody wrote down what the pictures show (no 07-UI-LOOK.md): open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 15 @@@
+ui-gates [] check skipped 
+rc=0
+out="step=ui-approve\nrun=gsdt-ui sheet 7\nthen=gsdt-ui approve 7\nstop=show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \"<reason>\"\nnote=the user has not approved the pages\n"
+err=""
+@@@ 16 @@@
+ui-gates [] check skipped --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"the user has not approved the pages\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 17 @@@
+ui-gates [] look missing 
+rc=0
+out="step=ui-look\nrun=gsdt-ui look 7\nnote=nobody wrote down what the pictures show (no 07-UI-LOOK.md): open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\n"
+err=""
+@@@ 18 @@@
+ui-gates [] look missing --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"nobody wrote down what the pictures show (no 07-UI-LOOK.md): open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 19 @@@
+ui-gates [] look stale 
+rc=0
+out="step=ui-look\nrun=gsdt-ui look 7\nnote=07-UI-LOOK.md describes older pictures: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\n"
+err=""
+@@@ 20 @@@
+ui-gates [] look stale --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"07-UI-LOOK.md describes older pictures: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 21 @@@
+ui-gates [] look bad 
+rc=0
+out="step=ui-look\nrun=gsdt-ui look 7\nnote=07-UI-LOOK.md has a line marked bad — fix the page, then check again: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\n"
+err=""
+@@@ 22 @@@
+ui-gates [] look bad --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"07-UI-LOOK.md has a line marked bad — fix the page, then check again: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 23 @@@
+ui-gates [] look open 
+rc=0
+out="step=ui-look\nrun=gsdt-ui look 7\nnote=07-UI-LOOK.md has lines without an answer: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\n"
+err=""
+@@@ 24 @@@
+ui-gates [] look open --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"07-UI-LOOK.md has lines without an answer: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 25 @@@
+ui-gates [] look complete 
+rc=0
+out="step=ui-approve\nrun=gsdt-ui sheet 7\nthen=gsdt-ui approve 7\nstop=show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \"<reason>\"\nnote=the user has not approved the pages\n"
+err=""
+@@@ 26 @@@
+ui-gates [] look complete --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"the user has not approved the pages\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 27 @@@
+ui-gates [] approval stale 
+rc=0
+out="step=ui-approve\nrun=gsdt-ui sheet 7\nthen=gsdt-ui approve 7\nstop=show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \"<reason>\"\nnote=the user approved older pictures\n"
+err=""
+@@@ 28 @@@
+ui-gates [] approval stale --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"the user approved older pictures\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 29 @@@
+ui-gates [] approval ok 
+rc=0
+out="step=ui-review\nrun=/gsd-ui-review 7\nnote=phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\n"
+err=""
+@@@ 30 @@@
+ui-gates [] approval ok --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 31 @@@
+ui-gates [] approval waived 
+rc=0
+out="step=ui-review\nrun=/gsd-ui-review 7\nnote=phase has screens\n"
+err=""
+@@@ 32 @@@
+ui-gates [] approval waived --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 33 @@@
+ui-gates [] approval waived, no reason 
+rc=0
+out="step=ui-approve\nrun=gsdt-ui sheet 7\nthen=gsdt-ui approve 7\nstop=show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \"<reason>\"\nnote=the user has not approved the pages\n"
+err=""
+@@@ 34 @@@
+ui-gates [] approval waived, no reason --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"the user has not approved the pages\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 35 @@@
+ui-gates [] ui-review present 
+rc=0
+out="step=validate\nrun=/gsd-validate-phase 7\nnote=no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\n"
+err=""
+@@@ 36 @@@
+ui-gates [] ui-review present --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 37 @@@
+ui-gates [] ui-review only here 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the rendered pages were never checked (no 07-UI-CHECK.md); start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \"<reason>\"\n"
+err=""
+@@@ 38 @@@
+ui-gates [] ui-review only here --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the rendered pages were never checked (no 07-UI-CHECK.md); start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \\\"<reason>\\\"\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 39 @@@
+ui-gates [ui_gates = strict] no check 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the rendered pages were never checked (no 07-UI-CHECK.md); start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \"<reason>\"\n"
+err=""
+@@@ 40 @@@
+ui-gates [ui_gates = strict] no check --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the rendered pages were never checked (no 07-UI-CHECK.md); start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \\\"<reason>\\\"\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 41 @@@
+ui-gates [ui_gates = strict] check error 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the last check could not run: nothing answers at http://localhost:3005; start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \"<reason>\"\n"
+err=""
+@@@ 42 @@@
+ui-gates [ui_gates = strict] check error --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the last check could not run: nothing answers at http://localhost:3005; start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \\\"<reason>\\\"\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 43 @@@
+ui-gates [ui_gates = strict] check failed 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the check found 2 problem(s) — see 07-UI-CHECK.md: fix the pages, then check again. A finding the user accepts becomes a waive: line in 07-LAYOUT.md — never waive without asking\n"
+err=""
+@@@ 44 @@@
+ui-gates [ui_gates = strict] check failed --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the check found 2 problem(s) — see 07-UI-CHECK.md: fix the pages, then check again. A finding the user accepts becomes a waive: line in 07-LAYOUT.md — never waive without asking\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 45 @@@
+ui-gates [ui_gates = strict] check bogus status 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the last check could not run: ; start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \"<reason>\"\n"
+err=""
+@@@ 46 @@@
+ui-gates [ui_gates = strict] check bogus status --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the last check could not run: ; start the app in this worktree first. It opens each page at 3 widths, measures it and writes .planning/phases/07-thing/07-UI-CHECK.md and the pictures. If the pages cannot be checked, ask the user, then: gsdt-ui check 7 --skip \\\"<reason>\\\"\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 47 @@@
+ui-gates [ui_gates = strict] check passed, stale code 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the code or 07-LAYOUT.md changed after the last check; start the app in this worktree first. Pages that look the same keep their look and approval\n"
+err=""
+@@@ 48 @@@
+ui-gates [ui_gates = strict] check passed, stale code --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the code or 07-LAYOUT.md changed after the last check; start the app in this worktree first. Pages that look the same keep their look and approval\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 49 @@@
+ui-gates [ui_gates = strict] check passed, stale inputs 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the code or 07-LAYOUT.md changed after the last check; start the app in this worktree first. Pages that look the same keep their look and approval\n"
+err=""
+@@@ 50 @@@
+ui-gates [ui_gates = strict] check passed, stale inputs --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the code or 07-LAYOUT.md changed after the last check; start the app in this worktree first. Pages that look the same keep their look and approval\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 51 @@@
+ui-gates [ui_gates = strict] check passed 
+rc=0
+out="step=ui-look\nrun=gsdt-ui look 7\nnote=nobody wrote down what the pictures show (no 07-UI-LOOK.md): open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\n"
+err=""
+@@@ 52 @@@
+ui-gates [ui_gates = strict] check passed --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"nobody wrote down what the pictures show (no 07-UI-LOOK.md): open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 53 @@@
+ui-gates [ui_gates = strict] check skipped 
+rc=0
+out="step=ui-approve\nrun=gsdt-ui sheet 7\nthen=gsdt-ui approve 7\nstop=show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \"<reason>\"\nnote=the user has not approved the pages\n"
+err=""
+@@@ 54 @@@
+ui-gates [ui_gates = strict] check skipped --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"the user has not approved the pages\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 55 @@@
+ui-gates [ui_gates = strict] look missing 
+rc=0
+out="step=ui-look\nrun=gsdt-ui look 7\nnote=nobody wrote down what the pictures show (no 07-UI-LOOK.md): open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\n"
+err=""
+@@@ 56 @@@
+ui-gates [ui_gates = strict] look missing --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"nobody wrote down what the pictures show (no 07-UI-LOOK.md): open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 57 @@@
+ui-gates off 
+rc=0
+out="step=ui-review\nrun=/gsd-ui-review 7\nnote=phase has screens\n"
+err=""
+@@@ 58 @@@
+ui-gates off --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 59 @@@
+ui-review on the base branch 
+rc=0
+out="step=validate\nrun=/gsd-validate-phase 7\nnote=no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\n"
+err=""
+@@@ 60 @@@
+ui-review on the base branch --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 61 @@@
+ui-review note when check passed 
+rc=0
+out="step=ui-review\nrun=/gsd-ui-review 7\nnote=phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\n"
+err=""
+@@@ 62 @@@
+ui-review note when check passed --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 63 @@@
+new code file 
+rc=0
+out="step=ui-check\nrun=gsdt-ui check 7\nnote=the code or 07-LAYOUT.md changed after the last check; start the app in this worktree first. Pages that look the same keep their look and approval\n"
+err=""
+@@@ 64 @@@
+new code file --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"ui-check\",\"run\":\"gsdt-ui check 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"the code or 07-LAYOUT.md changed after the last check; start the app in this worktree first. Pages that look the same keep their look and approval\"}\n{\"phase\":\"7\",\"step\":\"ui-look\",\"run\":\"gsdt-ui look 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"after the check: open every picture in 07-SHOTS/ and answer each line of 07-UI-LOOK.md (ok / fixed / bad / n/a — what you saw), then commit it. A bad line means: fix the page and check again\"}\n{\"phase\":\"7\",\"step\":\"ui-approve\",\"run\":\"gsdt-ui sheet 7\",\"then\":\"gsdt-ui approve 7\",\"stop\":\"show the user the sheet and ask for a yes BEFORE gsdt-ui approve; if the user does not want to look (or there are no pictures): gsdt-ui approve 7 --waive \\\"<reason>\\\"\",\"note\":\"after the look\"}\n{\"phase\":\"7\",\"step\":\"ui-review\",\"run\":\"/gsd-ui-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"phase has screens: hold the pictures in 07-SHOTS/ and 07-UI-LOOK.md against the chosen sketch and the layout rules in 07-LAYOUT.md / DESIGN.md, not only the code\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""

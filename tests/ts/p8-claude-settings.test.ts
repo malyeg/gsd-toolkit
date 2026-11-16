@@ -1,16 +1,15 @@
-// P8 parity: src/claude-settings.ts against the python it replaced (the oracles are in
-// tests/fixtures/p8-old-bins/: gsd_claude_env.py, baseref.py, drop_gemini_hook.py). Same inputs,
-// each on its own copy: exit status, stdout, the bytes left in the file, its mode, and the folder.
+// P8: src/claude-settings.ts (claudeEnv, baserefState, removeGuardHook) against saved goldens in
+// tests/golden/p8-claude-settings/: exit status, the answer, the bytes left in the file (shown as a JSON
+// string, so CR/LF stay visible), its mode, and the folder. Regenerate with UPDATE_GOLDEN=1 and review
+// the golden diff.
 // Run: node --test tests/ts/p8-claude-settings.test.ts
-import { spawnSync } from 'node:child_process';
 import { chmodSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { test } from 'node:test';
+import { golden, test } from './golden.ts';
 import assert from 'node:assert/strict';
 import { baserefState, claudeEnv, removeGuardHook } from '../../src/claude-settings.ts';
-import { PKG, tmp } from './helpers.ts';
+import { tmp } from './helpers.ts';
 
-const FIX = path.join(PKG, 'tests', 'fixtures', 'p8-old-bins');
 const root = tmp();
 let n = 0;
 const fresh = (): string => {
@@ -18,18 +17,14 @@ const fresh = (): string => {
   mkdirSync(d, { recursive: true });
   return d;
 };
-const py = (args: string[], stdin?: string): { rc: number; out: string } => {
-  const r = spawnSync('python3', args, { encoding: 'utf8', input: stdin, stdio: ['pipe', 'pipe', 'ignore'] });
-  return { rc: r.status ?? -1, out: r.stdout };
-};
 const snap = (dir: string): string =>
   readdirSync(dir, { recursive: true })
-    .map(String)
+    .map((f) => String(f).replace(/\\/g, '/'))
     .sort()
     .map((f) => {
       const p = path.join(dir, f);
       const st = statSync(p);
-      return st.isDirectory() ? `${f}/` : `${f} [${(st.mode & 0o777).toString(8)}]\n${readFileSync(p, 'latin1')}`;
+      return st.isDirectory() ? `${f}/` : `${f} [${(st.mode & 0o777).toString(8)}] ${JSON.stringify(readFileSync(p, 'latin1'))}`;
     })
     .join('\n--\n');
 
@@ -83,54 +78,43 @@ const INPUTS: Array<[string, Content]> = [
   ['invalid utf8', Buffer.from([0x7b, 0x22, 0xff, 0x22, 0x3a, 0x31, 0x7d])],
 ];
 
-test('claudeEnv = gsd_claude_env.py (set and remove, every input)', () => {
+test('claudeEnv: set and remove, every input', () => {
   for (const [label, content] of INPUTS) {
     for (const mode of [undefined, 0o600, 0o755]) {
       if (mode !== undefined && content === null) continue;
       for (const value of ['300000', undefined, 'café "q"']) {
-        const a = fresh();
         const b = fresh();
-        const fa = setup(a, content, mode);
         const fb = setup(b, content, mode);
-        const ra = py([path.join(FIX, 'gsd_claude_env.py'), fa, 'CLAUDE_CODE_AUTO_COMPACT_WINDOW', ...(value === undefined ? [] : [value])]);
         const rb = claudeEnv(fb, 'CLAUDE_CODE_AUTO_COMPACT_WINDOW', value);
         const what = `${label} mode=${mode?.toString(8)} value=${value}`;
-        assert.equal(rb, ra.rc, `${what}: exit status`);
-        assert.equal(snap(b), snap(a), `${what}: what is left`);
+        golden(`${what}\nrc=${rb}\n${snap(b)}`);
       }
     }
   }
 });
 
-test('claudeEnv: a settings file that is a symlink is replaced by a file (python did too)', () => {
-  const a = fresh();
+test('claudeEnv: a settings file that is a symlink is replaced by a file', () => {
   const b = fresh();
-  for (const d of [a, b]) {
-    mkdirSync(path.join(d, '.claude'), { recursive: true });
-    writeFileSync(path.join(d, 'real.json'), '{"x": 1}');
-    symlinkSync(path.join(d, 'real.json'), path.join(d, '.claude', 'settings.local.json'));
-  }
-  const ra = py([path.join(FIX, 'gsd_claude_env.py'), path.join(a, '.claude', 'settings.local.json'), 'N', 'v']);
+  mkdirSync(path.join(b, '.claude'), { recursive: true });
+  writeFileSync(path.join(b, 'real.json'), '{"x": 1}');
+  symlinkSync(path.join(b, 'real.json'), path.join(b, '.claude', 'settings.local.json'));
   const rb = claudeEnv(path.join(b, '.claude', 'settings.local.json'), 'N', 'v');
-  assert.equal(rb, ra.rc);
   assert.equal(existsSync(path.join(b, '.claude', 'settings.local.json')) && statSync(path.join(b, '.claude', 'settings.local.json')).isFile(), true);
-  assert.equal(readFileSync(path.join(b, 'real.json'), 'utf8'), readFileSync(path.join(a, 'real.json'), 'utf8'));
-  assert.equal(readFileSync(path.join(b, '.claude', 'settings.local.json'), 'utf8'), readFileSync(path.join(a, '.claude', 'settings.local.json'), 'utf8'));
+  const show = (d: string, rc: number): string => `rc=${rc}\nreal=${JSON.stringify(readFileSync(path.join(d, 'real.json'), 'utf8'))}\nlocal=${JSON.stringify(readFileSync(path.join(d, '.claude', 'settings.local.json'), 'utf8'))}`;
+  golden(show(b, rb));
 });
 
-test('claudeEnv: a directory where the file should be → 3 (python: not readable)', () => {
-  const a = fresh();
+test('claudeEnv: a directory where the file should be → 3 (not readable)', () => {
   const b = fresh();
-  for (const d of [a, b]) mkdirSync(path.join(d, '.claude', 'settings.local.json'), { recursive: true });
-  const ra = py([path.join(FIX, 'gsd_claude_env.py'), path.join(a, '.claude', 'settings.local.json'), 'N', 'v']);
-  assert.equal(claudeEnv(path.join(b, '.claude', 'settings.local.json'), 'N', 'v'), ra.rc);
+  mkdirSync(path.join(b, '.claude', 'settings.local.json'), { recursive: true });
+  golden(`rc=${claudeEnv(path.join(b, '.claude', 'settings.local.json'), 'N', 'v')}`);
 });
 
 // ── baseref ────────────────────────────────────────────────────────────────
 
 type Layers = { local: Content; proj: Content; user: Content };
-function baserefBoth(mode: 'check' | 'ensure', l: Layers, label: string): void {
-  const run = (kind: 'py' | 'ts'): { out: string; tree: string } => {
+function baserefCase(mode: 'check' | 'ensure', l: Layers, label: string): void {
+  const run = (): { out: string; tree: string } => {
     const d = fresh();
     const local = setup(d, l.local);
     const proj = path.join(d, '.claude', 'settings.json');
@@ -143,50 +127,41 @@ function baserefBoth(mode: 'check' | 'ensure', l: Layers, label: string): void {
       mkdirSync(path.dirname(user), { recursive: true });
       writeFileSync(user, l.user);
     }
-    let out: string;
-    if (kind === 'py') {
-      const r2 = spawnSync('python3', ['-', mode, local, proj, user], { input: readFileSync(path.join(FIX, 'baseref.py'), 'utf8'), encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
-      out = r2.status === 0 ? r2.stdout : `${r2.stdout}invalid\n`;
-    } else {
-      out = `${baserefState(mode, [local, proj, user])}\n`;
-    }
+    const out = `${baserefState(mode, [local, proj, user])}\n`;
     return { out, tree: snap(d).replaceAll(d, '<D>') };
   };
-  const a = run('py');
-  const b = run('ts');
-  assert.equal(b.out, a.out, `${label} ${mode}: answer`);
-  assert.equal(b.tree, a.tree, `${label} ${mode}: files`);
+  const show = (r: { out: string; tree: string }): string => `${label} ${mode}\nanswer=${JSON.stringify(r.out)}\n${r.tree}`;
+  golden(show(run()));
 }
 
-test('baserefState = the baseref python (every layer combination)', () => {
+test('baserefState: every layer combination', () => {
   const heads = ['{"worktree": {"baseRef": "head"}}', '{"worktree": {"baseRef": "main"}}', '{"worktree": {"baseRef": 5}}', '{"worktree": {}}', '{"worktree": null}', '{"worktree": []}', '{}', '[]', 'not json', '', '{"a": 1.0, "worktree": {"x": 1e5}}\n'];
   for (const mode of ['check', 'ensure'] as const) {
-    for (const l of heads) baserefBoth(mode, { local: l, proj: null, user: null }, `local ${l}`);
-    baserefBoth(mode, { local: null, proj: null, user: null }, 'nothing');
+    for (const l of heads) baserefCase(mode, { local: l, proj: null, user: null }, `local ${l}`);
+    baserefCase(mode, { local: null, proj: null, user: null }, 'nothing');
     for (const l of heads) {
-      baserefBoth(mode, { local: null, proj: l, user: null }, `proj ${l}`);
-      baserefBoth(mode, { local: null, proj: null, user: l }, `user ${l}`);
-      baserefBoth(mode, { local: '{}', proj: l, user: heads[1] as string }, `proj-over-user ${l}`);
-      baserefBoth(mode, { local: l, proj: heads[1] as string, user: heads[0] as string }, `local-over-all ${l}`);
+      baserefCase(mode, { local: null, proj: l, user: null }, `proj ${l}`);
+      baserefCase(mode, { local: null, proj: null, user: l }, `user ${l}`);
+      baserefCase(mode, { local: '{}', proj: l, user: heads[1] as string }, `proj-over-user ${l}`);
+      baserefCase(mode, { local: l, proj: heads[1] as string, user: heads[0] as string }, `local-over-all ${l}`);
     }
-    baserefBoth(mode, { local: Buffer.from([0xff, 0xfe]), proj: null, user: null }, 'bad bytes');
-    baserefBoth(mode, { local: '﻿{}', proj: null, user: null }, 'bom');
+    baserefCase(mode, { local: Buffer.from([0xff, 0xfe]), proj: null, user: null }, 'bad bytes');
+    baserefCase(mode, { local: '﻿{}', proj: null, user: null }, 'bom');
   }
 });
 
 test('baserefState: a symlinked local file is written through its target path', () => {
-  const run = (kind: 'py' | 'ts'): string => {
+  const run = (): string => {
     const d = fresh();
     mkdirSync(path.join(d, '.claude'), { recursive: true });
     writeFileSync(path.join(d, 'real.json'), '{"k": 1}');
     const local = path.join(d, '.claude', 'settings.local.json');
     symlinkSync(path.join(d, 'real.json'), local);
     const user = path.join(d, 'nohome', 'settings.json');
-    if (kind === 'py') spawnSync('python3', ['-', 'ensure', local, path.join(d, '.claude', 'settings.json'), user], { input: readFileSync(path.join(FIX, 'baseref.py'), 'utf8') });
-    else baserefState('ensure', [local, path.join(d, '.claude', 'settings.json'), user]);
+    baserefState('ensure', [local, path.join(d, '.claude', 'settings.json'), user]);
     return `${readFileSync(path.join(d, 'real.json'), 'utf8')}|${statSync(local).isFile()}|${existsSync(local)}`;
   };
-  assert.equal(run('ts'), run('py'));
+  golden(run());
 });
 
 // ── removing the guard hook (drop_gemini) ──────────────────────────────────
@@ -209,21 +184,13 @@ const HOOKS: Array<[string, string | Buffer]> = [
   ['bad bytes', Buffer.from([0xff])],
 ];
 
-test('removeGuardHook = the drop_gemini python', () => {
+test('removeGuardHook: drops the guard hook, keeps the rest', () => {
   for (const [label, content] of HOOKS) {
-    const run = (kind: 'py' | 'ts'): { rc: number; tree: string } => {
-      const d = fresh();
-      const f = path.join(d, '.gemini', 'settings.json');
-      mkdirSync(path.dirname(f), { recursive: true });
-      writeFileSync(f, content);
-      let rc: number;
-      if (kind === 'py') rc = py([path.join(FIX, 'drop_gemini_hook.py'), f]).rc === 0 ? 0 : 1;
-      else rc = removeGuardHook(f) ? 0 : 1;
-      return { rc, tree: snap(d) };
-    };
-    const a = run('py');
-    const b = run('ts');
-    assert.equal(b.rc, a.rc, `${label}: result`);
-    assert.equal(b.tree, a.tree, `${label}: file`);
+    const d = fresh();
+    const f = path.join(d, '.gemini', 'settings.json');
+    mkdirSync(path.dirname(f), { recursive: true });
+    writeFileSync(f, content);
+    const rc = removeGuardHook(f) ? 0 : 1;
+    golden(`${label}\nrc=${rc}\n${snap(d)}`);
   }
 });

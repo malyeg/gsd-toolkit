@@ -1,13 +1,11 @@
-// P7 parity (gsdt-finish): the TypeScript command behind bin/gsdt-finish against the
-// pre-P7 bash command (tests/fixtures/p7-old-bins/gsdt-finish, which runs the old
-// gsdt-wt-finish), each on its own copy of the same fixture project. Compared: stdout,
-// stderr, exit code of every step, and the files/commits/branches/worktrees/origin,
-// the tracker log, the gh log and the doctor log left behind.
+// gsdt-finish: the TypeScript command behind bin/gsdt-finish on its own copy of a fixture project. Every step's
+// stdout, stderr, exit code and the files/commits/branches/worktrees left behind are compared with
+// the saved goldens in tests/golden/p7-finish/. Regenerate with UPDATE_GOLDEN=1 and review the diff.
 // Run: node --test tests/ts/p7-finish.test.ts
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { test } from 'node:test';
+import { test } from './golden.ts';
 import {
   E,
   RACE_CONF,

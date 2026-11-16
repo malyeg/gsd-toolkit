@@ -1,0 +1,16 @@
+@@@ 1 @@@
+run [--repo {W}/nope]
+rc=1
+--- stdout
+--- stderr
+✖ not a git repository: <W>/nope
+
+@@@ 2 @@@
+run [--json --repo {W}/nope]
+rc=1
+--- stdout
+--- stderr
+✖ not a git repository: <W>/nope
+
+@@@ 3 @@@
+

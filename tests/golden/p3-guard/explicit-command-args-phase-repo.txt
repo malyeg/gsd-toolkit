@@ -1,0 +1,165 @@
+@@@ 1 @@@
+--phase 7 matching
+rc=0
+out=""
+err=""
+@@@ 2 @@@
+--phase 8 other
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 3 @@@
+--phase 07 padded
+rc=0
+out=""
+err=""
+@@@ 4 @@@
+--phase 7.0
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 7.0. Switch to the phase-7.0-* worktree.\n"
+@@@ 5 @@@
+--phase twice
+rc=0
+out=""
+err=""
+@@@ 6 @@@
+--args then --phase
+rc=0
+out=""
+err=""
+@@@ 7 @@@
+--phase then --args overwrites
+rc=0
+out=""
+err=""
+@@@ 8 @@@
+--phase=7 in args
+rc=0
+out=""
+err=""
+@@@ 9 @@@
+--phase=8 in args
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 10 @@@
+leading slash
+rc=0
+out=""
+err=""
+@@@ 11 @@@
+double slash
+rc=0
+out=""
+err=""
+@@@ 12 @@@
+namespaced
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 13 @@@
+plugin
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 14 @@@
+plugin namespaced
+rc=0
+out=""
+err=""
+@@@ 15 @@@
+a:b:gsd-x
+rc=0
+out=""
+err=""
+@@@ 16 @@@
+gsdt-flow
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 17 @@@
+gsdw-flow
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 18 @@@
+gsdt-flow base
+rc=2
+out=""
+err="BLOCKED: /gsd-flow is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 19 @@@
+gsd-flow base no N
+rc=2
+out=""
+err="BLOCKED: /gsd-flow is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 20 @@@
+plan-phase base no N
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 21 @@@
+not gsd
+rc=0
+out=""
+err=""
+@@@ 22 @@@
+global + explicit
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 23 @@@
+--command ignores stdin
+rc=0
+out=""
+err=""
+@@@ 24 @@@
+--repo beats CLAUDE_PROJECT_DIR
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 25 @@@
+CLAUDE_PROJECT_DIR beats cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 26 @@@
+cwd is the repo
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 27 @@@
+cwd is a subdir of the repo
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 28 @@@
+empty CLAUDE_PROJECT_DIR falls to cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 29 @@@
+repo is not a directory
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 8 but 'unknown' isn't a phase-8-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 30 @@@
+repo is not a directory, no N
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 31 @@@
+relative --repo
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 32 @@@
+plain dir no repo, new-project
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 33 @@@
+plain dir no repo, global feature
+rc=0
+out=""
+err=""

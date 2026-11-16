@@ -7,7 +7,46 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## Unreleased
+## 0.11.1
+
+**Windows fixes** (found once every test ran on Windows):
+
+- `gsdt-finish` removed the worktree from inside it, and Windows said
+  "Permission denied". It now steps out first.
+- Scripts run through Git's `sh` (shims, custom trackers) got their arguments
+  mangled: a `'` ate the rest, a newline split one. Arguments are now quoted.
+- `gsdt-update` ran Windows' own `curl.exe` instead of the one on PATH.
+- doctor T002 misread npm's `.cmd` wrappers; T008 never saw a stale `C:/…`
+  hook path; `gsdt-setup` split PATH on `:`; the UI app probe wrote to
+  `/dev/null`; `wtdir`, paths under a root, and UI folder names came out wrong
+  with `\` paths. A merged UI review was missed from the main checkout.
+- `HOME` unset (cmd, PowerShell) now falls back to `USERPROFILE`.
+
+**Tests:** every suite is `node:test` and runs on Linux, macOS and Windows
+(the bash suites and the old bash/python/perl code are gone). CI runs them in
+shards and stops a shard after 15 failures.
+
+**gsdt-migrate fixes** (found migrating a real repo):
+
+- One `--apply` is enough with a pre-merge script: the old paths inside the
+  renamed `scripts/gsdt-premerge-check.sh` are now fixed in the same run (git
+  grep skipped it: the old file is gone and the new one is not tracked yet).
+  `--check` (and doctor T090) now see such a file too; before, they said
+  "clean" while old paths were left in it.
+- A step's heading (`repo hook:`, `instruction blocks:`, `this clone
+  (.git/config):`, …) is printed only when something is under it.
+- "then each teammate: …" is printed only when HEAD has a commit by someone
+  else.
+
+**gsdt-doctor:** its title says `gsdt-doctor` (it said `gsd-doctor`), and a
+note says when the toolkit is installed in a Node version manager's folder
+(nvm, fnm, Volta): switching Node versions leaves the commands and the Claude
+hooks behind.
+
+**y/N prompts wait for the answer again.** `gsdt-doctor --fix` printed "Run
+these? [y/N] Nothing changed." at once in a real terminal: Node had made the
+terminal's input non-blocking and the read's EAGAIN was taken as "no". One
+reader (`readStdinLine`) now waits and retries, for doctor, migrate and init.
 
 - **`gsdt-list` shows a ticked phase with no plan files as `done`.** A phase
   done outside GSD (a pre-GSD baseline, work done by hand) has no

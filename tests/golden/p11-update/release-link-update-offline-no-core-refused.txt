@@ -1,0 +1,12 @@
+@@@ 1 @@@
+rc=1
+--stdout--
+installed : 1.0.0  (<R>/release/share/gsd-toolkit/releases/1.0.0)
+latest    : unknown (GitHub not reachable)  (acme/gsd-toolkit)
+--stderr--
+gsdt-update: cannot find the latest release — try again online, or pass --version X.Y.Z
+--install.sh--
+--npm--
+--npx--
+--caches--
+|

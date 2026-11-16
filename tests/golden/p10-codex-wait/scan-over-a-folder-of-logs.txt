@@ -1,0 +1,8 @@
+@@@ 1 @@@
+since 0 => "1760005000\tYou’ve hit your usage limit. Upgrade to Pro or try again at Oct 9th, 2025 1:00 AM."
+since 1759999999 => "1760005000\tYou’ve hit your usage limit. Upgrade to Pro or try again at Oct 9th, 2025 1:00 AM."
+since 1760000000 => "1760005000\tYou’ve hit your usage limit. Upgrade to Pro or try again at Oct 9th, 2025 1:00 AM."
+since 1760004001 => "1760005000\tYou’ve hit your usage limit. Upgrade to Pro or try again at Oct 9th, 2025 1:00 AM."
+since 1760005000 => "1760005000\tYou’ve hit your usage limit. Upgrade to Pro or try again at Oct 9th, 2025 1:00 AM."
+since 1760005001 => null
+since 1760009999 => null

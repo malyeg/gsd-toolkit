@@ -1,0 +1,207 @@
+@@@ 1 @@@
+# list claude
+rc=0
+
+@@@ 2 @@@
+# list claude,codex
+rc=0
+
+@@@ 3 @@@
+# list codex,claude,custom
+rc=0
+
+@@@ 4 @@@
+# list 
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+rc=64
+
+@@@ 5 @@@
+# list ,claude
+malformed providers list ',claude'; use comma-separated names, e.g. claude,codex
+rc=64
+
+@@@ 6 @@@
+# list claude,
+malformed providers list 'claude,'; use comma-separated names, e.g. claude,codex
+rc=64
+
+@@@ 7 @@@
+# list claude,,codex
+malformed providers list 'claude,,codex'; use comma-separated names, e.g. claude,codex
+rc=64
+
+@@@ 8 @@@
+# list claude,claude
+duplicate provider 'claude' in providers; list each provider once
+rc=64
+
+@@@ 9 @@@
+# list gemini
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+rc=64
+
+@@@ 10 @@@
+# list claude,gemini
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+rc=64
+
+@@@ 11 @@@
+# list nope
+unknown provider 'nope' in providers; expected claude, codex, or custom
+rc=64
+
+@@@ 12 @@@
+# list claude,nope
+unknown provider 'nope' in providers; expected claude, codex, or custom
+rc=64
+
+@@@ 13 @@@
+# list Claude
+unknown provider 'Claude' in providers; expected claude, codex, or custom
+rc=64
+
+@@@ 14 @@@
+# validate claude/""
+rc=0
+
+@@@ 15 @@@
+# validate claude/"my-agent"
+rc=0
+
+@@@ 16 @@@
+# validate claude/"bad cmd"
+agent command must be one executable path/name, not a shell template
+rc=64
+
+@@@ 17 @@@
+# validate claude/"tab\tcmd"
+agent command must be one executable path/name, not a shell template
+rc=64
+
+@@@ 18 @@@
+# validate claude/"/p/a th"
+agent command must be one executable path/name, not a shell template
+rc=64
+
+@@@ 19 @@@
+# validate codex/""
+rc=0
+
+@@@ 20 @@@
+# validate codex/"my-agent"
+rc=0
+
+@@@ 21 @@@
+# validate codex/"bad cmd"
+agent command must be one executable path/name, not a shell template
+rc=64
+
+@@@ 22 @@@
+# validate codex/"tab\tcmd"
+agent command must be one executable path/name, not a shell template
+rc=64
+
+@@@ 23 @@@
+# validate codex/"/p/a th"
+agent command must be one executable path/name, not a shell template
+rc=64
+
+@@@ 24 @@@
+# validate custom/""
+provider 'custom' requires an explicit agent command
+rc=64
+
+@@@ 25 @@@
+# validate custom/"my-agent"
+rc=0
+
+@@@ 26 @@@
+# validate custom/"bad cmd"
+agent command must be one executable path/name, not a shell template
+rc=64
+
+@@@ 27 @@@
+# validate custom/"tab\tcmd"
+agent command must be one executable path/name, not a shell template
+rc=64
+
+@@@ 28 @@@
+# validate custom/"/p/a th"
+agent command must be one executable path/name, not a shell template
+rc=64
+
+@@@ 29 @@@
+# validate gemini/""
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+rc=64
+
+@@@ 30 @@@
+# validate gemini/"my-agent"
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+rc=64
+
+@@@ 31 @@@
+# validate gemini/"bad cmd"
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+rc=64
+
+@@@ 32 @@@
+# validate gemini/"tab\tcmd"
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+rc=64
+
+@@@ 33 @@@
+# validate gemini/"/p/a th"
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+rc=64
+
+@@@ 34 @@@
+# validate nope/""
+unknown provider 'nope' (expected claude, codex, or custom)
+rc=64
+
+@@@ 35 @@@
+# validate nope/"my-agent"
+unknown provider 'nope' (expected claude, codex, or custom)
+rc=64
+
+@@@ 36 @@@
+# validate nope/"bad cmd"
+unknown provider 'nope' (expected claude, codex, or custom)
+rc=64
+
+@@@ 37 @@@
+# validate nope/"tab\tcmd"
+unknown provider 'nope' (expected claude, codex, or custom)
+rc=64
+
+@@@ 38 @@@
+# validate nope/"/p/a th"
+unknown provider 'nope' (expected claude, codex, or custom)
+rc=64
+
+@@@ 39 @@@
+# validate /""
+unknown provider '' (expected claude, codex, or custom)
+rc=64
+
+@@@ 40 @@@
+# validate /"my-agent"
+unknown provider '' (expected claude, codex, or custom)
+rc=64
+
+@@@ 41 @@@
+# validate /"bad cmd"
+unknown provider '' (expected claude, codex, or custom)
+rc=64
+
+@@@ 42 @@@
+# validate /"tab\tcmd"
+unknown provider '' (expected claude, codex, or custom)
+rc=64
+
+@@@ 43 @@@
+# validate /"/p/a th"
+unknown provider '' (expected claude, codex, or custom)
+rc=64
+

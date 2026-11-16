@@ -1,9 +1,9 @@
-// P11 (gsdt-update + the update notice): the TypeScript command behind bin/gsdt-update against the
-// bash one (tests/fixtures/p11-old-bins/gsdt-update, the oracle), for a git checkout and a GitHub
-// release runtime, with the stubs tests/test-update.sh uses (curl for GitHub, npm for gsd-core, an
+// P11 (gsdt-update + the update notice): the TypeScript command behind bin/gsdt-update, checked
+// against saved goldens in tests/golden/p11-update/ (regenerate with UPDATE_GOLDEN=1; review the
+// diff), for a git checkout and a GitHub release runtime, with the stubs tests/test-update.sh uses (curl for GitHub, npm for gsd-core, an
 // install.sh that only logs what it was given). Then the new npm mode, on a fake npm package dir
 // (an npm stub on PATH; its src/launch.mjs logs `setup`), the update notice from the npm stub and
-// from the caches, and that notice against bash's gsd_update_notice.
+// from the caches.
 // Every run has its own HOME/XDG_*; no real npm install is ever run.
 // The npm mode gets the release's .tgz + SHA256SUMS from the curl stub (no registry call for the toolkit).
 // Run: node --test tests/ts/p11-update.test.ts
@@ -13,8 +13,11 @@ import { createHash } from 'node:crypto';
 import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, renameSync, rmSync, statSync, symlinkSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { test } from 'node:test';
-import { PKG } from './helpers.ts';
+import { pathToFileURL } from 'node:url';
+import { test, golden, skipFileOnWindows } from './golden.ts';
+
+skipFileOnWindows('POSIX installer parity (symlinked skills and settings, 0.10.x links, colon-separated PATH, exec bits); Windows is covered by tests/node/npm.test.ts and tests/os');
+import { PKG, subst } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p11u-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
@@ -113,36 +116,32 @@ function exec(cmd: string, args: string[], env: NodeJS.ProcessEnv, cwd?: string)
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? 1 };
 }
 
-// ── parity runtimes: old (bash) and new (TS), as a release (symlinked, in releases/) and as a copy ──
+// ── runtimes: as a release (symlinked, in releases/) and as a copy ──
 const INSTALL_STUB = '#!/bin/sh\n{ echo "install.sh $*"; echo "GSD_BIN_DIR=$GSD_BIN_DIR"; echo "GSD_RELEASES_DIR=$GSD_RELEASES_DIR"; } >> "$STUB/install.log"\nexit "${INSTALL_RC:-0}"\n';
-type Side = 'old' | 'neu';
-const SIDES: Side[] = ['old', 'neu'];
 const runtimes: Record<string, { pkg: string; bin: string; link: string }> = {};
-function build(side: Side, kind: 'release' | 'copy'): void {
-  const root = path.join(W, side, kind);
+function build(kind: 'release' | 'copy'): void {
+  const root = path.join(W, 'rt', kind);
   const pkg = kind === 'release' ? path.join(root, 'share/gsd-toolkit/releases/1.0.0') : path.join(root, 'rt');
   mkdirSync(path.join(pkg, 'bin'), { recursive: true });
-  cpSync(path.join(PKG, 'lib'), path.join(pkg, 'lib'), { recursive: true });
   cpSync(path.join(PKG, 'src'), path.join(pkg, 'src'), { recursive: true });
   writeFileSync(path.join(pkg, 'VERSION'), '1.0.0\n');
   writeFileSync(path.join(pkg, 'install.sh'), INSTALL_STUB, { mode: 0o755 });
   const own = path.join(pkg, 'bin/gsdt-update');
-  cpSync(side === 'old' ? path.join(PKG, 'tests/fixtures/p11-old-bins/gsdt-update') : path.join(PKG, 'bin/gsdt-update'), own);
+  cpSync(path.join(PKG, 'bin/gsdt-update'), own);
   chmodSync(own, 0o755);
   const bin = path.join(root, 'bin');
   mkdirSync(bin, { recursive: true });
   symlinkSync(own, path.join(bin, 'gsdt-update'));
-  runtimes[`${side}-${kind}`] = { pkg, bin, link: path.join(bin, 'gsdt-update') };
+  runtimes[kind] = { pkg, bin, link: path.join(bin, 'gsdt-update') };
 }
-for (const s of SIDES) for (const k of ['release', 'copy'] as const) build(s, k);
+for (const k of ['release', 'copy'] as const) build(k);
 
-const norm = (s: string, side: Side): string => s.split(path.join(W, side)).join('<R>').replace(/\/run-\d+\//g, '/run-N/');
-function runSide(side: Side, kind: 'release' | 'copy', how: 'link' | 'direct', args: string[], sc: Scn, git = false): Res & { install: string; npm: string; npx: string; cache: string; manifest: string } {
-  const rt = runtimes[`${side}-${kind}`] as { pkg: string; bin: string; link: string };
+const norm = (s: string): string => subst(s, path.join(W, 'rt'), '<R>').replace(/\/run-\d+\//g, '/run-N/');
+function runSide(kind: 'release' | 'copy', how: 'link' | 'direct', args: string[], sc: Scn, git = false): Res & { install: string; npm: string; npx: string; cache: string; manifest: string } {
+  const rt = runtimes[kind] as { pkg: string; bin: string; link: string };
   const c = ctx(sc);
   const env = { ...c.env, GSD_BIN_DIR: c.env.GSD_BIN_DIR ?? rt.bin, ...(sc.env ?? {}) };
-  // The bash exits silently (set -e + pipefail on sed) when the manifest is missing; every real install has one.
-  // The TS carries on with claude (its own test below), so both sides get a manifest here.
+  // every real install has a manifest; the missing-manifest case has its own test below
   const mdir = how === 'link' ? rt.bin : env.GSD_BIN_DIR === '' ? path.join(c.home, '.local/bin') : (env.GSD_BIN_DIR as string);
   mkdirSync(mdir, { recursive: true });
   writeFileSync(path.join(mdir, '.gsd-install-manifest'), sc.manifest ?? 'providers\tclaude\nuser_hook\t1\n');
@@ -151,10 +150,10 @@ function runSide(side: Side, kind: 'release' | 'copy', how: 'link' | 'direct', a
     const r = exec(how === 'link' ? rt.link : path.join(rt.pkg, 'bin/gsdt-update'), args, env);
     const cacheF = path.join(c.env.XDG_CACHE_HOME as string, 'gsd-toolkit');
     return {
-      out: norm(r.out, side),
-      err: norm(r.err, side),
+      out: norm(r.out),
+      err: norm(r.err),
       rc: r.rc,
-      install: norm(readOr(path.join(c.stub, 'install.log')), side),
+      install: norm(readOr(path.join(c.stub, 'install.log'))),
       npm: readOr(path.join(c.stub, 'npm.log')),
       npx: readOr(path.join(c.stub, 'npx.log')),
       cache: `${readOr(path.join(cacheF, 'latest-version'))}|${readOr(path.join(cacheF, 'latest-gsd-core-version'))}`,
@@ -166,16 +165,11 @@ function runSide(side: Side, kind: 'release' | 'copy', how: 'link' | 'direct', a
   }
 }
 function same(name: string, kind: 'release' | 'copy', how: 'link' | 'direct', args: string[], sc: Scn, git = false, expectRc?: number): void {
-  test(`parity ${kind}${git ? '+git' : ''}/${how}: ${name}`, () => {
-    const o = runSide('old', kind, how, args, sc, git);
-    const n = runSide('neu', kind, how, args, sc, git);
-    assert.equal(n.out, o.out, 'stdout');
-    assert.equal(n.err, o.err, 'stderr');
-    assert.equal(n.rc, o.rc, 'exit code');
-    assert.equal(n.install, o.install, 'install.sh call');
-    assert.equal(n.npm, o.npm, 'npm calls');
-    assert.equal(n.npx, o.npx, 'npx calls');
-    assert.equal(n.cache, o.cache, 'caches');
+  test(`${kind}${git ? '+git' : ''}/${how}: ${name}`, () => {
+    const n = runSide(kind, how, args, sc, git);
+    const text = (r: ReturnType<typeof runSide>): string =>
+      `rc=${r.rc}\n--stdout--\n${r.out}--stderr--\n${r.err}--install.sh--\n${r.install}--npm--\n${r.npm}--npx--\n${r.npx}--caches--\n${r.cache}`;
+    golden(text(n));
     if (expectRc !== undefined) assert.equal(n.rc, expectRc);
   });
 }
@@ -343,8 +337,8 @@ test('npm: gsd-core agents come from the setup manifest, else claude', () => {
   assert.match(b.out, /gsd-core  : claude 1\.2\.0, latest 1\.2\.0\n✔ up to date\n$/);
   assert.doesNotMatch(b.out, /codex/);
 });
-test('release without a manifest: carries on with claude (the bash stopped silently there)', () => {
-  const rt = runtimes['neu-release'] as { pkg: string; bin: string; link: string };
+test('release without a manifest: carries on with claude ', () => {
+  const rt = runtimes['release'] as { pkg: string; bin: string; link: string };
   const c = ctx({ latest: '1.0.0', core: true, haveCore: '1.2.0', npmCore: '1.2.0' });
   const r = exec(rt.link, ['--check'], { ...c.env, GSD_BIN_DIR: rt.bin });
   assert.equal(r.rc, 0);
@@ -354,13 +348,13 @@ test('npm: --help adds the npm note; the other modes do not', () => {
   const r = npmRun(['--help'], {});
   assert.equal(r.rc, 0);
   assert.match(r.out, /Installed as the npm package/);
-  const old = runSide('neu', 'release', 'link', ['--help'], {});
-  assert.doesNotMatch(old.out, /Installed as the npm package/);
+  const plain = runSide('release', 'link', ['--help'], {});
+  assert.doesNotMatch(plain.out, /Installed as the npm package/);
 });
 
 // ── the notice ─────────────────────────────────────────────────────────────────
 function notice(pkg: string, env: NodeJS.ProcessEnv): Res {
-  return exec(process.execPath, ['--input-type=module', '-e', `const m = await import(${JSON.stringify(path.join(pkg, 'src/version.ts'))}); m.updateNotice();`], env);
+  return exec(process.execPath, ['--input-type=module', '-e', `const m = await import(${JSON.stringify(pathToFileURL(path.join(pkg, 'src/version.ts')).href)}); m.updateNotice();`], env);
 }
 function waitFor(f: string, ms = 8000): void {
   const t0 = Date.now();
@@ -404,10 +398,7 @@ test('notice (npm): GSD itself gets its own line, from the gsd-core cache', () =
   assert.equal(r.err, '• GSD 1.2.0 is out (you have 1.0.0) — update: gsdt-update\n');
 });
 
-// the same caches through bash's gsd_update_notice and the TS one, stale caches left alone (fresh files)
-function bashNotice(pkg: string, env: NodeJS.ProcessEnv): Res {
-  return exec('bash', ['-c', '. "$GSD_PKG/lib/common.sh"; . "$GSD_PKG/lib/version.sh"; gsd_update_notice'], { ...env, GSD_PKG: pkg });
-}
+// the notice from fresh caches (stale caches would start a refresh)
 const cases: Array<{ name: string; tool?: string; core?: string; haveCore?: string; gitDir?: boolean }> = [
   { name: 'both newer', tool: '9.0.0', core: '1.2.0', haveCore: '1.0.0' },
   { name: 'toolkit only', tool: '9.0.0' },
@@ -418,10 +409,9 @@ const cases: Array<{ name: string; tool?: string; core?: string; haveCore?: stri
   { name: 'a git checkout names its install.sh', tool: '9.0.0', core: '1.2.0', haveCore: '1.0.0', gitDir: true },
 ];
 for (const k of cases) {
-  test(`notice parity with bash: ${k.name}`, () => {
-    const outs: string[] = [];
-    for (const side of SIDES) {
-      const rt = runtimes[`${side}-copy`] as { pkg: string };
+  test(`notice: ${k.name}`, () => {
+    {
+      const rt = runtimes['copy'] as { pkg: string };
       const c = ctx({});
       const cd = path.join(c.env.XDG_CACHE_HOME as string, 'gsd-toolkit');
       mkdirSync(cd, { recursive: true });
@@ -443,17 +433,15 @@ for (const k of cases) {
       }
       if (k.gitDir) mkdirSync(path.join(rt.pkg, '.git'));
       try {
-        const r = side === 'old' ? bashNotice(rt.pkg, env) : notice(rt.pkg, env);
-        outs.push(norm(r.err, side));
+        golden(norm(notice(rt.pkg, env).err));
       } finally {
         if (k.gitDir) rmSync(path.join(rt.pkg, '.git'), { recursive: true, force: true });
       }
     }
-    assert.equal(outs[1], outs[0]);
   });
 }
 test('notice (release, GitHub): stale cache refreshed in the background through curl', () => {
-  const rt = runtimes['neu-copy'] as { pkg: string };
+  const rt = runtimes['copy'] as { pkg: string };
   const c = ctx({ latest: '9.0.0' });
   const cacheF = path.join(c.env.XDG_CACHE_HOME as string, 'gsd-toolkit/latest-version');
   assert.equal(notice(rt.pkg, { ...c.env, ...ALWAYS }).err, '');
@@ -464,7 +452,7 @@ test('notice (release, GitHub): stale cache refreshed in the background through 
   assert.doesNotMatch(readOr(path.join(c.stub, 'npm.log')), /view gsd-toolkit/, 'this toolkit is not asked of npm for a release runtime');
 });
 test('notice: offline keeps the old value and waits a day (the file is touched)', () => {
-  const rt = runtimes['neu-copy'] as { pkg: string };
+  const rt = runtimes['copy'] as { pkg: string };
   const c = ctx({});
   const cd = path.join(c.env.XDG_CACHE_HOME as string, 'gsd-toolkit');
   mkdirSync(cd, { recursive: true });

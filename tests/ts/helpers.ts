@@ -1,12 +1,11 @@
-// Shared by the parity suites: run a bash function from lib/*.sh and compare
-// with its TypeScript port. Throwaway repos live under os.tmpdir().
+// Shared by the suites: a clean env (no host GSD_/CLAUDE_/CODEX_ settings), throwaway
+// repos under os.tmpdir().
 import { spawnSync } from 'node:child_process';
 import { chmodSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 export const PKG = path.resolve(import.meta.dirname, '..', '..');
-export type BashResult = { out: string; err: string; rc: number };
 
 // Keep the host's settings out of both sides.
 for (const k of Object.keys(process.env)) {
@@ -38,15 +37,14 @@ export const AWK_DIR: string | null = (() => {
 })();
 if (AWK_DIR) process.env.PATH = `${AWK_DIR}:${process.env.PATH}`;
 
-/** Run `script` in bash with common.sh, provider.sh and ui.sh sourced; args are $1… */
-export function bash(script: string, args: string[] = [], env: Record<string, string> = {}): BashResult {
-  const r = spawnSync(
-    'bash',
-    ['-c', `. "$GSD_PKG/lib/common.sh"; . "$GSD_PKG/lib/provider.sh"; . "$GSD_PKG/lib/ui.sh"; ${script}`, '_', ...args],
-    { encoding: 'utf8', env: { ...process.env, GSD_PKG: PKG, ...env } },
-  );
-  return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? 1 };
-}
+// Git: no host config, but the global ignore the goldens were made with (Claude Code
+// keeps .claude/settings.local.json out of every repo that way). One dir for the run.
+const GIT_HOME = mkdtempSync(path.join(tmpdir(), 'gsd-gitcfg-'));
+writeFileSync(path.join(GIT_HOME, 'ignore'), '**/.claude/settings.local.json\n');
+writeFileSync(path.join(GIT_HOME, 'config'), `[core]\n\texcludesfile = ${path.join(GIT_HOME, 'ignore').replace(/\\/g, '/')}\n`);
+process.on('exit', () => rmSync(GIT_HOME, { recursive: true, force: true }));
+process.env.GIT_CONFIG_GLOBAL = path.join(GIT_HOME, 'config');
+process.env.GIT_CONFIG_NOSYSTEM = '1';
 
 /** What `$( … )` would capture. */
 export const chomp = (s: string): string => s.replace(/\n+$/, '');
@@ -98,4 +96,33 @@ export function write(file: string, content: string, mode?: number): string {
   writeFileSync(file, content);
   if (mode !== undefined) chmodSync(file, mode);
   return file;
+}
+
+/**
+ * `text` with the folder `dir` replaced by `token`, in every spelling a program may print it in. POSIX: as is.
+ * Windows: native and `/`, JSON-escaped, 8.3 (RUNNER~1) and long names; the path after the token then uses `/`.
+ */
+export function subst(text: string, dir: string, token: string): string {
+  if (process.platform !== 'win32') return text.split(dir).join(token);
+  const forms = new Set<string>();
+  let real = dir;
+  try {
+    real = realpathSync.native(dir);
+  } catch {
+    /* not there (yet): its own spelling only */
+  }
+  for (const d of [dir, real]) {
+    for (const x of [d, d.replace(/\\/g, '/')]) {
+      forms.add(x.replace(/\\/g, '\\\\'));
+      forms.add(x);
+    }
+  }
+  let t = text;
+  for (const f of [...forms].sort((a, b) => b.length - a.length)) {
+    t = t.replace(new RegExp(f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), token);
+  }
+  const tk = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return t.replace(new RegExp(`(${tk})((?:\\\\\\\\|\\\\(?![nrt](?:["\\\\\\s]|$)))(?:(?!\\\\[nrt](?:["\\\\\\s]|$))[^\\s"'\`<>|*?]| (?=[^\\s\\\\/"']*[\\\\/]))*)`, 'g'), (_m, p: string, rest: string) =>
+    p + (rest.includes('\\\\') ? rest.replaceAll('\\\\', '/') : rest.replaceAll('\\', '/')),
+  );
 }

@@ -1,0 +1,18 @@
+@@@ 1 @@@
+# empty
+
+@@@ 2 @@@
+# react
+react
+@@@ 3 @@@
+# +tailwind in apps
+react tailwind
+@@@ 4 @@@
+# +shadcn in packages
+react shadcn tailwind
+@@@ 5 @@@
+# substring words do not count
+shadcn
+@@@ 6 @@@
+# root components.json
+shadcn

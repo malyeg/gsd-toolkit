@@ -1,0 +1,73 @@
+@@@ 1 @@@
+# HOME=<TMP>/home
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home/a/gsd-x
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home/b/gsd-y
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home/c/gsd-z
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home
+
+@@@ 2 @@@
+# HOME=<TMP>/home/
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home/a/gsd-x
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home/b/gsd-y
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home/c/gsd-z
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home
+
+@@@ 3 @@@
+# HOME=<TMP>/home///
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home/a/gsd-x
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home/b/gsd-y
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home/c/gsd-z
+<TMP>/h.json	user	gsd	1	PreToolUse	<TMP>/home
+
+@@@ 4 @@@
+# HOME=
+<TMP>/h.json	user	gsd	1	PreToolUse	//a/gsd-x
+<TMP>/h.json	user	gsd	1	PreToolUse	//b/gsd-y
+<TMP>/h.json	user	gsd	1	PreToolUse	//c/gsd-z
+
+@@@ 5 @@@
+# HOME=/
+<TMP>/h.json	user	gsd	1	PreToolUse	//a/gsd-x
+<TMP>/h.json	user	gsd	1	PreToolUse	//b/gsd-y
+<TMP>/h.json	user	gsd	1	PreToolUse	//c/gsd-z
+
+@@@ 6 @@@
+# HOME=undefined
+<TMP>/h.json	user	gsd	1	PreToolUse	<HOME>/a/gsd-x
+<TMP>/h.json	user	gsd	1	PreToolUse	<HOME>/b/gsd-y
+<TMP>/h.json	user	gsd	1	PreToolUse	<HOME>/c/gsd-z
+
+@@@ 7 @@@
+# project expands CLAUDE_PROJECT_DIR
+<TMP>/p.json	project	gsd	1	PreToolUse	<TMP>/proj/a/gsd-x
+<TMP>/p.json	project	gsd	1	PreToolUse	<TMP>/proj/b/gsd-y
+
+@@@ 8 @@@
+# project path with $ in it is skipped
+
+@@@ 9 @@@
+# empty --project
+
+@@@ 10 @@@
+# --project applies to later files only
+<TMP>/p.json	project	gsd	1	PreToolUse	<TMP>/proj/a/gsd-x
+<TMP>/p.json	project	gsd	1	PreToolUse	<TMP>/proj/b/gsd-y
+
+@@@ 11 @@@
+# user scope never expands the project
+
+@@@ 12 @@@
+# --project without a value
+
+@@@ 13 @@@
+# --project twice
+<TMP>/p.json	project	gsd	1	PreToolUse	/two/a/gsd-x
+<TMP>/p.json	project	gsd	1	PreToolUse	/two/b/gsd-y
+
+@@@ 14 @@@
+# file name with a colon
+
+@@@ 15 @@@
+# file name with a colon (exists)
+<TMP>/a:b.json	user	gsd	1	PreToolUse	/gone/gsd-x
+

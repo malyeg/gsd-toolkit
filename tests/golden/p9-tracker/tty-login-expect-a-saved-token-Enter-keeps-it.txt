@@ -1,0 +1,27 @@
+@@@ 1 @@@
+rc=0
+spawn <PKG>/bin/gsdt-tracker login solo
+A token for profile solo is already saved. Use it, or replace it? [U/r] 
+✔ ClickUp token OK — kept → <ROOT>/home/.config/gsd/clickup-solo.env (only you can read it)
+✔ this repo now uses profile solo (git config gsdt-tracker.profile: this clone and its worktrees, never committed)
+
+@@@ 2 @@@
+curl.log:
+GET /user 
+
+argv:
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_solo-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+
+tracker.log:
+
+home:
+.config/gsd/clickup-solo.env 644 CLICKUP_API_TOKEN=pk_solo
+
+plain git config:
+gsdt-tracker.profile=solo
+gsd git config:
+
+cust git config:
+
+cu git config:
+

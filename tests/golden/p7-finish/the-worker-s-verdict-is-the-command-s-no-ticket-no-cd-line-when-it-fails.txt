@@ -1,0 +1,520 @@
+@@@ 1 @@@
+step 1 (gsdt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ tests (false, in <T>/shop-worktrees/phase-1-catalog; before merge)…
+
+--- stderr
+✗ tests failed (before merge) — not pushing or removing the phase worktree. Any merge remains local.
+  (skip with 'test = none' in .gsd.conf, or provide scripts/gsdt-premerge-check.sh)
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 2 @@@
+step 1 (gsdt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Auto-merging f.txt
+CONFLICT (add/add): Merge conflict in f.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr
+✗ merge conflict with 'main' — aborted, 'main' left clean. Conflicts: f.txt 
+  Resolve in the worktree: git -C <T>/shop-worktrees/phase-1-catalog merge main, fix conflicts, commit, then re-run finish.
+
+--- files left behind
+── log
+main change
+feature
+main change
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+main change
+main change
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 3 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ tests (mkdir -p cov && echo a > cov/out, in <T>/shop-worktrees/phase-1-catalog; before merge)…
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ tests (mkdir -p cov && echo a > cov/out, in <T>/shop; combined tree after phase merge)…
+▶ pushing 'main'…
+▶ removing worktree + branch…
+• removing files the tests left in the worktree:
+    cov/
+Deleted branch phase-1-catalog (was 7440f1a).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+?? cov/
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+init
+feature
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 4 @@@
+step 1 (gsdt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Already up to date.
+▶ reconciling .planning after the origin/main sync…
+✔ .planning/ is consistent
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Already up to date.
+▶ reconciling .planning after the origin/main sync…
+✔ .planning/ is consistent
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Already up to date.
+▶ reconciling .planning after the origin/main sync…
+✔ .planning/ is consistent
+
+--- stderr
+To <T>/shop.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to '<T>/shop.git'
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+To <T>/shop.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to '<T>/shop.git'
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+To <T>/shop.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to '<T>/shop.git'
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+✗ could not push 'main' after 3 attempts — push manually, then re-run to clean up.
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 5 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ tests (bash "$RACE_SH", in <T>/shop-worktrees/phase-1-catalog; before merge)…
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ tests (bash "$RACE_SH", in <T>/shop; combined tree after phase merge)…
+▶ pushing 'main'…
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Merge made by the 'ort' strategy.
+ other.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 other.txt
+▶ reconciling .planning after the origin/main sync…
+✔ .planning/ is consistent
+▶ tests (bash "$RACE_SH", in <T>/shop; combined tree after remote retry)…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 229b005).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+To <T>/shop.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to '<T>/shop.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+   c179caa..7477315  main       -> origin/main
+
+--- files left behind
+── log
+Merge branch 'main' of <T>/shop
+Merge phase-1-catalog into main
+other session
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge branch 'main' of <T>/shop
+Merge phase-1-catalog into main
+other session
+init
+feature
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 6 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+• no 'origin' remote — skipping push
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 259a7f0).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 7 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ reclaimed stale gsd lock (owner PID 2999999 no longer running)
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 259a7f0).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+init
+feature
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+

@@ -1,0 +1,15 @@
+@@@ 1 @@@
+rc=0
+--stdout--
+installed : 1.0.0  (<R>/copy/rt)
+latest    : 1.1.0  (acme/gsd-toolkit)
+--stderr--
+--install.sh--
+install.sh --version 1.1.0 --reuse-install-config
+GSD_BIN_DIR=<TMP>/mybin
+GSD_RELEASES_DIR=
+--npm--
+--npx--
+--caches--
+1.1.0
+|

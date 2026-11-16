@@ -1,0 +1,184 @@
+@@@ 1 @@@
+# integrated ok/claude
+0
+@@@ 2 @@@
+# integrated ok/codex
+0
+@@@ 3 @@@
+# integrated ok/custom
+1
+@@@ 4 @@@
+# integrated ok/nope
+1
+@@@ 5 @@@
+# members ok/CLAUDE.md
+claude
+
+@@@ 6 @@@
+# members ok/AGENTS.md
+claude,codex
+
+@@@ 7 @@@
+# integrated wrong-member/claude
+1
+@@@ 8 @@@
+# integrated wrong-member/codex
+0
+@@@ 9 @@@
+# integrated wrong-member/custom
+1
+@@@ 10 @@@
+# integrated wrong-member/nope
+1
+@@@ 11 @@@
+# members wrong-member/CLAUDE.md
+codex
+
+@@@ 12 @@@
+# members wrong-member/AGENTS.md
+codex
+
+@@@ 13 @@@
+# integrated old-header/claude
+0
+@@@ 14 @@@
+# integrated old-header/codex
+1
+@@@ 15 @@@
+# integrated old-header/custom
+1
+@@@ 16 @@@
+# integrated old-header/nope
+1
+@@@ 17 @@@
+# members old-header/CLAUDE.md
+claude
+
+@@@ 18 @@@
+# members old-header/AGENTS.md
+
+@@@ 19 @@@
+# integrated no-pointer/claude
+1
+@@@ 20 @@@
+# integrated no-pointer/codex
+1
+@@@ 21 @@@
+# integrated no-pointer/custom
+1
+@@@ 22 @@@
+# integrated no-pointer/nope
+1
+@@@ 23 @@@
+# members no-pointer/CLAUDE.md
+claude
+
+@@@ 24 @@@
+# members no-pointer/AGENTS.md
+
+@@@ 25 @@@
+# integrated two-lines/claude
+1
+@@@ 26 @@@
+# integrated two-lines/codex
+1
+@@@ 27 @@@
+# integrated two-lines/custom
+1
+@@@ 28 @@@
+# integrated two-lines/nope
+1
+@@@ 29 @@@
+# members two-lines/CLAUDE.md
+claude
+codex
+
+@@@ 30 @@@
+# members two-lines/AGENTS.md
+
+@@@ 31 @@@
+# integrated bad-markers/claude
+1
+@@@ 32 @@@
+# integrated bad-markers/codex
+1
+@@@ 33 @@@
+# integrated bad-markers/custom
+1
+@@@ 34 @@@
+# integrated bad-markers/nope
+1
+@@@ 35 @@@
+# members bad-markers/CLAUDE.md
+claude
+claude
+
+@@@ 36 @@@
+# members bad-markers/AGENTS.md
+
+@@@ 37 @@@
+# integrated noinstr/claude
+1
+@@@ 38 @@@
+# integrated noinstr/codex
+1
+@@@ 39 @@@
+# integrated noinstr/custom
+1
+@@@ 40 @@@
+# integrated noinstr/nope
+1
+@@@ 41 @@@
+# members noinstr/CLAUDE.md
+
+@@@ 42 @@@
+# members noinstr/AGENTS.md
+
+@@@ 43 @@@
+# integrated badcanon/claude
+1
+@@@ 44 @@@
+# integrated badcanon/codex
+1
+@@@ 45 @@@
+# integrated badcanon/custom
+1
+@@@ 46 @@@
+# integrated badcanon/nope
+1
+@@@ 47 @@@
+# members badcanon/CLAUDE.md
+
+@@@ 48 @@@
+# members badcanon/AGENTS.md
+
+@@@ 49 @@@
+# integrated nofile/claude
+1
+@@@ 50 @@@
+# integrated nofile/codex
+1
+@@@ 51 @@@
+# integrated nofile/custom
+1
+@@@ 52 @@@
+# integrated nofile/nope
+1
+@@@ 53 @@@
+# members nofile/CLAUDE.md
+
+@@@ 54 @@@
+# members nofile/AGENTS.md
+
+@@@ 55 @@@
+# commandGuardsActive step 1
+0
+@@@ 56 @@@
+# commandGuardsActive step 2
+1
+@@@ 57 @@@
+# commandGuardsActive step 3
+1
+@@@ 58 @@@
+# commandGuardsActive this package
+0

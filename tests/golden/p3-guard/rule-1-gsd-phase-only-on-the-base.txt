@@ -1,0 +1,400 @@
+@@@ 1 @@@
+rule1 no conf develop 
+rc=0
+out=""
+err=""
+@@@ 2 @@@
+rule2 no conf develop 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 3  (then open a session in phase-3-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 3 @@@
+rule2 no conf develop no N 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 4 @@@
+rule0 no conf develop 
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 5 @@@
+rule1 no conf develop --global
+rc=0
+out=""
+err=""
+@@@ 6 @@@
+rule2 no conf develop --global
+rc=0
+out=""
+err=""
+@@@ 7 @@@
+rule2 no conf develop no N --global
+rc=0
+out=""
+err=""
+@@@ 8 @@@
+rule0 no conf develop --global
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 9 @@@
+rule1 no conf main 
+rc=0
+out=""
+err=""
+@@@ 10 @@@
+rule2 no conf main 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on main.\nCreate/open it with: gsdt-start -p 3  (then open a session in phase-3-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 11 @@@
+rule2 no conf main no N 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on main.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 12 @@@
+rule0 no conf main 
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 13 @@@
+rule1 no conf main --global
+rc=0
+out=""
+err=""
+@@@ 14 @@@
+rule2 no conf main --global
+rc=0
+out=""
+err=""
+@@@ 15 @@@
+rule2 no conf main no N --global
+rc=0
+out=""
+err=""
+@@@ 16 @@@
+rule0 no conf main --global
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 17 @@@
+rule1 no conf, no develop/main 
+rc=0
+out=""
+err=""
+@@@ 18 @@@
+rule2 no conf, no develop/main 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on feature/x.\nCreate/open it with: gsdt-start -p 3  (then open a session in phase-3-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 19 @@@
+rule2 no conf, no develop/main no N 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on feature/x.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 20 @@@
+rule0 no conf, no develop/main 
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 21 @@@
+rule1 no conf, no develop/main --global
+rc=0
+out=""
+err=""
+@@@ 22 @@@
+rule2 no conf, no develop/main --global
+rc=0
+out=""
+err=""
+@@@ 23 @@@
+rule2 no conf, no develop/main no N --global
+rc=0
+out=""
+err=""
+@@@ 24 @@@
+rule0 no conf, no develop/main --global
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 25 @@@
+rule1 detached 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'HEAD'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 26 @@@
+rule2 detached 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 3 but 'HEAD' isn't a phase-3-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 27 @@@
+rule2 detached no N 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 28 @@@
+rule0 detached 
+rc=0
+out=""
+err=""
+@@@ 29 @@@
+rule1 detached --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'HEAD'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 30 @@@
+rule2 detached --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 3 but 'HEAD' isn't a phase-3-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 31 @@@
+rule2 detached no N --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 32 @@@
+rule0 detached --global
+rc=0
+out=""
+err=""
+@@@ 33 @@@
+rule1 unborn 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'HEAD\nunknown'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 34 @@@
+rule2 unborn 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 3 but 'HEAD\nunknown' isn't a phase-3-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 35 @@@
+rule2 unborn no N 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 36 @@@
+rule0 unborn 
+rc=0
+out=""
+err=""
+@@@ 37 @@@
+rule1 unborn --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'HEAD\nunknown'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 38 @@@
+rule2 unborn --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 3 but 'HEAD\nunknown' isn't a phase-3-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 39 @@@
+rule2 unborn no N --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 40 @@@
+rule0 unborn --global
+rc=0
+out=""
+err=""
+@@@ 41 @@@
+rule1 conf base with comment 
+rc=0
+out=""
+err=""
+@@@ 42 @@@
+rule2 conf base with comment 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on release/1.\nCreate/open it with: gsdt-start -p 3  (then open a session in phase-3-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 43 @@@
+rule2 conf base with comment no N 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on release/1.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 44 @@@
+rule0 conf base with comment 
+rc=0
+out=""
+err=""
+@@@ 45 @@@
+rule1 conf base with comment --global
+rc=0
+out=""
+err=""
+@@@ 46 @@@
+rule2 conf base with comment --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on release/1.\nCreate/open it with: gsdt-start -p 3  (then open a session in phase-3-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 47 @@@
+rule2 conf base with comment no N --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on release/1.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 48 @@@
+rule0 conf base with comment --global
+rc=0
+out=""
+err=""
+@@@ 49 @@@
+rule1 set-up on a phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-3-x'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 50 @@@
+rule2 set-up on a phase 
+rc=0
+out=""
+err=""
+@@@ 51 @@@
+rule2 set-up on a phase no N 
+rc=0
+out=""
+err=""
+@@@ 52 @@@
+rule0 set-up on a phase 
+rc=0
+out=""
+err=""
+@@@ 53 @@@
+rule1 set-up on a phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-3-x'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 54 @@@
+rule2 set-up on a phase --global
+rc=0
+out=""
+err=""
+@@@ 55 @@@
+rule2 set-up on a phase no N --global
+rc=0
+out=""
+err=""
+@@@ 56 @@@
+rule0 set-up on a phase --global
+rc=0
+out=""
+err=""
+@@@ 57 @@@
+rule1 set-up on base 
+rc=0
+out=""
+err=""
+@@@ 58 @@@
+rule2 set-up on base 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 3  (then open a session in phase-3-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 59 @@@
+rule2 set-up on base no N 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 60 @@@
+rule0 set-up on base 
+rc=0
+out=""
+err=""
+@@@ 61 @@@
+rule1 set-up on base --global
+rc=0
+out=""
+err=""
+@@@ 62 @@@
+rule2 set-up on base --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 3  (then open a session in phase-3-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 63 @@@
+rule2 set-up on base no N --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 64 @@@
+rule0 set-up on base --global
+rc=0
+out=""
+err=""
+@@@ 65 @@@
+rule1 agent branch 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'agent-abc'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 66 @@@
+rule2 agent branch 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 3 but 'agent-abc' isn't a phase-3-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 67 @@@
+rule2 agent branch no N 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 68 @@@
+rule0 agent branch 
+rc=0
+out=""
+err=""
+@@@ 69 @@@
+rule1 agent branch --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'agent-abc'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 70 @@@
+rule2 agent branch --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 3 but 'agent-abc' isn't a phase-3-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 71 @@@
+rule2 agent branch no N --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 72 @@@
+rule0 agent branch --global
+rc=0
+out=""
+err=""
+@@@ 73 @@@
+rule1 worktree-agent branch 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'worktree-agent-abc'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 74 @@@
+rule2 worktree-agent branch 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 3 but 'worktree-agent-abc' isn't a phase-3-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 75 @@@
+rule2 worktree-agent branch no N 
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 76 @@@
+rule0 worktree-agent branch 
+rc=0
+out=""
+err=""
+@@@ 77 @@@
+rule1 worktree-agent branch --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'worktree-agent-abc'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 78 @@@
+rule2 worktree-agent branch --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 3 but 'worktree-agent-abc' isn't a phase-3-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 79 @@@
+rule2 worktree-agent branch no N --global
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 80 @@@
+rule0 worktree-agent branch --global
+rc=0
+out=""
+err=""

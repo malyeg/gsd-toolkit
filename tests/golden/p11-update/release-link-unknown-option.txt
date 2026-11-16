@@ -1,0 +1,10 @@
+@@@ 1 @@@
+rc=1
+--stdout--
+--stderr--
+gsdt-update: unknown option: --nope (see gsdt-update --help)
+--install.sh--
+--npm--
+--npx--
+--caches--
+|

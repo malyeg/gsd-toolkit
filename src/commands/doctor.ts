@@ -14,7 +14,7 @@
 // Differences (improvements): T062 reads the settings file natively (no python).
 import { closeSync, existsSync, lstatSync, mkdtempSync, openSync, readFileSync, readdirSync, readSync, readlinkSync, realpathSync, rmSync, statSync, writeSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { WIN, normalizePath, selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
+import { WIN, normalizePath, relUnder, selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
 import path from 'node:path';
 import {
   GSD_CORE_INSTALL,
@@ -37,6 +37,7 @@ import {
   skillDiffers,
   validationProblem,
   wtdir as confWtdir,
+  readStdinLine,
 } from '../common.ts';
 import {
   CONTEXT_BIG_KIB,
@@ -123,6 +124,19 @@ const out = (s: string): void => writeAll(1, s);
 const err = (s: string): void => writeAll(2, s);
 
 /** the header comment of bin/gsdt-doctor up to its `set -uo` line, `# ` stripped (bash `usage`) */
+/** win32: the package folder a command shim runs (npm's shim names <prefix>\node_modules\gsd-toolkit\…; a node launch.mjs line names src\launch.mjs), else null */
+function shimPackage(shim: string): string | null {
+  let text: string;
+  try {
+    text = readFileSync(shim, 'utf8');
+  } catch {
+    return null;
+  }
+  if (/node_modules[\\/]gsd-toolkit[\\/]/.test(text)) return path.join(path.dirname(shim), 'node_modules', 'gsd-toolkit');
+  const m = /"([A-Za-z]:[^"\r\n$]*[\\/]src[\\/]launch\.mjs)"/.exec(text);
+  return m ? path.dirname(path.dirname(m[1] as string)) : null;
+}
+
 export function usageText(pkg: string = gsdPkg()): string {
   let t = '';
   try {
@@ -181,7 +195,7 @@ function readFileText(f: string): string | null {
 
 const realOrSelf = (p: string): string => {
   try {
-    return normalizePath(realpathSync(p));
+    return normalizePath(realpathSync.native(p));
   } catch {
     return p;
   }
@@ -376,7 +390,7 @@ class Doctor {
     if (mr.ok) DOCTOR_MODEL = mr.value;
     else MODEL_VALID = false;
 
-    if (!o.json) out(`\x1b[1mgsd-doctor\x1b[0m — ${path.basename(MAIN)}\n${MAIN}\n`);
+    if (!o.json) out(`\x1b[1mgsdt-doctor\x1b[0m — ${path.basename(MAIN)}\n${MAIN}\n`);
 
     // ── toolkit ─────────────────────────────────────────────────────────────
     section('toolkit');
@@ -396,10 +410,22 @@ class Doctor {
       // the npm entries live in <pkg>/dist/bin/
       if (path.basename(cand) === 'dist' && path.basename(path.dirname(live)) === 'bin') cand = path.dirname(cand);
       if (isDir(path.dirname(live))) resolved = cand;
+      if (WIN) {
+        // Windows: PATH finds a shim (npm's gsdt-x.cmd / extensionless sh shim, next to the prefix's node_modules),
+        // not a link into the package. Read the package folder out of the shim.
+        const pkgOfShim = shimPackage(live);
+        if (pkgOfShim !== null) resolved = pkgOfShim;
+      }
     }
     if (resolved === '') fail('gsd commands are not on PATH', REINSTALL, 'T001');
     else if (realOrSelf(resolved) !== realOrSelf(pkg)) fail(`PATH commands come from ${resolved}, not this package`, REINSTALL, 'T002');
     else pass(`PATH commands resolve to ${pkg}`);
+    // A Node version manager installs global packages per Node version: switching versions (nvm use, fnm use)
+    // leaves the gsdt-* commands behind, and the Claude hooks (absolute paths into that folder) stop quietly.
+    const vm = /[\\/](?:\.nvm[\\/]versions[\\/]node|fnm[\\/]node-versions|\.volta[\\/]tools[\\/]image[\\/]node)[\\/]([^\\/]+)[\\/]/.exec(realOrSelf(pkg));
+    if (resolved !== '' && vm !== null) {
+      note(`installed for Node ${vm[1]} only (a version manager's folder): after switching Node versions, install again (the curl line in the README, or gsdt-update from the old version) — until then gsdt-* is missing and the Claude hooks do nothing`);
+    }
 
     const gsdAgent = DOCTOR_PROVIDER === 'codex' ? 'codex' : 'claude';
     const gsdRun = cli();
@@ -1281,7 +1307,7 @@ class Doctor {
           if (!pd.includes('cu_')) {
             const tk = ticketExtract(path.basename(pd));
             miss += ' ticket';
-            fix += ` gsdt-tracker snapshot ${tk || '<id>'} --out ${pd.startsWith(`${MAIN}/`) ? pd.slice(MAIN.length + 1) : pd}/${p}-TICKET.md;`;
+            fix += ` gsdt-tracker snapshot ${tk || '<id>'} --out ${relUnder(MAIN, pd)}/${p}-TICKET.md;`;
           }
         }
         if (!flowHas('REVIEW.md')) {
@@ -1354,7 +1380,7 @@ class Doctor {
       case 'track':
         return `git branch --track ${this.base} origin/${this.base}`;
       case 'chmod':
-        return `chmod +x ${this.pmAbs.startsWith(`${MAIN}/`) ? this.pmAbs.slice(MAIN.length + 1) : this.pmAbs}`;
+        return `chmod +x ${relUnder(MAIN, this.pmAbs)}`;
       case 'init':
         return 'gsdt-init --no-launch --no-commit  (shims, merge rules, driver, hook, instructions)';
       case 'repair':
@@ -1480,21 +1506,8 @@ function securityOpen(file: string): string {
   return '';
 }
 
-/** one line from stdin (null at EOF without a newline: bash's `read` then fails) */
 function readLine(): string | null {
-  const b = Buffer.alloc(1);
-  let s = '';
-  for (;;) {
-    let n = 0;
-    try {
-      n = readSync(0, b, 0, 1, null);
-    } catch {
-      return null;
-    }
-    if (n === 0) return null;
-    if (b[0] === 10) return s;
-    s += String.fromCharCode(b[0] as number);
-  }
+  return readStdinLine();
 }
 
 export function main(argv: string[]): number {

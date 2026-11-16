@@ -1,0 +1,1045 @@
+@@@ 1 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/1
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-finish 1 --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/2
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose
+
+── merge driver
+
+@@@ 3 @@@
+step 1 (gsdt-finish 1 --pr --draft)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/1
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose --draft
+
+── merge driver
+
+@@@ 4 @@@
+step 2 (gsdt-finish phase-1-catalog --draft --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/2
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose --draft
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose --draft
+
+── merge driver
+
+@@@ 5 @@@
+step 1 (gsdt-finish --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/1
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose
+
+── merge driver
+
+@@@ 6 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/2
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose
+gh pr create --base main --head phase-1-catalog --title Phase 1: catalog --body 
+
+── merge driver
+
+@@@ 7 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=1
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+
+--- stderr
+gh: boom
+✖ gh pr create failed (is origin a GitHub repo and gh authenticated?)
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose
+gh pr create --base main --head phase-1-catalog --title Phase 1: catalog --body 
+
+── merge driver
+
+@@@ 8 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=1
+--- stdout
+
+--- stderr
+✖ --pr needs the GitHub CLI (gh) on PATH
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+
+@@@ 9 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/1
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: Catalog rework
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: Catalog rework --fill-verbose
+
+── merge driver
+
+@@@ 10 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog-pr'…
+▶ opening PR phase-1-catalog-pr → main…
+https://github.com/x/y/pull/1
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+phase-1-catalog-pr
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog-pr --title Phase 1: catalog --fill-verbose
+
+── merge driver
+
+@@@ 11 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=1
+--- stdout
+▶ pushing 'phase-1-catalog'…
+
+--- stderr
+fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+✖ push of 'phase-1-catalog' failed — if origin has newer commits, run 'git pull --rebase origin phase-1-catalog' where that branch is checked out, then rerun gsdt-finish --pr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+
+@@@ 12 @@@
+step 1 (gsdt-finish 9 --pr)
+rc=1
+--- stdout
+
+--- stderr
+✖ no phase-9-* branch found
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+
+@@@ 13 @@@
+step 2 (gsdt-finish phase-9-nope --pr)
+rc=1
+--- stdout
+
+--- stderr
+✖ branch 'phase-9-nope' not found
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+
+@@@ 14 @@@
+step 3 (gsdt-finish batch-nope --pr)
+rc=1
+--- stdout
+
+--- stderr
+✖ branch 'batch-nope' not found
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+
+@@@ 15 @@@
+step 1 (gsdt-finish batch-2026-11-09-fix --pr)
+rc=0
+--- stdout
+▶ pushing 'batch-2026-11-09-fix'…
+▶ opening PR batch-2026-11-09-fix → main…
+https://github.com/x/y/pull/1
+
+Worktree kept. After the PR merges:  gsdt-finish batch-2026-11-09-fix
+
+--- stderr
+
+--- files left behind
+── log
+fix: labels
+init
+
+── branches
+batch-2026-11-09-fix
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-2026-11-09-fix
+branch refs/heads/batch-2026-11-09-fix
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt batch-2026-11-09-fix
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+b.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head batch-2026-11-09-fix --title batch-2026-11-09-fix --fill-verbose
+
+── merge driver
+
+@@@ 16 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=0
+--- stdout
+▶ main checkout was on 'parked' — switching to 'main'…
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/1
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+parked
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose
+
+── merge driver
+
+@@@ 17 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/1
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog --fill-verbose
+
+── merge driver
+

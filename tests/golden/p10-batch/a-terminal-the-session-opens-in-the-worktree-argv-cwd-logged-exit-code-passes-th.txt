@@ -1,0 +1,1878 @@
+@@@ 1 @@@
+step 1 (gsdt-batch - fix a - fix b)
+rc=5
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-fix-a   (branch 'batch-<DATE>-fix-a' off main)
+Preparing worktree (new branch 'batch-<DATE>-fix-a')
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-<DATE>-fix-a/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-fix-a   (batch)
+▶ opening a claude batch session on sonnet in <T>/shop-worktrees/batch-<DATE>-fix-a…
+  land it afterwards: gsdt-finish batch-<DATE>-fix-a
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-fix-a
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [--model] [sonnet] [/gsdt-batch - fix a
+- fix b]
+cwd: <T>/shop-worktrees/batch-<DATE>-fix-a
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-batch --model default - fix a)
+rc=5
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-fix-a-2   (branch 'batch-<DATE>-fix-a-2' off main)
+Preparing worktree (new branch 'batch-<DATE>-fix-a-2')
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-<DATE>-fix-a-2/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-fix-a-2   (batch)
+▶ opening a claude batch session in <T>/shop-worktrees/batch-<DATE>-fix-a-2…
+  land it afterwards: gsdt-finish batch-<DATE>-fix-a-2
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-fix-a
+batch-<DATE>-fix-a-2
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a-2
+branch refs/heads/batch-<DATE>-fix-a-2
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [/gsdt-batch - fix a]
+cwd: <T>/shop-worktrees/batch-<DATE>-fix-a-2
+
+── merge driver
+
+@@@ 3 @@@
+step 3 (gsdt-batch --model opus --file brief.md)
+rc=5
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-brief   (branch 'batch-<DATE>-brief' off main)
+Preparing worktree (new branch 'batch-<DATE>-brief')
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-<DATE>-brief/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-brief   (batch)
+▶ opening a claude batch session on opus in <T>/shop-worktrees/batch-<DATE>-brief…
+  land it afterwards: gsdt-finish batch-<DATE>-brief
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-brief
+batch-<DATE>-fix-a
+batch-<DATE>-fix-a-2
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-brief
+branch refs/heads/batch-<DATE>-brief
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a-2
+branch refs/heads/batch-<DATE>-fix-a-2
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-brief
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-brief/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-brief/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [--model] [opus] [/gsdt-batch --file <T>/shop-worktrees/batch-<DATE>-brief/brief.md]
+cwd: <T>/shop-worktrees/batch-<DATE>-brief
+
+── merge driver
+
+@@@ 4 @@@
+step 4 (gsdt-batch --name twice x)
+rc=5
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-twice   (branch 'batch-<DATE>-twice' off main)
+Preparing worktree (new branch 'batch-<DATE>-twice')
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-<DATE>-twice/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-twice   (batch)
+▶ opening a claude batch session on sonnet in <T>/shop-worktrees/batch-<DATE>-twice…
+  land it afterwards: gsdt-finish batch-<DATE>-twice
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-brief
+batch-<DATE>-fix-a
+batch-<DATE>-fix-a-2
+batch-<DATE>-twice
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-brief
+branch refs/heads/batch-<DATE>-brief
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a-2
+branch refs/heads/batch-<DATE>-fix-a-2
+
+worktree <T>/shop-worktrees/batch-<DATE>-twice
+branch refs/heads/batch-<DATE>-twice
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-brief
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-brief/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-brief/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-twice
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-twice/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-twice/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [--model] [sonnet] [/gsdt-batch x]
+cwd: <T>/shop-worktrees/batch-<DATE>-twice
+
+── merge driver
+
+@@@ 5 @@@
+step 5 (gsdt-batch --name twice x)
+rc=5
+--- stdout
+• branch 'batch-<DATE>-twice' already has a worktree — reusing it.
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-twice   (batch)
+▶ opening a claude batch session on sonnet in <T>/shop-worktrees/batch-<DATE>-twice…
+  land it afterwards: gsdt-finish batch-<DATE>-twice
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-brief
+batch-<DATE>-fix-a
+batch-<DATE>-fix-a-2
+batch-<DATE>-twice
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-brief
+branch refs/heads/batch-<DATE>-brief
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a-2
+branch refs/heads/batch-<DATE>-fix-a-2
+
+worktree <T>/shop-worktrees/batch-<DATE>-twice
+branch refs/heads/batch-<DATE>-twice
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-brief
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-brief/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-brief/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-twice
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-twice/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-twice/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [--model] [sonnet] [/gsdt-batch x]
+cwd: <T>/shop-worktrees/batch-<DATE>-twice
+
+── merge driver
+
+@@@ 6 @@@
+step 6 (gsdt-batch --provider custom --agent-command myagent x)
+rc=5
+--- stdout
+gsdt-batch: the switch to Sonnet is Claude-only; custom runs with its usual model.
+▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-x   (branch 'batch-<DATE>-x' off main)
+Preparing worktree (new branch 'batch-<DATE>-x')
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-<DATE>-x/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-x   (batch)
+▶ opening a custom batch session in <T>/shop-worktrees/batch-<DATE>-x…
+  land it afterwards: gsdt-finish batch-<DATE>-x
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-brief
+batch-<DATE>-fix-a
+batch-<DATE>-fix-a-2
+batch-<DATE>-twice
+batch-<DATE>-x
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-brief
+branch refs/heads/batch-<DATE>-brief
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a-2
+branch refs/heads/batch-<DATE>-fix-a-2
+
+worktree <T>/shop-worktrees/batch-<DATE>-twice
+branch refs/heads/batch-<DATE>-twice
+
+worktree <T>/shop-worktrees/batch-<DATE>-x
+branch refs/heads/batch-<DATE>-x
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-brief
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-brief/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-brief/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-twice
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-twice/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-twice/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsdt-batch-report): x]
+cwd: <T>/shop-worktrees/batch-<DATE>-x
+
+── merge driver
+
+@@@ 7 @@@
+step 7 (gsdt-batch --provider custom --agent-command /nonexistent/agent x)
+rc=69
+--- stdout
+gsdt-batch: the switch to Sonnet is Claude-only; custom runs with its usual model.
+▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-x-2   (branch 'batch-<DATE>-x-2' off main)
+Preparing worktree (new branch 'batch-<DATE>-x-2')
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-<DATE>-x-2/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-x-2   (batch)
+gsdt-batch: /nonexistent/agent not found on PATH
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-brief
+batch-<DATE>-fix-a
+batch-<DATE>-fix-a-2
+batch-<DATE>-twice
+batch-<DATE>-x
+batch-<DATE>-x-2
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-brief
+branch refs/heads/batch-<DATE>-brief
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a-2
+branch refs/heads/batch-<DATE>-fix-a-2
+
+worktree <T>/shop-worktrees/batch-<DATE>-twice
+branch refs/heads/batch-<DATE>-twice
+
+worktree <T>/shop-worktrees/batch-<DATE>-x
+branch refs/heads/batch-<DATE>-x
+
+worktree <T>/shop-worktrees/batch-<DATE>-x-2
+branch refs/heads/batch-<DATE>-x-2
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-brief
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-brief/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-brief/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-twice
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-twice/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-twice/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsdt-batch-report): x]
+cwd: <T>/shop-worktrees/batch-<DATE>-x
+
+── merge driver
+
+@@@ 8 @@@
+step 8 (gsdt-batch --provider codex x)
+rc=69
+--- stdout
+gsdt-batch: the switch to Sonnet is Claude-only; codex runs with its usual model.
+▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-x-3   (branch 'batch-<DATE>-x-3' off main)
+Preparing worktree (new branch 'batch-<DATE>-x-3')
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-<DATE>-x-3/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-x-3   (batch)
+gsdt-batch: codex not found on PATH
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-brief
+batch-<DATE>-fix-a
+batch-<DATE>-fix-a-2
+batch-<DATE>-twice
+batch-<DATE>-x
+batch-<DATE>-x-2
+batch-<DATE>-x-3
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-brief
+branch refs/heads/batch-<DATE>-brief
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a-2
+branch refs/heads/batch-<DATE>-fix-a-2
+
+worktree <T>/shop-worktrees/batch-<DATE>-twice
+branch refs/heads/batch-<DATE>-twice
+
+worktree <T>/shop-worktrees/batch-<DATE>-x
+branch refs/heads/batch-<DATE>-x
+
+worktree <T>/shop-worktrees/batch-<DATE>-x-2
+branch refs/heads/batch-<DATE>-x-2
+
+worktree <T>/shop-worktrees/batch-<DATE>-x-3
+branch refs/heads/batch-<DATE>-x-3
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-brief
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-brief/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-brief/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-twice
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-twice/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-twice/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x-3
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x-3/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x-3/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsdt-batch-report): x]
+cwd: <T>/shop-worktrees/batch-<DATE>-x
+
+── merge driver
+
+@@@ 9 @@@
+step 9 (gsdt-batch --print x)
+rc=0
+--- stdout
+gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x-4 (branch 'batch-<DATE>-x-4' off main)
+cd <T>/shop-worktrees/batch-<DATE>-x-4 && claude --model sonnet /gsdt-batch\ x
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-brief
+batch-<DATE>-fix-a
+batch-<DATE>-fix-a-2
+batch-<DATE>-twice
+batch-<DATE>-x
+batch-<DATE>-x-2
+batch-<DATE>-x-3
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-brief
+branch refs/heads/batch-<DATE>-brief
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a-2
+branch refs/heads/batch-<DATE>-fix-a-2
+
+worktree <T>/shop-worktrees/batch-<DATE>-twice
+branch refs/heads/batch-<DATE>-twice
+
+worktree <T>/shop-worktrees/batch-<DATE>-x
+branch refs/heads/batch-<DATE>-x
+
+worktree <T>/shop-worktrees/batch-<DATE>-x-2
+branch refs/heads/batch-<DATE>-x-2
+
+worktree <T>/shop-worktrees/batch-<DATE>-x-3
+branch refs/heads/batch-<DATE>-x-3
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-brief
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-brief/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-brief/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-twice
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-twice/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-twice/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x-3
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x-3/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x-3/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsdt-batch-report): x]
+cwd: <T>/shop-worktrees/batch-<DATE>-x
+
+── merge driver
+
+@@@ 10 @@@
+step 10 (gsdt-batch --help)
+rc=0
+--- stdout
+
+gsdt-batch — run several quick tasks as one batch, in a FRESH session with
+the gsdt-batch skill already running. On Claude the session runs on Sonnet:
+a small, fresh context makes every coordinator turn cheaper. The planners
+keep the model gsd-core gives them (it never follows the session's model
+unless GSD's settings say `inherit` — the skill checks that first).
+
+Usage (from anywhere inside the repo):
+  gsdt-batch [options] [--] <task list | brief | --file <path>> [gsd-quick-batch flags]
+
+  A task list is what /gsd-quick-batch takes: one item per bulleted or
+  numbered line ("- fix …"), quoted as one argument, or --file <path>.
+  A brief is anything else, in your own words, quoted:
+    gsdt-batch "Read plan/FIX-BRIEF-7.md. Validate every item, fix only the
+    real ones, recommend the owner calls."
+  Everything that is not an option below goes to the skill unchanged.
+
+Options:
+  --provider <p>      claude (default: the repo's provider), codex or custom
+  --agent-command <c> the provider's executable
+  --model <m>         the session's model (Claude default: sonnet; others:
+                      their configured model). `default` = the CLI's own
+  --name <slug>       the batch's name (default: the first words of the
+                      list or brief, or the --file name)
+  --repo <path>       the repo (default: the main checkout of the cwd)
+  --print             print the worktree and command; make nothing
+
+The batch runs in its OWN worktree: gsdt-batch makes a
+batch-<YYYY-MM-DD>-<slug> branch + worktree off the base branch (next to the
+phase worktrees), then starts the session there. Its commits land on that
+branch, never on the base branch; `gsdt-finish batch-…` merges it (tests →
+merge → push → cleanup, like a phase). Run from inside a batch-* worktree,
+it starts the session there instead. A taken name gets -2, -3, … (unless
+--name named it: then that worktree is reused). Without a terminal the
+worktree is made and the command printed. The Sonnet switch is Claude-only:
+other providers launch with their usual model, and gsdt-batch says so.
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-brief
+batch-<DATE>-fix-a
+batch-<DATE>-fix-a-2
+batch-<DATE>-twice
+batch-<DATE>-x
+batch-<DATE>-x-2
+batch-<DATE>-x-3
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-brief
+branch refs/heads/batch-<DATE>-brief
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a-2
+branch refs/heads/batch-<DATE>-fix-a-2
+
+worktree <T>/shop-worktrees/batch-<DATE>-twice
+branch refs/heads/batch-<DATE>-twice
+
+worktree <T>/shop-worktrees/batch-<DATE>-x
+branch refs/heads/batch-<DATE>-x
+
+worktree <T>/shop-worktrees/batch-<DATE>-x-2
+branch refs/heads/batch-<DATE>-x-2
+
+worktree <T>/shop-worktrees/batch-<DATE>-x-3
+branch refs/heads/batch-<DATE>-x-3
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-brief
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-brief/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-brief/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-fix-a-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-fix-a-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-twice
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-twice/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-twice/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x-2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x-2/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x-2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-<DATE>-x-3
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+brief.md
+── wt batch-<DATE>-x-3/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-x-3/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsdt-batch-report): x]
+cwd: <T>/shop-worktrees/batch-<DATE>-x
+
+── merge driver
+
+@@@ 11 @@@
+step 1 (gsdt-batch --name in x)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-in && claude --model sonnet /gsdt-batch\ x
+
+--- stderr
+▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-in   (branch 'batch-<DATE>-in' off main)
+Preparing worktree (new branch 'batch-<DATE>-in')
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-<DATE>-in/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-in   (batch)
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-in
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-in
+branch refs/heads/batch-<DATE>-in
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-in
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt batch-<DATE>-in/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-in/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 12 @@@
+step 2 (gsdt-batch - here)
+rc=5
+--- stdout
+▶ opening a claude batch session on sonnet in <T>/shop-worktrees/batch-<DATE>-in…
+  land it afterwards: gsdt-finish batch-<DATE>-in
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-in
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-in
+branch refs/heads/batch-<DATE>-in
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-in
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt batch-<DATE>-in/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-in/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── agent.log
+argv: [--model] [sonnet] [/gsdt-batch - here]
+cwd: <T>/shop-worktrees/batch-<DATE>-in
+
+── merge driver
+
+@@@ 13 @@@
+step 1 (gsdt-batch - fix a)
+rc=69
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-fix-a   (branch 'batch-<DATE>-fix-a' off main)
+Preparing worktree (new branch 'batch-<DATE>-fix-a')
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-<DATE>-fix-a/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-fix-a   (batch)
+gsdt-batch: claude not found on PATH
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-fix-a
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-fix-a
+branch refs/heads/batch-<DATE>-fix-a
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-fix-a
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt batch-<DATE>-fix-a/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-fix-a/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+

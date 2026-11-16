@@ -1,0 +1,10 @@
+@@@ 1 @@@
+rc=1
+--stdout--
+--stderr--
+gsdt-update: --version needs X.Y.Z
+--install.sh--
+--npm--
+--npx--
+--caches--
+|

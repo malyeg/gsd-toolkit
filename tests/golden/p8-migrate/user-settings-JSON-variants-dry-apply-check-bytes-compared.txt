@@ -1,0 +1,2474 @@
+@@@ 1 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 2 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          },
+          {
+            "type": "command",
+            "command": "echo mine"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 3 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          },
+          {
+            "type": "command",
+            "command": "echo mine"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 4 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          },
+          {
+            "type": "command",
+            "command": "echo mine"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 5 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}]}}
+@@@ 6 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 7 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 8 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 9 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+	"a": 1,
+	"hooks": {
+		"SessionStart": [{"hooks": [{"command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]
+	}
+}
+
+@@@ 10 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "a": 1,
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 11 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "a": 1,
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 12 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "a": 1,
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 13 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"n":[1,-0,1.0,1.50,1e5,1E-3,2.5e+22,123456789012345678901234567890,0.1,1e16,1e15,123456789.123456789,-1.5e-7,0.0001,0.00001,1e400,NaN,Infinity,-Infinity],"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
+@@@ 14 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "n": [
+    1,
+    0,
+    1.0,
+    1.5,
+    100000.0,
+    0.001,
+    2.5e+22,
+    123456789012345678901234567890,
+    0.1,
+    1e+16,
+    1000000000000000.0,
+    123456789.12345679,
+    -1.5e-07,
+    0.0001,
+    1e-05,
+    Infinity,
+    NaN,
+    Infinity,
+    -Infinity
+  ],
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 15 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "n": [
+    1,
+    0,
+    1.0,
+    1.5,
+    100000.0,
+    0.001,
+    2.5e+22,
+    123456789012345678901234567890,
+    0.1,
+    1e+16,
+    1000000000000000.0,
+    123456789.12345679,
+    -1.5e-07,
+    0.0001,
+    1e-05,
+    Infinity,
+    NaN,
+    Infinity,
+    -Infinity
+  ],
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 16 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "n": [
+    1,
+    0,
+    1.0,
+    1.5,
+    100000.0,
+    0.001,
+    2.5e+22,
+    123456789012345678901234567890,
+    0.1,
+    1e+16,
+    1000000000000000.0,
+    123456789.12345679,
+    -1.5e-07,
+    0.0001,
+    1e-05,
+    Infinity,
+    NaN,
+    Infinity,
+    -Infinity
+  ],
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 17 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"s":["Ã©","\u00e9","\ud83d\ude00","ð","\u0001\u007f\u001f","a\/b","\b\f\n\r\t\"\\","\u2028"],"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
+@@@ 18 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "s": [
+    "Ã©",
+    "Ã©",
+    "ð",
+    "ð",
+    "\u0001\u001f",
+    "a/b",
+    "\b\f\n\r\t\"\\",
+    "â¨"
+  ],
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 19 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "s": [
+    "Ã©",
+    "Ã©",
+    "ð",
+    "ð",
+    "\u0001\u001f",
+    "a/b",
+    "\b\f\n\r\t\"\\",
+    "â¨"
+  ],
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 20 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "s": [
+    "Ã©",
+    "Ã©",
+    "ð",
+    "ð",
+    "\u0001\u001f",
+    "a/b",
+    "\b\f\n\r\t\"\\",
+    "â¨"
+  ],
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 21 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"2":"b","1":"a","10":{"x":1},"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]},"b":[],"c":{},"d":[[],{}]}
+@@@ 22 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "2": "b",
+  "1": "a",
+  "10": {
+    "x": 1
+  },
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  },
+  "b": [],
+  "c": {},
+  "d": [
+    [],
+    {}
+  ]
+}
+
+@@@ 23 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "2": "b",
+  "1": "a",
+  "10": {
+    "x": 1
+  },
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  },
+  "b": [],
+  "c": {},
+  "d": [
+    [],
+    {}
+  ]
+}
+
+@@@ 24 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "2": "b",
+  "1": "a",
+  "10": {
+    "x": 1
+  },
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  },
+  "b": [],
+  "c": {},
+  "d": [
+    [],
+    {}
+  ]
+}
+
+@@@ 25 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"matcher":"m","hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"},{"command":"[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsd-rules' --hook"}]},{"matcher":"m","hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]},{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]},{"hooks":[{"command":"[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
+@@@ 26 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "matcher": "m",
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 27 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "matcher": "m",
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 28 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "matcher": "m",
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 29 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"echo"},{"command":"echo"},{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"},{"command":"[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
+@@@ 30 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "echo"
+          },
+          {
+            "command": "echo"
+          },
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 31 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "echo"
+          },
+          {
+            "command": "echo"
+          },
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 32 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "echo"
+          },
+          {
+            "command": "echo"
+          },
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 33 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[]},{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]},{"matcher":"x"}],"T":[{"hooks":[]}],"U":"str","V":[3,null,{"hooks":"x"}]}}
+@@@ 34 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      },
+      {
+        "matcher": "x"
+      }
+    ],
+    "T": [],
+    "U": "str",
+    "V": [
+      3,
+      null,
+      {
+        "hooks": "x"
+      }
+    ]
+  }
+}
+
+@@@ 35 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      },
+      {
+        "matcher": "x"
+      }
+    ],
+    "T": [],
+    "U": "str",
+    "V": [
+      3,
+      null,
+      {
+        "hooks": "x"
+      }
+    ]
+  }
+}
+
+@@@ 36 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      },
+      {
+        "matcher": "x"
+      }
+    ],
+    "T": [],
+    "U": "str",
+    "V": [
+      3,
+      null,
+      {
+        "hooks": "x"
+      }
+    ]
+  }
+}
+
+@@@ 37 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[]},{"hooks":[{"command":"echo"}]}]}}
+@@@ 38 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[]},{"hooks":[{"command":"echo"}]}]}}
+@@@ 39 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[]},{"hooks":[{"command":"echo"}]}]}}
+@@@ 40 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[]},{"hooks":[{"command":"echo"}]}]}}
+@@@ 41 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"gsd-rules run"},{"command":"gsd-worktree-guard check"},{"command":"gsd-rules --hook-x gsd-rules"},{"command":5},{"nocommand":1},"x"]}]}}
+@@@ 42 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "gsd-rules run"
+          },
+          {
+            "command": "gsd-worktree-guard check"
+          },
+          {
+            "command": "gsdt-rules --hook-x gsdt-rules"
+          },
+          {
+            "command": 5
+          },
+          {
+            "nocommand": 1
+          },
+          "x"
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 43 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "gsd-rules run"
+          },
+          {
+            "command": "gsd-worktree-guard check"
+          },
+          {
+            "command": "gsdt-rules --hook-x gsdt-rules"
+          },
+          {
+            "command": 5
+          },
+          {
+            "nocommand": 1
+          },
+          "x"
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 44 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "gsd-rules run"
+          },
+          {
+            "command": "gsd-worktree-guard check"
+          },
+          {
+            "command": "gsdt-rules --hook-x gsdt-rules"
+          },
+          {
+            "command": 5
+          },
+          {
+            "nocommand": 1
+          },
+          "x"
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 45 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"a gsd-rules --hook b gsd-rules c xgsd-rules d gsd-rules-x e Ã©-gsd-rules f Ã¼gsd-rules g gsd-worktree-guard --global"}]}]}}
+@@@ 46 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "a gsdt-rules --hook b gsdt-rules c xgsd-rules d gsd-rules-x e Ã©-gsd-rules f Ã¼gsd-rules g gsdt-worktree-guard --global"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 47 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "a gsdt-rules --hook b gsdt-rules c xgsd-rules d gsd-rules-x e Ã©-gsd-rules f Ã¼gsd-rules g gsdt-worktree-guard --global"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 48 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "a gsdt-rules --hook b gsdt-rules c xgsd-rules d gsd-rules-x e Ã©-gsd-rules f Ã¼gsd-rules g gsdt-worktree-guard --global"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 49 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"matcher":1,"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]},{"matcher":1.0,"hooks":[{"command":"[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
+@@@ 50 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "matcher": 1,
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 51 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "matcher": 1,
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 52 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "hooks": {
+    "S": [
+      {
+        "matcher": 1,
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 53 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks": {
+@@@ 54 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks": {
+@@@ 55 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks": {
+@@@ 56 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks": {
+@@@ 57 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}],}}
+@@@ 58 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}],}}
+@@@ 59 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}],}}
+@@@ 60 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}],}}
+@@@ 61 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 [1,2]
+@@@ 62 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 [1,2]
+@@@ 63 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 [1,2]
+@@@ 64 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 [1,2]
+@@@ 65 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"a":1}
+@@@ 66 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"a":1}
+@@@ 67 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"a":1}
+@@@ 68 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"a":1}
+@@@ 69 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":[]}
+@@@ 70 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":[]}
+@@@ 71 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":[]}
+@@@ 72 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":[]}
+@@@ 73 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 
+@@@ 74 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 
+@@@ 75 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 
+@@@ 76 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 
+@@@ 77 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 ï»¿{"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
+@@@ 78 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 ï»¿{"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
+@@@ 79 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 ï»¿{"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
+@@@ 80 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 ï»¿{"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
+@@@ 81 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 82 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          },
+          {
+            "type": "command",
+            "command": "echo mine"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 83 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          },
+          {
+            "type": "command",
+            "command": "echo mine"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 84 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          },
+          {
+            "type": "command",
+            "command": "echo mine"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 85 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook	"}]}]}}
+@@@ 86 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook	"}]}]}}
+@@@ 87 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook	"}]}]}}
+@@@ 88 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook	"}]}]}}
+@@@ 89 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {"a":1,"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]},"a":2}
+@@@ 90 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "a": 2,
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 91 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "a": 2,
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 92 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "a": 2,
+  "hooks": {
+    "S": [
+      {
+        "hooks": [
+          {
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 93 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 94 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 95 @@@
+rc=0
+--stdout--
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 96 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+

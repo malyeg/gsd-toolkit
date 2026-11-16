@@ -1,6 +1,7 @@
-// P11: gsdt-setup. The user hook is compared against lib/install-copy.sh (the python
-// user_hook()), byte for byte; skills, the 0.10.x clean-up, the manifest and the
-// bin dir are checked on the new side. Always a temp HOME / CLAUDE / CODEX / XDG.
+// P11: gsdt-setup. The user hook (settings.json bytes + the hook output lines) is checked
+// against saved goldens in tests/golden/p11-setup/ (regenerate with UPDATE_GOLDEN=1; review
+// the diff); skills, the 0.10.x clean-up, the manifest and the bin dir are checked directly.
+// Always a temp HOME / CLAUDE / CODEX / XDG.
 // Run: node --test tests/ts/p11-setup.test.ts
 import { spawnSync } from 'node:child_process';
 import {
@@ -14,9 +15,11 @@ import {
   writeFileSync,
 } from 'node:fs';
 import path from 'node:path';
-import { test } from 'node:test';
+import { test, golden, skipFileOnWindows } from './golden.ts';
+
+skipFileOnWindows('POSIX installer parity (symlinked skills and settings, 0.10.x links, colon-separated PATH, exec bits); Windows is covered by tests/node/npm.test.ts and tests/os');
 import assert from 'node:assert/strict';
-import { PKG, tmp, write } from './helpers.ts';
+import { PKG, tmp, write, subst } from './helpers.ts';
 
 const NODE_DIR = path.dirname(process.execPath);
 const BASE_PATH = `${NODE_DIR}:/usr/bin:/bin`;
@@ -52,17 +55,10 @@ function setup(w: World, args: string[] = [], extra: Record<string, string> = {}
   });
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? -1 };
 }
-/** lib/install-copy.sh of this checkout into the same machine layout (its runtime goes next to its bin) */
-function oldInstall(w: World, args: string[] = []): { out: string; rc: number } {
-  const r = spawnSync('bash', [path.join(PKG, 'lib', 'install-copy.sh'), ...args], {
-    encoding: 'utf8',
-    env: { ...w.env, GSD_BIN_DIR: w.bin },
-  });
-  return { out: r.stdout ?? '', rc: r.status ?? -1 };
-}
 const settingsOf = (w: World): string => path.join(w.home, '.claude', 'settings.json');
 const read = (p: string): string | null => (existsSync(p) ? readFileSync(p, 'utf8') : null);
-const norm = (s: string, w: World): string => s.split(w.home).join('<H>').split(w.bin).join('<B>');
+const norm = (s: string, w: World): string => subst(subst(s, w.home, '<H>'), w.bin, '<B>');
+const unPrivate = (s: string): string => s.replace(/\/private(?=\/var\/)/g, '');
 const hookLines = (s: string): string =>
   s
     .split('\n')
@@ -101,7 +97,7 @@ const CASES: Array<[string, string | null]> = [
 
 for (const modeArgs of [[], ['--no-user-hook']]) {
   for (const [name, content] of CASES) {
-    test(`user hook parity: ${name} ${modeArgs.join(' ')}`, () => {
+    test(`user hook: ${name} ${modeArgs.join(' ')}`, () => {
       const a = world();
       const b = world();
       // the same bin path on both sides: it goes into the hook command
@@ -111,18 +107,15 @@ for (const modeArgs of [[], ['--no-user-hook']]) {
       for (const w of [a, b]) {
         if (content !== null) write(settingsOf(w), content);
       }
-      const o = oldInstall(a, modeArgs);
-      assert.equal(o.rc, 0, o.out);
       // new side: the guard must be found in the bin dir (GSD_BIN_DIR names it)
       const r = setup(b, modeArgs, { GSD_BIN_DIR: a.bin });
       assert.equal(r.rc, 0, r.err + r.out);
-      assert.equal(read(settingsOf(b)), read(settingsOf(a)));
-      assert.equal(norm(hookLines(r.out), b), norm(hookLines(o.out), a));
+      golden(unPrivate(`${read(settingsOf(b)) ?? '<missing>'}\n--\n${norm(hookLines(r.out), b)}`));
     });
   }
 }
 
-test('user hook parity: a symlinked settings file keeps its link and mode', () => {
+test('user hook: a symlinked settings file keeps its link and mode', () => {
   const ws = [world(), world()];
   const bins = ws[0] as World;
   const results: Array<{ link: string; dot: string | null; mode: number }> = [];
@@ -135,7 +128,6 @@ test('user hook parity: a symlinked settings file keeps its link and mode', () =
     mkdirSync(path.join(w.home, '.claude'), { recursive: true });
     symlinkSync(dot, settingsOf(w));
   }
-  oldInstall(ws[0] as World);
   const r = setup(ws[1] as World, [], { GSD_BIN_DIR: bins.bin });
   assert.equal(r.rc, 0, r.err);
   for (const w of ws) {
@@ -146,7 +138,7 @@ test('user hook parity: a symlinked settings file keeps its link and mode', () =
       mode: statSync(dot).mode & 0o777,
     });
   }
-  assert.deepEqual(results[1], results[0]);
+  golden(unPrivate(JSON.stringify(results[1])));
   assert.equal(results[1]?.link, 'link');
   assert.equal(results[1]?.mode, 0o640);
   assert.match(results[1]?.dot ?? '', /"keep": 1.0/);
@@ -386,7 +378,7 @@ test('0.10.x clean-up: GSD_OLD_BIN_DIR names the old folder', () => {
   const oldBin = path.join(w.root, 'oldbin');
   const rt = path.join(w.root, 'share', 'gsd-toolkit', 'releases', '0.10.0');
   write(path.join(rt, 'install.sh'), '');
-  write(path.join(rt, 'lib', 'common.sh'), '');
+  write(path.join(rt, 'lib', 'install.sh'), '');
   write(path.join(rt, 'bin', 'gsdt-list'), '', 0o755);
   mkdirSync(oldBin);
   symlinkSync(path.join(rt, 'bin', 'gsdt-list'), path.join(oldBin, 'gsdt-list'));

@@ -1,0 +1,309 @@
+@@@ 1 @@@
+### --help
+rc=0
+--- stdout
+
+gsdt-batch-report — how many tokens a quick-task batch used, per role and
+per item. Reads Claude Code's transcripts; read-only, costs no tokens.
+
+A batch is one /gsd-quick-batch or /gsdt-batch run. It is counted from its
+start to its end, not as the whole session (a session may hold other work
+or several batches): the main session's turns inside it (the coordinator),
+every helper it spawned (planners, executors, scouts, gsd-quick fallbacks),
+and the helpers those spawned.
+
+Usage:
+  gsdt-batch-report [options]
+
+Options:
+  --last <N>        the last N batches (default: the last one)
+  --days <N>        every batch started in the last N days
+  --session <id>    the batches in one session (a prefix of its id is enough)
+  --items <N>       item count for the per-item numbers (default: read from
+                    the run — the gsdt-batch done line, else the quick-task
+                    ids its planners/executors name, else the planner count)
+  --baseline <file> compare with a report saved earlier with --json
+                    (default: the built-in numbers from the week before
+                    2026-11-09, see docs/plan-gsdt-batch.md)
+  --json            machine-readable output
+  --repo <path>     the repo whose batches to read (default: the main
+                    checkout of the current directory)
+  --dir <path>      read this Claude Code project folder instead
+                    (~/.claude/projects/<the repo path, / → ->)
+  --provider <name> claude (default). Codex keeps no such transcripts:
+                    "not supported yet", exit 0
+
+Columns: AGENTS · TURNS (API calls) · BASH/AG (Bash calls per helper) ·
+FRESH IN / CACHE WR / CACHE RD (input split by kind — a cache read costs
+about a tenth of fresh input) · OUTPUT · WEIGHTED (input cost in fresh-token
+units: cache write ×1.25, or ×2 for the 1-hour cache, cache read ×0.1).
+
+Transcripts are read as data: counted, never printed. CLAUDE_CONFIG_DIR is
+honored (default ~/.claude).
+
+Exit: 0 = report printed (also when no batch was found); 64 = bad usage.
+
+--- stderr
+
+@@@ 2 @@@
+### -h
+rc=0
+--- stdout
+
+gsdt-batch-report — how many tokens a quick-task batch used, per role and
+per item. Reads Claude Code's transcripts; read-only, costs no tokens.
+
+A batch is one /gsd-quick-batch or /gsdt-batch run. It is counted from its
+start to its end, not as the whole session (a session may hold other work
+or several batches): the main session's turns inside it (the coordinator),
+every helper it spawned (planners, executors, scouts, gsd-quick fallbacks),
+and the helpers those spawned.
+
+Usage:
+  gsdt-batch-report [options]
+
+Options:
+  --last <N>        the last N batches (default: the last one)
+  --days <N>        every batch started in the last N days
+  --session <id>    the batches in one session (a prefix of its id is enough)
+  --items <N>       item count for the per-item numbers (default: read from
+                    the run — the gsdt-batch done line, else the quick-task
+                    ids its planners/executors name, else the planner count)
+  --baseline <file> compare with a report saved earlier with --json
+                    (default: the built-in numbers from the week before
+                    2026-11-09, see docs/plan-gsdt-batch.md)
+  --json            machine-readable output
+  --repo <path>     the repo whose batches to read (default: the main
+                    checkout of the current directory)
+  --dir <path>      read this Claude Code project folder instead
+                    (~/.claude/projects/<the repo path, / → ->)
+  --provider <name> claude (default). Codex keeps no such transcripts:
+                    "not supported yet", exit 0
+
+Columns: AGENTS · TURNS (API calls) · BASH/AG (Bash calls per helper) ·
+FRESH IN / CACHE WR / CACHE RD (input split by kind — a cache read costs
+about a tenth of fresh input) · OUTPUT · WEIGHTED (input cost in fresh-token
+units: cache write ×1.25, or ×2 for the 1-hour cache, cache read ×0.1).
+
+Transcripts are read as data: counted, never printed. CLAUDE_CONFIG_DIR is
+honored (default ~/.claude).
+
+Exit: 0 = report printed (also when no batch was found); 64 = bad usage.
+
+--- stderr
+
+@@@ 3 @@@
+### --last
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --last needs a value
+
+@@@ 4 @@@
+### --days
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --days needs a value
+
+@@@ 5 @@@
+### --items
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --items needs a value
+
+@@@ 6 @@@
+### --last x
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --last needs a whole number, got: x
+
+@@@ 7 @@@
+### --days 1.5
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --days needs a whole number, got: 1.5
+
+@@@ 8 @@@
+### --items -1
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --items needs a whole number, got: -1
+
+@@@ 9 @@@
+### --last 
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --last needs a whole number, got: 
+
+@@@ 10 @@@
+### --last 2 --days 3
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: use one of --last, --days, --session
+
+@@@ 11 @@@
+### --days 2 --session aa
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: use one of --last, --days, --session
+
+@@@ 12 @@@
+### --session aa --last 2
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: use one of --last, --days, --session
+
+@@@ 13 @@@
+### --session
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --session needs a value
+
+@@@ 14 @@@
+### --session a_b
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --session: not a session id: a_b
+
+@@@ 15 @@@
+### --session 
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --session: not a session id: 
+
+@@@ 16 @@@
+### --baseline
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --baseline needs a file
+
+@@@ 17 @@@
+### --baseline <W>/nope.json
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --baseline: no such file: <W>/nope.json
+
+@@@ 18 @@@
+### --repo
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --repo needs a path
+
+@@@ 19 @@@
+### --dir
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --dir needs a path
+
+@@@ 20 @@@
+### --provider
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: --provider needs a name
+
+@@@ 21 @@@
+### --bogus
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: unknown option: --bogus (see --help)
+
+@@@ 22 @@@
+### stray
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: unknown option: stray (see --help)
+
+@@@ 23 @@@
+### --last 1 --help
+rc=0
+--- stdout
+
+gsdt-batch-report — how many tokens a quick-task batch used, per role and
+per item. Reads Claude Code's transcripts; read-only, costs no tokens.
+
+A batch is one /gsd-quick-batch or /gsdt-batch run. It is counted from its
+start to its end, not as the whole session (a session may hold other work
+or several batches): the main session's turns inside it (the coordinator),
+every helper it spawned (planners, executors, scouts, gsd-quick fallbacks),
+and the helpers those spawned.
+
+Usage:
+  gsdt-batch-report [options]
+
+Options:
+  --last <N>        the last N batches (default: the last one)
+  --days <N>        every batch started in the last N days
+  --session <id>    the batches in one session (a prefix of its id is enough)
+  --items <N>       item count for the per-item numbers (default: read from
+                    the run — the gsdt-batch done line, else the quick-task
+                    ids its planners/executors name, else the planner count)
+  --baseline <file> compare with a report saved earlier with --json
+                    (default: the built-in numbers from the week before
+                    2026-11-09, see docs/plan-gsdt-batch.md)
+  --json            machine-readable output
+  --repo <path>     the repo whose batches to read (default: the main
+                    checkout of the current directory)
+  --dir <path>      read this Claude Code project folder instead
+                    (~/.claude/projects/<the repo path, / → ->)
+  --provider <name> claude (default). Codex keeps no such transcripts:
+                    "not supported yet", exit 0
+
+Columns: AGENTS · TURNS (API calls) · BASH/AG (Bash calls per helper) ·
+FRESH IN / CACHE WR / CACHE RD (input split by kind — a cache read costs
+about a tenth of fresh input) · OUTPUT · WEIGHTED (input cost in fresh-token
+units: cache write ×1.25, or ×2 for the 1-hour cache, cache read ×0.1).
+
+Transcripts are read as data: counted, never printed. CLAUDE_CONFIG_DIR is
+honored (default ~/.claude).
+
+Exit: 0 = report printed (also when no batch was found); 64 = bad usage.
+
+--- stderr
+
+@@@ 24 @@@
+### --bogus --help
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: unknown option: --bogus (see --help)
+

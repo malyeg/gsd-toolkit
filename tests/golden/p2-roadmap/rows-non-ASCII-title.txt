@@ -1,0 +1,5 @@
+@@@ 1 @@@
+rc=0
+out=""
+err=""
+file="### Phase 1: ÃnÃ¯code â tÃ­tulo â\n- [ ] **Phase 0: Z**\n- [ ] **Phase 1: ÃnÃ¯code â tÃ­tulo â**\n| Phase | S |\n|---|---|\n| 1. ÃnÃ¯code â tÃ­tulo â | - |\n"

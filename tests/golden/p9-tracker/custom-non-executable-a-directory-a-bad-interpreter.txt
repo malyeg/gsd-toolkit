@@ -1,0 +1,49 @@
+@@@ 1 @@@
+### step 0: ["check"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker_command '<ROOT>/cust/scripts/tracker.sh' is not an executable file
+
+@@@ 2 @@@
+### step 1: ["start","A","b"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker_command '<ROOT>/cust/scripts/tracker.sh' is not an executable file
+
+@@@ 3 @@@
+### step 2: ["config"] {}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=gsd.conf
+tracker_ok=yes
+profile=
+profile_from=
+command=<ROOT>/cust/scripts/tracker.sh
+command_from=gsd.conf
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 4 @@@
+curl.log:
+
+argv:
+
+tracker.log:
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+

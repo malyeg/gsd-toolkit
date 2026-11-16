@@ -1,0 +1,288 @@
+@@@ 1 @@@
+# prompt claude/discuss/
+/gsd-discuss-phase 
+@@@ 2 @@@
+# prompt claude/discuss/7
+/gsd-discuss-phase 7
+@@@ 3 @@@
+# prompt claude/discuss/2.1
+/gsd-discuss-phase 2.1
+@@@ 4 @@@
+# prompt claude/discuss/fix 'a' "b" $x `y` — é
+/gsd-discuss-phase fix 'a' "b" $x `y` — é
+@@@ 5 @@@
+# prompt claude/flow/
+/gsdt-flow 
+@@@ 6 @@@
+# prompt claude/flow/7
+/gsdt-flow 7
+@@@ 7 @@@
+# prompt claude/flow/2.1
+/gsdt-flow 2.1
+@@@ 8 @@@
+# prompt claude/flow/fix 'a' "b" $x `y` — é
+/gsdt-flow fix 'a' "b" $x `y` — é
+@@@ 9 @@@
+# prompt claude/batch/
+/gsdt-batch 
+@@@ 10 @@@
+# prompt claude/batch/7
+/gsdt-batch 7
+@@@ 11 @@@
+# prompt claude/batch/2.1
+/gsdt-batch 2.1
+@@@ 12 @@@
+# prompt claude/batch/fix 'a' "b" $x `y` — é
+/gsdt-batch fix 'a' "b" $x `y` — é
+@@@ 13 @@@
+# prompt claude/new/
+/gsd-new-project
+@@@ 14 @@@
+# prompt claude/new/7
+/gsd-new-project
+@@@ 15 @@@
+# prompt claude/new/2.1
+/gsd-new-project
+@@@ 16 @@@
+# prompt claude/new/fix 'a' "b" $x `y` — é
+/gsd-new-project
+@@@ 17 @@@
+# prompt claude/ingest/
+/gsd-ingest-docs
+@@@ 18 @@@
+# prompt claude/ingest/7
+/gsd-ingest-docs
+@@@ 19 @@@
+# prompt claude/ingest/2.1
+/gsd-ingest-docs
+@@@ 20 @@@
+# prompt claude/ingest/fix 'a' "b" $x `y` — é
+/gsd-ingest-docs
+@@@ 21 @@@
+# prompt claude/nope/
+
+@@@ 22 @@@
+# prompt claude/nope/7
+
+@@@ 23 @@@
+# prompt claude/nope/2.1
+
+@@@ 24 @@@
+# prompt claude/nope/fix 'a' "b" $x `y` — é
+
+@@@ 25 @@@
+# prompt codex/discuss/
+Discuss GSD phase  with the user and write its context artifact. Use the gsd-discuss-phase skill if available and obey .gsd/INSTRUCTIONS.md.
+@@@ 26 @@@
+# prompt codex/discuss/7
+Discuss GSD phase 7 with the user and write its context artifact. Use the gsd-discuss-phase skill if available and obey .gsd/INSTRUCTIONS.md.
+@@@ 27 @@@
+# prompt codex/discuss/2.1
+Discuss GSD phase 2.1 with the user and write its context artifact. Use the gsd-discuss-phase skill if available and obey .gsd/INSTRUCTIONS.md.
+@@@ 28 @@@
+# prompt codex/discuss/fix 'a' "b" $x `y` — é
+Discuss GSD phase fix 'a' "b" $x `y` — é with the user and write its context artifact. Use the gsd-discuss-phase skill if available and obey .gsd/INSTRUCTIONS.md.
+@@@ 29 @@@
+# prompt codex/flow/
+Use the gsdt-flow skill to drive phase . Start by running gsdt-flow-next  and obey every reported gate.
+@@@ 30 @@@
+# prompt codex/flow/7
+Use the gsdt-flow skill to drive phase 7. Start by running gsdt-flow-next 7 and obey every reported gate.
+@@@ 31 @@@
+# prompt codex/flow/2.1
+Use the gsdt-flow skill to drive phase 2.1. Start by running gsdt-flow-next 2.1 and obey every reported gate.
+@@@ 32 @@@
+# prompt codex/flow/fix 'a' "b" $x `y` — é
+Use the gsdt-flow skill to drive phase fix 'a' "b" $x `y` — é. Start by running gsdt-flow-next fix 'a' "b" $x `y` — é and obey every reported gate.
+@@@ 33 @@@
+# prompt codex/batch/
+Use the gsdt-batch skill to run this task list or brief as one batch: 
+@@@ 34 @@@
+# prompt codex/batch/7
+Use the gsdt-batch skill to run this task list or brief as one batch: 7
+@@@ 35 @@@
+# prompt codex/batch/2.1
+Use the gsdt-batch skill to run this task list or brief as one batch: 2.1
+@@@ 36 @@@
+# prompt codex/batch/fix 'a' "b" $x `y` — é
+Use the gsdt-batch skill to run this task list or brief as one batch: fix 'a' "b" $x `y` — é
+@@@ 37 @@@
+# prompt codex/new/
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 38 @@@
+# prompt codex/new/7
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 39 @@@
+# prompt codex/new/2.1
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 40 @@@
+# prompt codex/new/fix 'a' "b" $x `y` — é
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 41 @@@
+# prompt codex/ingest/
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 42 @@@
+# prompt codex/ingest/7
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 43 @@@
+# prompt codex/ingest/2.1
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 44 @@@
+# prompt codex/ingest/fix 'a' "b" $x `y` — é
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 45 @@@
+# prompt codex/nope/
+
+@@@ 46 @@@
+# prompt codex/nope/7
+
+@@@ 47 @@@
+# prompt codex/nope/2.1
+
+@@@ 48 @@@
+# prompt codex/nope/fix 'a' "b" $x `y` — é
+
+@@@ 49 @@@
+# prompt custom/discuss/
+Discuss GSD phase  with the user and write its context artifact; obey .gsd/INSTRUCTIONS.md.
+@@@ 50 @@@
+# prompt custom/discuss/7
+Discuss GSD phase 7 with the user and write its context artifact; obey .gsd/INSTRUCTIONS.md.
+@@@ 51 @@@
+# prompt custom/discuss/2.1
+Discuss GSD phase 2.1 with the user and write its context artifact; obey .gsd/INSTRUCTIONS.md.
+@@@ 52 @@@
+# prompt custom/discuss/fix 'a' "b" $x `y` — é
+Discuss GSD phase fix 'a' "b" $x `y` — é with the user and write its context artifact; obey .gsd/INSTRUCTIONS.md.
+@@@ 53 @@@
+# prompt custom/flow/
+Drive GSD phase  by running gsdt-flow-next  before every phase step; obey every gate in .gsd/INSTRUCTIONS.md.
+@@@ 54 @@@
+# prompt custom/flow/7
+Drive GSD phase 7 by running gsdt-flow-next 7 before every phase step; obey every gate in .gsd/INSTRUCTIONS.md.
+@@@ 55 @@@
+# prompt custom/flow/2.1
+Drive GSD phase 2.1 by running gsdt-flow-next 2.1 before every phase step; obey every gate in .gsd/INSTRUCTIONS.md.
+@@@ 56 @@@
+# prompt custom/flow/fix 'a' "b" $x `y` — é
+Drive GSD phase fix 'a' "b" $x `y` — é by running gsdt-flow-next fix 'a' "b" $x `y` — é before every phase step; obey every gate in .gsd/INSTRUCTIONS.md.
+@@@ 57 @@@
+# prompt custom/batch/
+Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsdt-batch-report): 
+@@@ 58 @@@
+# prompt custom/batch/7
+Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsdt-batch-report): 7
+@@@ 59 @@@
+# prompt custom/batch/2.1
+Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsdt-batch-report): 2.1
+@@@ 60 @@@
+# prompt custom/batch/fix 'a' "b" $x `y` — é
+Run this task list or brief as one batch, following the gsdt-batch skill steps (scout, sort, gsd-quick-batch, gsd-fast, gsdt-batch-report): fix 'a' "b" $x `y` — é
+@@@ 61 @@@
+# prompt custom/new/
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 62 @@@
+# prompt custom/new/7
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 63 @@@
+# prompt custom/new/2.1
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 64 @@@
+# prompt custom/new/fix 'a' "b" $x `y` — é
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 65 @@@
+# prompt custom/ingest/
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 66 @@@
+# prompt custom/ingest/7
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 67 @@@
+# prompt custom/ingest/2.1
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 68 @@@
+# prompt custom/ingest/fix 'a' "b" $x `y` — é
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 69 @@@
+# prompt custom/nope/
+
+@@@ 70 @@@
+# prompt custom/nope/7
+
+@@@ 71 @@@
+# prompt custom/nope/2.1
+
+@@@ 72 @@@
+# prompt custom/nope/fix 'a' "b" $x `y` — é
+
+@@@ 73 @@@
+# prompt nope/discuss/
+
+@@@ 74 @@@
+# prompt nope/discuss/7
+
+@@@ 75 @@@
+# prompt nope/discuss/2.1
+
+@@@ 76 @@@
+# prompt nope/discuss/fix 'a' "b" $x `y` — é
+
+@@@ 77 @@@
+# prompt nope/flow/
+
+@@@ 78 @@@
+# prompt nope/flow/7
+
+@@@ 79 @@@
+# prompt nope/flow/2.1
+
+@@@ 80 @@@
+# prompt nope/flow/fix 'a' "b" $x `y` — é
+
+@@@ 81 @@@
+# prompt nope/batch/
+
+@@@ 82 @@@
+# prompt nope/batch/7
+
+@@@ 83 @@@
+# prompt nope/batch/2.1
+
+@@@ 84 @@@
+# prompt nope/batch/fix 'a' "b" $x `y` — é
+
+@@@ 85 @@@
+# prompt nope/new/
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 86 @@@
+# prompt nope/new/7
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 87 @@@
+# prompt nope/new/2.1
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 88 @@@
+# prompt nope/new/fix 'a' "b" $x `y` — é
+Initialize GSD planning for this repository. Use the gsd-new-project skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 89 @@@
+# prompt nope/ingest/
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 90 @@@
+# prompt nope/ingest/7
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 91 @@@
+# prompt nope/ingest/2.1
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 92 @@@
+# prompt nope/ingest/fix 'a' "b" $x `y` — é
+Initialize GSD planning by ingesting the existing project documents. Use the gsd-ingest-docs skill if available; otherwise follow the installed GSD planning documentation.
+@@@ 93 @@@
+# prompt nope/nope/
+
+@@@ 94 @@@
+# prompt nope/nope/7
+
+@@@ 95 @@@
+# prompt nope/nope/2.1
+
+@@@ 96 @@@
+# prompt nope/nope/fix 'a' "b" $x `y` — é
+

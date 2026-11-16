@@ -1,0 +1,509 @@
+@@@ 1 @@@
+step 1 (gsdt-batch )
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: nothing to run: gsdt-batch "- task one
+- task two", or gsdt-batch --file <path>
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-batch --print)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: nothing to run: gsdt-batch "- task one
+- task two", or gsdt-batch --file <path>
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 3 @@@
+step 3 (gsdt-batch --name)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: --name needs a slug
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 4 @@@
+step 4 (gsdt-batch --file)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: --file needs a path
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 5 @@@
+step 5 (gsdt-batch --provider)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: --provider needs a name
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 6 @@@
+step 6 (gsdt-batch --agent-command)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: --agent-command needs a command
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 7 @@@
+step 7 (gsdt-batch --model)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: --model needs a model
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 8 @@@
+step 8 (gsdt-batch --repo)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: --repo needs a path
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 9 @@@
+step 9 (gsdt-batch x --model)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: --model needs a model
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 10 @@@
+step 10 (gsdt-batch --)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: nothing to run: gsdt-batch "- task one
+- task two", or gsdt-batch --file <path>
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 11 @@@
+step 11 (gsdt-batch --print --file )
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: --file: no such file: 
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+

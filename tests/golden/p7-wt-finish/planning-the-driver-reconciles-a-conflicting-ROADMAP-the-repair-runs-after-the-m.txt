@@ -1,0 +1,512 @@
+@@@ 1 @@@
+step 1 (gsdt-wt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Auto-merging .planning/ROADMAP.md
+Merge made by the 'ort' strategy.
+ .planning/ROADMAP.md | 2 +-
+ f.txt                | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 40d33d3).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+--- stderr
+  reconciled — ROADMAP.md: duplicate progress-table row for Phase 1
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+main change
+roadmap
+attrs
+feature
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+- [x] **Phase 1: Catalog**
+
+### Phase 1: Catalog
+
+## Progress
+
+| Phase | Plans | Status |
+|---|---|---|
+| 1. Catalog | 1/1 | In Progress |
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+main change
+roadmap
+attrs
+feature
+init
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 2 @@@
+step 1 (gsdt-wt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ .planning/ROADMAP.md | 2 +-
+ f.txt                | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was e3b30fa).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+init
+tick
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+- [x] **Phase 1: Catalog**
+
+### Phase 1: Catalog
+
+## Progress
+
+| Phase | Plans | Status |
+|---|---|---|
+| 1. Catalog | 1/1 | Complete |
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+init
+tick
+feature
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 3 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+
+--- stderr
+✗ .planning is STILL self-contradictory after the repair — not pushing.
+stub: ROADMAP is self-contradictory
+stub check failed
+  The merge is committed locally only. Fix .planning, commit, then re-run finish.
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+- [x] **Phase 1: Catalog**
+
+### Phase 1: Catalog
+
+## Progress
+
+| Phase | Plans | Status |
+|---|---|---|
+| 1. Catalog | 1/1 | Complete |
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 4 @@@
+step 1 (gsdt-wt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 81e8b2d).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+--- stderr
+stub repair broke
+⚠ .planning reconcile exited nonzero — verifying before we go on
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+- [x] **Phase 1: Catalog**
+
+### Phase 1: Catalog
+
+## Progress
+
+| Phase | Plans | Status |
+|---|---|---|
+| 1. Catalog | 1/1 | Complete |
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+init
+feature
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 5 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+
+--- stderr
+✗ the .planning repair was not committed — not pushing.
+ M .planning/ROADMAP.md
+  Commit it, then re-run finish.
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+ M .planning/ROADMAP.md
+
+── .planning/ROADMAP.md
+# Roadmap
+
+- [x] **Phase 1: Catalog**
+
+### Phase 1: Catalog
+
+## Progress
+
+| Phase | Plans | Status |
+|---|---|---|
+| 1. Catalog | 1/1 | Complete |
+x
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 6 @@@
+step 1 (gsdt-wt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 81e8b2d).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+--- stderr
+⚠ gsdt-planning-repair not on PATH — skipping the .planning reconcile (re-run install.sh)
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+- [x] **Phase 1: Catalog**
+
+### Phase 1: Catalog
+
+## Progress
+
+| Phase | Plans | Status |
+|---|---|---|
+| 1. Catalog | 1/1 | Complete |
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+init
+feature
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 7 @@@
+step 1 (gsdt-wt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 259a7f0).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+no roadmap
+feature
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+no roadmap
+feature
+init
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+

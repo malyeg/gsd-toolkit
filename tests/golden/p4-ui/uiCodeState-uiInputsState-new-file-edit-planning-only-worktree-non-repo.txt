@@ -1,0 +1,69 @@
+@@@ 1 @@@
+# initial
+20fd494bd4945f170f42e564ebade640c9a3c67f
+@@@ 2 @@@
+# inputs initial
+20fd494bd4945f170f42e564ebade640c9a3c67f+954440f7efc95ab0fa8c427256898ac61f8c5348
+@@@ 3 @@@
+# after commit
+20fd494bd4945f170f42e564ebade640c9a3c67f
+@@@ 4 @@@
+# inputs after commit
+20fd494bd4945f170f42e564ebade640c9a3c67f+954440f7efc95ab0fa8c427256898ac61f8c5348
+@@@ 5 @@@
+# .planning change
+20fd494bd4945f170f42e564ebade640c9a3c67f
+@@@ 6 @@@
+# edit
+1b3d483478a51983ae18ccedcbea59f76e1228d9
+@@@ 7 @@@
+# same-size edit, a second later
+cd8da784bf400de5247774398d9253a41aec0825
+@@@ 8 @@@
+# edit back
+1b3d483478a51983ae18ccedcbea59f76e1228d9
+@@@ 9 @@@
+# new file
+a44ae22475c2de4f330911ddf0c0416b6f7c3283
+@@@ 10 @@@
+# new file removed
+1b3d483478a51983ae18ccedcbea59f76e1228d9
+@@@ 11 @@@
+# gitignore
+27d2a64a4b64cb9aa1fe56d0bc17ce075cff493e
+@@@ 12 @@@
+# ignored file
+27d2a64a4b64cb9aa1fe56d0bc17ce075cff493e
+@@@ 13 @@@
+# inputs before layout edit
+27d2a64a4b64cb9aa1fe56d0bc17ce075cff493e+954440f7efc95ab0fa8c427256898ac61f8c5348
+@@@ 14 @@@
+# code unchanged by layout edit
+27d2a64a4b64cb9aa1fe56d0bc17ce075cff493e
+@@@ 15 @@@
+# inputs after layout edit
+27d2a64a4b64cb9aa1fe56d0bc17ce075cff493e+1e25ca1eb26bd65577bf19b302c21d035145ee26
+@@@ 16 @@@
+# inputs without layout
+27d2a64a4b64cb9aa1fe56d0bc17ce075cff493e+none
+@@@ 17 @@@
+# staged
+6c507d32f027d0ed7ffc56db0cf7a68939232e8a
+@@@ 18 @@@
+# deleted
+3426914ca312d01fce03f8ca3ec40be6c91f0dba
+@@@ 19 @@@
+# from a subdir
+3426914ca312d01fce03f8ca3ec40be6c91f0dba
+@@@ 20 @@@
+# linked worktree
+3426914ca312d01fce03f8ca3ec40be6c91f0dba
+@@@ 21 @@@
+# linked worktree dirty
+c937be2bfe4f7e69451787a39370121cef08a619
+@@@ 22 @@@
+# non-repo
+
+@@@ 23 @@@
+# inputs non-repo
+

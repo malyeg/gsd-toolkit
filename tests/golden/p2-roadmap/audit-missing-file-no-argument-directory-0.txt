@@ -1,0 +1,25 @@
+@@@ 1 @@@
+args ["<TMP>/nope.md"]
+rc=0
+out=""
+err=""
+@@@ 2 @@@
+args []
+rc=0
+out=""
+err=""
+@@@ 3 @@@
+args ["<TMP>"]
+rc=0
+out=""
+err=""
+@@@ 4 @@@
+args ["0"]
+rc=0
+out=""
+err=""
+@@@ 5 @@@
+args [""]
+rc=0
+out=""
+err=""

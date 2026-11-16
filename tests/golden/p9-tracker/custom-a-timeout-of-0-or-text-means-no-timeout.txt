@@ -1,0 +1,44 @@
+@@@ 1 @@@
+### step 0: ["check"] {"GSD_TRACKER_TIMEOUT":"0"}
+rc=0
+--- stdout
+stdin:
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["check"] {"GSD_TRACKER_TIMEOUT":"soon"}
+rc=0
+--- stdout
+stdin:
+
+--- stderr
+
+@@@ 3 @@@
+### step 2: ["check"] {"GSD_TRACKER_TIMEOUT":"5s"}
+rc=0
+--- stdout
+stdin:
+
+--- stderr
+
+@@@ 4 @@@
+curl.log:
+
+argv:
+
+tracker.log:
+check|check|status=|profile=
+check|check|status=|profile=
+check|check|status=|profile=
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+

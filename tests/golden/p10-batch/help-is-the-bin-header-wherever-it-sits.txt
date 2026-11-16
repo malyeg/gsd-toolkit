@@ -1,0 +1,448 @@
+@@@ 1 @@@
+step 1 (gsdt-batch --help)
+rc=0
+--- stdout
+
+gsdt-batch — run several quick tasks as one batch, in a FRESH session with
+the gsdt-batch skill already running. On Claude the session runs on Sonnet:
+a small, fresh context makes every coordinator turn cheaper. The planners
+keep the model gsd-core gives them (it never follows the session's model
+unless GSD's settings say `inherit` — the skill checks that first).
+
+Usage (from anywhere inside the repo):
+  gsdt-batch [options] [--] <task list | brief | --file <path>> [gsd-quick-batch flags]
+
+  A task list is what /gsd-quick-batch takes: one item per bulleted or
+  numbered line ("- fix …"), quoted as one argument, or --file <path>.
+  A brief is anything else, in your own words, quoted:
+    gsdt-batch "Read plan/FIX-BRIEF-7.md. Validate every item, fix only the
+    real ones, recommend the owner calls."
+  Everything that is not an option below goes to the skill unchanged.
+
+Options:
+  --provider <p>      claude (default: the repo's provider), codex or custom
+  --agent-command <c> the provider's executable
+  --model <m>         the session's model (Claude default: sonnet; others:
+                      their configured model). `default` = the CLI's own
+  --name <slug>       the batch's name (default: the first words of the
+                      list or brief, or the --file name)
+  --repo <path>       the repo (default: the main checkout of the cwd)
+  --print             print the worktree and command; make nothing
+
+The batch runs in its OWN worktree: gsdt-batch makes a
+batch-<YYYY-MM-DD>-<slug> branch + worktree off the base branch (next to the
+phase worktrees), then starts the session there. Its commits land on that
+branch, never on the base branch; `gsdt-finish batch-…` merges it (tests →
+merge → push → cleanup, like a phase). Run from inside a batch-* worktree,
+it starts the session there instead. A taken name gets -2, -3, … (unless
+--name named it: then that worktree is reused). Without a terminal the
+worktree is made and the command printed. The Sonnet switch is Claude-only:
+other providers launch with their usual model, and gsdt-batch says so.
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-batch -h)
+rc=0
+--- stdout
+
+gsdt-batch — run several quick tasks as one batch, in a FRESH session with
+the gsdt-batch skill already running. On Claude the session runs on Sonnet:
+a small, fresh context makes every coordinator turn cheaper. The planners
+keep the model gsd-core gives them (it never follows the session's model
+unless GSD's settings say `inherit` — the skill checks that first).
+
+Usage (from anywhere inside the repo):
+  gsdt-batch [options] [--] <task list | brief | --file <path>> [gsd-quick-batch flags]
+
+  A task list is what /gsd-quick-batch takes: one item per bulleted or
+  numbered line ("- fix …"), quoted as one argument, or --file <path>.
+  A brief is anything else, in your own words, quoted:
+    gsdt-batch "Read plan/FIX-BRIEF-7.md. Validate every item, fix only the
+    real ones, recommend the owner calls."
+  Everything that is not an option below goes to the skill unchanged.
+
+Options:
+  --provider <p>      claude (default: the repo's provider), codex or custom
+  --agent-command <c> the provider's executable
+  --model <m>         the session's model (Claude default: sonnet; others:
+                      their configured model). `default` = the CLI's own
+  --name <slug>       the batch's name (default: the first words of the
+                      list or brief, or the --file name)
+  --repo <path>       the repo (default: the main checkout of the cwd)
+  --print             print the worktree and command; make nothing
+
+The batch runs in its OWN worktree: gsdt-batch makes a
+batch-<YYYY-MM-DD>-<slug> branch + worktree off the base branch (next to the
+phase worktrees), then starts the session there. Its commits land on that
+branch, never on the base branch; `gsdt-finish batch-…` merges it (tests →
+merge → push → cleanup, like a phase). Run from inside a batch-* worktree,
+it starts the session there instead. A taken name gets -2, -3, … (unless
+--name named it: then that worktree is reused). Without a terminal the
+worktree is made and the command printed. The Sonnet switch is Claude-only:
+other providers launch with their usual model, and gsdt-batch says so.
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 3 @@@
+step 3 (gsdt-batch --print x --help)
+rc=0
+--- stdout
+
+gsdt-batch — run several quick tasks as one batch, in a FRESH session with
+the gsdt-batch skill already running. On Claude the session runs on Sonnet:
+a small, fresh context makes every coordinator turn cheaper. The planners
+keep the model gsd-core gives them (it never follows the session's model
+unless GSD's settings say `inherit` — the skill checks that first).
+
+Usage (from anywhere inside the repo):
+  gsdt-batch [options] [--] <task list | brief | --file <path>> [gsd-quick-batch flags]
+
+  A task list is what /gsd-quick-batch takes: one item per bulleted or
+  numbered line ("- fix …"), quoted as one argument, or --file <path>.
+  A brief is anything else, in your own words, quoted:
+    gsdt-batch "Read plan/FIX-BRIEF-7.md. Validate every item, fix only the
+    real ones, recommend the owner calls."
+  Everything that is not an option below goes to the skill unchanged.
+
+Options:
+  --provider <p>      claude (default: the repo's provider), codex or custom
+  --agent-command <c> the provider's executable
+  --model <m>         the session's model (Claude default: sonnet; others:
+                      their configured model). `default` = the CLI's own
+  --name <slug>       the batch's name (default: the first words of the
+                      list or brief, or the --file name)
+  --repo <path>       the repo (default: the main checkout of the cwd)
+  --print             print the worktree and command; make nothing
+
+The batch runs in its OWN worktree: gsdt-batch makes a
+batch-<YYYY-MM-DD>-<slug> branch + worktree off the base branch (next to the
+phase worktrees), then starts the session there. Its commits land on that
+branch, never on the base branch; `gsdt-finish batch-…` merges it (tests →
+merge → push → cleanup, like a phase). Run from inside a batch-* worktree,
+it starts the session there instead. A taken name gets -2, -3, … (unless
+--name named it: then that worktree is reused). Without a terminal the
+worktree is made and the command printed. The Sonnet switch is Claude-only:
+other providers launch with their usual model, and gsdt-batch says so.
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 4 @@@
+step 4 (gsdt-batch --bogus --help)
+rc=0
+--- stdout
+
+gsdt-batch — run several quick tasks as one batch, in a FRESH session with
+the gsdt-batch skill already running. On Claude the session runs on Sonnet:
+a small, fresh context makes every coordinator turn cheaper. The planners
+keep the model gsd-core gives them (it never follows the session's model
+unless GSD's settings say `inherit` — the skill checks that first).
+
+Usage (from anywhere inside the repo):
+  gsdt-batch [options] [--] <task list | brief | --file <path>> [gsd-quick-batch flags]
+
+  A task list is what /gsd-quick-batch takes: one item per bulleted or
+  numbered line ("- fix …"), quoted as one argument, or --file <path>.
+  A brief is anything else, in your own words, quoted:
+    gsdt-batch "Read plan/FIX-BRIEF-7.md. Validate every item, fix only the
+    real ones, recommend the owner calls."
+  Everything that is not an option below goes to the skill unchanged.
+
+Options:
+  --provider <p>      claude (default: the repo's provider), codex or custom
+  --agent-command <c> the provider's executable
+  --model <m>         the session's model (Claude default: sonnet; others:
+                      their configured model). `default` = the CLI's own
+  --name <slug>       the batch's name (default: the first words of the
+                      list or brief, or the --file name)
+  --repo <path>       the repo (default: the main checkout of the cwd)
+  --print             print the worktree and command; make nothing
+
+The batch runs in its OWN worktree: gsdt-batch makes a
+batch-<YYYY-MM-DD>-<slug> branch + worktree off the base branch (next to the
+phase worktrees), then starts the session there. Its commits land on that
+branch, never on the base branch; `gsdt-finish batch-…` merges it (tests →
+merge → push → cleanup, like a phase). Run from inside a batch-* worktree,
+it starts the session there instead. A taken name gets -2, -3, … (unless
+--name named it: then that worktree is reused). Without a terminal the
+worktree is made and the command printed. The Sonnet switch is Claude-only:
+other providers launch with their usual model, and gsdt-batch says so.
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 5 @@@
+step 5 (gsdt-batch --name)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: --name needs a slug
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 6 @@@
+step 6 (gsdt-batch -- --help)
+rc=0
+--- stdout
+cd <T>/shop-worktrees/batch-<DATE>-batch && claude --model sonnet /gsdt-batch\ --help
+
+--- stderr
+▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-batch   (branch 'batch-<DATE>-batch' off main)
+Preparing worktree (new branch 'batch-<DATE>-batch')
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-<DATE>-batch/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-<DATE>-batch   (batch)
+
+--- files left behind
+── log
+init
+
+── branches
+batch-<DATE>-batch
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-<DATE>-batch
+branch refs/heads/batch-<DATE>-batch
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-<DATE>-batch
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt batch-<DATE>-batch/.gsd-install.status
+skipped
+
+── wt batch-<DATE>-batch/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+

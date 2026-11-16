@@ -1,0 +1,471 @@
+@@@ 1 @@@
+# confGet base for ""
+
+@@@ 2 @@@
+# confGet wtdir for ""
+
+@@@ 3 @@@
+# confGet flow for ""
+
+@@@ 4 @@@
+# confGet providers for ""
+
+@@@ 5 @@@
+# confGet provider for ""
+
+@@@ 6 @@@
+# confGet test for ""
+
+@@@ 7 @@@
+# confGet install for ""
+
+@@@ 8 @@@
+# confGet compact_at for ""
+
+@@@ 9 @@@
+# confGet nothere for ""
+
+@@@ 10 @@@
+# base
+develop
+@@@ 11 @@@
+# flowMode
+off
+@@@ 12 @@@
+# confProviders
+claude
+@@@ 13 @@@
+# wtdir
+my repo-worktrees
+@@@ 14 @@@
+# confGet base for "base = develop\n"
+develop
+@@@ 15 @@@
+# confGet wtdir for "base = develop\n"
+
+@@@ 16 @@@
+# confGet flow for "base = develop\n"
+
+@@@ 17 @@@
+# confGet providers for "base = develop\n"
+
+@@@ 18 @@@
+# confGet provider for "base = develop\n"
+
+@@@ 19 @@@
+# confGet test for "base = develop\n"
+
+@@@ 20 @@@
+# confGet install for "base = develop\n"
+
+@@@ 21 @@@
+# confGet compact_at for "base = develop\n"
+
+@@@ 22 @@@
+# confGet nothere for "base = develop\n"
+
+@@@ 23 @@@
+# base
+develop
+@@@ 24 @@@
+# flowMode
+off
+@@@ 25 @@@
+# confProviders
+claude
+@@@ 26 @@@
+# wtdir
+my repo-worktrees
+@@@ 27 @@@
+# confGet base for "  base   =   main   # the base\nwtdir=wt-x\nflow = strict\n"
+main
+@@@ 28 @@@
+# confGet wtdir for "  base   =   main   # the base\nwtdir=wt-x\nflow = strict\n"
+wt-x
+@@@ 29 @@@
+# confGet flow for "  base   =   main   # the base\nwtdir=wt-x\nflow = strict\n"
+strict
+@@@ 30 @@@
+# confGet providers for "  base   =   main   # the base\nwtdir=wt-x\nflow = strict\n"
+
+@@@ 31 @@@
+# confGet provider for "  base   =   main   # the base\nwtdir=wt-x\nflow = strict\n"
+
+@@@ 32 @@@
+# confGet test for "  base   =   main   # the base\nwtdir=wt-x\nflow = strict\n"
+
+@@@ 33 @@@
+# confGet install for "  base   =   main   # the base\nwtdir=wt-x\nflow = strict\n"
+
+@@@ 34 @@@
+# confGet compact_at for "  base   =   main   # the base\nwtdir=wt-x\nflow = strict\n"
+
+@@@ 35 @@@
+# confGet nothere for "  base   =   main   # the base\nwtdir=wt-x\nflow = strict\n"
+
+@@@ 36 @@@
+# base
+main
+@@@ 37 @@@
+# flowMode
+strict
+@@@ 38 @@@
+# confProviders
+claude
+@@@ 39 @@@
+# wtdir
+wt-x
+@@@ 40 @@@
+# confGet base for "providers = codex,claude # two\nprovider = claude\n"
+
+@@@ 41 @@@
+# confGet wtdir for "providers = codex,claude # two\nprovider = claude\n"
+
+@@@ 42 @@@
+# confGet flow for "providers = codex,claude # two\nprovider = claude\n"
+
+@@@ 43 @@@
+# confGet providers for "providers = codex,claude # two\nprovider = claude\n"
+codex,claude
+@@@ 44 @@@
+# confGet provider for "providers = codex,claude # two\nprovider = claude\n"
+claude
+@@@ 45 @@@
+# confGet test for "providers = codex,claude # two\nprovider = claude\n"
+
+@@@ 46 @@@
+# confGet install for "providers = codex,claude # two\nprovider = claude\n"
+
+@@@ 47 @@@
+# confGet compact_at for "providers = codex,claude # two\nprovider = claude\n"
+
+@@@ 48 @@@
+# confGet nothere for "providers = codex,claude # two\nprovider = claude\n"
+
+@@@ 49 @@@
+# base
+develop
+@@@ 50 @@@
+# flowMode
+off
+@@@ 51 @@@
+# confProviders
+codex,claude
+@@@ 52 @@@
+# wtdir
+my repo-worktrees
+@@@ 53 @@@
+# confGet base for "provider = codex\n"
+
+@@@ 54 @@@
+# confGet wtdir for "provider = codex\n"
+
+@@@ 55 @@@
+# confGet flow for "provider = codex\n"
+
+@@@ 56 @@@
+# confGet providers for "provider = codex\n"
+
+@@@ 57 @@@
+# confGet provider for "provider = codex\n"
+codex
+@@@ 58 @@@
+# confGet test for "provider = codex\n"
+
+@@@ 59 @@@
+# confGet install for "provider = codex\n"
+
+@@@ 60 @@@
+# confGet compact_at for "provider = codex\n"
+
+@@@ 61 @@@
+# confGet nothere for "provider = codex\n"
+
+@@@ 62 @@@
+# base
+develop
+@@@ 63 @@@
+# flowMode
+off
+@@@ 64 @@@
+# confProviders
+codex
+@@@ 65 @@@
+# wtdir
+my repo-worktrees
+@@@ 66 @@@
+# confGet base for "base=\nbase = second\n"
+
+@@@ 67 @@@
+# confGet wtdir for "base=\nbase = second\n"
+
+@@@ 68 @@@
+# confGet flow for "base=\nbase = second\n"
+
+@@@ 69 @@@
+# confGet providers for "base=\nbase = second\n"
+
+@@@ 70 @@@
+# confGet provider for "base=\nbase = second\n"
+
+@@@ 71 @@@
+# confGet test for "base=\nbase = second\n"
+
+@@@ 72 @@@
+# confGet install for "base=\nbase = second\n"
+
+@@@ 73 @@@
+# confGet compact_at for "base=\nbase = second\n"
+
+@@@ 74 @@@
+# confGet nothere for "base=\nbase = second\n"
+
+@@@ 75 @@@
+# base
+develop
+@@@ 76 @@@
+# flowMode
+off
+@@@ 77 @@@
+# confProviders
+claude
+@@@ 78 @@@
+# wtdir
+my repo-worktrees
+@@@ 79 @@@
+# confGet base for "base = a#b\r\nflow = strict  \r\n"
+a
+@@@ 80 @@@
+# confGet wtdir for "base = a#b\r\nflow = strict  \r\n"
+
+@@@ 81 @@@
+# confGet flow for "base = a#b\r\nflow = strict  \r\n"
+strict
+@@@ 82 @@@
+# confGet providers for "base = a#b\r\nflow = strict  \r\n"
+
+@@@ 83 @@@
+# confGet provider for "base = a#b\r\nflow = strict  \r\n"
+
+@@@ 84 @@@
+# confGet test for "base = a#b\r\nflow = strict  \r\n"
+
+@@@ 85 @@@
+# confGet install for "base = a#b\r\nflow = strict  \r\n"
+
+@@@ 86 @@@
+# confGet compact_at for "base = a#b\r\nflow = strict  \r\n"
+
+@@@ 87 @@@
+# confGet nothere for "base = a#b\r\nflow = strict  \r\n"
+
+@@@ 88 @@@
+# base
+a
+@@@ 89 @@@
+# flowMode
+strict
+@@@ 90 @@@
+# confProviders
+claude
+@@@ 91 @@@
+# wtdir
+my repo-worktrees
+@@@ 92 @@@
+# confGet base for "basement = nope\nbase\t=\tfoo\tbar\n"
+foo	bar
+@@@ 93 @@@
+# confGet wtdir for "basement = nope\nbase\t=\tfoo\tbar\n"
+
+@@@ 94 @@@
+# confGet flow for "basement = nope\nbase\t=\tfoo\tbar\n"
+
+@@@ 95 @@@
+# confGet providers for "basement = nope\nbase\t=\tfoo\tbar\n"
+
+@@@ 96 @@@
+# confGet provider for "basement = nope\nbase\t=\tfoo\tbar\n"
+
+@@@ 97 @@@
+# confGet test for "basement = nope\nbase\t=\tfoo\tbar\n"
+
+@@@ 98 @@@
+# confGet install for "basement = nope\nbase\t=\tfoo\tbar\n"
+
+@@@ 99 @@@
+# confGet compact_at for "basement = nope\nbase\t=\tfoo\tbar\n"
+
+@@@ 100 @@@
+# confGet nothere for "basement = nope\nbase\t=\tfoo\tbar\n"
+
+@@@ 101 @@@
+# base
+foo	bar
+@@@ 102 @@@
+# flowMode
+off
+@@@ 103 @@@
+# confProviders
+claude
+@@@ 104 @@@
+# wtdir
+my repo-worktrees
+@@@ 105 @@@
+# confGet base for "# base = commented\n"
+
+@@@ 106 @@@
+# confGet wtdir for "# base = commented\n"
+
+@@@ 107 @@@
+# confGet flow for "# base = commented\n"
+
+@@@ 108 @@@
+# confGet providers for "# base = commented\n"
+
+@@@ 109 @@@
+# confGet provider for "# base = commented\n"
+
+@@@ 110 @@@
+# confGet test for "# base = commented\n"
+
+@@@ 111 @@@
+# confGet install for "# base = commented\n"
+
+@@@ 112 @@@
+# confGet compact_at for "# base = commented\n"
+
+@@@ 113 @@@
+# confGet nothere for "# base = commented\n"
+
+@@@ 114 @@@
+# base
+develop
+@@@ 115 @@@
+# flowMode
+off
+@@@ 116 @@@
+# confProviders
+claude
+@@@ 117 @@@
+# wtdir
+my repo-worktrees
+@@@ 118 @@@
+# confGet base for "flow = strict"
+
+@@@ 119 @@@
+# confGet wtdir for "flow = strict"
+
+@@@ 120 @@@
+# confGet flow for "flow = strict"
+strict
+@@@ 121 @@@
+# confGet providers for "flow = strict"
+
+@@@ 122 @@@
+# confGet provider for "flow = strict"
+
+@@@ 123 @@@
+# confGet test for "flow = strict"
+
+@@@ 124 @@@
+# confGet install for "flow = strict"
+
+@@@ 125 @@@
+# confGet compact_at for "flow = strict"
+
+@@@ 126 @@@
+# confGet nothere for "flow = strict"
+
+@@@ 127 @@@
+# base
+develop
+@@@ 128 @@@
+# flowMode
+strict
+@@@ 129 @@@
+# confProviders
+claude
+@@@ 130 @@@
+# wtdir
+my repo-worktrees
+@@@ 131 @@@
+# confGet base for "test = make check\ninstall = none\ncompact_at = 200000\n"
+
+@@@ 132 @@@
+# confGet wtdir for "test = make check\ninstall = none\ncompact_at = 200000\n"
+
+@@@ 133 @@@
+# confGet flow for "test = make check\ninstall = none\ncompact_at = 200000\n"
+
+@@@ 134 @@@
+# confGet providers for "test = make check\ninstall = none\ncompact_at = 200000\n"
+
+@@@ 135 @@@
+# confGet provider for "test = make check\ninstall = none\ncompact_at = 200000\n"
+
+@@@ 136 @@@
+# confGet test for "test = make check\ninstall = none\ncompact_at = 200000\n"
+make check
+@@@ 137 @@@
+# confGet install for "test = make check\ninstall = none\ncompact_at = 200000\n"
+none
+@@@ 138 @@@
+# confGet compact_at for "test = make check\ninstall = none\ncompact_at = 200000\n"
+200000
+@@@ 139 @@@
+# confGet nothere for "test = make check\ninstall = none\ncompact_at = 200000\n"
+
+@@@ 140 @@@
+# base
+develop
+@@@ 141 @@@
+# flowMode
+off
+@@@ 142 @@@
+# confProviders
+claude
+@@@ 143 @@@
+# wtdir
+my repo-worktrees
+@@@ 144 @@@
+# confGet base for "flow = off\nwtdir =\n"
+
+@@@ 145 @@@
+# confGet wtdir for "flow = off\nwtdir =\n"
+
+@@@ 146 @@@
+# confGet flow for "flow = off\nwtdir =\n"
+off
+@@@ 147 @@@
+# confGet providers for "flow = off\nwtdir =\n"
+
+@@@ 148 @@@
+# confGet provider for "flow = off\nwtdir =\n"
+
+@@@ 149 @@@
+# confGet test for "flow = off\nwtdir =\n"
+
+@@@ 150 @@@
+# confGet install for "flow = off\nwtdir =\n"
+
+@@@ 151 @@@
+# confGet compact_at for "flow = off\nwtdir =\n"
+
+@@@ 152 @@@
+# confGet nothere for "flow = off\nwtdir =\n"
+
+@@@ 153 @@@
+# base
+develop
+@@@ 154 @@@
+# flowMode
+off
+@@@ 155 @@@
+# confProviders
+claude
+@@@ 156 @@@
+# wtdir
+my repo-worktrees
+@@@ 157 @@@
+# wtdir of a trailing slash
+b-worktrees

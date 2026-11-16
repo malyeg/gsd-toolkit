@@ -1,0 +1,44 @@
+@@@ 1 @@@
+rc=0 clock=1760011200 runs=0
+--- stdout
+
+gsdt-codex-wait — wait out a Codex usage limit instead of failing.
+
+When its quota runs out, Codex stops with "You've hit your usage limit …
+try again at <time>". This waits until that time (plus a margin) and then
+runs the command again — or only waits, for callers that cannot be wrapped
+(the /gsd-review skill). The review is then done later, never skipped. The
+waiting never calls Codex, so it burns no quota.
+
+Usage:
+  gsdt-codex-wait [options] -- <command> [args...]
+      run the command; on a Codex usage limit wait for the reset and run it
+      again; otherwise exit with the command's own code
+  gsdt-codex-wait [options] --wait-only
+      only wait for the reset, then exit 0 — run the step again after it
+
+Options:
+  --message <text>  Codex's limit message (--wait-only). Default: the newest
+                    limited run in Codex's session logs ($CODEX_HOME/sessions,
+                    default ~/.codex/sessions); without one, wait --interval
+  --max-wait <dur>  give up when the total wait would pass this (default 24h)
+  --interval <dur>  how long to wait when no reset time is known (default 30m)
+  --margin <dur>    wait this long past the reset Codex gave (default 2m;
+                    Codex prints minutes only)
+  <dur> = seconds, or a number with s / m / h / d (90s, 30m, 4h, 1d)
+
+A limit counts only when the command FAILED and Codex's limit message is in
+its output, or in a Codex session log written since it started (scripts
+that hide Codex's stderr still work). A review that merely quotes the
+message does not count. Output streams through unchanged.
+
+Exit: the command's code (wrap); 0 after the wait (--wait-only); 75 = gave
+up, the wait would pass --max-wait — nothing was reviewed, never treat it as
+a pass; 64 = bad usage.
+
+Long waits: run it as a BACKGROUND job — agent tool calls in the foreground
+are cut off (Claude Code: run_in_background; foreground stops at 10 min).
+On macOS it keeps the Mac awake while it waits (caffeinate -i -w).
+
+--- stderr
+

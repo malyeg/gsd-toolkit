@@ -11,7 +11,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { spawnSyncX } from '../spawn.ts';
 import { gsdPkg } from '../common.ts';
 import { coreSync, coreVersion } from '../core.ts';
 import { err, inherit, out } from '../stdio.ts';
@@ -77,7 +77,7 @@ function cacheWrite(file: string, v: string): void {
     // best effort
   }
 }
-const cacheDir = (): string => `${process.env.XDG_CACHE_HOME || `${process.env.HOME ?? ''}/.cache`}/gsd-toolkit`;
+const cacheDir = (): string => `${process.env.XDG_CACHE_HOME || `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.cache`}/gsd-toolkit`;
 
 export function main(argv: string[]): number {
   // the launcher passes the dir a symlinked bin/gsdt-update sits in (the bash used `$0`)
@@ -111,7 +111,7 @@ function run(argv: string[], linkDir: string): number {
 
   const pkg = gsdPkg();
   const mode = installMode(pkg);
-  const home = process.env.HOME ?? '';
+  const home = (process.env.HOME ?? process.env.USERPROFILE ?? '');
   const installBin = linkDir !== '' ? linkDir : process.env.GSD_BIN_DIR || `${home}/.local/bin`;
 
   const cur = gsdVersion();
@@ -177,10 +177,14 @@ function run(argv: string[], linkDir: string): number {
 
 /** Download `url` to `file` with curl (retrying a GitHub blip). */
 function download(url: string, file: string, maxTime: number): boolean {
-  const r = spawnSync('curl', ['-fsSL', '--retry', '3', '--retry-delay', '2', '--max-time', String(maxTime), url, '-o', file], {
-    stdio: ['ignore', 'ignore', 'ignore'],
+  const r = spawnSyncX('curl', ['-fsSL', '--retry', '3', '--retry-delay', '2', '--max-time', String(maxTime), url, '-o', file], {
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
-  return r.status === 0 && existsSync(file);
+  if (r.status === 0 && existsSync(file)) return true;
+  // say why (a missing curl, its exit code, its last words): a bare "download failed" hides a Windows-only cause
+  const why = [r.error?.message, r.status !== null && r.status !== 0 ? `curl exit ${r.status}` : '', String(r.stderr ?? '').trim().split('\n').pop()].filter(Boolean).join('; ');
+  if (why !== '') err(`  (${why})\n`);
+  return false;
 }
 
 /** npm mode: install that release's .tgz globally, then run the NEW package's setup. 0 = fine, 1 = setup failed, 2 = the install failed. */

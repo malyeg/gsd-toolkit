@@ -1,0 +1,64 @@
+@@@ 1 @@@
+ROADMAP path
+rc=0
+out=""
+err="  reconciled — ROADMAP.md: duplicate checklist entry for Phase 1\n"
+A: "- [x] **Phase 1: a** (done)\n"
+B: "- [ ] **Phase 1: a**, b\n"
+O: "- [ ] **Phase 1: a**\n"
+@@@ 2 @@@
+STATE path (not state-shaped)
+rc=0
+out=""
+err=""
+A: "- [x] **Phase 1: a** (done)\n- [ ] **Phase 1: a**, b\n"
+B: "- [ ] **Phase 1: a**, b\n"
+O: "- [ ] **Phase 1: a**\n"
+@@@ 3 @@@
+other path
+rc=0
+out=""
+err=""
+A: "- [x] **Phase 1: a** (done)\n- [ ] **Phase 1: a**, b\n"
+B: "- [ ] **Phase 1: a**, b\n"
+O: "- [ ] **Phase 1: a**\n"
+@@@ 4 @@@
+no path
+rc=0
+out=""
+err=""
+A: "- [x] **Phase 1: a** (done)\n- [ ] **Phase 1: a**, b\n"
+B: "- [ ] **Phase 1: a**, b\n"
+O: "- [ ] **Phase 1: a**\n"
+@@@ 5 @@@
+empty path
+rc=0
+out=""
+err=""
+A: "- [x] **Phase 1: a** (done)\n- [ ] **Phase 1: a**, b\n"
+B: "- [ ] **Phase 1: a**, b\n"
+O: "- [ ] **Phase 1: a**\n"
+@@@ 6 @@@
+missing %B
+rc=1
+out=""
+err="<bin>: line N: 3: merge driver needs %B\n"
+A: "- [x] **Phase 1: a** (done)\n"
+B: "- [ ] **Phase 1: a**, b\n"
+O: "- [ ] **Phase 1: a**\n"
+@@@ 7 @@@
+no args
+rc=1
+out=""
+err="<bin>: line N: 1: merge driver needs %O\n"
+A: "- [x] **Phase 1: a** (done)\n"
+B: "- [ ] **Phase 1: a**, b\n"
+O: "- [ ] **Phase 1: a**\n"
+@@@ 8 @@@
+missing %A
+rc=0
+out=""
+err="gsd_planning: ENOENT: no such file or directory, open '<d>/nonexistent'\n⚠ gsdt-planning-merge: reconcile failed on ROADMAP.md — plain union result kept; run gsdt-planning-repair.\n"
+A: "- [x] **Phase 1: a** (done)\n"
+B: "- [ ] **Phase 1: a**, b\n"
+O: "- [ ] **Phase 1: a**\n"

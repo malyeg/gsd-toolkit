@@ -193,7 +193,7 @@ function run(argv: string[]): number {
     // current directory's own spelling too when it is the same folder.
     const repos = [repo];
     if (phys(process.cwd()) === phys(repo) && pwd !== repo) repos.push(pwd);
-    dir = projdir(process.env.CLAUDE_CONFIG_DIR || `${process.env.HOME ?? ''}/.claude`, repos);
+    dir = projdir(process.env.CLAUDE_CONFIG_DIR || `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.claude`, repos);
   }
   if (!isDir(dir)) {
     out(`gsdt-batch-report: no Claude Code transcripts for this repo (looked in ${dir}).\n`);

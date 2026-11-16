@@ -1,0 +1,470 @@
+@@@ 1 @@@
+worker agent-1 under phase-7-thing args [7]
+rc=0
+out=""
+err=""
+@@@ 2 @@@
+worker agent-1 under phase-7-thing args [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 3 @@@
+worker agent-1 under phase-7-thing args [2.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 4 @@@
+worker agent-1 under phase-7-thing args [02.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 5 @@@
+worker agent-1 under phase-7-thing args []
+rc=0
+out=""
+err=""
+@@@ 6 @@@
+worker agent-1 under phase-7-thing rule 1
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-7-thing'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 7 @@@
+worker agent-1 under phase-7-thing via cwd
+rc=0
+out=""
+err=""
+@@@ 8 @@@
+worker agent-1 under phase-7-thing via payload cwd
+rc=0
+out=""
+err=""
+@@@ 9 @@@
+worker agent-1 under phase-7-thing via a subdir
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 10 @@@
+worker agent-1 under phase-07-x args [7]
+rc=0
+out=""
+err=""
+@@@ 11 @@@
+worker agent-1 under phase-07-x args [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-x', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 12 @@@
+worker agent-1 under phase-07-x args [2.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-x', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 13 @@@
+worker agent-1 under phase-07-x args [02.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-x', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 14 @@@
+worker agent-1 under phase-07-x args []
+rc=0
+out=""
+err=""
+@@@ 15 @@@
+worker agent-1 under phase-07-x rule 1
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-07-x'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 16 @@@
+worker agent-1 under phase-07-x via cwd
+rc=0
+out=""
+err=""
+@@@ 17 @@@
+worker agent-1 under phase-07-x via payload cwd
+rc=0
+out=""
+err=""
+@@@ 18 @@@
+worker agent-1 under phase-07-x via a subdir
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 19 @@@
+worker agent-1 under phase-2.1-x args [7]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 20 @@@
+worker agent-1 under phase-2.1-x args [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-x', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 21 @@@
+worker agent-1 under phase-2.1-x args [2.1]
+rc=0
+out=""
+err=""
+@@@ 22 @@@
+worker agent-1 under phase-2.1-x args [02.1]
+rc=0
+out=""
+err=""
+@@@ 23 @@@
+worker agent-1 under phase-2.1-x args []
+rc=0
+out=""
+err=""
+@@@ 24 @@@
+worker agent-1 under phase-2.1-x rule 1
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-2.1-x'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 25 @@@
+worker agent-1 under phase-2.1-x via cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 26 @@@
+worker agent-1 under phase-2.1-x via payload cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 27 @@@
+worker agent-1 under phase-2.1-x via a subdir
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 28 @@@
+worker agent-1 under feature/x args [7]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'agent-1' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 29 @@@
+worker agent-1 under feature/x args [8]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 8 but 'agent-1' isn't a phase-8-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 30 @@@
+worker agent-1 under feature/x args [2.1]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 2.1 but 'agent-1' isn't a phase-2.1-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 31 @@@
+worker agent-1 under feature/x args [02.1]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 02.1 but 'agent-1' isn't a phase-02.1-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 32 @@@
+worker agent-1 under feature/x args []
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 33 @@@
+worker agent-1 under feature/x rule 1
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'agent-1'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 34 @@@
+worker agent-1 under feature/x via cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'agent-1' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 35 @@@
+worker agent-1 under feature/x via payload cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'agent-1' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 36 @@@
+worker agent-1 under feature/x via a subdir
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 37 @@@
+worker agent-1 under phase-foo args [7]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 38 @@@
+worker agent-1 under phase-foo args [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 39 @@@
+worker agent-1 under phase-foo args [2.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 40 @@@
+worker agent-1 under phase-foo args [02.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 41 @@@
+worker agent-1 under phase-foo args []
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 42 @@@
+worker agent-1 under phase-foo rule 1
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-foo'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 43 @@@
+worker agent-1 under phase-foo via cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 44 @@@
+worker agent-1 under phase-foo via payload cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 45 @@@
+worker agent-1 under phase-foo via a subdir
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 46 @@@
+worker worktree-agent-1 under phase-7-thing args [7]
+rc=0
+out=""
+err=""
+@@@ 47 @@@
+worker worktree-agent-1 under phase-7-thing args [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 48 @@@
+worker worktree-agent-1 under phase-7-thing args [2.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 49 @@@
+worker worktree-agent-1 under phase-7-thing args [02.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 50 @@@
+worker worktree-agent-1 under phase-7-thing args []
+rc=0
+out=""
+err=""
+@@@ 51 @@@
+worker worktree-agent-1 under phase-7-thing rule 1
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-7-thing'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 52 @@@
+worker worktree-agent-1 under phase-7-thing via cwd
+rc=0
+out=""
+err=""
+@@@ 53 @@@
+worker worktree-agent-1 under phase-7-thing via payload cwd
+rc=0
+out=""
+err=""
+@@@ 54 @@@
+worker worktree-agent-1 under phase-7-thing via a subdir
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 55 @@@
+worker worktree-agent-1 under phase-07-x args [7]
+rc=0
+out=""
+err=""
+@@@ 56 @@@
+worker worktree-agent-1 under phase-07-x args [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-x', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 57 @@@
+worker worktree-agent-1 under phase-07-x args [2.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-x', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 58 @@@
+worker worktree-agent-1 under phase-07-x args [02.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-x', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 59 @@@
+worker worktree-agent-1 under phase-07-x args []
+rc=0
+out=""
+err=""
+@@@ 60 @@@
+worker worktree-agent-1 under phase-07-x rule 1
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-07-x'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 61 @@@
+worker worktree-agent-1 under phase-07-x via cwd
+rc=0
+out=""
+err=""
+@@@ 62 @@@
+worker worktree-agent-1 under phase-07-x via payload cwd
+rc=0
+out=""
+err=""
+@@@ 63 @@@
+worker worktree-agent-1 under phase-07-x via a subdir
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 64 @@@
+worker worktree-agent-1 under phase-2.1-x args [7]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 65 @@@
+worker worktree-agent-1 under phase-2.1-x args [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-x', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 66 @@@
+worker worktree-agent-1 under phase-2.1-x args [2.1]
+rc=0
+out=""
+err=""
+@@@ 67 @@@
+worker worktree-agent-1 under phase-2.1-x args [02.1]
+rc=0
+out=""
+err=""
+@@@ 68 @@@
+worker worktree-agent-1 under phase-2.1-x args []
+rc=0
+out=""
+err=""
+@@@ 69 @@@
+worker worktree-agent-1 under phase-2.1-x rule 1
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-2.1-x'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 70 @@@
+worker worktree-agent-1 under phase-2.1-x via cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 71 @@@
+worker worktree-agent-1 under phase-2.1-x via payload cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 72 @@@
+worker worktree-agent-1 under phase-2.1-x via a subdir
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 73 @@@
+worker worktree-agent-1 under feature/x args [7]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'worktree-agent-1' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 74 @@@
+worker worktree-agent-1 under feature/x args [8]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 8 but 'worktree-agent-1' isn't a phase-8-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 75 @@@
+worker worktree-agent-1 under feature/x args [2.1]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 2.1 but 'worktree-agent-1' isn't a phase-2.1-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 76 @@@
+worker worktree-agent-1 under feature/x args [02.1]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 02.1 but 'worktree-agent-1' isn't a phase-02.1-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 77 @@@
+worker worktree-agent-1 under feature/x args []
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 78 @@@
+worker worktree-agent-1 under feature/x rule 1
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'worktree-agent-1'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 79 @@@
+worker worktree-agent-1 under feature/x via cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'worktree-agent-1' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 80 @@@
+worker worktree-agent-1 under feature/x via payload cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'worktree-agent-1' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 81 @@@
+worker worktree-agent-1 under feature/x via a subdir
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 82 @@@
+worker worktree-agent-1 under phase-foo args [7]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 83 @@@
+worker worktree-agent-1 under phase-foo args [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 84 @@@
+worker worktree-agent-1 under phase-foo args [2.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 85 @@@
+worker worktree-agent-1 under phase-foo args [02.1]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 86 @@@
+worker worktree-agent-1 under phase-foo args []
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 87 @@@
+worker worktree-agent-1 under phase-foo rule 1
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-foo'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 88 @@@
+worker worktree-agent-1 under phase-foo via cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 89 @@@
+worker worktree-agent-1 under phase-foo via payload cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 90 @@@
+worker worktree-agent-1 under phase-foo via a subdir
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 91 @@@
+agent branch in a foreign repo inside a phase checkout
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'agent-9' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 92 @@@
+agent branch in a plain repo
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'agent-1' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 93 @@@
+worktree-agent branch in a plain repo, base conf
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'worktree-agent-1'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 94 @@@
+worker under a non-phase worktree
+rc=2
+out=""
+err="BLOCKED: /gsd-review targets phase 3 but 'agent-3' isn't a phase-3-* worktree. See .gsd/INSTRUCTIONS.md.\n"

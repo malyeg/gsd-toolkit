@@ -1,0 +1,4 @@
+@@@ 1 @@@
+rc=1
+out="▶ repaired union-merge damage in ROADMAP.md, STATE.md:\n  • ROADMAP.md: duplicate checklist entry for Phase 2\n  • ROADMAP.md: duplicate progress-table row for Phase 2\n  • ROADMAP.md: duplicate '### Phase 2' detail section\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.completed_phases recomputed to 2 (file had 1)\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: progress.percent recomputed to 67 (file had 33)\n  - STATE.md: progress bar recomputed to 67% (was Progress: [███░░░░░░░] 33%)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err="rejected\n"

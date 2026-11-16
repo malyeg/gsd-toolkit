@@ -1,0 +1,1176 @@
+@@@ 1 @@@
+state clean (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 2 @@@
+state clean (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 3 @@@
+state clean (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 4 @@@
+state clean (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 5 @@@
+state clean: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 6 @@@
+state crlf (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\r\ngsd_state_version: 1.0\r\nstatus: planning\r\nlast_updated: \"2026-08-05T09:34:25.661Z\"\r\nprogress:\r\n  total_phases: 3\r\n  completed_phases: 1\r\n  total_plans: 3\r\n  completed_plans: 1\r\n  percent: 33\r\n---\r\n\r\n# Project State\r\n\r\n**Current focus:** Phase 2 â beta\r\n\r\n## Current Position\r\n\r\nPhase: 2\r\nPlan: Not started\r\nStatus: Ready\r\nProgress: [ââââââââââ] 33%\r\n\r\n## Performance Metrics\r\n\r\n- Total plans completed: 1\r\n- Average duration: 4 min\r\n\r\n| Phase | Plans | Total |\r\n|-------|-------|-------|\r\n| 1 | 2 | 8 min |\r\n\r\n## Session Continuity\r\n\r\nLast session: 2026-08-01\r\nStopped at: Phase 1\r\nLast session: 2026-08-02\r\nStopped at: Phase 2\r\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 7 @@@
+state crlf (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\r\ngsd_state_version: 1.0\r\nstatus: planning\r\nlast_updated: \"2026-08-05T09:34:25.661Z\"\r\nprogress:\r\n  total_phases: 3\r\n  completed_phases: 1\r\n  total_plans: 2\r\n  completed_plans: 2\r\n  percent: 33\r\n---\r\n\r\n# Project State\r\n\r\n**Current focus:** Phase 2 â beta\r\n\r\n## Current Position\r\n\r\nPhase: 2\r\nPlan: Not started\r\nStatus: Ready\r\nProgress: [ââââââââââ] 33%\r\n\r\n## Performance Metrics\r\n\r\n- Total plans completed: 2\r\n- Average duration: 4 min\r\n\r\n| Phase | Plans | Total |\r\n|-------|-------|-------|\r\n| 1 | 2 | 8 min |\r\n\r\n## Session Continuity\r\n\r\nLast session: 2026-08-01\r\nStopped at: Phase 1\r\nLast session: 2026-08-02\r\nStopped at: Phase 2\r\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 8 @@@
+state crlf (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\r\ngsd_state_version: 1.0\r\nstatus: planning\r\nlast_updated: \"2026-08-05T09:34:25.661Z\"\r\nprogress:\r\n  total_phases: 3\r\n  completed_phases: 1\r\n  total_plans: 2\r\n  completed_plans: 2\r\n  percent: 33\r\n---\r\n\r\n# Project State\r\n\r\n**Current focus:** Phase 2 â beta\r\n\r\n## Current Position\r\n\r\nPhase: 2\r\nPlan: Not started\r\nStatus: Ready\r\nProgress: [ââââââââââ] 33%\r\n\r\n## Performance Metrics\r\n\r\n- Total plans completed: 2\r\n- Average duration: 4 min\r\n\r\n| Phase | Plans | Total |\r\n|-------|-------|-------|\r\n| 1 | 2 | 8 min |\r\n\r\n## Session Continuity\r\n\r\nLast session: 2026-08-01\r\nStopped at: Phase 1\r\nLast session: 2026-08-02\r\nStopped at: Phase 2\r\n"
+@@@ 9 @@@
+state crlf (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\r\ngsd_state_version: 1.0\r\nstatus: planning\r\nlast_updated: \"2026-08-05T09:34:25.661Z\"\r\nprogress:\r\n  total_phases: 3\r\n  completed_phases: 1\r\n  total_plans: 2\r\n  completed_plans: 2\r\n  percent: 33\r\n---\r\n\r\n# Project State\r\n\r\n**Current focus:** Phase 2 â beta\r\n\r\n## Current Position\r\n\r\nPhase: 2\r\nPlan: Not started\r\nStatus: Ready\r\nProgress: [ââââââââââ] 33%\r\n\r\n## Performance Metrics\r\n\r\n- Total plans completed: 2\r\n- Average duration: 4 min\r\n\r\n| Phase | Plans | Total |\r\n|-------|-------|-------|\r\n| 1 | 2 | 8 min |\r\n\r\n## Session Continuity\r\n\r\nLast session: 2026-08-01\r\nStopped at: Phase 1\r\nLast session: 2026-08-02\r\nStopped at: Phase 2\r\n"
+@@@ 10 @@@
+state crlf: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\r\ngsd_state_version: 1.0\r\nstatus: planning\r\nlast_updated: \"2026-08-05T09:34:25.661Z\"\r\nprogress:\r\n  total_phases: 3\r\n  completed_phases: 1\r\n  total_plans: 2\r\n  completed_plans: 2\r\n  percent: 33\r\n---\r\n\r\n# Project State\r\n\r\n**Current focus:** Phase 2 â beta\r\n\r\n## Current Position\r\n\r\nPhase: 2\r\nPlan: Not started\r\nStatus: Ready\r\nProgress: [ââââââââââ] 33%\r\n\r\n## Performance Metrics\r\n\r\n- Total plans completed: 2\r\n- Average duration: 4 min\r\n\r\n| Phase | Plans | Total |\r\n|-------|-------|-------|\r\n| 1 | 2 | 8 min |\r\n\r\n## Session Continuity\r\n\r\nLast session: 2026-08-01\r\nStopped at: Phase 1\r\nLast session: 2026-08-02\r\nStopped at: Phase 2\r\n"
+@@@ 11 @@@
+state no trailing newline (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 12 @@@
+state no trailing newline (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 13 @@@
+state no trailing newline (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2"
+@@@ 14 @@@
+state no trailing newline (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2"
+@@@ 15 @@@
+state no trailing newline: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2"
+@@@ 16 @@@
+state no frontmatter (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 17 @@@
+state no frontmatter (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 18 @@@
+state no frontmatter (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 19 @@@
+state no frontmatter (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 20 @@@
+state no frontmatter: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 21 @@@
+state unterminated frontmatter (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 22 @@@
+state unterminated frontmatter (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 23 @@@
+state unterminated frontmatter (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 24 @@@
+state unterminated frontmatter (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 25 @@@
+state unterminated frontmatter: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 26 @@@
+state two frontmatter blocks of counters (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: progress.total_phases recomputed to 3 (file had 3, 30)\n  • STATE.md: progress.completed_phases recomputed to 1 (file had 1, 12)\n  • STATE.md: progress.total_plans recomputed to 3 (file had 2, 96)\n  • STATE.md: progress.completed_plans recomputed to 1 (file had 2, 96)\n  • STATE.md: progress.percent recomputed to 33 (file had 33, 40)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 27 @@@
+state two frontmatter blocks of counters (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: progress.total_phases recomputed to 3 (file had 3, 30)\n  • STATE.md: progress.completed_phases recomputed to 1 (file had 1, 12)\n  • STATE.md: progress.total_plans recomputed to 3 (file had 2, 96)\n  • STATE.md: progress.completed_plans recomputed to 1 (file had 2, 96)\n  • STATE.md: progress.percent recomputed to 33 (file had 33, 40)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n  total_phases: 30\n  completed_phases: 12\n  total_plans: 96\n  completed_plans: 96\n  percent: 40\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 28 @@@
+state two frontmatter blocks of counters (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: progress.total_phases recomputed to 3 (file had 3, 30)\n  • STATE.md: progress.completed_phases recomputed to 1 (file had 1, 12)\n  • STATE.md: conflicting 'progress.total_plans' in frontmatter (2 values: 2, 96)\n  • STATE.md: conflicting 'progress.completed_plans' in frontmatter (2 values: 2, 96)\n  • STATE.md: progress.percent recomputed to 33 (file had 33, 40)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 96\n  completed_plans: 96\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 29 @@@
+state two frontmatter blocks of counters (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: progress.total_phases recomputed to 3 (file had 3, 30)\n  • STATE.md: progress.completed_phases recomputed to 1 (file had 1, 12)\n  • STATE.md: conflicting 'progress.total_plans' in frontmatter (2 values: 2, 96)\n  • STATE.md: conflicting 'progress.completed_plans' in frontmatter (2 values: 2, 96)\n  • STATE.md: progress.percent recomputed to 33 (file had 33, 40)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n  total_phases: 30\n  completed_phases: 12\n  total_plans: 96\n  completed_plans: 96\n  percent: 40\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 30 @@@
+state two frontmatter blocks of counters: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: conflicting 'progress.total_phases' in frontmatter (2 values: 3, 30)\n  reconciled — STATE.md: conflicting 'progress.completed_phases' in frontmatter (2 values: 1, 12)\n  reconciled — STATE.md: conflicting 'progress.total_plans' in frontmatter (2 values: 2, 96)\n  reconciled — STATE.md: conflicting 'progress.completed_plans' in frontmatter (2 values: 2, 96)\n  reconciled — STATE.md: conflicting 'progress.percent' in frontmatter (2 values: 33, 40)\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 30\n  completed_phases: 12\n  total_plans: 96\n  completed_plans: 96\n  percent: 40\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 31 @@@
+state conflicting scalars (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'status' in frontmatter (2 values: planning, ready)\n  • STATE.md: conflicting 'last_updated' in frontmatter (3 values: 2026-09-01, 2026-07-01, 2026-08-05T09:34:25.661Z)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: ready\nlast_updated: 2026-09-01\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 32 @@@
+state conflicting scalars (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'status' in frontmatter (2 values: planning, ready)\n  • STATE.md: conflicting 'last_updated' in frontmatter (3 values: 2026-09-01, 2026-07-01, 2026-08-05T09:34:25.661Z)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nstatus: ready\nlast_updated: 2026-09-01\nlast_updated: \"2026-07-01\"\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 33 @@@
+state conflicting scalars (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'status' in frontmatter (2 values: planning, ready)\n  • STATE.md: conflicting 'last_updated' in frontmatter (3 values: 2026-09-01, 2026-07-01, 2026-08-05T09:34:25.661Z)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: ready\nlast_updated: 2026-09-01\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 34 @@@
+state conflicting scalars (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'status' in frontmatter (2 values: planning, ready)\n  • STATE.md: conflicting 'last_updated' in frontmatter (3 values: 2026-09-01, 2026-07-01, 2026-08-05T09:34:25.661Z)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nstatus: ready\nlast_updated: 2026-09-01\nlast_updated: \"2026-07-01\"\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 35 @@@
+state conflicting scalars: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: conflicting 'status' in frontmatter (2 values: planning, ready)\n  reconciled — STATE.md: conflicting 'last_updated' in frontmatter (3 values: 2026-09-01, 2026-07-01, 2026-08-05T09:34:25.661Z)\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: ready\nlast_updated: 2026-09-01\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 36 @@@
+state quoted values (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: 'planning'\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 37 @@@
+state quoted values (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: 'planning'\nstatus: \"planning\"\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 38 @@@
+state quoted values (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: 'planning'\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 39 @@@
+state quoted values (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: 'planning'\nstatus: \"planning\"\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 40 @@@
+state quoted values: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: 'planning'\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 41 @@@
+state list and comment in frontmatter (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\n# a comment\nitems:\n  - one\n  - two\n\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 42 @@@
+state list and comment in frontmatter (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\n# a comment\nitems:\n  - one\n  - two\n\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 43 @@@
+state list and comment in frontmatter (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\n# a comment\nitems:\n  - one\n  - two\n\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 44 @@@
+state list and comment in frontmatter (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\n# a comment\nitems:\n  - one\n  - two\n\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 45 @@@
+state list and comment in frontmatter: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\n# a comment\nitems:\n  - one\n  - two\n\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 46 @@@
+state duplicate position and velocity (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: duplicate 'Phase:' in ## Current Position\n  • STATE.md: duplicate 'Status:' in ## Current Position\n  • STATE.md: duplicate '- Total plans completed:' in the velocity block\n  • STATE.md: duplicate '- Average duration:' in the velocity block\n  • STATE.md: duplicate '- Trend:' in the velocity block\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 7)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 3\nStatus: Ready\nPlan: Not started\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 9 min\n- Trend: down\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 47 @@@
+state duplicate position and velocity (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: duplicate 'Phase:' in ## Current Position\n  • STATE.md: duplicate 'Status:' in ## Current Position\n  • STATE.md: duplicate '- Total plans completed:' in the velocity block\n  • STATE.md: duplicate '- Average duration:' in the velocity block\n  • STATE.md: duplicate '- Trend:' in the velocity block\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 7)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPhase: 3\nStatus: Done\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n- Average duration: 9 min\n- Total plans completed: 7\n- Trend: up\n- Trend: down\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 48 @@@
+state duplicate position and velocity (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: duplicate 'Phase:' in ## Current Position\n  • STATE.md: duplicate 'Status:' in ## Current Position\n  • STATE.md: duplicate '- Total plans completed:' in the velocity block\n  • STATE.md: duplicate '- Average duration:' in the velocity block\n  • STATE.md: duplicate '- Trend:' in the velocity block\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 3\nStatus: Ready\nPlan: Not started\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 7\n- Average duration: 9 min\n- Trend: down\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 49 @@@
+state duplicate position and velocity (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: duplicate 'Phase:' in ## Current Position\n  • STATE.md: duplicate 'Status:' in ## Current Position\n  • STATE.md: duplicate '- Total plans completed:' in the velocity block\n  • STATE.md: duplicate '- Average duration:' in the velocity block\n  • STATE.md: duplicate '- Trend:' in the velocity block\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPhase: 3\nStatus: Done\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n- Average duration: 9 min\n- Total plans completed: 7\n- Trend: up\n- Trend: down\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 50 @@@
+state duplicate position and velocity: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: duplicate 'Phase:' in ## Current Position\n  reconciled — STATE.md: duplicate 'Status:' in ## Current Position\n  reconciled — STATE.md: duplicate '- Total plans completed:' in the velocity block\n  reconciled — STATE.md: duplicate '- Average duration:' in the velocity block\n  reconciled — STATE.md: duplicate '- Trend:' in the velocity block\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 3\nStatus: Ready\nPlan: Not started\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 7\n- Average duration: 9 min\n- Trend: down\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 51 @@@
+state duplicate focus (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: duplicate '**Current focus:**' line\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 3 â gamma\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 52 @@@
+state duplicate focus (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: duplicate '**Current focus:**' line\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n**Current focus:** Phase 3 â gamma\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 53 @@@
+state duplicate focus (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: duplicate '**Current focus:**' line\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 3 â gamma\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 54 @@@
+state duplicate focus (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: duplicate '**Current focus:**' line\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n**Current focus:** Phase 3 â gamma\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 55 @@@
+state duplicate focus: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: duplicate '**Current focus:**' line\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 3 â gamma\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 56 @@@
+state by-phase duplicates (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: duplicate by-phase row for Phase 1\n  • STATE.md: duplicate by-phase row for Phase 1\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 3 | 9 minutes |\n| 02 | 1/2 | x |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 57 @@@
+state by-phase duplicates (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: duplicate by-phase row for Phase 1\n  • STATE.md: duplicate by-phase row for Phase 1\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n| 1 | 3 | 8 min |\n| 1 | 3 | 9 minutes |\n| 02 | 1/2 | x |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 58 @@@
+state by-phase duplicates (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: duplicate by-phase row for Phase 1\n  • STATE.md: duplicate by-phase row for Phase 1\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 3 | 9 minutes |\n| 02 | 1/2 | x |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 59 @@@
+state by-phase duplicates (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: duplicate by-phase row for Phase 1\n  • STATE.md: duplicate by-phase row for Phase 1\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n| 1 | 3 | 8 min |\n| 1 | 3 | 9 minutes |\n| 02 | 1/2 | x |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 60 @@@
+state by-phase duplicates: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: duplicate by-phase row for Phase 1\n  reconciled — STATE.md: duplicate by-phase row for Phase 1\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 3 | 9 minutes |\n| 02 | 1/2 | x |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 61 @@@
+state progress line forms (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: progress bar recomputed to 33% (was Progress: [██░░░░░░░░] 20% (1 of 5 phases complete))\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33% (1 of 3 phases complete)\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 62 @@@
+state progress line forms (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: progress bar recomputed to 33% (was Progress: [██░░░░░░░░] 20% (1 of 5 phases complete))\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 20% (1 of 5 phases complete)\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 63 @@@
+state progress line forms (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress bar recomputed to 33% (was Progress: [██░░░░░░░░] 20% (1 of 5 phases complete))\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33% (1 of 3 phases complete)\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 64 @@@
+state progress line forms (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress bar recomputed to 33% (was Progress: [██░░░░░░░░] 20% (1 of 5 phases complete))\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 20% (1 of 5 phases complete)\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 65 @@@
+state progress line forms: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 20% (1 of 5 phases complete)\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 66 @@@
+state progress line odd (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: progress bar recomputed to 33% (was Progress: oddly shaped)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33% (1 of 3 phases complete)\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 67 @@@
+state progress line odd (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: progress bar recomputed to 33% (was Progress: oddly shaped)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: oddly shaped\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 68 @@@
+state progress line odd (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress bar recomputed to 33% (was Progress: oddly shaped)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33% (1 of 3 phases complete)\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 69 @@@
+state progress line odd (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress bar recomputed to 33% (was Progress: oddly shaped)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: oddly shaped\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 70 @@@
+state progress line odd: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: oddly shaped\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 71 @@@
+state progress line extra text (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: progress bar recomputed to 33% (was Progress: [█░░░░░░░░░] 9%  extra words (1 of 2 phases complete) more)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%  extra words (1 of 2 phases complete) more\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 72 @@@
+state progress line extra text (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: progress bar recomputed to 33% (was Progress: [█░░░░░░░░░] 9%  extra words (1 of 2 phases complete) more)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 9%  extra words (1 of 2 phases complete) more\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 73 @@@
+state progress line extra text (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress bar recomputed to 33% (was Progress: [█░░░░░░░░░] 9%  extra words (1 of 2 phases complete) more)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%  extra words (1 of 2 phases complete) more\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 74 @@@
+state progress line extra text (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress bar recomputed to 33% (was Progress: [█░░░░░░░░░] 9%  extra words (1 of 2 phases complete) more)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 9%  extra words (1 of 2 phases complete) more\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 75 @@@
+state progress line extra text: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 9%  extra words (1 of 2 phases complete) more\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 76 @@@
+state orphan rows (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n  - STATE.md:40: table row outside any table — move it into the table it belongs to by hand: | stray | row |\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n\n| stray | row |\n\n| stray2 | row xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |\n| a |\n| b |\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 77 @@@
+state orphan rows (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n  - STATE.md:40: table row outside any table — move it into the table it belongs to by hand: | stray | row |\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n\n| stray | row |\n\n| stray2 | row xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |\n| a |\n| b |\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 78 @@@
+state orphan rows (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md:40: table row outside any table — move it into the table it belongs to by hand: | stray | row |\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n\n| stray | row |\n\n| stray2 | row xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |\n| a |\n| b |\n"
+@@@ 79 @@@
+state orphan rows (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md:40: table row outside any table — move it into the table it belongs to by hand: | stray | row |\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n\n| stray | row |\n\n| stray2 | row xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |\n| a |\n| b |\n"
+@@@ 80 @@@
+state orphan rows: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n\n| stray | row |\n\n| stray2 | row xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |\n| a |\n| b |\n"
+@@@ 81 @@@
+state orphan row at eof no newline (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n  - STATE.md:39: table row outside any table — move it into the table it belongs to by hand: | lonely\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n| lonely"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 82 @@@
+state orphan row at eof no newline (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n  - STATE.md:39: table row outside any table — move it into the table it belongs to by hand: | lonely\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n| lonely"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 83 @@@
+state orphan row at eof no newline (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md:39: table row outside any table — move it into the table it belongs to by hand: | lonely\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n| lonely"
+@@@ 84 @@@
+state orphan row at eof no newline (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md:39: table row outside any table — move it into the table it belongs to by hand: | lonely\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n| lonely"
+@@@ 85 @@@
+state orphan row at eof no newline: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n| lonely"
+@@@ 86 @@@
+state session continuity untouched (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\nPhase: 9\nStatus: z\nProgress: [ââââââââââ] 0%\nLast session: 2026-08-03\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 87 @@@
+state session continuity untouched (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 2)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 2)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 2)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\nPhase: 9\nStatus: z\nProgress: [ââââââââââ] 0%\nLast session: 2026-08-03\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 88 @@@
+state session continuity untouched (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\nPhase: 9\nStatus: z\nProgress: [ââââââââââ] 0%\nLast session: 2026-08-03\n"
+@@@ 89 @@@
+state session continuity untouched (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\nPhase: 9\nStatus: z\nProgress: [ââââââââââ] 0%\nLast session: 2026-08-03\n"
+@@@ 90 @@@
+state session continuity untouched: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\nPhase: 9\nStatus: z\nProgress: [ââââââââââ] 0%\nLast session: 2026-08-03\n"
+@@@ 91 @@@
+state metrics heading then others (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 9)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "## Performance Metrics\n- Total plans completed: 1\n## Other\n- Total plans completed: 8\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 92 @@@
+state metrics heading then others (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 9)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "## Performance Metrics\n- Total plans completed: 9\n## Other\n- Total plans completed: 8\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 93 @@@
+state metrics heading then others (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "## Performance Metrics\n- Total plans completed: 9\n## Other\n- Total plans completed: 8\n"
+@@@ 94 @@@
+state metrics heading then others (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "## Performance Metrics\n- Total plans completed: 9\n## Other\n- Total plans completed: 8\n"
+@@@ 95 @@@
+state metrics heading then others: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "## Performance Metrics\n- Total plans completed: 9\n## Other\n- Total plans completed: 8\n"
+@@@ 96 @@@
+state zero plans claims (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 5)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 5)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 5)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 3\n  completed_plans: 1\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 1\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 97 @@@
+state zero plans claims (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.total_plans recomputed to 3 (file had 5)\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 5)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: 5)\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 5\n  completed_plans: 5\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 5\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 98 @@@
+state zero plans claims (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 5\n  completed_plans: 5\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 5\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 99 @@@
+state zero plans claims (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 5\n  completed_plans: 5\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 5\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 100 @@@
+state zero plans claims: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 5\n  completed_plans: 5\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 5\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"
+@@@ 101 @@@
+state empty (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: ""
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 102 @@@
+state empty (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: ""
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 103 @@@
+state empty (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: ""
+@@@ 104 @@@
+state empty (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: ""
+@@@ 105 @@@
+state empty: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: ""
+@@@ 106 @@@
+state only frontmatter (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'a' in frontmatter (2 values: 1, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\na: 2\n---\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 107 @@@
+state only frontmatter (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'a' in frontmatter (2 values: 1, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\na: 1\na: 2\n---\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 108 @@@
+state only frontmatter (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'a' in frontmatter (2 values: 1, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\na: 2\n---\n"
+@@@ 109 @@@
+state only frontmatter (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'a' in frontmatter (2 values: 1, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\na: 1\na: 2\n---\n"
+@@@ 110 @@@
+state only frontmatter: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: conflicting 'a' in frontmatter (2 values: 1, 2)\n"
+.planning/STATE.md: "---\na: 2\n---\n"
+@@@ 111 @@@
+state frontmatter spaces (with plans): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "  ---  \nkey: spaced   \n---\t\nbody\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 112 @@@
+state frontmatter spaces (with plans): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "  ---  \nkey:   spaced   \n---\t\nbody\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 113 @@@
+state frontmatter spaces (no phases dir): repair
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "  ---  \nkey: spaced   \n---\t\nbody\n"
+@@@ 114 @@@
+state frontmatter spaces (no phases dir): check
+rc=0
+out="• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n• a repair would update: STATE.md\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "  ---  \nkey:   spaced   \n---\t\nbody\n"
+@@@ 115 @@@
+state frontmatter spaces: reconcile
+rc=0
+out=""
+err=""
+.planning/STATE.md: "  ---  \nkey: spaced   \n---\t\nbody\n"
+@@@ 116 @@@
+state unicode keys (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'clé' in frontmatter (2 values: 1, 2)\n  • STATE.md: conflicting 'status' in frontmatter (2 values: , x)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nclÃ©: 2\nstatus: x\n---\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 117 @@@
+state unicode keys (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'clé' in frontmatter (2 values: 1, 2)\n  • STATE.md: conflicting 'status' in frontmatter (2 values: , x)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nclÃ©: 1\nclÃ©: 2\nstatus:\nstatus: x\n---\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 118 @@@
+state unicode keys (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'clé' in frontmatter (2 values: 1, 2)\n  • STATE.md: conflicting 'status' in frontmatter (2 values: , x)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nclÃ©: 2\nstatus: x\n---\n"
+@@@ 119 @@@
+state unicode keys (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'clé' in frontmatter (2 values: 1, 2)\n  • STATE.md: conflicting 'status' in frontmatter (2 values: , x)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nclÃ©: 1\nclÃ©: 2\nstatus:\nstatus: x\n---\n"
+@@@ 120 @@@
+state unicode keys: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: conflicting 'clé' in frontmatter (2 values: 1, 2)\n  reconciled — STATE.md: conflicting 'status' in frontmatter (2 values: , x)\n"
+.planning/STATE.md: "---\nclÃ©: 2\nstatus: x\n---\n"
+@@@ 121 @@@
+state exotic breaks in frontmatter (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'status' in frontmatter (2 values: a, b)\n  • STATE.md: progress.percent recomputed to 33 (file had 1, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nstatus: bÂ\nprogress:\n  percent: 33\n---\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 122 @@@
+state exotic breaks in frontmatter (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'status' in frontmatter (2 values: a, b)\n  • STATE.md: progress.percent recomputed to 33 (file had 1, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nstatus: aâ¨status: bÂprogress:\n  percent: 1\u000b  percent: 2\n---\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 123 @@@
+state exotic breaks in frontmatter (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'status' in frontmatter (2 values: a, b)\n  • STATE.md: progress.percent recomputed to 33 (file had 1, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nstatus: bÂ\nprogress:\n  percent: 33\n---\n"
+@@@ 124 @@@
+state exotic breaks in frontmatter (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'status' in frontmatter (2 values: a, b)\n  • STATE.md: progress.percent recomputed to 33 (file had 1, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nstatus: aâ¨status: bÂprogress:\n  percent: 1\u000b  percent: 2\n---\n"
+@@@ 125 @@@
+state exotic breaks in frontmatter: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: conflicting 'status' in frontmatter (2 values: a, b)\n  reconciled — STATE.md: conflicting 'progress.percent' in frontmatter (2 values: 1, 2)\n"
+.planning/STATE.md: "---\nstatus: bÂ\nprogress:\n  percent: 2\n---\n"
+@@@ 126 @@@
+state last_updated unicode order (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'last_updated' in frontmatter (2 values: 😀, ￮)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nlast_updated: \"ð\"\n---\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 127 @@@
+state last_updated unicode order (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'last_updated' in frontmatter (2 values: 😀, ￮)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nlast_updated: \"ð\"\nlast_updated: \"ï¿®\"\n---\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 128 @@@
+state last_updated unicode order (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'last_updated' in frontmatter (2 values: 😀, ￮)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nlast_updated: \"ð\"\n---\n"
+@@@ 129 @@@
+state last_updated unicode order (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'last_updated' in frontmatter (2 values: 😀, ￮)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nlast_updated: \"ð\"\nlast_updated: \"ï¿®\"\n---\n"
+@@@ 130 @@@
+state last_updated unicode order: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: conflicting 'last_updated' in frontmatter (2 values: 😀, ￮)\n"
+.planning/STATE.md: "---\nlast_updated: \"ð\"\n---\n"
+@@@ 131 @@@
+state huge ints (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: progress.total_phases recomputed to 3 (file had 99999999999999999999, 5)\n  • STATE.md: progress.percent recomputed to 33 (file had -7, 3)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nprogress:\n  total_phases: 3\n  percent: 33\n---\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 132 @@@
+state huge ints (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: progress.total_phases recomputed to 3 (file had 99999999999999999999, 5)\n  • STATE.md: progress.percent recomputed to 33 (file had -7, 3)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nprogress:\n  total_phases: 99999999999999999999\n  total_phases: 5\n  percent: -7\n  percent: 3\n---\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 133 @@@
+state huge ints (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: progress.total_phases recomputed to 3 (file had 99999999999999999999, 5)\n  • STATE.md: progress.percent recomputed to 33 (file had -7, 3)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nprogress:\n  total_phases: 3\n  percent: 33\n---\n"
+@@@ 134 @@@
+state huge ints (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: progress.total_phases recomputed to 3 (file had 99999999999999999999, 5)\n  • STATE.md: progress.percent recomputed to 33 (file had -7, 3)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nprogress:\n  total_phases: 99999999999999999999\n  total_phases: 5\n  percent: -7\n  percent: 3\n---\n"
+@@@ 135 @@@
+state huge ints: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: conflicting 'progress.total_phases' in frontmatter (2 values: 99999999999999999999, 5)\n  reconciled — STATE.md: conflicting 'progress.percent' in frontmatter (2 values: -7, 3)\n"
+.planning/STATE.md: "---\nprogress:\n  total_phases: 99999999999999999999\n  percent: 3\n---\n"
+@@@ 136 @@@
+state unicode digits in counters (with plans): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: progress.total_plans recomputed to 3 (file had ٣, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 0)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: ٣)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nprogress:\n  total_plans: 3\n  completed_plans: 1\n---\n## Performance Metrics\n- Total plans completed: 1\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 137 @@@
+state unicode digits in counters (with plans): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: progress.total_plans recomputed to 3 (file had ٣, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n  - STATE.md: progress.completed_plans recomputed to 1 (file had 0)\n  - STATE.md: velocity total recomputed to 1 (was - Total plans completed: ٣)\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nprogress:\n  total_plans: Ù£\n  total_plans: 2\n  completed_plans: 0\n---\n## Performance Metrics\n- Total plans completed: Ù£\n"
+.planning/phases/01-alpha/01-01-PLAN.md: "p"
+.planning/phases/01-alpha/01-01-SUMMARY.md: "s"
+.planning/phases/01-alpha/01-02-PLAN.md: "p"
+.planning/phases/02-beta/02-01-PLAN.md: "p"
+@@@ 138 @@@
+state unicode digits in counters (no phases dir): repair
+rc=0
+out="▶ repaired union-merge damage in STATE.md:\n  • STATE.md: conflicting 'progress.total_plans' in frontmatter (2 values: ٣, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nprogress:\n  total_plans: Ù£\n  completed_plans: 0\n---\n## Performance Metrics\n- Total plans completed: Ù£\n"
+@@@ 139 @@@
+state unicode digits in counters (no phases dir): check
+rc=1
+out="✖ union-merge damage found in STATE.md:\n  • STATE.md: conflicting 'progress.total_plans' in frontmatter (2 values: ٣, 2)\n• advisories (not merge damage — reported, never fail a check):\n  - ROADMAP.md: Phase 3 is in the checklist but has no ## Progress row\n"
+err=""
+.planning/ROADMAP.md: "# Roadmap\n\n## Phases\n\n- [x] **Phase 1: Alpha** - first (completed 2026-01-01)\n- [ ] **Phase 2: Beta** - second\n- [ ] **Phase 3: Gamma**\n\n## Progress\n\n| Phase | Plans | Status | Completed |\n|-------|-------|--------|-----------|\n| 1. Alpha | 1/1 | Complete | 2026-01-01 |\n| 2. Beta | 0/1 | Not started | - |\n\n### Phase 1: Alpha\n\n**Goal**: a\n\n### Phase 2: Beta\n\n**Goal**: b\n"
+.planning/STATE.md: "---\nprogress:\n  total_plans: Ù£\n  total_plans: 2\n  completed_plans: 0\n---\n## Performance Metrics\n- Total plans completed: Ù£\n"
+@@@ 140 @@@
+state unicode digits in counters: reconcile
+rc=0
+out=""
+err="  reconciled — STATE.md: conflicting 'progress.total_plans' in frontmatter (2 values: ٣, 2)\n"
+.planning/STATE.md: "---\nprogress:\n  total_plans: Ù£\n  completed_plans: 0\n---\n## Performance Metrics\n- Total plans completed: Ù£\n"

@@ -1,0 +1,13 @@
+@@@ 1 @@@
+<!-- gsd:design-stub
+375 768 1440
+R1|One main focus per screen
+R2|The main button is on the first screen, never covered
+R3|More than ~12 items → search, filters or tabs
+R4|One alignment system per page
+R5|Consistent title casing
+R6|Header and footer are lighter than the content
+R7|No large empty areas; cards in a row have equal structure
+R8|Images: same shape and treatment; no blank or near-empty images
+R9|Nothing wraps alone onto its own row at any size
+R10|Matches the chosen sketch: same sections, same order

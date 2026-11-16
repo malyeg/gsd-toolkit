@@ -9,7 +9,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
-import { LOCALE_ENV, PKG, tmp, write } from './helpers.ts';
+import { LOCALE_ENV, PKG, tmp, write, subst } from './helpers.ts';
 import { confGet, planningApply, planningStatus, reviewsProblem, validationProblem } from '../../src/common.ts';
 import { roadmapAudit, roadmapRows } from '../../src/roadmap.ts';
 import { ownedBlockGet, ownedMarkersValid, replaceOwnedBlock } from '../../src/provider.ts';
@@ -153,7 +153,7 @@ function run(w: World, argv: string[], extraEnv: Record<string, string> = {}, in
     encoding: 'utf8',
     input: input ?? '',
   });
-  const norm = (s: string): string => s.split(w.root).join('<W>');
+  const norm = (s: string): string => subst(subst(s, w.root, '<W>'), w.root.replace(/\\/g, '/'), '<W>'); // doctor prints git's `/` form on Windows
   return { out: norm(r.stdout ?? ''), err: norm(r.stderr ?? ''), rc: r.status ?? -1 };
 }
 /** the same command in both worlds: identical stdout, stderr, exit code */
@@ -333,7 +333,7 @@ test('gsdt-planning-repair: same repair; a CRLF file stays CRLF; Session Continu
   }
   const go = (d: string, extra: string[] = []): R => {
     const r = spawnSync('node', [LAUNCH, 'planning-repair', '--repo', d, ...extra], { cwd: d, env: lf.env, encoding: 'utf8' });
-    return { out: (r.stdout ?? '').split(d).join('<D>'), err: (r.stderr ?? '').split(d).join('<D>'), rc: r.status ?? -1 };
+    return { out: subst((r.stdout ?? ''), d, '<D>'), err: subst((r.stderr ?? ''), d, '<D>'), rc: r.status ?? -1 };
   };
   const ca = go(a, ['--check']);
   const cb = go(b, ['--check']);

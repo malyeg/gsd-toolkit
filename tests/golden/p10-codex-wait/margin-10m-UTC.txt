@@ -1,0 +1,12 @@
+@@@ 1 @@@
+rc=0 clock=1760040600 runs=2
+--- stdout
+review: looks fine
+
+--- stderr
+You’ve hit your usage limit. Upgrade to Pro or try again at Oct 9th, 2025 8:00 PM.
+gsdt-codex-wait: Codex usage limit — it resets Thu Oct 09 20:00 UTC (from its output).
+gsdt-codex-wait: waiting 8h 10m, until Thu Oct 09 20:10 UTC…
+gsdt-codex-wait: running it again: <D>/stub
+note on stderr
+

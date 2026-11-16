@@ -1,0 +1,34 @@
+@@@ 1 @@@
+rc=75 clock=1760014800 runs=0
+--- stdout
+hit your usage limit
+hit your usage limit
+hit your usage limit
+hit your usage limit
+hit your usage limit
+hit your usage limit
+hit your usage limit
+
+--- stderr
+gsdt-codex-wait: Codex usage limit — no reset time found (from its output); checking again in 10m.
+gsdt-codex-wait: waiting 10m, until Thu Oct 09 12:10 UTC…
+gsdt-codex-wait: running it again: sh -c echo "hit your usage limit"; exit 2
+gsdt-codex-wait: Codex usage limit — no reset time found (from its output); checking again in 10m.
+gsdt-codex-wait: waiting 10m, until Thu Oct 09 12:20 UTC…
+gsdt-codex-wait: running it again: sh -c echo "hit your usage limit"; exit 2
+gsdt-codex-wait: Codex usage limit — no reset time found (from its output); checking again in 10m.
+gsdt-codex-wait: waiting 10m, until Thu Oct 09 12:30 UTC…
+gsdt-codex-wait: running it again: sh -c echo "hit your usage limit"; exit 2
+gsdt-codex-wait: Codex usage limit — no reset time found (from its output); checking again in 10m.
+gsdt-codex-wait: waiting 10m, until Thu Oct 09 12:40 UTC…
+gsdt-codex-wait: running it again: sh -c echo "hit your usage limit"; exit 2
+gsdt-codex-wait: Codex usage limit — no reset time found (from its output); checking again in 10m.
+gsdt-codex-wait: waiting 10m, until Thu Oct 09 12:50 UTC…
+gsdt-codex-wait: running it again: sh -c echo "hit your usage limit"; exit 2
+gsdt-codex-wait: Codex usage limit — no reset time found (from its output); checking again in 10m.
+gsdt-codex-wait: waiting 10m, until Thu Oct 09 13:00 UTC…
+gsdt-codex-wait: running it again: sh -c echo "hit your usage limit"; exit 2
+gsdt-codex-wait: Codex usage limit — no reset time found (from its output); checking again in 10m.
+gsdt-codex-wait: GAVE UP: waiting until Thu Oct 09 13:10 UTC would pass --max-wait (1h 00m).
+gsdt-codex-wait: The Codex step did not run: this is NOT a pass. Run it again after the reset.
+

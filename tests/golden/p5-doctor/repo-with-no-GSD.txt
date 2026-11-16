@@ -1,0 +1,42 @@
+@@@ 1 @@@
+run [--json --repo {R}]
+rc=0
+--- stdout
+{"session_model":"","gsd_repo":false,"context":{"agents":[],"big_files":[]},"safe":[],"repo":"<W>/repo","configured":["claude"],"provider":{"name":"claude","command":"claude","available":false,"instruction_file":"CLAUDE.md","instruction_integrated":false,"skill_installed":false,"command_guard":true,"native_hook":"absent"},"count":0,"findings":[],"updates":[],"notes":["no .planning/, no .gsd.conf, no gsd shims — this repo does not use GSD","set it up with:  cd <W>/repo && gsdt-init","claude: for CLAUDE.md, memory, MCP servers and plugins, run /doctor and /skill-doctor in a Claude session; /context shows the real numbers"]}
+--- stderr
+
+@@@ 2 @@@
+run [--repo {R}]
+rc=0
+--- stdout
+[1mgsdt-doctor[0m — repo
+<W>/repo
+
+[1mtoolkit[0m
+  [32m✔[0m PATH commands resolve to <W>/pkg
+  [32m✔[0m gsd-core  (<W>/stub/gsd_run)
+  [32m✔[0m no GSD hook runs a missing file
+
+[1mrepo setup[0m
+  • no .planning/, no .gsd.conf, no gsd shims — this repo does not use GSD
+  • set it up with:  cd <W>/repo && gsdt-init
+
+[1mcontext[0m
+  • claude: for CLAUDE.md, memory, MCP servers and plugins, run /doctor and /skill-doctor in a Claude session; /context shows the real numbers
+
+[1mworktrees[0m
+  [32m✔[0m no stale worktree records
+  [32m✔[0m every phase and batch branch has its worktree
+  [32m✔[0m main checkout is on 'develop'
+
+[32m✔ no findings[0m
+--- stderr
+
+@@@ 3 @@@
+### repo/.git/config
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+

@@ -1,0 +1,717 @@
+@@@ 1 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was baa2553).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── tracker.log
+finish ABC-1 ✅ GSD phase 1 merged to main — commit b990d62 in shop. Ready for testing.|status=
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 2 @@@
+step 1 (gsdt-finish phase-1-catalog)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 907049d).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── tracker.log
+finish ABC-1 ✅ GSD phase 1 merged to main — commit 7fc2aaa in shop. Ready for testing.|status=Testing
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 3 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was baa2553).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+• ticket ABC-1 not updated (non-fatal) — check: gsdt-tracker check
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── tracker.log
+finish ABC-1 ✅ GSD phase 1 merged to main — commit b990d62 in shop. Ready for testing.|status=
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 4 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog-tk-abc-9' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog-tk-abc-9 (was 8fc6797).
+✅ 'phase-1-catalog-tk-abc-9' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog-tk-abc-9 into main
+main change
+feature
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog-tk-abc-9 into main
+main change
+feature
+init
+
+── tracker.log
+finish abc-9 ✅ GSD phase 1 merged to main — commit 82af125 in shop. Ready for testing.|status=
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 5 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 8fc6797).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 6 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 9476d29).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+init
+feature
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 7 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 48d47a2).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog cu_abc123
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── tracker.log
+finish abc123 ✅ GSD phase 1 merged to main — commit fd427c9 in shop. Ready for testing.|status=
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 8 @@@
+step 1 (gsdt-finish 2.1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-2.1-hot' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-2.1-hot (was b4a9fc9).
+✅ 'phase-2.1-hot' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-2.1-hot into main
+main change
+feature
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 2.1: hot tk-ABC-2
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-2.1-hot into main
+main change
+feature
+init
+
+── tracker.log
+finish ABC-2 ✅ GSD phase 2.1 merged to main — commit 4383ebc in shop. Ready for testing.|status=
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 9 @@@
+step 1 (gsdt-finish batch-2026-11-09-fix)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'batch-2026-11-09-fix' into 'main'…
+Merge made by the 'ort' strategy.
+ b.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 b.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch batch-2026-11-09-fix (was e797b19).
+✅ 'batch-2026-11-09-fix' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge batch-2026-11-09-fix into main
+main change
+fix: labels
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge batch-2026-11-09-fix into main
+main change
+fix: labels
+init
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 10 @@@
+step 1 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 8edeff8).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+• ticket ABC-1 not updated (non-fatal) — check: gsdt-tracker check
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+gsdt-tracker: unknown tracker 'bogus' — use none, clickup, or custom
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+init
+feature
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+

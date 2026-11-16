@@ -68,7 +68,7 @@ Env: GSD_BIN_DIR, GSD_CLAUDE_SKILL_DIR, GSD_CODEX_SKILL_DIR, GSD_CLAUDE_SETTINGS
      GSD_OLD_BIN_DIR (the 0.10.x bin dir, default ~/.local/bin), GSD_NO_CORE=1
 `;
 
-const HOME = (): string => process.env.HOME ?? '';
+const HOME = (): string => (process.env.HOME ?? process.env.USERPROFILE ?? '');
 const nz = (v: string | undefined): string | undefined => (v === undefined || v === '' ? undefined : v);
 
 /** python os.path.realpath: resolves what exists, keeps the rest */
@@ -110,7 +110,8 @@ function backupPath(base: string): string {
 }
 
 /** toolkit_pkg — a folder that holds a toolkit package (release runtime or checkout) */
-const toolkitPkg = (d: string): boolean => isFile(`${d}/install.sh`) && isFile(`${d}/lib/common.sh`);
+/** 0.10.x runtimes held lib/common.sh; from 0.11.0 only lib/install.sh (the bridge) is left of lib/ shell */
+const toolkitPkg = (d: string): boolean => isFile(`${d}/install.sh`) && (isFile(`${d}/lib/common.sh`) || isFile(`${d}/lib/install.sh`));
 
 /** owned_link — a link this toolkit placed earlier (from any checkout or release runtime) */
 function ownedLink(link: string, kind: 'bin' | 'skills'): boolean {
@@ -166,6 +167,23 @@ function retireSkills(pkg: string, dir: string, provider: string, all: boolean):
     }
     out(`✔ ${provider} skill ${name} retired → removed ${dest}\n`);
   }
+}
+
+/** is `bin` one of the PATH folders (Windows: `;` between them, same folder in any spelling) */
+function binOnPath(bin: string): boolean {
+  const p = process.env.PATH ?? (WIN ? process.env.Path : undefined) ?? '';
+  if (!WIN) return `:${p}:`.includes(`:${bin}:`);
+  const key = (d: string): string => {
+    let r = d;
+    try {
+      r = realpathSync.native(d);
+    } catch {
+      /* not there: compare as written */
+    }
+    return r.replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+  };
+  const want = key(bin);
+  return p.split(';').some((d) => d !== '' && key(d) === want);
 }
 
 function installSkills(pkg: string, provider: string, skillDir: string): void {
@@ -500,7 +518,7 @@ export function main(argv: string[]): number {
   writeFileSync(tmp, `${lines.join('\n')}\n`);
   renameSync(tmp, manifestFile);
 
-  if (!`:${process.env.PATH ?? ''}:`.includes(`:${bin}:`)) out(`⚠ ${bin} is not on your PATH — add it to your shell profile\n`);
+  if (!binOnPath(bin)) out(`⚠ ${bin} is not on your PATH — add it to your shell profile\n`);
   out('\nDone. Try:  gsdt-list --help\n');
   return 0;
 }

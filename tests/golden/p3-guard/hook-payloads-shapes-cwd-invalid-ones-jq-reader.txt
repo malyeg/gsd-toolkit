@@ -1,0 +1,1060 @@
+@@@ 1 @@@
+skill payload, wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 2 @@@
+upe payload, wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 3 @@@
+skill payload, matching
+rc=0
+out=""
+err=""
+@@@ 4 @@@
+upe leading slash
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 5 @@@
+upe double slash
+rc=0
+out=""
+err=""
+@@@ 6 @@@
+gsd: namespace
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 7 @@@
+/gsd: namespace
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 8 @@@
+plugin form
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 9 @@@
+plugin form in upe
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 10 @@@
+plugin, not gsd
+rc=0
+out=""
+err=""
+@@@ 11 @@@
+gsdt-flow
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 12 @@@
+gsdw-flow
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 13 @@@
+non-gsd
+rc=0
+out=""
+err=""
+@@@ 14 @@@
+empty command
+rc=0
+out=""
+err=""
+@@@ 15 @@@
+no command
+rc=0
+out=""
+err=""
+@@@ 16 @@@
+cwd of the payload
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 17 @@@
+cwd = bare repo, new-project
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 18 @@@
+cwd = set-up repo, new-project
+rc=0
+out=""
+err=""
+@@@ 19 @@@
+cwd beats nothing, env beats cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 20 @@@
+empty cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 21 @@@
+non-string cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 22 @@@
+array cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 23 @@@
+null cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 24 @@@
+false cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 25 @@@
+cwd with trailing newline
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 26 @@@
+cwd missing dir
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 27 @@@
+payload: empty
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 28 @@@
+payload (bare cwd): empty
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 29 @@@
+payload: spaces
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 30 @@@
+payload (bare cwd): spaces
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 31 @@@
+payload: bad json
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 32 @@@
+payload (bare cwd): bad json
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 33 @@@
+payload: truncated
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 34 @@@
+payload (bare cwd): truncated
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 35 @@@
+payload: array
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 36 @@@
+payload (bare cwd): array
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 37 @@@
+payload: array of objects
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 38 @@@
+payload (bare cwd): array of objects
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 39 @@@
+payload: string
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 40 @@@
+payload (bare cwd): string
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 41 @@@
+payload: number
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 42 @@@
+payload (bare cwd): number
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 43 @@@
+payload: null
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 44 @@@
+payload (bare cwd): null
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 45 @@@
+payload: true
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 46 @@@
+payload (bare cwd): true
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 47 @@@
+payload: non-string command
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 48 @@@
+payload (bare cwd): non-string command
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 49 @@@
+payload: object command
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 50 @@@
+payload (bare cwd): object command
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 51 @@@
+payload: array command
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 52 @@@
+payload (bare cwd): array command
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 53 @@@
+payload: non-string args
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 54 @@@
+payload (bare cwd): non-string args
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 55 @@@
+payload: array args
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 56 @@@
+payload (bare cwd): array args
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 57 @@@
+payload: non-string skill
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 58 @@@
+payload (bare cwd): non-string skill
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 59 @@@
+payload: non-string skill args
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 60 @@@
+payload (bare cwd): non-string skill args
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 61 @@@
+payload: null tool_input
+rc=0
+out=""
+err=""
+@@@ 62 @@@
+payload (bare cwd): null tool_input
+rc=0
+out=""
+err=""
+@@@ 63 @@@
+payload: string tool_input
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 64 @@@
+payload (bare cwd): string tool_input
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 65 @@@
+payload: array tool_input
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 66 @@@
+payload (bare cwd): array tool_input
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 67 @@@
+payload: number tool_input
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 68 @@@
+payload (bare cwd): number tool_input
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 69 @@@
+payload: false command falls through
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 70 @@@
+payload (bare cwd): false command falls through
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 71 @@@
+payload: null command falls through
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 72 @@@
+payload (bare cwd): null command falls through
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 73 @@@
+payload: empty command wins
+rc=0
+out=""
+err=""
+@@@ 74 @@@
+payload (bare cwd): empty command wins
+rc=0
+out=""
+err=""
+@@@ 75 @@@
+payload: command_name beats skill
+rc=0
+out=""
+err=""
+@@@ 76 @@@
+payload (bare cwd): command_name beats skill
+rc=0
+out=""
+err=""
+@@@ 77 @@@
+payload: command_args beats args
+rc=0
+out=""
+err=""
+@@@ 78 @@@
+payload (bare cwd): command_args beats args
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 79 @@@
+payload: null command_args falls through
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 80 @@@
+payload (bare cwd): null command_args falls through
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 81 @@@
+payload: false args
+rc=0
+out=""
+err=""
+@@@ 82 @@@
+payload (bare cwd): false args
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 83 @@@
+payload: trailing newline in command
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 84 @@@
+payload (bare cwd): trailing newline in command
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 85 @@@
+payload: trailing newlines in args
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 86 @@@
+payload (bare cwd): trailing newlines in args
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 87 @@@
+payload: leading newline in args
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 88 @@@
+payload (bare cwd): leading newline in args
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 89 @@@
+payload: whitespace around the json
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 90 @@@
+payload (bare cwd): whitespace around the json
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 91 @@@
+payload: command_name wins over a bad tool_input
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 92 @@@
+payload (bare cwd): command_name wins over a bad tool_input
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 93 @@@
+payload: only the command is set, bad tool_input
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 94 @@@
+payload (bare cwd): only the command is set, bad tool_input
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 95 @@@
+payload: false tool_input
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 96 @@@
+payload (bare cwd): false tool_input
+rc=2
+out=""
+err="BLOCKED: invalid Claude hook payload.\n"
+@@@ 97 @@@
+payload: false tool_input, command set
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 98 @@@
+payload (bare cwd): false tool_input, command set
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 99 @@@
+payload: unicode args
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 100 @@@
+payload (bare cwd): unicode args
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 101 @@@
+payload: duplicate keys
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 102 @@@
+payload (bare cwd): duplicate keys
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 8  (then open a session in phase-8-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 103 @@@
+payload: old Gemini payload
+rc=0
+out=""
+err=""
+@@@ 104 @@@
+payload (bare cwd): old Gemini payload
+rc=0
+out=""
+err=""
+@@@ 105 @@@
+payload: Bash payload
+rc=0
+out=""
+err=""
+@@@ 106 @@@
+payload (bare cwd): Bash payload
+rc=0
+out=""
+err=""
+@@@ 107 @@@
+global skill payload, wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 108 @@@
+global upe payload, wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 109 @@@
+global skill payload, matching
+rc=0
+out=""
+err=""
+@@@ 110 @@@
+global upe leading slash
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 111 @@@
+global upe double slash
+rc=0
+out=""
+err=""
+@@@ 112 @@@
+global gsd: namespace
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 113 @@@
+global /gsd: namespace
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 114 @@@
+global plugin form
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 115 @@@
+global plugin form in upe
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 116 @@@
+global plugin, not gsd
+rc=0
+out=""
+err=""
+@@@ 117 @@@
+global gsdt-flow
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 118 @@@
+global gsdw-flow
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 119 @@@
+global non-gsd
+rc=0
+out=""
+err=""
+@@@ 120 @@@
+global empty command
+rc=0
+out=""
+err=""
+@@@ 121 @@@
+global no command
+rc=0
+out=""
+err=""
+@@@ 122 @@@
+global cwd of the payload
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 123 @@@
+global cwd = bare repo, new-project
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 124 @@@
+global cwd = set-up repo, new-project
+rc=0
+out=""
+err=""
+@@@ 125 @@@
+global cwd beats nothing, env beats cwd
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 126 @@@
+global empty cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 127 @@@
+global non-string cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 128 @@@
+global array cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 129 @@@
+global null cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 130 @@@
+global false cwd
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 131 @@@
+global cwd with trailing newline
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 132 @@@
+global cwd missing dir
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 133 @@@
+global payload: empty
+rc=0
+out=""
+err=""
+@@@ 134 @@@
+global payload (bare cwd): empty
+rc=0
+out=""
+err=""
+@@@ 135 @@@
+global payload: spaces
+rc=0
+out=""
+err=""
+@@@ 136 @@@
+global payload (bare cwd): spaces
+rc=0
+out=""
+err=""
+@@@ 137 @@@
+global payload: bad json
+rc=0
+out=""
+err=""
+@@@ 138 @@@
+global payload (bare cwd): bad json
+rc=0
+out=""
+err=""
+@@@ 139 @@@
+global payload: truncated
+rc=0
+out=""
+err=""
+@@@ 140 @@@
+global payload (bare cwd): truncated
+rc=0
+out=""
+err=""
+@@@ 141 @@@
+global payload: array
+rc=0
+out=""
+err=""
+@@@ 142 @@@
+global payload (bare cwd): array
+rc=0
+out=""
+err=""
+@@@ 143 @@@
+global payload: array of objects
+rc=0
+out=""
+err=""
+@@@ 144 @@@
+global payload (bare cwd): array of objects
+rc=0
+out=""
+err=""
+@@@ 145 @@@
+global payload: string
+rc=0
+out=""
+err=""
+@@@ 146 @@@
+global payload (bare cwd): string
+rc=0
+out=""
+err=""
+@@@ 147 @@@
+global payload: number
+rc=0
+out=""
+err=""
+@@@ 148 @@@
+global payload (bare cwd): number
+rc=0
+out=""
+err=""
+@@@ 149 @@@
+global payload: null
+rc=0
+out=""
+err=""
+@@@ 150 @@@
+global payload (bare cwd): null
+rc=0
+out=""
+err=""
+@@@ 151 @@@
+global payload: true
+rc=0
+out=""
+err=""
+@@@ 152 @@@
+global payload (bare cwd): true
+rc=0
+out=""
+err=""
+@@@ 153 @@@
+global payload: non-string command
+rc=0
+out=""
+err=""
+@@@ 154 @@@
+global payload (bare cwd): non-string command
+rc=0
+out=""
+err=""
+@@@ 155 @@@
+global payload: object command
+rc=0
+out=""
+err=""
+@@@ 156 @@@
+global payload (bare cwd): object command
+rc=0
+out=""
+err=""
+@@@ 157 @@@
+global payload: array command
+rc=0
+out=""
+err=""
+@@@ 158 @@@
+global payload (bare cwd): array command
+rc=0
+out=""
+err=""
+@@@ 159 @@@
+global payload: non-string args
+rc=0
+out=""
+err=""
+@@@ 160 @@@
+global payload (bare cwd): non-string args
+rc=0
+out=""
+err=""
+@@@ 161 @@@
+global payload: array args
+rc=0
+out=""
+err=""
+@@@ 162 @@@
+global payload (bare cwd): array args
+rc=0
+out=""
+err=""
+@@@ 163 @@@
+global payload: non-string skill
+rc=0
+out=""
+err=""
+@@@ 164 @@@
+global payload (bare cwd): non-string skill
+rc=0
+out=""
+err=""
+@@@ 165 @@@
+global payload: non-string skill args
+rc=0
+out=""
+err=""
+@@@ 166 @@@
+global payload (bare cwd): non-string skill args
+rc=0
+out=""
+err=""
+@@@ 167 @@@
+global payload: null tool_input
+rc=0
+out=""
+err=""
+@@@ 168 @@@
+global payload (bare cwd): null tool_input
+rc=0
+out=""
+err=""
+@@@ 169 @@@
+global payload: string tool_input
+rc=0
+out=""
+err=""
+@@@ 170 @@@
+global payload (bare cwd): string tool_input
+rc=0
+out=""
+err=""
+@@@ 171 @@@
+global payload: array tool_input
+rc=0
+out=""
+err=""
+@@@ 172 @@@
+global payload (bare cwd): array tool_input
+rc=0
+out=""
+err=""
+@@@ 173 @@@
+global payload: number tool_input
+rc=0
+out=""
+err=""
+@@@ 174 @@@
+global payload (bare cwd): number tool_input
+rc=0
+out=""
+err=""
+@@@ 175 @@@
+global payload: false command falls through
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 176 @@@
+global payload (bare cwd): false command falls through
+rc=0
+out=""
+err=""
+@@@ 177 @@@
+global payload: null command falls through
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 178 @@@
+global payload (bare cwd): null command falls through
+rc=0
+out=""
+err=""
+@@@ 179 @@@
+global payload: empty command wins
+rc=0
+out=""
+err=""
+@@@ 180 @@@
+global payload (bare cwd): empty command wins
+rc=0
+out=""
+err=""
+@@@ 181 @@@
+global payload: command_name beats skill
+rc=0
+out=""
+err=""
+@@@ 182 @@@
+global payload (bare cwd): command_name beats skill
+rc=0
+out=""
+err=""
+@@@ 183 @@@
+global payload: command_args beats args
+rc=0
+out=""
+err=""
+@@@ 184 @@@
+global payload (bare cwd): command_args beats args
+rc=0
+out=""
+err=""
+@@@ 185 @@@
+global payload: null command_args falls through
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 186 @@@
+global payload (bare cwd): null command_args falls through
+rc=0
+out=""
+err=""
+@@@ 187 @@@
+global payload: false args
+rc=0
+out=""
+err=""
+@@@ 188 @@@
+global payload (bare cwd): false args
+rc=0
+out=""
+err=""
+@@@ 189 @@@
+global payload: trailing newline in command
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 190 @@@
+global payload (bare cwd): trailing newline in command
+rc=0
+out=""
+err=""
+@@@ 191 @@@
+global payload: trailing newlines in args
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 192 @@@
+global payload (bare cwd): trailing newlines in args
+rc=0
+out=""
+err=""
+@@@ 193 @@@
+global payload: leading newline in args
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 194 @@@
+global payload (bare cwd): leading newline in args
+rc=0
+out=""
+err=""
+@@@ 195 @@@
+global payload: whitespace around the json
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 196 @@@
+global payload (bare cwd): whitespace around the json
+rc=0
+out=""
+err=""
+@@@ 197 @@@
+global payload: command_name wins over a bad tool_input
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 198 @@@
+global payload (bare cwd): command_name wins over a bad tool_input
+rc=0
+out=""
+err=""
+@@@ 199 @@@
+global payload: only the command is set, bad tool_input
+rc=0
+out=""
+err=""
+@@@ 200 @@@
+global payload (bare cwd): only the command is set, bad tool_input
+rc=0
+out=""
+err=""
+@@@ 201 @@@
+global payload: false tool_input
+rc=0
+out=""
+err=""
+@@@ 202 @@@
+global payload (bare cwd): false tool_input
+rc=0
+out=""
+err=""
+@@@ 203 @@@
+global payload: false tool_input, command set
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 204 @@@
+global payload (bare cwd): false tool_input, command set
+rc=0
+out=""
+err=""
+@@@ 205 @@@
+global payload: unicode args
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 206 @@@
+global payload (bare cwd): unicode args
+rc=0
+out=""
+err=""
+@@@ 207 @@@
+global payload: duplicate keys
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 208 @@@
+global payload (bare cwd): duplicate keys
+rc=0
+out=""
+err=""
+@@@ 209 @@@
+global payload: old Gemini payload
+rc=0
+out=""
+err=""
+@@@ 210 @@@
+global payload (bare cwd): old Gemini payload
+rc=0
+out=""
+err=""
+@@@ 211 @@@
+global payload: Bash payload
+rc=0
+out=""
+err=""
+@@@ 212 @@@
+global payload (bare cwd): Bash payload
+rc=0
+out=""
+err=""

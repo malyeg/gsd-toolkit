@@ -1,0 +1,1005 @@
+@@@ 1 @@@
+none gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 2 @@@
+none gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 3 @@@
+none gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 4 @@@
+none gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 5 @@@
+none gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 6 @@@
+none gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 7 @@@
+none gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 8 @@@
+none gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 9 @@@
+none gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 10 @@@
+none gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 11 @@@
+none gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 12 @@@
+none gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 13 @@@
+stub_design gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 14 @@@
+stub_design gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 15 @@@
+stub_design gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 16 @@@
+stub_design gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 17 @@@
+stub_design gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 18 @@@
+stub_design gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 19 @@@
+stub_design gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 20 @@@
+stub_design gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 21 @@@
+stub_design gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 22 @@@
+stub_design gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 23 @@@
+stub_design gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 24 @@@
+stub_design gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 25 @@@
+design_ok gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs 05-LAYOUT.md with a chosen sketch and pages.\nRun: gsdt-ui layout 5, /gsd-sketch, then fill sketch: and pages:   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 26 @@@
+design_ok gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 27 @@@
+design_ok gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 28 @@@
+design_ok gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 29 @@@
+design_ok gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 30 @@@
+design_ok gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 31 @@@
+design_ok gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs 05-LAYOUT.md with a chosen sketch and pages.\nRun: gsdt-ui layout 5, /gsd-sketch, then fill sketch: and pages:   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 32 @@@
+design_ok gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 33 @@@
+design_ok gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 34 @@@
+design_ok gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 35 @@@
+design_ok gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 36 @@@
+design_ok gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 37 @@@
+design_ok_layout_missing_sketch gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs 05-LAYOUT.md with a chosen sketch and pages.\nRun: gsdt-ui layout 5, /gsd-sketch, then fill sketch: and pages:   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 38 @@@
+design_ok_layout_missing_sketch gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 39 @@@
+design_ok_layout_missing_sketch gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 40 @@@
+design_ok_layout_missing_sketch gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 41 @@@
+design_ok_layout_missing_sketch gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 42 @@@
+design_ok_layout_missing_sketch gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 43 @@@
+design_ok_layout_missing_sketch gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs 05-LAYOUT.md with a chosen sketch and pages.\nRun: gsdt-ui layout 5, /gsd-sketch, then fill sketch: and pages:   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 44 @@@
+design_ok_layout_missing_sketch gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 45 @@@
+design_ok_layout_missing_sketch gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 46 @@@
+design_ok_layout_missing_sketch gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 47 @@@
+design_ok_layout_missing_sketch gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 48 @@@
+design_ok_layout_missing_sketch gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 49 @@@
+design_ok_layout_nowinner gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs 05-LAYOUT.md with a chosen sketch and pages.\nRun: gsdt-ui layout 5, /gsd-sketch, then fill sketch: and pages:   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 50 @@@
+design_ok_layout_nowinner gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 51 @@@
+design_ok_layout_nowinner gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 52 @@@
+design_ok_layout_nowinner gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 53 @@@
+design_ok_layout_nowinner gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 54 @@@
+design_ok_layout_nowinner gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 55 @@@
+design_ok_layout_nowinner gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs 05-LAYOUT.md with a chosen sketch and pages.\nRun: gsdt-ui layout 5, /gsd-sketch, then fill sketch: and pages:   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 56 @@@
+design_ok_layout_nowinner gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 57 @@@
+design_ok_layout_nowinner gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 58 @@@
+design_ok_layout_nowinner gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 59 @@@
+design_ok_layout_nowinner gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 60 @@@
+design_ok_layout_nowinner gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 61 @@@
+design_ok_layout_nopages gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs 05-LAYOUT.md with a chosen sketch and pages.\nRun: gsdt-ui layout 5, /gsd-sketch, then fill sketch: and pages:   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 62 @@@
+design_ok_layout_nopages gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 63 @@@
+design_ok_layout_nopages gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 64 @@@
+design_ok_layout_nopages gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 65 @@@
+design_ok_layout_nopages gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 66 @@@
+design_ok_layout_nopages gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 67 @@@
+design_ok_layout_nopages gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs 05-LAYOUT.md with a chosen sketch and pages.\nRun: gsdt-ui layout 5, /gsd-sketch, then fill sketch: and pages:   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 68 @@@
+design_ok_layout_nopages gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 69 @@@
+design_ok_layout_nopages gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 70 @@@
+design_ok_layout_nopages gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 71 @@@
+design_ok_layout_nopages gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 72 @@@
+design_ok_layout_nopages gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 73 @@@
+design_ok_layout_ok gsd-ui-phase 5 
+rc=0
+out=""
+err=""
+@@@ 74 @@@
+design_ok_layout_ok gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 75 @@@
+design_ok_layout_ok gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 76 @@@
+design_ok_layout_ok gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 77 @@@
+design_ok_layout_ok gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 78 @@@
+design_ok_layout_ok gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 79 @@@
+design_ok_layout_ok gsd-ui-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 80 @@@
+design_ok_layout_ok gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 81 @@@
+design_ok_layout_ok gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 82 @@@
+design_ok_layout_ok gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 83 @@@
+design_ok_layout_ok gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 84 @@@
+design_ok_layout_ok gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 85 @@@
+design_ok_layout_skip gsd-ui-phase 5 
+rc=0
+out=""
+err=""
+@@@ 86 @@@
+design_ok_layout_skip gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 87 @@@
+design_ok_layout_skip gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 88 @@@
+design_ok_layout_skip gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 89 @@@
+design_ok_layout_skip gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 90 @@@
+design_ok_layout_skip gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 91 @@@
+design_ok_layout_skip gsd-ui-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 92 @@@
+design_ok_layout_skip gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 93 @@@
+design_ok_layout_skip gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 94 @@@
+design_ok_layout_skip gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 95 @@@
+design_ok_layout_skip gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 96 @@@
+design_ok_layout_skip gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 97 @@@
+layout_nodesign gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 98 @@@
+layout_nodesign gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 99 @@@
+layout_nodesign gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 100 @@@
+layout_nodesign gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 101 @@@
+layout_nodesign gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 102 @@@
+layout_nodesign gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 103 @@@
+layout_nodesign gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 104 @@@
+layout_nodesign gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 105 @@@
+layout_nodesign gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 106 @@@
+layout_nodesign gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 107 @@@
+layout_nodesign gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 108 @@@
+layout_nodesign gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 109 @@@
+phasedir_only gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 110 @@@
+phasedir_only gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 111 @@@
+phasedir_only gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 112 @@@
+phasedir_only gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 113 @@@
+phasedir_only gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 114 @@@
+phasedir_only gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 115 @@@
+phasedir_only gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 116 @@@
+phasedir_only gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 117 @@@
+phasedir_only gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 118 @@@
+phasedir_only gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 119 @@@
+phasedir_only gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 120 @@@
+phasedir_only gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 121 @@@
+layout_ok_no_check gsd-ui-phase 5 
+rc=0
+out=""
+err=""
+@@@ 122 @@@
+layout_ok_no_check gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 123 @@@
+layout_ok_no_check gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 124 @@@
+layout_ok_no_check gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 125 @@@
+layout_ok_no_check gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 126 @@@
+layout_ok_no_check gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 127 @@@
+layout_ok_no_check gsd-ui-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 128 @@@
+layout_ok_no_check gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 129 @@@
+layout_ok_no_check gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 130 @@@
+layout_ok_no_check gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 131 @@@
+layout_ok_no_check gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 132 @@@
+layout_ok_no_check gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 133 @@@
+skipped_check gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 134 @@@
+skipped_check gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 135 @@@
+skipped_check gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 136 @@@
+skipped_check gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 137 @@@
+skipped_check gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 138 @@@
+skipped_check gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 139 @@@
+skipped_check gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 140 @@@
+skipped_check gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 141 @@@
+skipped_check gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 142 @@@
+skipped_check gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 143 @@@
+skipped_check gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 144 @@@
+skipped_check gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 145 @@@
+check_only gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 146 @@@
+check_only gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 147 @@@
+check_only gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 148 @@@
+check_only gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 149 @@@
+check_only gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 150 @@@
+check_only gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 151 @@@
+check_only gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 152 @@@
+check_only gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 153 @@@
+check_only gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 154 @@@
+check_only gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 155 @@@
+check_only gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 156 @@@
+check_only gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 157 @@@
+look_no_approval gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 158 @@@
+look_no_approval gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 159 @@@
+look_no_approval gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 160 @@@
+look_no_approval gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 161 @@@
+look_no_approval gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 162 @@@
+look_no_approval gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 163 @@@
+look_no_approval gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 164 @@@
+look_no_approval gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 165 @@@
+look_no_approval gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 166 @@@
+look_no_approval gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 167 @@@
+look_no_approval gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 168 @@@
+look_no_approval gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the last check could not run: .\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 169 @@@
+exempt_review_on_base gsd-ui-phase 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 170 @@@
+exempt_review_on_base gsd-ui-review 5 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 171 @@@
+exempt_review_on_base gsd-ui-review 6 
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 172 @@@
+exempt_review_on_base gsd-plan-phase 5 
+rc=0
+out=""
+err=""
+@@@ 173 @@@
+exempt_review_on_base gsd-secure-phase 5 
+rc=0
+out=""
+err=""
+@@@ 174 @@@
+exempt_review_on_base gsd-ui-review 05 
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 175 @@@
+exempt_review_on_base gsd-ui-phase 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 176 @@@
+exempt_review_on_base gsd-ui-review 5 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 177 @@@
+exempt_review_on_base gsd-ui-review 6 --global
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-5-thing', but /gsd-ui-review targets phase 6. Switch to the phase-6-* worktree.\n"
+@@@ 178 @@@
+exempt_review_on_base gsd-plan-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 179 @@@
+exempt_review_on_base gsd-secure-phase 5 --global
+rc=0
+out=""
+err=""
+@@@ 180 @@@
+exempt_review_on_base gsd-ui-review 05 --global
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 05 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 05   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 181 @@@
+exempt: UI-REVIEW on base
+rc=0
+out=""
+err=""
+@@@ 182 @@@
+exempt: ui-phase
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 183 @@@
+ui_gates=warn ui-phase
+rc=0
+out=""
+err=""
+@@@ 184 @@@
+ui_gates=warn ui-review
+rc=0
+out=""
+err=""
+@@@ 185 @@@
+ui_gates=off ui-phase
+rc=0
+out=""
+err=""
+@@@ 186 @@@
+ui_gates=off ui-review
+rc=0
+out=""
+err=""
+@@@ 187 @@@
+ui_gates=strict ui-phase
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 188 @@@
+ui_gates=strict ui-review
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs a phase folder with the UI check of the built pages.\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 189 @@@
+ui_gates=bogus ui-phase
+rc=0
+out=""
+err=""
+@@@ 190 @@@
+ui_gates=bogus ui-review
+rc=0
+out=""
+err=""
+@@@ 191 @@@
+ui_gates= ui-phase
+rc=0
+out=""
+err=""
+@@@ 192 @@@
+ui_gates= ui-review
+rc=0
+out=""
+err=""
+@@@ 193 @@@
+flow+ui gsd-plan-phase
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 5 needs 05-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 194 @@@
+flow+ui gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 5 needs 05-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 5  then  /gsd-plan-phase 5 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 195 @@@
+flow+ui gsd-secure-phase
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 5 needs 05-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 196 @@@
+flow+ui gsd-ui-phase
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-phase 5 needs a filled .planning/design/DESIGN.md (the design system).\nRun: gsdt-ui design, then fill it with the user   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 197 @@@
+flow+ui gsd-ui-review
+rc=2
+out=""
+err="BLOCKED (ui_gates = strict): /gsd-ui-review 5 needs the UI steps before it — the rendered pages were never checked (no 05-UI-CHECK.md).\nRun: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 198 @@@
+ui main off
+rc=0
+out=""
+err=""
+@@@ 199 @@@
+ui worktree-only strict
+rc=0
+out=""
+err=""
+@@@ 200 @@@
+ui main strict
+rc=0
+out=""
+err=""
+@@@ 201 @@@
+ui main off, worktree strict
+rc=0
+out=""
+err=""

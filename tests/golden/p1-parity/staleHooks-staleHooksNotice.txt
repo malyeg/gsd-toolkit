@@ -1,0 +1,14 @@
+@@@ 1 @@@
+# staleHooks (no repo)
+<TMP>/claude/settings.json	user	gsd	1	SessionStart	<TMP>/gone/gsd-hook.js
+<TMP>/claude/settings.json	user	gsd	2	SessionStart	<TMP>/gone/gsd-hook.js
+
+@@@ 2 @@@
+# staleHooks repo
+<TMP>/claude/settings.json	user	gsd	1	SessionStart	<TMP>/gone/gsd-hook.js
+<TMP>/claude/settings.json	user	gsd	2	SessionStart	<TMP>/gone/gsd-hook.js
+
+@@@ 3 @@@
+# staleHooksNotice
+⚠ 2 GSD hook(s) in <TMP>/claude/settings.json run a file that is gone, so they fail silently — run gsdt-doctor
+

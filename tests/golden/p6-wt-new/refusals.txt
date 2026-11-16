@@ -1,0 +1,585 @@
+@@@ 1 @@@
+step 1 (gsdt-wt-new --bogus)
+rc=1
+--- stdout
+
+--- stderr
+unknown flag: --bogus
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-wt-new --phase)
+rc=1
+--- stdout
+
+--- stderr
+error: --phase needs a value
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 3 @@@
+step 3 (gsdt-wt-new --batch)
+rc=1
+--- stdout
+
+--- stderr
+error: --batch needs a name
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 4 @@@
+step 4 (gsdt-wt-new --batch fix-labels)
+rc=1
+--- stdout
+
+--- stderr
+error: --batch needs a batch-<date>-<slug> name (a-z, 0-9, ., -), got 'fix-labels'
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 5 @@@
+step 5 (gsdt-wt-new --batch batch-UPPER)
+rc=1
+--- stdout
+
+--- stderr
+error: --batch needs a batch-<date>-<slug> name (a-z, 0-9, ., -), got 'batch-UPPER'
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 6 @@@
+step 6 (gsdt-wt-new --batch batch-)
+rc=1
+--- stdout
+
+--- stderr
+error: --batch needs a batch-<date>-<slug> name (a-z, 0-9, ., -), got 'batch-'
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 7 @@@
+step 7 (gsdt-wt-new --batch )
+rc=1
+--- stdout
+
+--- stderr
+error: --batch needs a batch-<date>-<slug> name (a-z, 0-9, ., -), got ''
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 8 @@@
+step 8 (gsdt-wt-new --phase 9)
+rc=1
+--- stdout
+
+--- stderr
+error: phase 9 not found in <T>/shop/.planning/ROADMAP.md
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 9 @@@
+step 9 (gsdt-wt-new --phase 1+)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-1+-catalog   (branch 'phase-1+-catalog' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-1+-catalog/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-1+-catalog   (phase 1+)
+Open an agent session there, then:
+    /gsd-discuss-phase 1+ → /gsd-plan-phase 1+ → /gsd-execute-phase 1+
+Finish:  gsdt-finish 1+
+
+--- stderr
+Preparing worktree (new branch 'phase-1+-catalog')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1+-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1+-catalog
+branch refs/heads/phase-1+-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1+-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1+-catalog/.gsd-install.status
+skipped
+
+── wt phase-1+-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 10 @@@
+step 1 (gsdt-wt-new --no-install)
+rc=1
+--- stdout
+
+--- stderr
+error: no phase found in ROADMAP.md — claim one first (gsdt-start)
+
+--- files left behind
+── log
+no phases
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# nothing here
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 11 @@@
+step 1 (gsdt-wt-new --no-install)
+rc=1
+--- stdout
+
+--- stderr
+error: <T>/shop/.planning/ROADMAP.md not found (is GSD initialized?)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+D  .planning/ROADMAP.md
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 12 @@@
+step 1 (gsdt-wt-new --phase 1 --no-install)
+rc=1
+--- stdout
+
+--- stderr
+error: <T>/shop-worktrees/phase-1-catalog already exists but is not a registered worktree — remove it or run 'git worktree prune'
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+
+── merge driver
+

@@ -1,15 +1,15 @@
-// P2 parity: src/roadmap.ts (roadmap-audit, roadmap-rows) against
-// lib/roadmap-audit.pl and lib/roadmap-rows.pl, same inputs side by side:
-// stdout, stderr, exit code and the resulting file bytes must be equal.
+// P2: src/roadmap.ts (roadmap-audit, roadmap-rows) against saved goldens in
+// tests/golden/p2-roadmap/: stdout, stderr, exit code and the resulting file bytes
+// (shown as JSON strings, so CR/LF stay visible). Regenerate with UPDATE_GOLDEN=1 and
+// review the golden diff.
 // Run: node --test tests/ts/p2-roadmap.test.ts
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { test } from 'node:test';
-import { eolOf } from '../../src/common.ts';
+import { golden, test } from './golden.ts';
 import { roadmapAudit, roadmapRows, unmarkedDone } from '../../src/roadmap.ts';
-import { PKG, tmp, write } from './helpers.ts';
+import { PKG, tmp, write, subst } from './helpers.ts';
 
 type Run = { out: Buffer; err: string; rc: number; file: Buffer | null };
 
@@ -26,35 +26,15 @@ function run(cmd: string, args: string[], file: string): Run {
 
 const ts = (name: string, args: string[]): [string, string[]] => [process.execPath, [path.join(PKG, 'src/launch.mjs'), name, ...args]];
 
-// Each side gets its own copy of the input (rows writes in place).
-function both(kind: 'audit' | 'rows', content: string | Buffer, extra: string[] = [], opts: { sameErr?: boolean } = {}): { p: Run; t: Run } {
-  const d = tmp();
-  const pf = write(path.join(d, 'perl', 'ROADMAP.md'), content as string);
-  const tf = write(path.join(d, 'ts', 'ROADMAP.md'), content as string);
-  const pl = path.join(PKG, 'lib', kind === 'audit' ? 'roadmap-audit.pl' : 'roadmap-rows.pl');
-  const p = run('perl', [pl, pf, ...extra], pf);
-  const t = run(...ts(kind === 'audit' ? 'roadmap-audit' : 'roadmap-rows', [tf, ...extra]), tf);
-  // Error text names the file path; make the two comparable.
-  p.err = p.err.split(pf).join('<F>');
-  t.err = t.err.split(tf).join('<F>');
-  void opts;
-  // P12: perl keeps the \r of a CRLF file in what it reports and writes bare-LF rows into it; the port reads
-  // CRLF as LF and writes the file's own ending. Compare against the oracle on that terms.
-  if (eolOf(Buffer.from(content as string).toString('latin1')) === '\r\n') {
-    crlfRuns.add(p);
-  }
-  return { p, t };
+function runKind(kind: 'audit' | 'rows', content: string | Buffer, extra: string[] = []): Run {
+  const f = write(path.join(tmp(), 'ROADMAP.md'), content as string);
+  const t = run(...ts(kind === 'audit' ? 'roadmap-audit' : 'roadmap-rows', [f, ...extra]), f);
+  // Error text names the file path.
+  t.err = subst(t.err, f, '<F>');
+  return t;
 }
 
-const crlfRuns = new Set<Run>();
-function sameRun(label: string, p: Run, t: Run): void {
-  const crlf = crlfRuns.has(p);
-  assert.equal(t.out.toString('latin1'), crlf ? p.out.toString('latin1').replace(/\r/g, '') : p.out.toString('latin1'), `${label}: stdout`);
-  assert.equal(t.err, p.err, `${label}: stderr`);
-  assert.equal(t.rc, p.rc, `${label}: exit code`);
-  const want = crlf && p.file ? Buffer.from(p.file.toString('latin1').replace(/\r?\n/g, '\r\n'), 'latin1') : p.file;
-  assert.deepEqual(t.file, want, `${label}: file bytes`);
-}
+const ser = (r: Run): string => `rc=${r.rc}\nout=${JSON.stringify(r.out.toString('latin1'))}\nerr=${JSON.stringify(r.err)}\nfile=${r.file ? JSON.stringify(r.file.toString('latin1')) : '(absent)'}`;
 
 // ── fixtures ─────────────────────────────────────────────────────────────────
 
@@ -205,16 +185,16 @@ const audits: Record<string, string> = {
 
 for (const [label, content] of Object.entries(audits)) {
   test(`audit: ${label}`, () => {
-    const { p, t } = both('audit', content);
-    sameRun(label, p, t);
+    const t = runKind('audit', content);
+    golden(ser(t));
     // the in-process function agrees with the CLI
     const f = write(path.join(tmp(), 'R.md'), content as string);
-    assert.equal(Buffer.from(roadmapAudit(f), 'utf8').toString('latin1'), Buffer.from(crlfRuns.has(p) ? p.out.toString('utf8').replace(/\r/g, '') : p.out.toString('utf8'), 'utf8').toString('latin1'));
+    assert.equal(Buffer.from(roadmapAudit(f), 'utf8').toString('latin1'), Buffer.from(t.out.toString('utf8'), 'utf8').toString('latin1'));
   });
 }
 
 test('audit: expected findings (sanity on the fixtures)', () => {
-  const lines = (c: string): string[] => both('audit', c).p.out.toString().split('\n').filter(Boolean);
+  const lines = (c: string): string[] => runKind('audit', c).out.toString().split('\n').filter(Boolean);
   assert.deepEqual(lines(clean), []);
   assert.deepEqual(lines(audits['missing checklist row'] as string), ['NOROW|2']);
   assert.deepEqual(lines(audits['missing progress row'] as string), ['NOPROG|2']);
@@ -225,12 +205,10 @@ test('audit: expected findings (sanity on the fixtures)', () => {
 test('audit: missing file, no argument, directory, "0"', () => {
   const d = tmp();
   for (const args of [[path.join(d, 'nope.md')], [], [d], ['0'], ['']]) {
-    const p = spawnSync('perl', [path.join(PKG, 'lib/roadmap-audit.pl'), ...args], { encoding: 'buffer' });
     const [c, a] = ts('roadmap-audit', args);
     const t = spawnSync(c, a, { encoding: 'buffer' });
-    assert.equal(t.stdout.toString(), p.stdout.toString(), `args ${JSON.stringify(args)}`);
-    assert.equal(t.stderr.toString(), p.stderr.toString(), `stderr ${JSON.stringify(args)}`);
-    assert.equal(t.status, p.status, `rc ${JSON.stringify(args)}`);
+    const show = (r: { stdout: Buffer; stderr: Buffer; status: number | null }): string => `args ${JSON.stringify(args)}\nrc=${r.status}\nout=${JSON.stringify(r.stdout.toString())}\nerr=${JSON.stringify(r.stderr.toString())}`;
+    golden(show(t));
   }
 });
 
@@ -304,49 +282,40 @@ rowsCases.push(
 
 for (const [label, content, args] of rowsCases) {
   test(`rows: ${label}`, () => {
-    const { p, t } = both('rows', content, args);
-    // die with $! unset exits 255, but "no heading" leaks errno on some platforms
-    // (Linux: ENOTTY after open); the TS port pins 255. Compare all else strictly.
-    if (p.rc !== t.rc && p.rc !== 0 && t.rc === 255 && /^no '### Phase /.test(p.err)) {
-      t.rc = p.rc;
-    }
-    sameRun(label, p, t);
+    // die with $! unset exits 255 (the port pins it; perl's "no heading" leaked errno on some platforms)
+    golden(ser(runKind('rows', content, args)));
   });
 }
 
 test('rows: results look right (sanity on the fixtures)', () => {
-  const { t } = both('rows', base, ['3']);
+  const t = runKind('rows', base, ['3']);
   const text = (t.file as Buffer).toString();
   assert.ok(text.includes('- [ ] **Phase 3: Third**\n'));
   assert.ok(text.includes('| 3. Third | - | 0/TBD | Not started | - |\n'));
-  const again = both('rows', text, ['3']);
-  assert.equal(again.t.file?.toString(), text, 'idempotent');
+  const again = runKind('rows', text, ['3']);
+  assert.equal(again.file?.toString(), text, 'idempotent');
 });
 
-test('rows: idempotent, in sequence, on the real tool and the port alike', () => {
+test('rows: idempotent, in sequence', () => {
   const d = tmp();
-  const pf = write(path.join(d, 'p', 'R.md'), base);
   const tf = write(path.join(d, 't', 'R.md'), base);
   for (const n of ['3', '2.1', '10', '0.5', '02', '3', '2.1']) {
-    spawnSync('perl', [path.join(PKG, 'lib/roadmap-rows.pl'), pf, n]);
     const r = roadmapRows(tf, n);
     assert.equal(r.rc, 0);
-    assert.deepEqual(readFileSync(tf), readFileSync(pf), `after phase ${n}`);
+    golden(`after phase ${n}\n${JSON.stringify(readFileSync(tf, 'latin1'))}`);
   }
   // the audit is clean for what was added (the two TBD lines are tick targets, as in bash)
-  assert.equal(roadmapAudit(tf), spawnSync('perl', [path.join(PKG, 'lib/roadmap-audit.pl'), pf], { encoding: 'utf8' }).stdout);
+  golden(JSON.stringify(roadmapAudit(tf)));
 });
 
-test('rows: unreadable file exits 2 with the same message', () => {
+test('rows: unreadable file exits 2 with the message', () => {
   const d = tmp();
   const f = path.join(d, 'missing.md');
-  const p = spawnSync('perl', [path.join(PKG, 'lib/roadmap-rows.pl'), f, '1'], { encoding: 'utf8' });
   const [c, a] = ts('roadmap-rows', [f, '1']);
   const t = spawnSync(c, a, { encoding: 'utf8' });
-  assert.equal(t.stderr, p.stderr);
-  assert.equal(t.status, p.status);
   assert.equal(t.status, 2);
-  assert.equal(t.stdout, p.stdout);
+  const show = (r: { stdout: string; stderr: string; status: number | null }): string => `rc=${r.status}\nout=${JSON.stringify(r.stdout)}\nerr=${JSON.stringify(r.stderr)}`;
+  golden(show(t));
 });
 
 test('unmarkedDone (doctor T027): merged, every plan run, checklist row not ticked', () => {

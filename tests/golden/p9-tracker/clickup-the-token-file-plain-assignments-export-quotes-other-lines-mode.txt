@@ -1,0 +1,145 @@
+@@@ 1 @@@
+### step 0: ["check"] {}
+rc=0
+--- stdout
+✔ ClickUp token OK
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["check"] {"GSD_TRACKER_PROFILE":"p1"}
+rc=0
+--- stdout
+✔ ClickUp token OK (profile p1)
+
+--- stderr
+
+@@@ 3 @@@
+### step 2: ["check"] {"GSD_TRACKER_PROFILE":"p2"}
+rc=0
+--- stdout
+✔ ClickUp token OK (profile p2)
+
+--- stderr
+
+@@@ 4 @@@
+### step 3: ["check"] {"GSD_TRACKER_PROFILE":"p3"}
+rc=0
+--- stdout
+✔ ClickUp token OK (profile p3)
+
+--- stderr
+
+@@@ 5 @@@
+### step 4: ["check"] {"GSD_TRACKER_PROFILE":"p4"}
+rc=0
+--- stdout
+✔ ClickUp token OK (profile p4)
+
+--- stderr
+
+@@@ 6 @@@
+### step 5: ["check"] {"GSD_TRACKER_PROFILE":"p5"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no CLICKUP_API_TOKEN for profile 'p5' — run gsdt-tracker login p5, or put CLICKUP_API_TOKEN=pk_… in <ROOT>/home/.config/gsd/clickup-p5.env
+
+@@@ 7 @@@
+### step 6: ["config"] {"GSD_TRACKER_PROFILE":"p5"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=default
+tracker_ok=yes
+profile=p5
+profile_from=env
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-p5.env
+token=missing
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 8 @@@
+### step 7: ["members"] {"GSD_TRACKER_PROFILE":"p6"}
+rc=0
+--- stdout
+42  Sara  sara@x.io
+43  Bob  -
+
+--- stderr
+
+@@@ 9 @@@
+### step 8: ["config"] {"GSD_TRACKER_PROFILE":"p7"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=default
+tracker_ok=yes
+profile=p7
+profile_from=env
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-p7.env
+token=missing
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 10 @@@
+curl.log:
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /team 
+
+argv:
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_shared-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_quoted-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_single-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_trailing-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_indented-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_team-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+
+tracker.log:
+
+home:
+.config/gsd/clickup-p1.env 644 # comment
+export CLICKUP_API_TOKEN="pk_quoted"
+OTHER=1
+
+---
+.config/gsd/clickup-p2.env 644 CLICKUP_API_TOKEN='pk_single'
+
+---
+.config/gsd/clickup-p3.env 644 CLICKUP_API_TOKEN=pk_trailing # note
+
+---
+.config/gsd/clickup-p4.env 644   CLICKUP_API_TOKEN=pk_indented
+
+---
+.config/gsd/clickup-p5.env 644 NOPE=1
+
+---
+.config/gsd/clickup-p6.env 644 CLICKUP_API_TOKEN=pk_team
+CLICKUP_TEAM_ID=T1
+
+---
+.config/gsd/clickup-p7.env 644 CLICKUP_API_TOKEN=
+
+---
+.config/gsd/clickup.env 644 CLICKUP_API_TOKEN=pk_shared
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+

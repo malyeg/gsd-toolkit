@@ -1,0 +1,168 @@
+@@@ 1 @@@
+# valid none/provider
+0
+@@@ 2 @@@
+# block none/provider
+""
+@@@ 3 @@@
+# valid none/canonical
+0
+@@@ 4 @@@
+# block none/canonical
+""
+@@@ 5 @@@
+# valid ok/provider
+0
+@@@ 6 @@@
+# block ok/provider
+"<!-- gsd-toolkit:provider:start -->\nx\n<!-- gsd-toolkit:provider:end -->\n"
+@@@ 7 @@@
+# valid ok/canonical
+0
+@@@ 8 @@@
+# block ok/canonical
+""
+@@@ 9 @@@
+# valid old/provider
+0
+@@@ 10 @@@
+# block old/provider
+"<!-- gsd-worktrees:provider:start -->\nx\n<!-- gsd-worktrees:provider:end -->\n"
+@@@ 11 @@@
+# valid old/canonical
+0
+@@@ 12 @@@
+# block old/canonical
+""
+@@@ 13 @@@
+# valid mixed/provider
+0
+@@@ 14 @@@
+# block mixed/provider
+"<!-- gsd-worktrees:provider:start -->\nx\n<!-- gsd-toolkit:provider:end -->\n"
+@@@ 15 @@@
+# valid mixed/canonical
+0
+@@@ 16 @@@
+# block mixed/canonical
+""
+@@@ 17 @@@
+# valid twoStarts/provider
+1
+@@@ 18 @@@
+# block twoStarts/provider
+"<!-- gsd-toolkit:provider:start -->\n<!-- gsd-toolkit:provider:start -->\n<!-- gsd-toolkit:provider:end -->\n"
+@@@ 19 @@@
+# valid twoStarts/canonical
+0
+@@@ 20 @@@
+# block twoStarts/canonical
+""
+@@@ 21 @@@
+# valid twoBlocks/provider
+1
+@@@ 22 @@@
+# block twoBlocks/provider
+"<!-- gsd-toolkit:provider:start -->\na\n<!-- gsd-toolkit:provider:end -->\n<!-- gsd-toolkit:provider:start -->\nb\n<!-- gsd-toolkit:provider:end -->\n"
+@@@ 23 @@@
+# valid twoBlocks/canonical
+0
+@@@ 24 @@@
+# block twoBlocks/canonical
+""
+@@@ 25 @@@
+# valid noEnd/provider
+1
+@@@ 26 @@@
+# block noEnd/provider
+"<!-- gsd-toolkit:provider:start -->\nx\n"
+@@@ 27 @@@
+# valid noEnd/canonical
+0
+@@@ 28 @@@
+# block noEnd/canonical
+""
+@@@ 29 @@@
+# valid endFirst/provider
+1
+@@@ 30 @@@
+# block endFirst/provider
+"<!-- gsd-toolkit:provider:start -->\n"
+@@@ 31 @@@
+# valid endFirst/canonical
+0
+@@@ 32 @@@
+# block endFirst/canonical
+""
+@@@ 33 @@@
+# valid indented/provider
+1
+@@@ 34 @@@
+# block indented/provider
+""
+@@@ 35 @@@
+# valid indented/canonical
+0
+@@@ 36 @@@
+# block indented/canonical
+""
+@@@ 37 @@@
+# valid trailing/provider
+1
+@@@ 38 @@@
+# block trailing/provider
+""
+@@@ 39 @@@
+# valid trailing/canonical
+0
+@@@ 40 @@@
+# block trailing/canonical
+""
+@@@ 41 @@@
+# valid crlf/provider
+0
+@@@ 42 @@@
+# block crlf/provider
+"<!-- gsd-toolkit:provider:start -->\nx\n<!-- gsd-toolkit:provider:end -->\n"
+@@@ 43 @@@
+# valid crlf/canonical
+0
+@@@ 44 @@@
+# block crlf/canonical
+""
+@@@ 45 @@@
+# valid otherKind/provider
+0
+@@@ 46 @@@
+# block otherKind/provider
+"<!-- gsd-toolkit:provider:start -->\nx\n<!-- gsd-toolkit:provider:end -->\n"
+@@@ 47 @@@
+# valid otherKind/canonical
+0
+@@@ 48 @@@
+# block otherKind/canonical
+"<!-- gsd-toolkit:canonical:start -->\nc\n<!-- gsd-toolkit:canonical:end -->\n"
+@@@ 49 @@@
+# valid unicode/provider
+0
+@@@ 50 @@@
+# block unicode/provider
+"<!-- gsd-toolkit:provider:start -->\n— é ü 日本\n<!-- gsd-toolkit:provider:end -->\n"
+@@@ 51 @@@
+# valid unicode/canonical
+0
+@@@ 52 @@@
+# block unicode/canonical
+""
+@@@ 53 @@@
+# valid empty/provider
+0
+@@@ 54 @@@
+# block empty/provider
+""
+@@@ 55 @@@
+# valid empty/canonical
+0
+@@@ 56 @@@
+# block empty/canonical
+""

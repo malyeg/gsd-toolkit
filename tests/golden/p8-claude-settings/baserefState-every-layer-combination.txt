@@ -1,0 +1,1154 @@
+@@@ 1 @@@
+local {"worktree": {"baseRef": "head"}} check
+answer="head\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 2 @@@
+local {"worktree": {"baseRef": "main"}} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 3 @@@
+local {"worktree": {"baseRef": 5}} check
+answer="missing\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": 5}}"
+@@@ 4 @@@
+local {"worktree": {}} check
+answer="missing\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"worktree\": {}}"
+@@@ 5 @@@
+local {"worktree": null} check
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"worktree\": null}"
+@@@ 6 @@@
+local {"worktree": []} check
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"worktree\": []}"
+@@@ 7 @@@
+local {} check
+answer="missing\n"
+.claude/
+--
+.claude/settings.local.json [644] "{}"
+@@@ 8 @@@
+local [] check
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "[]"
+@@@ 9 @@@
+local not json check
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "not json"
+@@@ 10 @@@
+local  check
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] ""
+@@@ 11 @@@
+local {"a": 1.0, "worktree": {"x": 1e5}}
+ check
+answer="missing\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 1.0, \"worktree\": {\"x\": 1e5}}\n"
+@@@ 12 @@@
+nothing check
+answer="missing\n"
+
+@@@ 13 @@@
+proj {"worktree": {"baseRef": "head"}} check
+answer="head\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 14 @@@
+user {"worktree": {"baseRef": "head"}} check
+answer="head\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 15 @@@
+proj-over-user {"worktree": {"baseRef": "head"}} check
+answer="head\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 16 @@@
+local-over-all {"worktree": {"baseRef": "head"}} check
+answer="head\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 17 @@@
+proj {"worktree": {"baseRef": "main"}} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 18 @@@
+user {"worktree": {"baseRef": "main"}} check
+answer="other:main\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 19 @@@
+proj-over-user {"worktree": {"baseRef": "main"}} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 20 @@@
+local-over-all {"worktree": {"baseRef": "main"}} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 21 @@@
+proj {"worktree": {"baseRef": 5}} check
+answer="missing\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": 5}}"
+@@@ 22 @@@
+user {"worktree": {"baseRef": 5}} check
+answer="missing\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": 5}}"
+@@@ 23 @@@
+proj-over-user {"worktree": {"baseRef": 5}} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": 5}}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 24 @@@
+local-over-all {"worktree": {"baseRef": 5}} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": 5}}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 25 @@@
+proj {"worktree": {}} check
+answer="missing\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {}}"
+@@@ 26 @@@
+user {"worktree": {}} check
+answer="missing\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {}}"
+@@@ 27 @@@
+proj-over-user {"worktree": {}} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {}}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 28 @@@
+local-over-all {"worktree": {}} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": {}}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 29 @@@
+proj {"worktree": null} check
+answer="missing\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": null}"
+@@@ 30 @@@
+user {"worktree": null} check
+answer="missing\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": null}"
+@@@ 31 @@@
+proj-over-user {"worktree": null} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": null}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 32 @@@
+local-over-all {"worktree": null} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": null}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 33 @@@
+proj {"worktree": []} check
+answer="missing\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": []}"
+@@@ 34 @@@
+user {"worktree": []} check
+answer="missing\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": []}"
+@@@ 35 @@@
+proj-over-user {"worktree": []} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": []}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 36 @@@
+local-over-all {"worktree": []} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": []}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 37 @@@
+proj {} check
+answer="missing\n"
+.claude/
+--
+.claude/settings.json [644] "{}"
+@@@ 38 @@@
+user {} check
+answer="missing\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{}"
+@@@ 39 @@@
+proj-over-user {} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 40 @@@
+local-over-all {} check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 41 @@@
+proj [] check
+answer="missing\n"
+.claude/
+--
+.claude/settings.json [644] "[]"
+@@@ 42 @@@
+user [] check
+answer="missing\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "[]"
+@@@ 43 @@@
+proj-over-user [] check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "[]"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 44 @@@
+local-over-all [] check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "[]"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 45 @@@
+proj not json check
+answer="missing\n"
+.claude/
+--
+.claude/settings.json [644] "not json"
+@@@ 46 @@@
+user not json check
+answer="missing\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "not json"
+@@@ 47 @@@
+proj-over-user not json check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "not json"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 48 @@@
+local-over-all not json check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "not json"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 49 @@@
+proj  check
+answer="missing\n"
+.claude/
+--
+.claude/settings.json [644] ""
+@@@ 50 @@@
+user  check
+answer="missing\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] ""
+@@@ 51 @@@
+proj-over-user  check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] ""
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 52 @@@
+local-over-all  check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] ""
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 53 @@@
+proj {"a": 1.0, "worktree": {"x": 1e5}}
+ check
+answer="missing\n"
+.claude/
+--
+.claude/settings.json [644] "{\"a\": 1.0, \"worktree\": {\"x\": 1e5}}\n"
+@@@ 54 @@@
+user {"a": 1.0, "worktree": {"x": 1e5}}
+ check
+answer="missing\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"a\": 1.0, \"worktree\": {\"x\": 1e5}}\n"
+@@@ 55 @@@
+proj-over-user {"a": 1.0, "worktree": {"x": 1e5}}
+ check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"a\": 1.0, \"worktree\": {\"x\": 1e5}}\n"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 56 @@@
+local-over-all {"a": 1.0, "worktree": {"x": 1e5}}
+ check
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"a\": 1.0, \"worktree\": {\"x\": 1e5}}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 57 @@@
+bad bytes check
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "ÿþ"
+@@@ 58 @@@
+bom check
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "ï»¿{}"
+@@@ 59 @@@
+local {"worktree": {"baseRef": "head"}} ensure
+answer="head\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 60 @@@
+local {"worktree": {"baseRef": "main"}} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 61 @@@
+local {"worktree": {"baseRef": 5}} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 62 @@@
+local {"worktree": {}} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 63 @@@
+local {"worktree": null} ensure
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"worktree\": null}"
+@@@ 64 @@@
+local {"worktree": []} ensure
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\"worktree\": []}"
+@@@ 65 @@@
+local {} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 66 @@@
+local [] ensure
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "[]"
+@@@ 67 @@@
+local not json ensure
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "not json"
+@@@ 68 @@@
+local  ensure
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] ""
+@@@ 69 @@@
+local {"a": 1.0, "worktree": {"x": 1e5}}
+ ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": 1.0,\n  \"worktree\": {\n    \"x\": 100000.0,\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 70 @@@
+nothing ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 71 @@@
+proj {"worktree": {"baseRef": "head"}} ensure
+answer="head\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 72 @@@
+user {"worktree": {"baseRef": "head"}} ensure
+answer="head\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 73 @@@
+proj-over-user {"worktree": {"baseRef": "head"}} ensure
+answer="head\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 74 @@@
+local-over-all {"worktree": {"baseRef": "head"}} ensure
+answer="head\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 75 @@@
+proj {"worktree": {"baseRef": "main"}} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 76 @@@
+user {"worktree": {"baseRef": "main"}} ensure
+answer="other:main\n"
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 77 @@@
+proj-over-user {"worktree": {"baseRef": "main"}} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 78 @@@
+local-over-all {"worktree": {"baseRef": "main"}} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 79 @@@
+proj {"worktree": {"baseRef": 5}} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": 5}}"
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 80 @@@
+user {"worktree": {"baseRef": 5}} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": 5}}"
+@@@ 81 @@@
+proj-over-user {"worktree": {"baseRef": 5}} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": 5}}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 82 @@@
+local-over-all {"worktree": {"baseRef": 5}} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": {\"baseRef\": 5}}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 83 @@@
+proj {"worktree": {}} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {}}"
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 84 @@@
+user {"worktree": {}} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {}}"
+@@@ 85 @@@
+proj-over-user {"worktree": {}} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {}}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 86 @@@
+local-over-all {"worktree": {}} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": {}}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 87 @@@
+proj {"worktree": null} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": null}"
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 88 @@@
+user {"worktree": null} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": null}"
+@@@ 89 @@@
+proj-over-user {"worktree": null} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": null}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 90 @@@
+local-over-all {"worktree": null} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": null}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 91 @@@
+proj {"worktree": []} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": []}"
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 92 @@@
+user {"worktree": []} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": []}"
+@@@ 93 @@@
+proj-over-user {"worktree": []} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": []}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 94 @@@
+local-over-all {"worktree": []} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"worktree\": []}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 95 @@@
+proj {} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.json [644] "{}"
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 96 @@@
+user {} ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{}"
+@@@ 97 @@@
+proj-over-user {} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 98 @@@
+local-over-all {} ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 99 @@@
+proj [] ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.json [644] "[]"
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 100 @@@
+user [] ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "[]"
+@@@ 101 @@@
+proj-over-user [] ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "[]"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 102 @@@
+local-over-all [] ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "[]"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 103 @@@
+proj not json ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.json [644] "not json"
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 104 @@@
+user not json ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "not json"
+@@@ 105 @@@
+proj-over-user not json ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "not json"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 106 @@@
+local-over-all not json ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "not json"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 107 @@@
+proj  ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.json [644] ""
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 108 @@@
+user  ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] ""
+@@@ 109 @@@
+proj-over-user  ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] ""
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 110 @@@
+local-over-all  ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] ""
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 111 @@@
+proj {"a": 1.0, "worktree": {"x": 1e5}}
+ ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.json [644] "{\"a\": 1.0, \"worktree\": {\"x\": 1e5}}\n"
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 112 @@@
+user {"a": 1.0, "worktree": {"x": 1e5}}
+ ensure
+answer="set\n"
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"a\": 1.0, \"worktree\": {\"x\": 1e5}}\n"
+@@@ 113 @@@
+proj-over-user {"a": 1.0, "worktree": {"x": 1e5}}
+ ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"a\": 1.0, \"worktree\": {\"x\": 1e5}}\n"
+--
+.claude/settings.local.json [644] "{}"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+@@@ 114 @@@
+local-over-all {"a": 1.0, "worktree": {"x": 1e5}}
+ ensure
+answer="other:main\n"
+.claude/
+--
+.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"main\"}}"
+--
+.claude/settings.local.json [644] "{\"a\": 1.0, \"worktree\": {\"x\": 1e5}}\n"
+--
+home/
+--
+home/.claude/
+--
+home/.claude/settings.json [644] "{\"worktree\": {\"baseRef\": \"head\"}}"
+@@@ 115 @@@
+bad bytes ensure
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "ÿþ"
+@@@ 116 @@@
+bom ensure
+answer="invalid\n"
+.claude/
+--
+.claude/settings.local.json [644] "ï»¿{}"

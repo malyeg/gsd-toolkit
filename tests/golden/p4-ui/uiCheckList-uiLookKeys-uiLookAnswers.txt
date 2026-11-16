@@ -1,0 +1,133 @@
+@@@ 1 @@@
+# check_list Shots
+/ | 375 | home-375-aaaaaa.png
+/cart | 375 | cart-375-bbbbbb.png
+@@@ 2 @@@
+# check_list Questions
+Q1 | /cart | 375 | C2 | possible clipped text in 1 element(s): div.box "long"
+@@@ 3 @@@
+# check_list Failures
+
+@@@ 4 @@@
+# check_list Nope
+
+@@@ 5 @@@
+# check_list missing file
+
+@@@ 6 @@@
+# look_keys
+/|375|R1
+/|375|R2
+/|375|R3
+/|375|R4
+/|375|R5
+/|375|R6
+/|375|R7
+/|375|R8
+/|375|R9
+/|375|R10
+/cart|375|R1
+/cart|375|R2
+/cart|375|R3
+/cart|375|R4
+/cart|375|R5
+/cart|375|R6
+/cart|375|R7
+/cart|375|R8
+/cart|375|R9
+/cart|375|R10
+/cart|375|Q1
+@@@ 7 @@@
+# look_keys messy
+/a|375|R1
+/a|375|R2
+/a|375|R3
+/a|375|R4
+/a|375|R5
+/a|375|R6
+/a|375|R7
+/a|375|R8
+/a|375|R9
+/a|375|R10
+/a|375|Q1
+/a|375|Q2
+/b|768|R1
+/b|768|R2
+/b|768|R3
+/b|768|R4
+/b|768|R5
+/b|768|R6
+/b|768|R7
+/b|768|R8
+/b|768|R9
+/b|768|R10
+/b|768|Q3
+/c||R1
+/c||R2
+/c||R3
+/c||R4
+/c||R5
+/c||R6
+/c||R7
+/c||R8
+/c||R9
+/c||R10
+/a|375|R1
+/a|375|R2
+/a|375|R3
+/a|375|R4
+/a|375|R5
+/a|375|R6
+/a|375|R7
+/a|375|R8
+/a|375|R9
+/a|375|R10
+/a|375|Q1
+/a|375|Q2
+@@@ 8 @@@
+# look_keys custom rules
+/a|375|R1
+/a|375|R12
+/a|375|Q1
+/a|375|Q2
+/b|768|R1
+/b|768|R12
+/b|768|Q3
+/c||R1
+/c||R12
+/a|375|R1
+/a|375|R12
+/a|375|Q1
+/a|375|Q2
+@@@ 9 @@@
+# look_answers "## / at 375px\n- R1: ok — seen\n- R2: fixe"
+/|375|R1|ok|seen
+/|375|R2|fixed|did it
+/|375|R4|n/a|
+/|375|Q1|ok|double dash
+/|375|R6:ok|ok|no space
+/|375|R7|ok|trailing
+/|375|R8|ok|colon
+/|375|R9|ok|| pipe | in text
+/|375|R10|ok|ünï
+@@@ 10 @@@
+# look_answers "## /cart at 375px\n- R1: ok — a\n## /cart "
+/cart|375|R1|ok|a
+/x|12|R3|ok|c
+/z|800|Q3|ok|e
+@@@ 11 @@@
+# look_answers "- R1: ok — before any heading\n## a  at  "
+a|9|R1|ok|spaces
+@@@ 12 @@@
+# look_answers CRLF
+/|375|R1|ok|crlf
+/|375|R2|ok|
+@@@ 13 @@@
+# look_answers "## / at 375px\n- R1:\tok\tTAB\n-   R2: ok — "
+/|375|R1|ok|TAB
+@@@ 14 @@@
+# look_answers ""
+
+@@@ 15 @@@
+# look_answers missing
+

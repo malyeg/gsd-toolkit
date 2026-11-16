@@ -28,8 +28,8 @@ export function coreRequiredSkills(repo: string): string[] {
 /** gsd_agent_home — claude|codex → the agent's config folder (null for any other name) */
 export function agentHome(agent: string): string | null {
   const nz = (v: string | undefined): string | undefined => (v === undefined || v === '' ? undefined : v);
-  if (agent === 'claude') return nz(process.env.CLAUDE_CONFIG_DIR) ?? `${process.env.HOME ?? ''}/.claude`;
-  if (agent === 'codex') return nz(process.env.CODEX_HOME) ?? `${process.env.HOME ?? ''}/.codex`;
+  if (agent === 'claude') return nz(process.env.CLAUDE_CONFIG_DIR) ?? `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.claude`;
+  if (agent === 'codex') return nz(process.env.CODEX_HOME) ?? `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.codex`;
   return null;
 }
 
@@ -135,7 +135,7 @@ export function coreClusters(home: string): Cluster[] {
   const node = commandOnPath('node');
   if (node === null) return [];
   let f = '';
-  const claude = process.env.CLAUDE_CONFIG_DIR || `${process.env.HOME ?? ''}/.claude`;
+  const claude = process.env.CLAUDE_CONFIG_DIR || `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.claude`;
   for (const c of [`${home}/gsd-core/bin/lib/clusters.cjs`, `${claude}/gsd-core/bin/lib/clusters.cjs`]) {
     if (isFile(c)) {
       f = c;

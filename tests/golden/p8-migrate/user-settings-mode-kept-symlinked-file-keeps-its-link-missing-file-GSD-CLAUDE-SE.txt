@@ -1,0 +1,222 @@
+@@@ 1 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 640 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          },
+          {
+            "type": "command",
+            "command": "echo mine"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 2 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          },
+          {
+            "type": "command",
+            "command": "echo mine"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 3 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-worktree-guard' ] || exec '/u/bin/gsdt-worktree-guard' --global"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsdt-rules' --hook"
+          },
+          {
+            "type": "command",
+            "command": "echo mine"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+@@@ 4 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+@@@ 5 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+@@@ 6 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+your Claude settings:
+  <S>/home/.claude/settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+1 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 7 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+your Claude settings:
+  <S>/home/.claude/settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+✔ migrated to gsdt-* (1 change(s), not committed)
+--stderr--
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+lock: false
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+

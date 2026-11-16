@@ -1,0 +1,1190 @@
+@@@ 1 @@@
+empty/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 2 @@@
+empty/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 3 @@@
+empty/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 4 @@@
+empty/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 5 @@@
+empty/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 6 @@@
+empty/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 7 @@@
+empty/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 8 @@@
+empty/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 9 @@@
+empty/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 10 @@@
+context/strict gsd-plan-phase [7]
+rc=0
+out=""
+err=""
+@@@ 11 @@@
+context/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 12 @@@
+context/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 13 @@@
+context/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 14 @@@
+context/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 15 @@@
+context/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 16 @@@
+context/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 17 @@@
+context/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 18 @@@
+context/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 19 @@@
+reviews_codex_ok/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 20 @@@
+reviews_codex_ok/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 21 @@@
+reviews_codex_ok/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 22 @@@
+reviews_codex_ok/strict gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 23 @@@
+reviews_codex_ok/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 24 @@@
+reviews_codex_ok/strict gsd-execute-phase [7 --gaps-only-x]
+rc=0
+out=""
+err=""
+@@@ 25 @@@
+reviews_codex_ok/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 26 @@@
+reviews_codex_ok/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 27 @@@
+reviews_codex_ok/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 28 @@@
+reviews_codex_ok/claude gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 29 @@@
+reviews_codex_ok/custom gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 30 @@@
+reviews_codex_ok/codex gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 31 @@@
+reviews_codex_ok/bogus gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 32 @@@
+reviews_codex_ok/no nyquist gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 33 @@@
+reviews_empty/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 34 @@@
+reviews_empty/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 35 @@@
+reviews_empty/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 36 @@@
+reviews_empty/strict gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 37 @@@
+reviews_empty/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 38 @@@
+reviews_empty/strict gsd-execute-phase [7 --gaps-only-x]
+rc=0
+out=""
+err=""
+@@@ 39 @@@
+reviews_empty/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 40 @@@
+reviews_empty/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 41 @@@
+reviews_empty/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 42 @@@
+reviews_empty/claude gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 43 @@@
+reviews_empty/custom gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 44 @@@
+reviews_empty/codex gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 45 @@@
+reviews_empty/bogus gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 46 @@@
+reviews_empty/no nyquist gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 47 @@@
+reviews_limit/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 48 @@@
+reviews_limit/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 49 @@@
+reviews_limit/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 50 @@@
+reviews_limit/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs a usable 07-REVIEWS.md — Codex Review — usage limit hit.\nOpen it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (Codex usage limit: gsdt-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 51 @@@
+reviews_limit/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 52 @@@
+reviews_limit/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs a usable 07-REVIEWS.md — Codex Review — usage limit hit.\nOpen it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (Codex usage limit: gsdt-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 53 @@@
+reviews_limit/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 54 @@@
+reviews_limit/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 55 @@@
+reviews_limit/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 56 @@@
+reviews_limit/claude gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs a usable 07-REVIEWS.md — Codex Review — usage limit hit.\nOpen it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (Codex usage limit: gsdt-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 57 @@@
+reviews_limit/custom gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs a usable 07-REVIEWS.md — Codex Review — usage limit hit.\nOpen it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (Codex usage limit: gsdt-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 58 @@@
+reviews_limit/codex gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs a usable 07-REVIEWS.md — Codex Review — usage limit hit.\nOpen it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (Codex usage limit: gsdt-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 59 @@@
+reviews_limit/bogus gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs a usable 07-REVIEWS.md — Codex Review — usage limit hit.\nOpen it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (Codex usage limit: gsdt-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 60 @@@
+reviews_limit/no nyquist gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs a usable 07-REVIEWS.md — Codex Review — usage limit hit.\nOpen it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (Codex usage limit: gsdt-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 61 @@@
+reviews_claude/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 62 @@@
+reviews_claude/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 63 @@@
+reviews_claude/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 64 @@@
+reviews_claude/strict gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 65 @@@
+reviews_claude/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 66 @@@
+reviews_claude/strict gsd-execute-phase [7 --gaps-only-x]
+rc=0
+out=""
+err=""
+@@@ 67 @@@
+reviews_claude/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 68 @@@
+reviews_claude/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 69 @@@
+reviews_claude/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 70 @@@
+reviews_claude/claude gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 71 @@@
+reviews_claude/custom gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 72 @@@
+reviews_claude/codex gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 73 @@@
+reviews_claude/bogus gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 74 @@@
+reviews_claude/no nyquist gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 75 @@@
+reviews_unlabeled/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 76 @@@
+reviews_unlabeled/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 77 @@@
+reviews_unlabeled/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 78 @@@
+reviews_unlabeled/strict gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 79 @@@
+reviews_unlabeled/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 80 @@@
+reviews_unlabeled/strict gsd-execute-phase [7 --gaps-only-x]
+rc=0
+out=""
+err=""
+@@@ 81 @@@
+reviews_unlabeled/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 82 @@@
+reviews_unlabeled/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 83 @@@
+reviews_unlabeled/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 84 @@@
+reviews_unlabeled/claude gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 85 @@@
+reviews_unlabeled/custom gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 86 @@@
+reviews_unlabeled/codex gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 87 @@@
+reviews_unlabeled/bogus gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 88 @@@
+reviews_unlabeled/no nyquist gsd-execute-phase [7]
+rc=0
+out=""
+err=""
+@@@ 89 @@@
+code_review/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 90 @@@
+code_review/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 91 @@@
+code_review/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 92 @@@
+code_review/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 93 @@@
+code_review/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 94 @@@
+code_review/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 95 @@@
+code_review/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs the test audit — no 07-VALIDATION.md.\nRun: /gsd-validate-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 96 @@@
+code_review/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 97 @@@
+code_review/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 98 @@@
+code_review_ui_spec/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 99 @@@
+code_review_ui_spec/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 100 @@@
+code_review_ui_spec/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 101 @@@
+code_review_ui_spec/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 102 @@@
+code_review_ui_spec/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 103 @@@
+code_review_ui_spec/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 104 @@@
+code_review_ui_spec/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-UI-REVIEW.md — ui-review (this phase has screens) has not been done.\nRun: /gsd-ui-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 105 @@@
+code_review_ui_spec/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 106 @@@
+code_review_ui_spec/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 107 @@@
+code_review_ui_all/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 108 @@@
+code_review_ui_all/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 109 @@@
+code_review_ui_all/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 110 @@@
+code_review_ui_all/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 111 @@@
+code_review_ui_all/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 112 @@@
+code_review_ui_all/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 113 @@@
+code_review_ui_all/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs the test audit — no 07-VALIDATION.md.\nRun: /gsd-validate-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 114 @@@
+code_review_ui_all/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 115 @@@
+code_review_ui_all/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 116 @@@
+validation_ok/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 117 @@@
+validation_ok/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 118 @@@
+validation_ok/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 119 @@@
+validation_ok/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 120 @@@
+validation_ok/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 121 @@@
+validation_ok/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 122 @@@
+validation_ok/strict gsd-secure-phase [7]
+rc=0
+out=""
+err=""
+@@@ 123 @@@
+validation_ok/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 124 @@@
+validation_ok/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 125 @@@
+validation_bad/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 126 @@@
+validation_bad/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 127 @@@
+validation_bad/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 128 @@@
+validation_bad/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 129 @@@
+validation_bad/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 130 @@@
+validation_bad/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 131 @@@
+validation_bad/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs the test audit — 07-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit).\nRun: /gsd-validate-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 132 @@@
+validation_bad/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 133 @@@
+validation_bad/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 134 @@@
+validation_nofm/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 135 @@@
+validation_nofm/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 136 @@@
+validation_nofm/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 137 @@@
+validation_nofm/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 138 @@@
+validation_nofm/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 139 @@@
+validation_nofm/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 140 @@@
+validation_nofm/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs the test audit — 07-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit).\nRun: /gsd-validate-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 141 @@@
+validation_nofm/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 142 @@@
+validation_nofm/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 143 @@@
+padded_only_unpadded_dir/strict gsd-plan-phase [7]
+rc=0
+out=""
+err=""
+@@@ 144 @@@
+padded_only_unpadded_dir/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 145 @@@
+padded_only_unpadded_dir/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 146 @@@
+padded_only_unpadded_dir/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 7-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 147 @@@
+padded_only_unpadded_dir/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 148 @@@
+padded_only_unpadded_dir/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 7-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 149 @@@
+padded_only_unpadded_dir/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs the test audit — no 7-VALIDATION.md.\nRun: /gsd-validate-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 150 @@@
+padded_only_unpadded_dir/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 151 @@@
+padded_only_unpadded_dir/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 152 @@@
+other_dir_only/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 153 @@@
+other_dir_only/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 154 @@@
+other_dir_only/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 155 @@@
+other_dir_only/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 156 @@@
+other_dir_only/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 157 @@@
+other_dir_only/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 158 @@@
+other_dir_only/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 159 @@@
+other_dir_only/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 160 @@@
+other_dir_only/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 161 @@@
+file_not_dir/strict gsd-plan-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 162 @@@
+file_not_dir/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 163 @@@
+file_not_dir/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 164 @@@
+file_not_dir/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 165 @@@
+file_not_dir/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 166 @@@
+file_not_dir/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 167 @@@
+file_not_dir/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 168 @@@
+file_not_dir/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 169 @@@
+file_not_dir/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 170 @@@
+two_dirs/strict gsd-plan-phase [7]
+rc=0
+out=""
+err=""
+@@@ 171 @@@
+two_dirs/strict gsd-plan-phase [7 --prd docs/x.md]
+rc=0
+out=""
+err=""
+@@@ 172 @@@
+two_dirs/strict gsd-plan-phase [--prd=docs/x.md 7]
+rc=0
+out=""
+err=""
+@@@ 173 @@@
+two_dirs/strict gsd-execute-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 174 @@@
+two_dirs/strict gsd-execute-phase [7 --gaps-only]
+rc=0
+out=""
+err=""
+@@@ 175 @@@
+two_dirs/strict gsd-execute-phase [7 --gaps-only-x]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-execute-phase 7 needs 07-REVIEWS.md — the cross-AI plan review has not been done.\nRun: /gsd-review --phase 7  then  /gsd-plan-phase 7 --reviews   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 176 @@@
+two_dirs/strict gsd-secure-phase [7]
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7 needs 07-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 177 @@@
+two_dirs/strict gsd-flow [7]
+rc=0
+out=""
+err=""
+@@@ 178 @@@
+two_dirs/strict gsd-plan-phase [8]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 179 @@@
+worktree, policy off in main
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 180 @@@
+worktree, policy on in main only (own conf is the old one)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 181 @@@
+worktree via cwd
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 182 @@@
+worktree, own conf says nothing
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7 needs 07-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 183 @@@
+phase-8-x 08-x gsd-plan-phase 8 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 8 needs 08-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 8   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 184 @@@
+phase-8-x 08-x gsd-plan-phase 8 (artifact)
+rc=0
+out=""
+err=""
+@@@ 185 @@@
+phase-8-x 08-x gsd-secure-phase 8 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 8 needs 08-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 8   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 186 @@@
+phase-8-x 08-x gsd-secure-phase 8 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 8 needs the test audit — no 08-VALIDATION.md.\nRun: /gsd-validate-phase 8   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 187 @@@
+phase-8-x 08-x gsd-plan-phase 08 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 08 needs 08-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 08   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 188 @@@
+phase-8-x 08-x gsd-plan-phase 08 (artifact)
+rc=0
+out=""
+err=""
+@@@ 189 @@@
+phase-8-x 08-x gsd-secure-phase 08 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 08 needs 08-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 08   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 190 @@@
+phase-8-x 08-x gsd-secure-phase 08 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 08 needs the test audit — no 08-VALIDATION.md.\nRun: /gsd-validate-phase 08   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 191 @@@
+phase-08-x 08-x gsd-plan-phase 8 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 8 needs 08-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 8   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 192 @@@
+phase-08-x 08-x gsd-plan-phase 8 (artifact)
+rc=0
+out=""
+err=""
+@@@ 193 @@@
+phase-08-x 08-x gsd-secure-phase 8 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 8 needs 08-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 8   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 194 @@@
+phase-08-x 08-x gsd-secure-phase 8 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 8 needs the test audit — no 08-VALIDATION.md.\nRun: /gsd-validate-phase 8   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 195 @@@
+phase-08-x 8-x gsd-plan-phase 8 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 8 needs 8-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 8   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 196 @@@
+phase-08-x 8-x gsd-plan-phase 8 (artifact)
+rc=0
+out=""
+err=""
+@@@ 197 @@@
+phase-08-x 8-x gsd-secure-phase 8 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 8 needs 8-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 8   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 198 @@@
+phase-08-x 8-x gsd-secure-phase 8 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 8 needs the test audit — no 8-VALIDATION.md.\nRun: /gsd-validate-phase 8   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 199 @@@
+phase-8-x 8-x gsd-plan-phase 08 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 08 needs 8-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 08   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 200 @@@
+phase-8-x 8-x gsd-plan-phase 08 (artifact)
+rc=0
+out=""
+err=""
+@@@ 201 @@@
+phase-8-x 8-x gsd-secure-phase 08 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 08 needs 8-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 08   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 202 @@@
+phase-8-x 8-x gsd-secure-phase 08 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 08 needs the test audit — no 8-VALIDATION.md.\nRun: /gsd-validate-phase 08   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 203 @@@
+phase-2.1-x 02.1-x gsd-plan-phase 2.1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 2.1 needs 02.1-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 2.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 204 @@@
+phase-2.1-x 02.1-x gsd-plan-phase 2.1 (artifact)
+rc=0
+out=""
+err=""
+@@@ 205 @@@
+phase-2.1-x 02.1-x gsd-secure-phase 2.1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 2.1 needs 02.1-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 2.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 206 @@@
+phase-2.1-x 02.1-x gsd-secure-phase 2.1 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 2.1 needs the test audit — no 02.1-VALIDATION.md.\nRun: /gsd-validate-phase 2.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 207 @@@
+phase-2.1-x 02.1-x gsd-plan-phase 02.1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 02.1 needs 02.1-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 02.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 208 @@@
+phase-2.1-x 02.1-x gsd-plan-phase 02.1 (artifact)
+rc=0
+out=""
+err=""
+@@@ 209 @@@
+phase-2.1-x 02.1-x gsd-secure-phase 02.1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 02.1 needs 02.1-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 02.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 210 @@@
+phase-2.1-x 02.1-x gsd-secure-phase 02.1 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 02.1 needs the test audit — no 02.1-VALIDATION.md.\nRun: /gsd-validate-phase 02.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 211 @@@
+phase-02.1-x 2.1-x gsd-plan-phase 2.1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 2.1 needs 2.1-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 2.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 212 @@@
+phase-02.1-x 2.1-x gsd-plan-phase 2.1 (artifact)
+rc=0
+out=""
+err=""
+@@@ 213 @@@
+phase-02.1-x 2.1-x gsd-secure-phase 2.1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 2.1 needs 2.1-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 2.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 214 @@@
+phase-02.1-x 2.1-x gsd-secure-phase 2.1 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 2.1 needs the test audit — no 2.1-VALIDATION.md.\nRun: /gsd-validate-phase 2.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 215 @@@
+phase-7.1-x 7.1-x gsd-plan-phase 7.1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7.1 needs 7.1-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 216 @@@
+phase-7.1-x 7.1-x gsd-plan-phase 7.1 (artifact)
+rc=0
+out=""
+err=""
+@@@ 217 @@@
+phase-7.1-x 7.1-x gsd-secure-phase 7.1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7.1 needs 7.1-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 218 @@@
+phase-7.1-x 7.1-x gsd-secure-phase 7.1 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7.1 needs the test audit — no 7.1-VALIDATION.md.\nRun: /gsd-validate-phase 7.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 219 @@@
+phase-7.1-x 07.1-x gsd-plan-phase 7.1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 7.1 needs 07.1-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 7.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 220 @@@
+phase-7.1-x 07.1-x gsd-plan-phase 7.1 (artifact)
+rc=0
+out=""
+err=""
+@@@ 221 @@@
+phase-7.1-x 07.1-x gsd-secure-phase 7.1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7.1 needs 07.1-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 7.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 222 @@@
+phase-7.1-x 07.1-x gsd-secure-phase 7.1 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 7.1 needs the test audit — no 07.1-VALIDATION.md.\nRun: /gsd-validate-phase 7.1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 223 @@@
+phase-12-x 12-x gsd-plan-phase 12 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 12 needs 12-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 12   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 224 @@@
+phase-12-x 12-x gsd-plan-phase 12 (artifact)
+rc=0
+out=""
+err=""
+@@@ 225 @@@
+phase-12-x 12-x gsd-secure-phase 12 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 12 needs 12-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 12   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 226 @@@
+phase-12-x 12-x gsd-secure-phase 12 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 12 needs the test audit — no 12-VALIDATION.md.\nRun: /gsd-validate-phase 12   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 227 @@@
+phase-100-x 100-x gsd-plan-phase 100 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 100 needs 100-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 100   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 228 @@@
+phase-100-x 100-x gsd-plan-phase 100 (artifact)
+rc=0
+out=""
+err=""
+@@@ 229 @@@
+phase-100-x 100-x gsd-secure-phase 100 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 100 needs 100-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 100   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 230 @@@
+phase-100-x 100-x gsd-secure-phase 100 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 100 needs the test audit — no 100-VALIDATION.md.\nRun: /gsd-validate-phase 100   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 231 @@@
+phase-0-x 00-x gsd-plan-phase 0 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 0 needs 00-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 0   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 232 @@@
+phase-0-x 00-x gsd-plan-phase 0 (artifact)
+rc=0
+out=""
+err=""
+@@@ 233 @@@
+phase-0-x 00-x gsd-secure-phase 0 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 0 needs 00-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 0   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 234 @@@
+phase-0-x 00-x gsd-secure-phase 0 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 0 needs the test audit — no 00-VALIDATION.md.\nRun: /gsd-validate-phase 0   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 235 @@@
+phase-1-x 01-x gsd-plan-phase 1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-plan-phase 1 needs 01-CONTEXT.md — discuss-phase has not been done.\nRun: /gsd-discuss-phase 1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 236 @@@
+phase-1-x 01-x gsd-plan-phase 1 (artifact)
+rc=0
+out=""
+err=""
+@@@ 237 @@@
+phase-1-x 01-x gsd-secure-phase 1 (no artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 1 needs 01-REVIEW.md — the code review has not been done.\nRun: /gsd-code-review 1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"
+@@@ 238 @@@
+phase-1-x 01-x gsd-secure-phase 1 (artifact)
+rc=2
+out=""
+err="BLOCKED (flow = strict): /gsd-secure-phase 1 needs the test audit — no 01-VALIDATION.md.\nRun: /gsd-validate-phase 1   (or GSD_SKIP_GUARD=1 if the user asked to skip it)\n"

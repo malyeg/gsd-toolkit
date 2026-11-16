@@ -1,0 +1,48 @@
+@@@ 1 @@@
+# missing
+missing
+@@@ 2 @@@
+# no check → stale
+stale
+@@@ 3 @@@
+# complete
+complete
+@@@ 4 @@@
+# older capture → stale
+stale
+@@@ 5 @@@
+# bad
+bad
+@@@ 6 @@@
+# rules deleted → open
+open
+@@@ 7 @@@
+# answer without text → open
+open
+@@@ 8 @@@
+# 2-byte text → open
+open
+@@@ 9 @@@
+# 3-byte text → complete
+complete
+@@@ 10 @@@
+# "—" alone is 3 bytes after stripping? (kept as bash)
+open
+@@@ 11 @@@
+# same
+open
+@@@ 12 @@@
+# 2-char 3-byte text
+open
+@@@ 13 @@@
+# question unanswered → open
+open
+@@@ 14 @@@
+# duplicate answer
+bad
+@@@ 15 @@@
+# no shots → open
+open
+@@@ 16 @@@
+# pipe in page
+complete

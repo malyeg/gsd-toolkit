@@ -1,0 +1,87 @@
+@@@ 1 @@@
+# repo=
+<TMP>/home/.claude/settings.json	user	gsd	1	PreToolUse	/gone/home-claude/gsd-x.js
+<TMP>/home/.codex/hooks.json	user	gsd	1	PreToolUse	/gone/home-codex/gsd-x.js
+
+@@@ 2 @@@
+# repo=<repo>
+<TMP>/home/.claude/settings.json	user	gsd	1	PreToolUse	/gone/home-claude/gsd-x.js
+<TMP>/home/.codex/hooks.json	user	gsd	1	PreToolUse	/gone/home-codex/gsd-x.js
+<TMP>/repo/.claude/settings.json	project	gsd	1	PreToolUse	<TMP>/repo/.claude/hooks/gsd-guard.js
+<TMP>/repo/.claude/settings.local.json	project	gsd	1	A	/gone/local/gsd-y
+<TMP>/repo/.claude/settings.local.json	project	gsd	2	A	/gone/local/gsd-z
+
+@@@ 3 @@@
+# repo=<norepo>
+<TMP>/home/.claude/settings.json	user	gsd	1	PreToolUse	/gone/home-claude/gsd-x.js
+<TMP>/home/.codex/hooks.json	user	gsd	1	PreToolUse	/gone/home-codex/gsd-x.js
+
+@@@ 4 @@@
+# repo=
+<TMP>/home/.claude/settings.json	user	gsd	1	PreToolUse	/gone/home-claude/gsd-x.js
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+
+@@@ 5 @@@
+# repo=<repo>
+<TMP>/home/.claude/settings.json	user	gsd	1	PreToolUse	/gone/home-claude/gsd-x.js
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+<TMP>/repo/.claude/settings.json	project	gsd	1	PreToolUse	<TMP>/repo/.claude/hooks/gsd-guard.js
+<TMP>/repo/.claude/settings.local.json	project	gsd	1	A	/gone/local/gsd-y
+<TMP>/repo/.claude/settings.local.json	project	gsd	2	A	/gone/local/gsd-z
+
+@@@ 6 @@@
+# repo=<norepo>
+<TMP>/home/.claude/settings.json	user	gsd	1	PreToolUse	/gone/home-claude/gsd-x.js
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+
+@@@ 7 @@@
+# repo=
+<TMP>/claude/settings.json	user	gsd	1	PreToolUse	/gone/user-claude/gsd-x.js
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+
+@@@ 8 @@@
+# repo=<repo>
+<TMP>/claude/settings.json	user	gsd	1	PreToolUse	/gone/user-claude/gsd-x.js
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+<TMP>/repo/.claude/settings.json	project	gsd	1	PreToolUse	<TMP>/repo/.claude/hooks/gsd-guard.js
+<TMP>/repo/.claude/settings.local.json	project	gsd	1	A	/gone/local/gsd-y
+<TMP>/repo/.claude/settings.local.json	project	gsd	2	A	/gone/local/gsd-z
+
+@@@ 9 @@@
+# repo=<norepo>
+<TMP>/claude/settings.json	user	gsd	1	PreToolUse	/gone/user-claude/gsd-x.js
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+
+@@@ 10 @@@
+# repo=
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+
+@@@ 11 @@@
+# repo=<repo>
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+<TMP>/repo/.claude/settings.json	project	gsd	1	PreToolUse	<TMP>/repo/.claude/hooks/gsd-guard.js
+<TMP>/repo/.claude/settings.local.json	project	gsd	1	A	/gone/local/gsd-y
+<TMP>/repo/.claude/settings.local.json	project	gsd	2	A	/gone/local/gsd-z
+
+@@@ 12 @@@
+# repo=<norepo>
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+
+@@@ 13 @@@
+# repo=
+<TMP>/home/.claude/settings.json	user	gsd	1	PreToolUse	/gone/home-claude/gsd-x.js
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+
+@@@ 14 @@@
+# repo=<repo>
+<TMP>/home/.claude/settings.json	user	gsd	1	PreToolUse	/gone/home-claude/gsd-x.js
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+<TMP>/repo/.claude/settings.json	project	gsd	1	PreToolUse	<TMP>/repo/.claude/hooks/gsd-guard.js
+<TMP>/repo/.claude/settings.local.json	project	gsd	1	A	/gone/local/gsd-y
+<TMP>/repo/.claude/settings.local.json	project	gsd	2	A	/gone/local/gsd-z
+
+@@@ 15 @@@
+# repo=<norepo>
+<TMP>/home/.claude/settings.json	user	gsd	1	PreToolUse	/gone/home-claude/gsd-x.js
+<TMP>/codex/hooks.json	user	toolkit	1	SessionStart	/gone/codex/gsdt-rules
+

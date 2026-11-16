@@ -1,0 +1,522 @@
+@@@ 1 @@@
+# workflowFlag nyquist_validation null
+
+@@@ 2 @@@
+# workflowFlag other null
+
+@@@ 3 @@@
+# validation null null
+rc=0
+no 03-VALIDATION.md
+@@@ 4 @@@
+# validation null "---\nnyquist_compliant: true\n---\nbody\n"
+rc=1
+
+@@@ 5 @@@
+# validation null "---\nnyquist_compliant: false\n---\nbody\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 6 @@@
+# validation null "---\nnyquist_compliant: 'True'  # yes\n---\n"
+rc=1
+
+@@@ 7 @@@
+# validation null "---\r\nnyquist_compliant: true\r\n---\r\n"
+rc=1
+
+@@@ 8 @@@
+# validation null "---\nnyquist_compliant: false\n---\n## Validation Audit\n| a |\n"
+rc=1
+
+@@@ 9 @@@
+# validation null "---\nstatus: x\n---\nnyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 10 @@@
+# validation null "nyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 11 @@@
+# validation null "---\nfoo: 1\n---\n\n---\nnyquist_compliant: \"true\"\n---\n"
+rc=1
+
+@@@ 12 @@@
+# validation null "---\nnyquist_compliant:true\n"
+rc=1
+
+@@@ 13 @@@
+# validation null "---\nnyquist_compliant:   TRUE\n---\n"
+rc=1
+
+@@@ 14 @@@
+# validation null "no front matter\n## Validation Audit\n"
+rc=1
+
+@@@ 15 @@@
+# validation null "---\nnyquist_compliant: false\n---\n ## Validation Audit\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 16 @@@
+# workflowFlag nyquist_validation {"workflow":{"nyquist_validation":false}}
+false
+@@@ 17 @@@
+# workflowFlag other {"workflow":{"nyquist_validation":false}}
+
+@@@ 18 @@@
+# validation {"workflow":{"nyquist_validation":false}} null
+rc=1
+
+@@@ 19 @@@
+# validation {"workflow":{"nyquist_validation":false}} "---\nnyquist_compliant: true\n---\nbody\n"
+rc=1
+
+@@@ 20 @@@
+# validation {"workflow":{"nyquist_validation":false}} "---\nnyquist_compliant: false\n---\nbody\n"
+rc=1
+
+@@@ 21 @@@
+# validation {"workflow":{"nyquist_validation":false}} "---\nnyquist_compliant: 'True'  # yes\n---\n"
+rc=1
+
+@@@ 22 @@@
+# validation {"workflow":{"nyquist_validation":false}} "---\r\nnyquist_compliant: true\r\n---\r\n"
+rc=1
+
+@@@ 23 @@@
+# validation {"workflow":{"nyquist_validation":false}} "---\nnyquist_compliant: false\n---\n## Validation Audit\n| a |\n"
+rc=1
+
+@@@ 24 @@@
+# validation {"workflow":{"nyquist_validation":false}} "---\nstatus: x\n---\nnyquist_compliant: true\n"
+rc=1
+
+@@@ 25 @@@
+# validation {"workflow":{"nyquist_validation":false}} "nyquist_compliant: true\n"
+rc=1
+
+@@@ 26 @@@
+# validation {"workflow":{"nyquist_validation":false}} "---\nfoo: 1\n---\n\n---\nnyquist_compliant: \"true\"\n---\n"
+rc=1
+
+@@@ 27 @@@
+# validation {"workflow":{"nyquist_validation":false}} "---\nnyquist_compliant:true\n"
+rc=1
+
+@@@ 28 @@@
+# validation {"workflow":{"nyquist_validation":false}} "---\nnyquist_compliant:   TRUE\n---\n"
+rc=1
+
+@@@ 29 @@@
+# validation {"workflow":{"nyquist_validation":false}} "no front matter\n## Validation Audit\n"
+rc=1
+
+@@@ 30 @@@
+# validation {"workflow":{"nyquist_validation":false}} "---\nnyquist_compliant: false\n---\n ## Validation Audit\n"
+rc=1
+
+@@@ 31 @@@
+# workflowFlag nyquist_validation {"workflow":{"nyquist_validation":true}}
+true
+@@@ 32 @@@
+# workflowFlag other {"workflow":{"nyquist_validation":true}}
+
+@@@ 33 @@@
+# validation {"workflow":{"nyquist_validation":true}} null
+rc=0
+no 03-VALIDATION.md
+@@@ 34 @@@
+# validation {"workflow":{"nyquist_validation":true}} "---\nnyquist_compliant: true\n---\nbody\n"
+rc=1
+
+@@@ 35 @@@
+# validation {"workflow":{"nyquist_validation":true}} "---\nnyquist_compliant: false\n---\nbody\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 36 @@@
+# validation {"workflow":{"nyquist_validation":true}} "---\nnyquist_compliant: 'True'  # yes\n---\n"
+rc=1
+
+@@@ 37 @@@
+# validation {"workflow":{"nyquist_validation":true}} "---\r\nnyquist_compliant: true\r\n---\r\n"
+rc=1
+
+@@@ 38 @@@
+# validation {"workflow":{"nyquist_validation":true}} "---\nnyquist_compliant: false\n---\n## Validation Audit\n| a |\n"
+rc=1
+
+@@@ 39 @@@
+# validation {"workflow":{"nyquist_validation":true}} "---\nstatus: x\n---\nnyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 40 @@@
+# validation {"workflow":{"nyquist_validation":true}} "nyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 41 @@@
+# validation {"workflow":{"nyquist_validation":true}} "---\nfoo: 1\n---\n\n---\nnyquist_compliant: \"true\"\n---\n"
+rc=1
+
+@@@ 42 @@@
+# validation {"workflow":{"nyquist_validation":true}} "---\nnyquist_compliant:true\n"
+rc=1
+
+@@@ 43 @@@
+# validation {"workflow":{"nyquist_validation":true}} "---\nnyquist_compliant:   TRUE\n---\n"
+rc=1
+
+@@@ 44 @@@
+# validation {"workflow":{"nyquist_validation":true}} "no front matter\n## Validation Audit\n"
+rc=1
+
+@@@ 45 @@@
+# validation {"workflow":{"nyquist_validation":true}} "---\nnyquist_compliant: false\n---\n ## Validation Audit\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 46 @@@
+# workflowFlag nyquist_validation {"workflow":{"nyquist_validation":"false"}}
+
+@@@ 47 @@@
+# workflowFlag other {"workflow":{"nyquist_validation":"false"}}
+
+@@@ 48 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} null
+rc=0
+no 03-VALIDATION.md
+@@@ 49 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "---\nnyquist_compliant: true\n---\nbody\n"
+rc=1
+
+@@@ 50 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "---\nnyquist_compliant: false\n---\nbody\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 51 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "---\nnyquist_compliant: 'True'  # yes\n---\n"
+rc=1
+
+@@@ 52 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "---\r\nnyquist_compliant: true\r\n---\r\n"
+rc=1
+
+@@@ 53 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "---\nnyquist_compliant: false\n---\n## Validation Audit\n| a |\n"
+rc=1
+
+@@@ 54 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "---\nstatus: x\n---\nnyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 55 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "nyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 56 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "---\nfoo: 1\n---\n\n---\nnyquist_compliant: \"true\"\n---\n"
+rc=1
+
+@@@ 57 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "---\nnyquist_compliant:true\n"
+rc=1
+
+@@@ 58 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "---\nnyquist_compliant:   TRUE\n---\n"
+rc=1
+
+@@@ 59 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "no front matter\n## Validation Audit\n"
+rc=1
+
+@@@ 60 @@@
+# validation {"workflow":{"nyquist_validation":"false"}} "---\nnyquist_compliant: false\n---\n ## Validation Audit\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 61 @@@
+# workflowFlag nyquist_validation {"workflow":[1]}
+
+@@@ 62 @@@
+# workflowFlag other {"workflow":[1]}
+
+@@@ 63 @@@
+# validation {"workflow":[1]} null
+rc=0
+no 03-VALIDATION.md
+@@@ 64 @@@
+# validation {"workflow":[1]} "---\nnyquist_compliant: true\n---\nbody\n"
+rc=1
+
+@@@ 65 @@@
+# validation {"workflow":[1]} "---\nnyquist_compliant: false\n---\nbody\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 66 @@@
+# validation {"workflow":[1]} "---\nnyquist_compliant: 'True'  # yes\n---\n"
+rc=1
+
+@@@ 67 @@@
+# validation {"workflow":[1]} "---\r\nnyquist_compliant: true\r\n---\r\n"
+rc=1
+
+@@@ 68 @@@
+# validation {"workflow":[1]} "---\nnyquist_compliant: false\n---\n## Validation Audit\n| a |\n"
+rc=1
+
+@@@ 69 @@@
+# validation {"workflow":[1]} "---\nstatus: x\n---\nnyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 70 @@@
+# validation {"workflow":[1]} "nyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 71 @@@
+# validation {"workflow":[1]} "---\nfoo: 1\n---\n\n---\nnyquist_compliant: \"true\"\n---\n"
+rc=1
+
+@@@ 72 @@@
+# validation {"workflow":[1]} "---\nnyquist_compliant:true\n"
+rc=1
+
+@@@ 73 @@@
+# validation {"workflow":[1]} "---\nnyquist_compliant:   TRUE\n---\n"
+rc=1
+
+@@@ 74 @@@
+# validation {"workflow":[1]} "no front matter\n## Validation Audit\n"
+rc=1
+
+@@@ 75 @@@
+# validation {"workflow":[1]} "---\nnyquist_compliant: false\n---\n ## Validation Audit\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 76 @@@
+# workflowFlag nyquist_validation {"workflow":null}
+
+@@@ 77 @@@
+# workflowFlag other {"workflow":null}
+
+@@@ 78 @@@
+# validation {"workflow":null} null
+rc=0
+no 03-VALIDATION.md
+@@@ 79 @@@
+# validation {"workflow":null} "---\nnyquist_compliant: true\n---\nbody\n"
+rc=1
+
+@@@ 80 @@@
+# validation {"workflow":null} "---\nnyquist_compliant: false\n---\nbody\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 81 @@@
+# validation {"workflow":null} "---\nnyquist_compliant: 'True'  # yes\n---\n"
+rc=1
+
+@@@ 82 @@@
+# validation {"workflow":null} "---\r\nnyquist_compliant: true\r\n---\r\n"
+rc=1
+
+@@@ 83 @@@
+# validation {"workflow":null} "---\nnyquist_compliant: false\n---\n## Validation Audit\n| a |\n"
+rc=1
+
+@@@ 84 @@@
+# validation {"workflow":null} "---\nstatus: x\n---\nnyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 85 @@@
+# validation {"workflow":null} "nyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 86 @@@
+# validation {"workflow":null} "---\nfoo: 1\n---\n\n---\nnyquist_compliant: \"true\"\n---\n"
+rc=1
+
+@@@ 87 @@@
+# validation {"workflow":null} "---\nnyquist_compliant:true\n"
+rc=1
+
+@@@ 88 @@@
+# validation {"workflow":null} "---\nnyquist_compliant:   TRUE\n---\n"
+rc=1
+
+@@@ 89 @@@
+# validation {"workflow":null} "no front matter\n## Validation Audit\n"
+rc=1
+
+@@@ 90 @@@
+# validation {"workflow":null} "---\nnyquist_compliant: false\n---\n ## Validation Audit\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 91 @@@
+# workflowFlag nyquist_validation [1,2]
+
+@@@ 92 @@@
+# workflowFlag other [1,2]
+
+@@@ 93 @@@
+# validation [1,2] null
+rc=0
+no 03-VALIDATION.md
+@@@ 94 @@@
+# validation [1,2] "---\nnyquist_compliant: true\n---\nbody\n"
+rc=1
+
+@@@ 95 @@@
+# validation [1,2] "---\nnyquist_compliant: false\n---\nbody\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 96 @@@
+# validation [1,2] "---\nnyquist_compliant: 'True'  # yes\n---\n"
+rc=1
+
+@@@ 97 @@@
+# validation [1,2] "---\r\nnyquist_compliant: true\r\n---\r\n"
+rc=1
+
+@@@ 98 @@@
+# validation [1,2] "---\nnyquist_compliant: false\n---\n## Validation Audit\n| a |\n"
+rc=1
+
+@@@ 99 @@@
+# validation [1,2] "---\nstatus: x\n---\nnyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 100 @@@
+# validation [1,2] "nyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 101 @@@
+# validation [1,2] "---\nfoo: 1\n---\n\n---\nnyquist_compliant: \"true\"\n---\n"
+rc=1
+
+@@@ 102 @@@
+# validation [1,2] "---\nnyquist_compliant:true\n"
+rc=1
+
+@@@ 103 @@@
+# validation [1,2] "---\nnyquist_compliant:   TRUE\n---\n"
+rc=1
+
+@@@ 104 @@@
+# validation [1,2] "no front matter\n## Validation Audit\n"
+rc=1
+
+@@@ 105 @@@
+# validation [1,2] "---\nnyquist_compliant: false\n---\n ## Validation Audit\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 106 @@@
+# workflowFlag nyquist_validation not json
+
+@@@ 107 @@@
+# workflowFlag other not json
+
+@@@ 108 @@@
+# validation not json null
+rc=0
+no 03-VALIDATION.md
+@@@ 109 @@@
+# validation not json "---\nnyquist_compliant: true\n---\nbody\n"
+rc=1
+
+@@@ 110 @@@
+# validation not json "---\nnyquist_compliant: false\n---\nbody\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 111 @@@
+# validation not json "---\nnyquist_compliant: 'True'  # yes\n---\n"
+rc=1
+
+@@@ 112 @@@
+# validation not json "---\r\nnyquist_compliant: true\r\n---\r\n"
+rc=1
+
+@@@ 113 @@@
+# validation not json "---\nnyquist_compliant: false\n---\n## Validation Audit\n| a |\n"
+rc=1
+
+@@@ 114 @@@
+# validation not json "---\nstatus: x\n---\nnyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 115 @@@
+# validation not json "nyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 116 @@@
+# validation not json "---\nfoo: 1\n---\n\n---\nnyquist_compliant: \"true\"\n---\n"
+rc=1
+
+@@@ 117 @@@
+# validation not json "---\nnyquist_compliant:true\n"
+rc=1
+
+@@@ 118 @@@
+# validation not json "---\nnyquist_compliant:   TRUE\n---\n"
+rc=1
+
+@@@ 119 @@@
+# validation not json "no front matter\n## Validation Audit\n"
+rc=1
+
+@@@ 120 @@@
+# validation not json "---\nnyquist_compliant: false\n---\n ## Validation Audit\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 121 @@@
+# workflowFlag nyquist_validation {}
+
+@@@ 122 @@@
+# workflowFlag other {}
+
+@@@ 123 @@@
+# validation {} null
+rc=0
+no 03-VALIDATION.md
+@@@ 124 @@@
+# validation {} "---\nnyquist_compliant: true\n---\nbody\n"
+rc=1
+
+@@@ 125 @@@
+# validation {} "---\nnyquist_compliant: false\n---\nbody\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 126 @@@
+# validation {} "---\nnyquist_compliant: 'True'  # yes\n---\n"
+rc=1
+
+@@@ 127 @@@
+# validation {} "---\r\nnyquist_compliant: true\r\n---\r\n"
+rc=1
+
+@@@ 128 @@@
+# validation {} "---\nnyquist_compliant: false\n---\n## Validation Audit\n| a |\n"
+rc=1
+
+@@@ 129 @@@
+# validation {} "---\nstatus: x\n---\nnyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 130 @@@
+# validation {} "nyquist_compliant: true\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)
+@@@ 131 @@@
+# validation {} "---\nfoo: 1\n---\n\n---\nnyquist_compliant: \"true\"\n---\n"
+rc=1
+
+@@@ 132 @@@
+# validation {} "---\nnyquist_compliant:true\n"
+rc=1
+
+@@@ 133 @@@
+# validation {} "---\nnyquist_compliant:   TRUE\n---\n"
+rc=1
+
+@@@ 134 @@@
+# validation {} "no front matter\n## Validation Audit\n"
+rc=1
+
+@@@ 135 @@@
+# validation {} "---\nnyquist_compliant: false\n---\n ## Validation Audit\n"
+rc=0
+03-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit)

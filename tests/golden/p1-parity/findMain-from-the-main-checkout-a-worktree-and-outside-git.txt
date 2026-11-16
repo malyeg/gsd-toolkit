@@ -1,0 +1,18 @@
+@@@ 1 @@@
+# main <TMP>/main repo
+<TMP>/main repo
+@@@ 2 @@@
+# main <TMP>/wt dir
+<TMP>/main repo
+@@@ 3 @@@
+# main <TMP>/main repo/.git
+<TMP>/main repo
+@@@ 4 @@@
+# main <TMP>
+
+@@@ 5 @@@
+# main /nonexistent
+
+@@@ 6 @@@
+# main of no arg
+<TMP>/main repo

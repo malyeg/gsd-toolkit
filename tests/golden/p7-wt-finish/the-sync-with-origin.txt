@@ -1,0 +1,264 @@
+@@@ 1 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+
+--- stderr
+fatal: couldn't find remote ref main
+error: origin has no 'main' branch — push it first (git -C "<T>/shop" push -u origin main), or set base = <branch> in .gsd.conf. The phase worktree is kept.
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+fatal: ambiguous argument 'main': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 2 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+
+--- stderr
+fatal: '<T>/gone.git' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+error: could not synchronize 'main'; resolve remote connectivity or divergence, then retry finish. The phase worktree is kept.
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 3 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+
+--- stderr
+hint: Diverging branches can't be fast-forwarded, you need to either:
+hint:
+hint: 	git merge --no-ff
+hint:
+hint: or:
+hint:
+hint: 	git rebase
+hint:
+hint: Disable this message with "git config set advice.diverging false"
+fatal: Not possible to fast-forward, aborting.
+error: could not synchronize 'main'; resolve remote connectivity or divergence, then retry finish. The phase worktree is kept.
+
+--- files left behind
+── log
+main change
+feature
+theirs
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+theirs
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 4 @@@
+step 1 (gsdt-wt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Updating 5c05f5c..7db14e0
+Fast-forward
+ o.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 o.txt
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 259a7f0).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+theirs
+feature
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+theirs
+feature
+init
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+

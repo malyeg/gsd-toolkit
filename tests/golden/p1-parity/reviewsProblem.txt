@@ -1,0 +1,363 @@
+@@@ 1 @@@
+# empty/codex
+rc=0
+Codex Review is empty
+@@@ 2 @@@
+# empty/claude
+rc=0
+Codex Review is empty
+@@@ 3 @@@
+# empty/
+rc=0
+Codex Review is empty
+@@@ 4 @@@
+# empty/Codex
+rc=0
+Codex Review is empty
+@@@ 5 @@@
+# empty/other
+rc=0
+Codex Review is empty
+@@@ 6 @@@
+# limit/codex
+rc=0
+Codex Review — usage limit hit
+@@@ 7 @@@
+# limit/claude
+rc=0
+Codex Review — usage limit hit
+@@@ 8 @@@
+# limit/
+rc=0
+Codex Review — usage limit hit
+@@@ 9 @@@
+# limit/Codex
+rc=0
+Codex Review — usage limit hit
+@@@ 10 @@@
+# limit/other
+rc=0
+Codex Review — usage limit hit
+@@@ 11 @@@
+# longQuote/codex
+rc=1
+
+@@@ 12 @@@
+# longQuote/claude
+rc=1
+
+@@@ 13 @@@
+# longQuote/
+rc=1
+
+@@@ 14 @@@
+# longQuote/Codex
+rc=1
+
+@@@ 15 @@@
+# longQuote/other
+rc=1
+
+@@@ 16 @@@
+# allFailed/codex
+rc=0
+Codex Review is empty
+@@@ 17 @@@
+# allFailed/claude
+rc=0
+Claude Review — reviewer failed
+@@@ 18 @@@
+# allFailed/
+rc=0
+Codex Review is empty
+@@@ 19 @@@
+# allFailed/Codex
+rc=0
+Codex Review is empty
+@@@ 20 @@@
+# allFailed/other
+rc=0
+Codex Review is empty
+@@@ 21 @@@
+# oneOk/codex
+rc=1
+
+@@@ 22 @@@
+# oneOk/claude
+rc=0
+Claude Review is empty
+@@@ 23 @@@
+# oneOk/
+rc=1
+
+@@@ 24 @@@
+# oneOk/Codex
+rc=1
+
+@@@ 25 @@@
+# oneOk/other
+rc=1
+
+@@@ 26 @@@
+# codexOkClaudeBad/codex
+rc=1
+
+@@@ 27 @@@
+# codexOkClaudeBad/claude
+rc=0
+Claude Review — usage limit hit
+@@@ 28 @@@
+# codexOkClaudeBad/
+rc=1
+
+@@@ 29 @@@
+# codexOkClaudeBad/Codex
+rc=1
+
+@@@ 30 @@@
+# codexOkClaudeBad/other
+rc=1
+
+@@@ 31 @@@
+# frontmatter/codex
+rc=1
+
+@@@ 32 @@@
+# frontmatter/claude
+rc=1
+
+@@@ 33 @@@
+# frontmatter/
+rc=1
+
+@@@ 34 @@@
+# frontmatter/Codex
+rc=1
+
+@@@ 35 @@@
+# frontmatter/other
+rc=1
+
+@@@ 36 @@@
+# handwritten/codex
+rc=1
+
+@@@ 37 @@@
+# handwritten/claude
+rc=1
+
+@@@ 38 @@@
+# handwritten/
+rc=1
+
+@@@ 39 @@@
+# handwritten/Codex
+rc=1
+
+@@@ 40 @@@
+# handwritten/other
+rc=1
+
+@@@ 41 @@@
+# planHeadings/codex
+rc=1
+
+@@@ 42 @@@
+# planHeadings/claude
+rc=1
+
+@@@ 43 @@@
+# planHeadings/
+rc=1
+
+@@@ 44 @@@
+# planHeadings/Codex
+rc=1
+
+@@@ 45 @@@
+# planHeadings/other
+rc=1
+
+@@@ 46 @@@
+# instance/codex
+rc=0
+Codex Review (gpt-5) — reviewer failed
+@@@ 47 @@@
+# instance/claude
+rc=0
+Codex Review (gpt-5) — reviewer failed
+@@@ 48 @@@
+# instance/
+rc=0
+Codex Review (gpt-5) — reviewer failed
+@@@ 49 @@@
+# instance/Codex
+rc=0
+Codex Review (gpt-5) — reviewer failed
+@@@ 50 @@@
+# instance/other
+rc=0
+Codex Review (gpt-5) — reviewer failed
+@@@ 51 @@@
+# crlf/codex
+rc=0
+Codex Review — usage limit hit
+@@@ 52 @@@
+# crlf/claude
+rc=0
+Codex Review — usage limit hit
+@@@ 53 @@@
+# crlf/
+rc=0
+Codex Review — usage limit hit
+@@@ 54 @@@
+# crlf/Codex
+rc=0
+Codex Review — usage limit hit
+@@@ 55 @@@
+# crlf/other
+rc=0
+Codex Review — usage limit hit
+@@@ 56 @@@
+# ruleThenVerification/codex
+rc=1
+
+@@@ 57 @@@
+# ruleThenVerification/claude
+rc=0
+Claude Review is empty
+@@@ 58 @@@
+# ruleThenVerification/
+rc=1
+
+@@@ 59 @@@
+# ruleThenVerification/Codex
+rc=1
+
+@@@ 60 @@@
+# ruleThenVerification/other
+rc=1
+
+@@@ 61 @@@
+# onlyHeadings/codex
+rc=0
+Codex Review is empty
+@@@ 62 @@@
+# onlyHeadings/claude
+rc=0
+Claude Review is empty
+@@@ 63 @@@
+# onlyHeadings/
+rc=0
+Codex Review is empty
+@@@ 64 @@@
+# onlyHeadings/Codex
+rc=0
+Codex Review is empty
+@@@ 65 @@@
+# onlyHeadings/other
+rc=0
+Codex Review is empty
+@@@ 66 @@@
+# nested/codex
+rc=1
+
+@@@ 67 @@@
+# nested/claude
+rc=1
+
+@@@ 68 @@@
+# nested/
+rc=1
+
+@@@ 69 @@@
+# nested/Codex
+rc=1
+
+@@@ 70 @@@
+# nested/other
+rc=1
+
+@@@ 71 @@@
+# noNewline/codex
+rc=0
+Codex Review — usage limit hit
+@@@ 72 @@@
+# noNewline/claude
+rc=0
+Codex Review — usage limit hit
+@@@ 73 @@@
+# noNewline/
+rc=0
+Codex Review — usage limit hit
+@@@ 74 @@@
+# noNewline/Codex
+rc=0
+Codex Review — usage limit hit
+@@@ 75 @@@
+# noNewline/other
+rc=0
+Codex Review — usage limit hit
+@@@ 76 @@@
+# two/codex
+rc=0
+Codex Review is empty
+@@@ 77 @@@
+# two/claude
+rc=1
+
+@@@ 78 @@@
+# two/
+rc=1
+
+@@@ 79 @@@
+# two/Codex
+rc=0
+Codex Review is empty
+@@@ 80 @@@
+# two/other
+rc=1
+
+@@@ 81 @@@
+# emptyFile/codex
+rc=1
+
+@@@ 82 @@@
+# emptyFile/claude
+rc=1
+
+@@@ 83 @@@
+# emptyFile/
+rc=1
+
+@@@ 84 @@@
+# emptyFile/Codex
+rc=1
+
+@@@ 85 @@@
+# emptyFile/other
+rc=1
+
+@@@ 86 @@@
+# spaces/codex
+rc=0
+ Review — reviewer failed
+@@@ 87 @@@
+# spaces/claude
+rc=0
+ Review — reviewer failed
+@@@ 88 @@@
+# spaces/
+rc=0
+ Review — reviewer failed
+@@@ 89 @@@
+# spaces/Codex
+rc=0
+ Review — reviewer failed
+@@@ 90 @@@
+# spaces/other
+rc=0
+ Review — reviewer failed
+@@@ 91 @@@
+# missing file
+1

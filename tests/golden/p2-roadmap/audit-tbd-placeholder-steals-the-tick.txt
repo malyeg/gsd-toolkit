@@ -1,0 +1,5 @@
+@@@ 1 @@@
+rc=0
+out="NOROW|29\nTICK|29|a non-phase line, \"TBD (run /gsd:plan-phase 29 to break dow\"\n"
+err=""
+file="- [ ] **Phase 1: One**\n### Phase 1: One\n### Phase 29: Next\n- [ ] TBD (run /gsd:plan-phase 29 to break down)\n| Phase | Status |\n|---|---|\n| 1. One | x |\n| 29. Next | x |\n"

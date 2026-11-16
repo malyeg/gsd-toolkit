@@ -1,0 +1,96 @@
+@@@ 1 @@@
+run [--json --repo {R}]
+rc=1
+--- stdout
+      · ROADMAP.md: duplicate checklist entry for Phase 1
+{"session_model":"","gsd_repo":true,"context":{"agents":[],"big_files":[]},"safe":["init","repair","baseref"],"repo":"<W>/repo","configured":["claude"],"provider":{"name":"claude","command":"claude","available":false,"instruction_file":"CLAUDE.md","instruction_integrated":false,"skill_installed":false,"command_guard":true,"native_hook":"absent"},"count":11,"findings":[{"code":"T051","message":"provider executable 'claude' is unavailable (print-only still works)","fix":"install claude or set claude_command in .gsd.conf"},{"code":"T052","message":"CLAUDE.md integration is missing, malformed or legacy","fix":"gsdt-init --no-launch"},{"code":"T057","message":"configured provider claude executable 'claude' is unavailable","fix":"install it, set claude_command, or use print-only"},{"code":"T058","message":"claude instruction adapter is missing or malformed in CLAUDE.md","fix":"gsdt-init --no-launch"},{"code":"T010","message":"shims: 5 missing, 0 out of date","fix":"gsdt-init"},{"code":"T012","message":".gitattributes missing the .planning merge rules","fix":"gsdt-init"},{"code":"T013","message":"merge driver not registered (per-clone; git config is not versioned)","fix":"gsdt-init"},{"code":"T014","message":"no post-merge hook — a plain 'git pull' is unguarded","fix":"gsdt-init"},{"code":"T020","message":".planning contradicts itself (union-merge damage)","fix":"gsdt-planning-repair"},{"code":"T023","message":"Phase 1 is missing from the Progress table","fix":"edit .planning/ROADMAP.md"},{"code":"T034","message":"worktree.baseRef is not set (in: main checkout) — /gsd-execute-phase runs a wave's plans one at a time there","fix":"gsdt-doctor --fix   (adds worktree.baseRef = \"head\" to .claude/settings.local.json; other keys kept)"}],"updates":[],"notes":["claude native hook absent — inspect provider settings, then gsdt-init --no-launch","claude skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent claude","cross-references in a checklist row must read 'phase-13', never 'Phase 13'","claude: for CLAUDE.md, memory, MCP servers and plugins, run /doctor and /skill-doctor in a Claude session; /context shows the real numbers"]}
+--- stderr
+
+@@@ 2 @@@
+run [--repo {R}]
+rc=1
+--- stdout
+[1mgsdt-doctor[0m — repo
+<W>/repo
+
+[1mtoolkit[0m
+  [32m✔[0m PATH commands resolve to <W>/pkg
+  [32m✔[0m gsd-core  (<W>/stub/gsd_run)
+  [32m✔[0m no GSD hook runs a missing file
+
+[1mrepo setup[0m
+  [32m✔[0m session model: CLI default (model availability is checked by the provider CLI)
+  [32m✔[0m provider: claude (command: claude)
+  [31m✖[0m provider executable 'claude' is unavailable (print-only still works) [2m→ install claude or set claude_command in .gsd.conf [T051][0m
+  [31m✖[0m CLAUDE.md integration is missing, malformed or legacy [2m→ gsdt-init --no-launch [T052][0m
+  • claude native hook absent — inspect provider settings, then gsdt-init --no-launch
+  [32m✔[0m mandatory command-level guards are active
+  [31m✖[0m configured provider claude executable 'claude' is unavailable [2m→ install it, set claude_command, or use print-only [T057][0m
+  • claude skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent claude
+  [31m✖[0m claude instruction adapter is missing or malformed in CLAUDE.md [2m→ gsdt-init --no-launch [T058][0m
+  [32m✔[0m .gsd.conf (base develop, worktrees repo-worktrees)
+  [32m✔[0m uses the gsdt-* command names
+  [31m✖[0m shims: 5 missing, 0 out of date [2m→ gsdt-init [T010][0m
+  [31m✖[0m .gitattributes missing the .planning merge rules [2m→ gsdt-init [T012][0m
+  [31m✖[0m merge driver not registered (per-clone; git config is not versioned) [2m→ gsdt-init [T013][0m
+  [31m✖[0m no post-merge hook — a plain 'git pull' is unguarded [2m→ gsdt-init [T014][0m
+
+[1mplanning state[0m
+  [31m✖[0m .planning contradicts itself (union-merge damage) [2m→ gsdt-planning-repair [T020][0m
+      · ROADMAP.md: duplicate checklist entry for Phase 1
+  [31m✖[0m Phase 1 is missing from the Progress table [2m→ edit .planning/ROADMAP.md [T023][0m
+  • cross-references in a checklist row must read 'phase-13', never 'Phase 13'
+
+[1mcontext[0m
+  • claude: for CLAUDE.md, memory, MCP servers and plugins, run /doctor and /skill-doctor in a Claude session; /context shows the real numbers
+
+[1mworktrees[0m
+  [31m✖[0m worktree.baseRef is not set (in: main checkout) — /gsd-execute-phase runs a wave's plans one at a time there [2m→ gsdt-doctor --fix   (adds worktree.baseRef = "head" to .claude/settings.local.json; other keys kept) [T034][0m
+  [32m✔[0m no stale worktree records
+  [32m✔[0m every phase and batch branch has its worktree
+  [32m✔[0m main checkout is on 'develop'
+
+[31m11 finding(s).[0m Run:
+
+  cd <W>/repo
+  install claude or set claude_command in .gsd.conf
+  gsdt-init --no-launch
+  install it, set claude_command, or use print-only
+  gsdt-init
+  gsdt-planning-repair
+  edit .planning/ROADMAP.md
+  gsdt-doctor --fix   (adds worktree.baseRef = "head" to .claude/settings.local.json; other keys kept)
+
+(then re-run gsdt-doctor to confirm)
+Some of these are safe to run for you:  gsdt-doctor --fix
+--- stderr
+
+@@@ 3 @@@
+### repo/.git/config
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = <W>/repo.origin.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "develop"]
+	remote = origin
+	merge = refs/heads/develop
+
+### repo/.gsd.conf
+base = develop
+
+### repo/.planning/ROADMAP.md
+# Roadmap
+
+- [ ] **Phase 1: One**
+- [x] **Phase 1: One**
+
+### Phase 1: One
+
+**Plans:** 1/1 plans complete
+
+**Plans:** 0/1 plans
+

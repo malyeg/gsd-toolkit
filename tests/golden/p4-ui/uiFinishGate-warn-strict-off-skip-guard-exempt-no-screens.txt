@@ -1,0 +1,82 @@
+@@@ 1 @@@
+# no screens
+ok=true
+stderr:
+
+@@@ 2 @@@
+# screens, nothing done (warn)
+ok=true
+stderr:
+⚠ phase 5 has screens and its UI steps are open: the rendered pages were never checked (no 05-UI-CHECK.md) — next: gsdt-ui check 5
+
+@@@ 3 @@@
+# screens, nothing done (strict)
+ok=false
+stderr:
+✗ phase 5 has screens and its UI steps are open (ui_gates = strict): the rendered pages were never checked (no 05-UI-CHECK.md).
+  In the phase worktree: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)
+
+@@@ 4 @@@
+# screens, nothing done (off)
+ok=true
+stderr:
+
+@@@ 5 @@@
+# strict + GSD_SKIP_GUARD
+ok=true
+stderr:
+⚠ phase 5 has screens and its UI steps are open: the rendered pages were never checked (no 05-UI-CHECK.md) — next: gsdt-ui check 5
+  (GSD_SKIP_GUARD=1 — finishing anyway)
+
+@@@ 6 @@@
+# strict + GSD_SKIP_GUARD=0
+ok=false
+stderr:
+✗ phase 5 has screens and its UI steps are open (ui_gates = strict): the rendered pages were never checked (no 05-UI-CHECK.md).
+  In the phase worktree: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)
+
+@@@ 7 @@@
+# strict, all done
+ok=true
+stderr:
+
+@@@ 8 @@@
+# strict, check failed
+ok=false
+stderr:
+✗ phase 5 has screens and its UI steps are open (ui_gates = strict): the check found 2 problem(s) — see 05-UI-CHECK.md.
+  In the phase worktree: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)
+
+@@@ 9 @@@
+# warn, look open
+ok=true
+stderr:
+⚠ phase 5 has screens and its UI steps are open: nobody wrote down what the pictures show (no 05-UI-LOOK.md) — next: gsdt-ui look 5, then answer every line
+
+@@@ 10 @@@
+# strict, approval open
+ok=false
+stderr:
+✗ phase 5 has screens and its UI steps are open (ui_gates = strict): the user has not approved the pages.
+  In the phase worktree: show the user the sheet (gsdt-ui sheet 5); on a yes: gsdt-ui approve 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)
+
+@@@ 11 @@@
+# strict, exempt (review on base)
+ok=true
+stderr:
+
+@@@ 12 @@@
+# branch develop
+ok=true
+stderr:
+
+@@@ 13 @@@
+# branch phase-9-nothing
+ok=true
+stderr:
+
+@@@ 14 @@@
+# branch phase-5
+ok=true
+stderr:
+

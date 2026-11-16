@@ -1,38 +1,30 @@
-// P4 parity (lib/ui.sh → src/ui.ts): every gsd_ui_* function in bash and its
-// TypeScript twin on the same fixture repos; outputs (and rc where it means
-// something) must match byte for byte. Run: node --test tests/ts/p4-ui.test.ts
+// P4 (src/ui.ts): every ui function on fixture repos; outputs (and rc where it means
+// something) are checked against saved goldens in tests/golden/p4-ui/.
+// Run: node --test tests/ts/p4-ui.test.ts
+// Regenerate with UPDATE_GOLDEN=1 (from the new code only); review a regenerated golden by diff.
 import assert from 'node:assert/strict';
-import { chmodSync, existsSync, mkdirSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, readFileSync, realpathSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { test } from 'node:test';
+import { golden, test } from './golden.ts';
 import * as U from '../../src/ui.ts';
 import { finishGates } from '../../src/common.ts';
-import { bash, chomp, repo, sh, tmp, withEnv, write } from './helpers.ts';
+import { repo, sh, tmp, withEnv, write } from './helpers.ts';
 
 type Env = Record<string, string | undefined>;
 
-/** bash side: the function's stdout (as `$( )` sees it), rc, stderr */
-function b(fn: string, args: string[], env: Env = {}): { out: string; rc: number; err: string } {
-  const e: Record<string, string> = {};
-  const unset: string[] = [];
-  for (const [k, v] of Object.entries(env)) {
-    if (v === undefined) unset.push(k);
-    else e[k] = v;
-  }
-  const r = bash(`${unset.map((k) => `unset ${k};`).join(' ')} ${fn} "$@"`, args, e);
-  return { out: chomp(r.out), rc: r.rc, err: r.err };
-}
-/** Same function in bash and TS: stdout equal. */
-function same(label: string, fn: string, args: string[], ts: () => string, env: Env = {}): void {
-  const bo = b(fn, args, env);
+// the temp dir spelled one way (macOS: /var/folders vs /private/var/folders), so goldenNorm sees it
+const fix = (t: string): string => t.split(realpathSync(tmpdir())).join(tmpdir());
+const gold = (text: string): void => golden(fix(text));
+/** The TS function's stdout against its golden. */
+function same(label: string, ts: () => string, env: Env = {}): void {
   const to = withEnv(env, ts);
-  assert.equal(to, bo.out, `${label}: ${fn} ${JSON.stringify(args)}`);
+  gold(`# ${label}\n${to}`);
 }
-/** Predicate: rc 0 = true. */
-function sameRc(label: string, fn: string, args: string[], ts: () => boolean, env: Env = {}): void {
-  const bo = b(fn, args, env);
+/** A predicate's answer. */
+function sameRc(label: string, ts: () => boolean, env: Env = {}): void {
   const to = withEnv(env, ts);
-  assert.equal(to, bo.rc === 0, `${label}: ${fn} ${JSON.stringify(args)}`);
+  gold(`# ${label}\n${to}`);
 }
 
 const git = (cwd: string, ...a: string[]): string => sh(cwd, 'git', ['-c', 'user.name=t', '-c', 'user.email=t@t', ...a]);
@@ -76,8 +68,8 @@ function fixApproval(pd: string, p: string, capture = 'cap1'): void {
 test('uiGates / design file + state', () => {
   for (const conf of ['', 'ui_gates = strict\n', 'ui_gates = off\n', 'ui_gates = warn\n', 'ui_gates = bogus\n']) {
     const { r } = proj(conf);
-    same(`gates ${conf}`, 'gsd_ui_gates', [r], () => U.uiGates(r));
-    same('design_file', 'gsd_ui_design_file', [r], () => U.uiDesignFile(r));
+    same(`gates ${conf}`, () => U.uiGates(r));
+    same('design_file', () => U.uiDesignFile(r));
   }
   // a worktree sees the main checkout's conf
   const { r } = proj('ui_gates = strict\n');
@@ -85,20 +77,20 @@ test('uiGates / design file + state', () => {
   commitAll(r);
   const wt = path.join(tmp(), 'wt');
   git(r, 'worktree', 'add', '-q', '-b', 'phase-5-x', wt);
-  same('gates from a linked worktree', 'gsd_ui_gates', [wt], () => U.uiGates(wt));
+  same('gates from a linked worktree', () => U.uiGates(wt));
   // states
   const { r: r2 } = proj();
-  same('design missing', 'gsd_ui_design_state', [r2], () => U.uiDesignState(r2));
+  same('design missing', () => U.uiDesignState(r2));
   assert.equal(U.uiDesignState(r2), 'missing');
   U.uiScaffoldDesign(r2);
-  same('design stub', 'gsd_ui_design_state', [r2], () => U.uiDesignState(r2));
+  same('design stub', () => U.uiDesignState(r2));
   assert.equal(U.uiDesignState(r2), 'stub');
   writeFileSync(`${r2}/.planning/design/DESIGN.md`, '# Design\n\nfilled\n');
-  same('design ok', 'gsd_ui_design_state', [r2], () => U.uiDesignState(r2));
+  same('design ok', () => U.uiDesignState(r2));
   assert.equal(U.uiDesignState(r2), 'ok');
   writeFileSync(`${r2}/.planning/design/DESIGN.md`, 'x\n<!-- gsd:design-stub more -->\n');
   assert.equal(U.uiDesignState(r2), 'stub');
-  same('design stub inline', 'gsd_ui_design_state', [r2], () => U.uiDesignState(r2));
+  same('design stub inline', () => U.uiDesignState(r2));
 });
 
 test('uiField / uiFields / uiFm', () => {
@@ -121,21 +113,21 @@ test('uiField / uiFields / uiFm', () => {
   cases.forEach((c, i) => {
     const f = write(`${d}/f${i}.md`, c);
     for (const key of ['sketch', 'status', 'code', 'a']) {
-      same(`field ${i} ${key}`, 'gsd_ui_field', [f, key], () => U.uiField(f, key));
-      same(`fm ${i} ${key}`, 'gsd_ui_fm', [f, key], () => U.uiFm(f, key));
-      same(`fields ${i} ${key}`, 'gsd_ui_fields', [f, key], () => U.uiFields(f, key).join('\n'));
+      same(`field ${i} ${key}`, () => U.uiField(f, key));
+      same(`fm ${i} ${key}`, () => U.uiFm(f, key));
+      same(`fields ${i} ${key}`, () => U.uiFields(f, key).join('\n'));
     }
   });
-  same('field missing file', 'gsd_ui_field', [`${d}/none`, 'a'], () => U.uiField(`${d}/none`, 'a'));
-  same('fm missing file', 'gsd_ui_fm', [`${d}/none`, 'a'], () => U.uiFm(`${d}/none`, 'a'));
-  same('fields missing file', 'gsd_ui_fields', [`${d}/none`, 'a'], () => U.uiFields(`${d}/none`, 'a').join('\n'));
+  same('field missing file', () => U.uiField(`${d}/none`, 'a'));
+  same('fm missing file', () => U.uiFm(`${d}/none`, 'a'));
+  same('fields missing file', () => U.uiFields(`${d}/none`, 'a').join('\n'));
 });
 
 test('uiWinner / uiLayoutState — every state', () => {
   const { r, pd } = proj();
   const lay = `${pd}/05-LAYOUT.md`;
   const st = (label: string): string => {
-    same(label, 'gsd_ui_layout_state', [r, pd, '05'], () => U.uiLayoutState(r, pd, '05'));
+    same(label, () => U.uiLayoutState(r, pd, '05'));
     return U.uiLayoutState(r, pd, '05');
   };
   assert.equal(st('missing'), 'missing');
@@ -165,7 +157,7 @@ test('uiWinner / uiLayoutState — every state', () => {
   ];
   for (const [readme, want] of winners) {
     write(`${sk}/README.md`, readme);
-    same(`winner ${JSON.stringify(readme)}`, 'gsd_ui_winner', [sk], () => U.uiWinner(sk));
+    same(`winner ${JSON.stringify(readme)}`, () => U.uiWinner(sk));
     assert.equal(st(`readme ${JSON.stringify(readme)}`), want === 'ok' ? 'ok' : want);
   }
   write(`${sk}/README.md`, '---\nwinner: v2\n---\n');
@@ -175,7 +167,7 @@ test('uiWinner / uiLayoutState — every state', () => {
   assert.equal(st('ok'), 'ok');
   assert.equal(U.uiWinner(`${r}/nodir`), '');
   // shots
-  const sh1 = (): void => same('shots', 'gsd_ui_shots_state', [pd, '05'], () => U.uiShotsState(pd, '05'));
+  const sh1 = (): void => same('shots', () => U.uiShotsState(pd, '05'));
   sh1();
   write(`${pd}/05-SHOTS.md`, 'taken: x\n');
   sh1();
@@ -189,83 +181,81 @@ test('uiWinner / uiLayoutState — every state', () => {
 
 test('uiHasScreens / uiPhaseScreens', () => {
   const { r, pd } = proj();
-  sameRc('none', 'gsd_ui_has_screens', [r], () => U.uiHasScreens(r));
-  sameRc('phase none', 'gsd_ui_phase_screens', [pd, '05'], () => U.uiPhaseScreens(pd, '05'));
+  sameRc('none', () => U.uiHasScreens(r));
+  sameRc('phase none', () => U.uiPhaseScreens(pd, '05'));
   write(`${pd}/05-LAYOUT.md`, 'x');
-  sameRc('layout', 'gsd_ui_has_screens', [r], () => U.uiHasScreens(r));
-  sameRc('phase layout', 'gsd_ui_phase_screens', [pd, '05'], () => U.uiPhaseScreens(pd, '05'));
+  sameRc('layout', () => U.uiHasScreens(r));
+  sameRc('phase layout', () => U.uiPhaseScreens(pd, '05'));
   assert.equal(U.uiHasScreens(r), true);
   const { r: r2, pd: pd2 } = proj();
   write(`${pd2}/05-UI-SPEC.md`, 'x');
-  sameRc('spec', 'gsd_ui_has_screens', [r2], () => U.uiHasScreens(r2));
-  sameRc('phase spec', 'gsd_ui_phase_screens', [pd2, '05'], () => U.uiPhaseScreens(pd2, '05'));
+  sameRc('spec', () => U.uiHasScreens(r2));
+  sameRc('phase spec', () => U.uiPhaseScreens(pd2, '05'));
   const { r: r3, pd: pd3 } = proj();
   write(`${pd3}/05-REVIEW.md`, 'x');
-  sameRc('other files', 'gsd_ui_has_screens', [r3], () => U.uiHasScreens(r3));
+  sameRc('other files', () => U.uiHasScreens(r3));
   assert.equal(U.uiHasScreens(r3), false);
   const { r: r4 } = proj();
   write(`${r4}/.planning/phases/.hidden/x-LAYOUT.md`, 'x');
-  sameRc('hidden dir ignored', 'gsd_ui_has_screens', [r4], () => U.uiHasScreens(r4));
+  sameRc('hidden dir ignored', () => U.uiHasScreens(r4));
   assert.equal(U.uiHasScreens(r4), false);
 });
 
 // ── playwright ──────────────────────────────────────────────────────────────
 
-test('uiPlaywright / uiGlobalRoot / uiPlaywrightInstalled', () => {
+test('uiPlaywright / uiGlobalRoot / uiPlaywrightInstalled', { skip: process.platform === 'win32' && 'needs a non-executable file (no exec bit on Windows)' }, () => {
   const emptyPath = tmp();
   const pin: Env = { PATH: `${emptyPath}:/usr/bin:/bin`, GSD_NPM_GLOBAL_ROOT: '' };
   const { r } = proj();
   // none
-  same('playwright none', 'gsd_ui_playwright', [r, ''], () => U.uiPlaywright(r, ''), pin);
+  same('playwright none', () => U.uiPlaywright(r, ''), pin);
   assert.equal(withEnv(pin, () => U.uiPlaywright(r, '')), '');
   // env override
-  same('playwright GSD_PLAYWRIGHT', 'gsd_ui_playwright', [r, ''], () => U.uiPlaywright(r, ''), { ...pin, GSD_PLAYWRIGHT: '/x/pw' });
+  same('playwright GSD_PLAYWRIGHT', () => U.uiPlaywright(r, ''), { ...pin, GSD_PLAYWRIGHT: '/x/pw' });
   // project, app, apps/*, packages/*
   const bin = (d: string, mode = 0o755): void => {
     write(`${d}/node_modules/.bin/playwright`, '#!/bin/sh\n', mode);
   };
   bin(`${r}/packages/ui`);
-  same('playwright packages/ui', 'gsd_ui_playwright', [r, ''], () => U.uiPlaywright(r, ''), pin);
+  same('playwright packages/ui', () => U.uiPlaywright(r, ''), pin);
   assert.equal(withEnv(pin, () => U.uiPlaywright(r, '')), `${r}/packages/ui/node_modules/.bin/playwright`);
   bin(`${r}/apps/b`);
   bin(`${r}/apps/a`, 0o644); // not executable: skipped
-  same('playwright apps/b before packages', 'gsd_ui_playwright', [r, ''], () => U.uiPlaywright(r, ''), pin);
+  same('playwright apps/b before packages', () => U.uiPlaywright(r, ''), pin);
   bin(`${r}/web`);
-  same('playwright app: web first', 'gsd_ui_playwright', [r, 'web'], () => U.uiPlaywright(r, 'web'), pin);
-  same('playwright app: missing → rest', 'gsd_ui_playwright', [r, 'nope'], () => U.uiPlaywright(r, 'nope'), pin);
+  same('playwright app: web first', () => U.uiPlaywright(r, 'web'), pin);
+  same('playwright app: missing → rest', () => U.uiPlaywright(r, 'nope'), pin);
   bin(r);
-  same('playwright root wins over apps', 'gsd_ui_playwright', [r, ''], () => U.uiPlaywright(r, ''), pin);
+  same('playwright root wins over apps', () => U.uiPlaywright(r, ''), pin);
   // on PATH
   const { r: r2 } = proj();
   const pbin = tmp();
   write(`${pbin}/playwright`, '#!/bin/sh\n', 0o755);
   const onPath: Env = { PATH: `${pbin}:/usr/bin:/bin`, GSD_NPM_GLOBAL_ROOT: '' };
-  same('playwright on PATH', 'gsd_ui_playwright', [r2, ''], () => U.uiPlaywright(r2, ''), onPath);
+  same('playwright on PATH', () => U.uiPlaywright(r2, ''), onPath);
   assert.equal(withEnv(onPath, () => U.uiPlaywright(r2, '')), `${pbin}/playwright`);
 
   // global root
   for (const root of [undefined, '', '/some/where', tmp()]) {
-    same(`global_root ${root}`, 'gsd_ui_global_root', [], () => U.uiGlobalRoot(), { GSD_NPM_GLOBAL_ROOT: root, PATH: pin.PATH });
+    same(`global_root ${root}`, () => U.uiGlobalRoot(), { GSD_NPM_GLOBAL_ROOT: root, PATH: pin.PATH });
   }
   // npm root -g through a stub npm
   const nbin = tmp();
   const groot = tmp();
   write(`${nbin}/npm`, `#!/bin/sh\necho ${groot}\n`, 0o755);
   const npmEnv: Env = { PATH: `${nbin}:/usr/bin:/bin`, GSD_NPM_GLOBAL_ROOT: undefined };
-  same('global_root via npm', 'gsd_ui_global_root', [], () => U.uiGlobalRoot(), npmEnv);
+  same('global_root via npm', () => U.uiGlobalRoot(), npmEnv);
   assert.equal(withEnv(npmEnv, () => U.uiGlobalRoot()), groot);
   write(`${nbin}/npm`, '#!/bin/sh\necho /no/such/dir\n', 0o755);
-  same('global_root via npm, no dir', 'gsd_ui_global_root', [], () => U.uiGlobalRoot(), npmEnv);
+  same('global_root via npm, no dir', () => U.uiGlobalRoot(), npmEnv);
   write(`${nbin}/npm`, '#!/bin/sh\nexit 1\n', 0o755);
-  same('global_root via failing npm', 'gsd_ui_global_root', [], () => U.uiGlobalRoot(), npmEnv);
+  same('global_root via failing npm', () => U.uiGlobalRoot(), npmEnv);
 
   // installed: none / project (root, apps, packages, @playwright/test, GSD_PLAYWRIGHT_ROOT) / global
   const { r: r3 } = proj();
   const inst = (label: string, env: Env, want: string): void => {
-    const bo = b('gsd_ui_playwright_installed', [r3], env);
     const to = withEnv(env, () => U.uiPlaywrightInstalled(r3));
-    assert.equal(to === null ? '' : to, bo.out, label);
-    assert.equal(to === null, bo.rc !== 0, `${label} rc`);
+    gold(`# ${label}\n${to === null ? '' : to}|rc=${to === null ? 1 : 0}`);
     assert.equal(to ?? 'none', want, `${label} value`);
   };
   const noGlobal: Env = { GSD_NPM_GLOBAL_ROOT: '', GSD_PLAYWRIGHT_ROOT: undefined };
@@ -285,23 +275,22 @@ test('uiPlaywright / uiGlobalRoot / uiPlaywrightInstalled', () => {
   inst('apps/web', { ...noGlobal, GSD_NPM_GLOBAL_ROOT: g2 }, 'project');
   const { r: r4 } = proj();
   write(`${r4}/packages/p/node_modules/playwright/package.json`, '{}');
-  const bo = b('gsd_ui_playwright_installed', [r4], noGlobal);
-  assert.equal(bo.out, 'project');
   assert.equal(withEnv(noGlobal, () => U.uiPlaywrightInstalled(r4)), 'project');
+  gold('# packages/p\nproject');
   const { r: r5 } = proj();
   write(`${r5}/node_modules/playwright/package.json`, '{}');
   assert.equal(withEnv(noGlobal, () => U.uiPlaywrightInstalled(r5)), 'project');
-  assert.equal(b('gsd_ui_playwright_installed', [r5], noGlobal).out, 'project');
+  gold('# root node_modules\nproject');
 });
 
 // ── rules, page hash, min font ──────────────────────────────────────────────
 
 test('uiRules default / DESIGN.md R-lines', () => {
   const { r } = proj();
-  same('no DESIGN.md', 'gsd_ui_rules', [r], () => U.uiRules(r).join('\n'));
+  same('no DESIGN.md', () => U.uiRules(r).join('\n'));
   assert.equal(U.uiRules(r).length, 10);
   U.uiScaffoldDesign(r);
-  same('scaffolded', 'gsd_ui_rules', [r], () => U.uiRules(r).join('\n'));
+  same('scaffolded', () => U.uiRules(r).join('\n'));
   const designs = [
     '# D\n- R1: Only one thing\n- R2:   spaced   \n',
     '- R1: a\n- R3:\n- R4:   \n- R5: x\r\n- R6 : no\n  - R7: indented\n-R8: no\n- R9: tail  \t\n',
@@ -312,14 +301,14 @@ test('uiRules default / DESIGN.md R-lines', () => {
   ];
   for (const d of designs) {
     writeFileSync(`${r}/.planning/design/DESIGN.md`, d);
-    same(`design ${JSON.stringify(d)}`, 'gsd_ui_rules', [r], () => U.uiRules(r).join('\n'));
+    same(`design ${JSON.stringify(d)}`, () => U.uiRules(r).join('\n'));
   }
   assert.deepEqual(U.uiRules(`${r}/nowhere`), U.UI_RULES.split('\n'));
 });
 
 test('uiPageHash', () => {
   for (const p of ['/', '/cart', '/a/b', '/a-b', '', '/ü/ñ', '/x y', '/q?a=1&b=2', 'a\nb']) {
-    same(`page_hash ${JSON.stringify(p)}`, 'gsd_ui_page_hash', [p], () => U.uiPageHash(p));
+    same(`page_hash ${JSON.stringify(p)}`, () => U.uiPageHash(p));
   }
   assert.notEqual(U.uiPageHash('/a/b'), U.uiPageHash('/a-b'));
 });
@@ -327,7 +316,7 @@ test('uiPageHash', () => {
 test('uiMinFont — clamping, main conf first', () => {
   for (const v of ['', 'ui_min_font = 14', 'ui_min_font = 8', 'ui_min_font = 32', 'ui_min_font = 7', 'ui_min_font = 33', 'ui_min_font = 014', 'ui_min_font = 08', 'ui_min_font = 0', 'ui_min_font = abc', 'ui_min_font = 1.5', 'ui_min_font = -9', 'ui_min_font = 99999999999999999999', 'ui_min_font = 12px', 'ui_min_font = 18  # big']) {
     const { r } = proj(v === '' ? '' : `${v}\n`);
-    same(`min_font ${v}`, 'gsd_ui_min_font', [r], () => String(U.uiMinFont(r)));
+    same(`min_font ${v}`, () => String(U.uiMinFont(r)));
   }
   const { r } = proj('ui_min_font = 20\n');
   write(`${r}/f`, '1');
@@ -335,9 +324,9 @@ test('uiMinFont — clamping, main conf first', () => {
   const wt = path.join(tmp(), 'wt');
   git(r, 'worktree', 'add', '-q', '-b', 'phase-5-x', wt);
   write(`${wt}/.gsd.conf`, 'ui_min_font = 9\n');
-  same('min_font worktree → main wins', 'gsd_ui_min_font', [wt], () => String(U.uiMinFont(wt)));
+  same('min_font worktree → main wins', () => String(U.uiMinFont(wt)));
   assert.equal(U.uiMinFont(wt), 20);
-  same('min_font non-repo', 'gsd_ui_min_font', [tmp()], () => String(U.uiMinFont(tmp())));
+  same('min_font non-repo', () => String(U.uiMinFont(tmp())));
 });
 
 // ── code state, inputs state ────────────────────────────────────────────────
@@ -347,11 +336,11 @@ test('uiCodeState / uiInputsState — new file, edit, .planning-only, worktree, 
   write(`${pd}/05-LAYOUT.md`, 'sketch: skip\n');
   write(`${r}/app.js`, 'one\n');
   const cs = (label: string, dir = r): string => {
-    same(label, 'gsd_ui_code_state', [dir], () => U.uiCodeState(dir));
+    same(label, () => U.uiCodeState(dir));
     return U.uiCodeState(dir);
   };
   const is = (label: string, dir = r): string => {
-    same(label, 'gsd_ui_inputs_state', [dir, pd, '05'], () => U.uiInputsState(dir, pd, '05'));
+    same(label, () => U.uiInputsState(dir, pd, '05'));
     return U.uiInputsState(dir, pd, '05');
   };
   const h0 = cs('initial');
@@ -410,9 +399,9 @@ test('uiCodeState / uiInputsState — new file, edit, .planning-only, worktree, 
   cs('linked worktree dirty', wt);
   // not a repo
   const nr = tmp();
-  same('non-repo', 'gsd_ui_code_state', [nr], () => U.uiCodeState(nr));
+  same('non-repo', () => U.uiCodeState(nr));
   assert.equal(U.uiCodeState(nr), '');
-  same('inputs non-repo', 'gsd_ui_inputs_state', [nr, pd, '05'], () => U.uiInputsState(nr, pd, '05'));
+  same('inputs non-repo', () => U.uiInputsState(nr, pd, '05'));
   // the checkout's own index and objects are untouched
   const before = sh(r, 'git', ['status', '--porcelain']);
   U.uiCodeState(r);
@@ -432,7 +421,7 @@ test('uiExempt — review on the base branch vs only on the phase branch', () =>
   git(r, 'worktree', 'add', '-q', '-b', 'phase-5-x', wt);
   const wpd = `${wt}/.planning/phases/05-x`;
   const ex = (label: string, dir: string, d: string): boolean => {
-    sameRc(label, 'gsd_ui_exempt', [dir, d, '05'], () => U.uiExempt(dir, d, '05'));
+    sameRc(label, () => U.uiExempt(dir, d, '05'));
     return U.uiExempt(dir, d, '05');
   };
   assert.equal(ex('no review anywhere', r, pd), false);
@@ -466,10 +455,10 @@ test('uiExempt — review on the base branch vs only on the phase branch', () =>
   git(r3, 'checkout', '-q', 'develop');
   assert.equal(ex('base from conf', r3, pd3), true);
   // phase dir outside the checkout
-  sameRc('pdir not under the checkout', 'gsd_ui_exempt', [r, '/elsewhere/05-x', '05'], () => U.uiExempt(r, '/elsewhere/05-x', '05'));
+  sameRc('pdir not under the checkout', () => U.uiExempt(r, '/elsewhere/05-x', '05'));
   // non-repo
   const nr = tmp();
-  sameRc('non-repo', 'gsd_ui_exempt', [nr, `${nr}/p`, '05'], () => U.uiExempt(nr, `${nr}/p`, '05'));
+  sameRc('non-repo', () => U.uiExempt(nr, `${nr}/p`, '05'));
 });
 
 // ── check / look / approval / gate ──────────────────────────────────────────
@@ -478,9 +467,8 @@ test('uiCheckState — missing/error/failed/skipped/stale/passed', () => {
   const { r, pd } = proj();
   write(`${pd}/05-LAYOUT.md`, 'sketch: skip\npages: /\n');
   const cs = (label: string, nostale = ''): string => {
-    const bo = b('gsd_ui_check_state', [r, pd, '05', nostale]);
     const to = U.uiCheckState(r, pd, '05', nostale);
-    assert.equal(to, bo.out, label);
+    gold(`# ${label}\n${to}`);
     return to;
   };
   assert.equal(cs('missing'), 'missing');
@@ -510,9 +498,8 @@ test('uiCheckState — missing/error/failed/skipped/stale/passed', () => {
   const nr = tmp();
   const npd = `${nr}/p`;
   fixCheck(mkdirp(npd), '05', 'passed', 'cap1', 'abc+def');
-  const bo = b('gsd_ui_check_state', [nr, npd, '05', '']);
-  assert.equal(U.uiCheckState(nr, npd, '05', ''), bo.out);
-  assert.equal(bo.out, 'passed');
+  assert.equal(U.uiCheckState(nr, npd, '05', ''), 'passed');
+  gold('# repo-less dir\npassed');
 });
 function mkdirp(d: string): string {
   mkdirSync(d, { recursive: true });
@@ -524,21 +511,21 @@ test('uiCheckList / uiLookKeys / uiLookAnswers', () => {
   fixCheck(pd, '05');
   const chk = `${pd}/05-UI-CHECK.md`;
   for (const sec of ['Shots', 'Questions', 'Failures', 'Nope']) {
-    same(`check_list ${sec}`, 'gsd_ui_check_list', [chk, sec], () => U.uiCheckList(chk, sec).join('\n'));
+    same(`check_list ${sec}`, () => U.uiCheckList(chk, sec).join('\n'));
   }
-  same('check_list missing file', 'gsd_ui_check_list', [`${pd}/none`, 'Shots'], () => U.uiCheckList(`${pd}/none`, 'Shots').join('\n'));
-  same('look_keys', 'gsd_ui_look_keys', [r, pd, '05'], () => U.uiLookKeys(r, pd, '05').join('\n'));
+  same('check_list missing file', () => U.uiCheckList(`${pd}/none`, 'Shots').join('\n'));
+  same('look_keys', () => U.uiLookKeys(r, pd, '05').join('\n'));
   assert.equal(U.uiLookKeys(r, pd, '05').length, 21);
   // widths that compare numerically, several questions, extra shots, pipes in text
   write(
     chk,
     '---\nstatus: passed\ncapture: c\n---\n\n## Questions\n\n- Q1 | /a | 0375 | C2 | x\n- Q2 | /a | 375 | C3 | y | z\n- Q3 | /b | 768 | C1 | q\n- Q4 | /a\n\n## Shots\n\n- /a | 375 | a.png\n- /b | 768 | b.png\n- /c\n-\n- /a | 375 | dup.png\n\n## Other\n\n- not | a | shot\n',
   );
-  same('look_keys messy', 'gsd_ui_look_keys', [r, pd, '05'], () => U.uiLookKeys(r, pd, '05').join('\n'));
+  same('look_keys messy', () => U.uiLookKeys(r, pd, '05').join('\n'));
   // custom rules
   U.uiScaffoldDesign(r);
   writeFileSync(`${r}/.planning/design/DESIGN.md`, '- R1: a\n- R12: b\n');
-  same('look_keys custom rules', 'gsd_ui_look_keys', [r, pd, '05'], () => U.uiLookKeys(r, pd, '05').join('\n'));
+  same('look_keys custom rules', () => U.uiLookKeys(r, pd, '05').join('\n'));
   // answers
   const look = `${pd}/05-UI-LOOK.md`;
   const looks = [
@@ -552,20 +539,19 @@ test('uiCheckList / uiLookKeys / uiLookAnswers', () => {
   for (const t of looks) {
     write(look, t);
     if (t.includes('\r\n')) {
-      // P12: the CRLF file reads as its LF version (the bash oracle chokes on the \r)
-      const lfLook = write(`${pd}/05-UI-LOOK-lf.md`, t.replace(/\r\n/g, '\n'));
-      same(`look_answers CRLF`, 'gsd_ui_look_answers', [lfLook], () => U.uiLookAnswers(look).join('\n'));
+      // a CRLF file reads as its LF version
+      same(`look_answers CRLF`, () => U.uiLookAnswers(look).join('\n'));
       continue;
     }
-    same(`look_answers ${JSON.stringify(t.slice(0, 40))}`, 'gsd_ui_look_answers', [look], () => U.uiLookAnswers(look).join('\n'));
+    same(`look_answers ${JSON.stringify(t.slice(0, 40))}`, () => U.uiLookAnswers(look).join('\n'));
   }
-  same('look_answers missing', 'gsd_ui_look_answers', [`${pd}/none`], () => U.uiLookAnswers(`${pd}/none`).join('\n'));
+  same('look_answers missing', () => U.uiLookAnswers(`${pd}/none`).join('\n'));
 });
 
 test('uiLookState — missing/stale/open/bad/complete', () => {
   const { r, pd } = proj();
   const ls = (label: string): string => {
-    same(label, 'gsd_ui_look_state', [r, pd, '05'], () => U.uiLookState(r, pd, '05'));
+    same(label, () => U.uiLookState(r, pd, '05'));
     return U.uiLookState(r, pd, '05');
   };
   assert.equal(ls('missing'), 'missing');
@@ -607,7 +593,7 @@ test('uiLookState — missing/stale/open/bad/complete', () => {
 test('uiApprovalState — missing/stale/ok/waived', () => {
   const { pd } = proj();
   const as = (label: string): string => {
-    same(label, 'gsd_ui_approval_state', [pd, '05'], () => U.uiApprovalState(pd, '05'));
+    same(label, () => U.uiApprovalState(pd, '05'));
     return U.uiApprovalState(pd, '05');
   };
   assert.equal(as('missing'), 'missing');
@@ -634,7 +620,7 @@ test('uiApprovalState — missing/stale/ok/waived', () => {
 test('uiGate — every branch, and uiStepCmd', () => {
   const { r, pd } = proj();
   const g = (label: string, nostale = ''): string => {
-    same(label, 'gsd_ui_gate', [r, pd, '05', nostale], () => U.uiGate(r, pd, '05', nostale));
+    same(label, () => U.uiGate(r, pd, '05', nostale));
     return U.uiGate(r, pd, '05', nostale);
   };
   assert.match(g('check missing'), /^ui-check\|missing\|/);
@@ -671,7 +657,7 @@ test('uiGate — every branch, and uiStepCmd', () => {
   assert.match(g('skipped check, approval of pictures (no capture in check) → stale'), /^ui-approve\|stale\|/);
   // step_cmd
   for (const step of ['ui-check', 'ui-look', 'ui-approve', 'bogus', '']) {
-    same(`step_cmd ${step}`, 'gsd_ui_step_cmd', [step, '5'], () => U.uiStepCmd(step, '5'));
+    same(`step_cmd ${step}`, () => U.uiStepCmd(step, '5'));
   }
 });
 
@@ -734,18 +720,14 @@ test('uiFinishGate — warn / strict / off, skip guard, exempt, no screens', () 
     const { r, pd } = proj(c.conf);
     c.setup?.(pd, r);
     const env = c.env ?? {};
-    const bo = b('gsd_ui_finish_gate', [r, 'phase-5-x', r], env);
     const to = withEnv(env, () => U.uiFinishGate(r, 'phase-5-x', r));
-    assert.equal(to.stderr, bo.err, `${c.label}: stderr`);
-    assert.equal(to.ok, bo.rc === 0, `${c.label}: rc`);
+    gold(`# ${c.label}\nok=${to.ok}\nstderr:\n${to.stderr}`);
   }
   // a branch that is not a phase branch, a missing phase dir
   const { r } = proj('ui_gates = strict\n');
   for (const br of ['develop', 'phase-9-nothing', 'phase-5']) {
-    const bo = b('gsd_ui_finish_gate', [r, br, r]);
     const to = U.uiFinishGate(r, br, r);
-    assert.equal(to.stderr, bo.err, br);
-    assert.equal(to.ok, bo.rc === 0, br);
+    gold(`# branch ${br}\nok=${to.ok}\nstderr:\n${to.stderr}`);
   }
 });
 
@@ -764,9 +746,7 @@ test('finishGates (common.ts) runs the TS UI gate: strict + open step refuses; w
       assert.equal(g.ok, true);
       assert.match(g.stderr, /⚠ phase 5 has screens and its UI steps are open/);
     }
-    const bo = bash('gsd_finish_gates "$1" phase-5-x "$1"', [r]);
-    assert.equal(g.ok, bo.rc === 0);
-    assert.equal(g.stderr, bo.err);
+    gold(`# finishGates ui_gates=${JSON.stringify(conf)}\nok=${g.ok}\nstderr:\n${g.stderr}`);
   }
 });
 
@@ -774,19 +754,19 @@ test('finishGates (common.ts) runs the TS UI gate: strict + open step refuses; w
 
 test('uiStack', () => {
   const { r } = proj();
-  same('empty', 'gsd_ui_stack', [r], () => U.uiStack(r));
+  same('empty', () => U.uiStack(r));
   write(`${r}/package.json`, '{"dependencies":{"react":"1"}}');
-  same('react', 'gsd_ui_stack', [r], () => U.uiStack(r));
+  same('react', () => U.uiStack(r));
   write(`${r}/apps/web/package.json`, '{"devDependencies":{"tailwindcss":"3"}}');
-  same('+tailwind in apps', 'gsd_ui_stack', [r], () => U.uiStack(r));
+  same('+tailwind in apps', () => U.uiStack(r));
   write(`${r}/packages/ui/components.json`, '{}');
-  same('+shadcn in packages', 'gsd_ui_stack', [r], () => U.uiStack(r));
+  same('+shadcn in packages', () => U.uiStack(r));
   assert.equal(U.uiStack(r), 'react shadcn tailwind');
   write(`${r}/package.json`, '{"dependencies":{"react-dom":"1","tailwindcss-animate":"1"}}');
   write(`${r}/apps/web/package.json`, '{}');
-  same('substring words do not count', 'gsd_ui_stack', [r], () => U.uiStack(r));
+  same('substring words do not count', () => U.uiStack(r));
   write(`${r}/components.json`, '{}');
-  same('root components.json', 'gsd_ui_stack', [r], () => U.uiStack(r));
+  same('root components.json', () => U.uiStack(r));
 });
 
 test('uiAddonPresent', () => {
@@ -794,33 +774,32 @@ test('uiAddonPresent', () => {
   const home = tmp();
   const env: Env = { HOME: home };
   for (const addon of ['impeccable', 'shadcn-mcp', 'other']) {
-    sameRc(`none ${addon}`, 'gsd_ui_addon_present', [r, addon], () => U.uiAddonPresent(r, addon), env);
+    sameRc(`none ${addon}`, () => U.uiAddonPresent(r, addon), env);
   }
   mkdirSync(`${home}/.agents/skills/impeccable`, { recursive: true });
-  sameRc('impeccable in ~/.agents', 'gsd_ui_addon_present', [r, 'impeccable'], () => U.uiAddonPresent(r, 'impeccable'), env);
+  sameRc('impeccable in ~/.agents', () => U.uiAddonPresent(r, 'impeccable'), env);
   assert.equal(withEnv(env, () => U.uiAddonPresent(r, 'impeccable')), true);
   const { r: r2 } = proj();
   mkdirSync(`${r2}/.claude/skills`, { recursive: true });
   symlinkSync('/nonexistent', `${r2}/.claude/skills/impeccable`);
-  sameRc('broken symlink', 'gsd_ui_addon_present', [r2, 'impeccable'], () => U.uiAddonPresent(r2, 'impeccable'), { HOME: tmp() });
+  sameRc('broken symlink', () => U.uiAddonPresent(r2, 'impeccable'), { HOME: tmp() });
   write(`${r2}/.mcp.json`, '{"mcpServers":{"shadcn":{}}}');
-  sameRc('shadcn in .mcp.json', 'gsd_ui_addon_present', [r2, 'shadcn-mcp'], () => U.uiAddonPresent(r2, 'shadcn-mcp'), { HOME: tmp() });
+  sameRc('shadcn in .mcp.json', () => U.uiAddonPresent(r2, 'shadcn-mcp'), { HOME: tmp() });
   assert.equal(withEnv({ HOME: tmp() }, () => U.uiAddonPresent(r2, 'shadcn-mcp')), true);
   const { r: r3 } = proj();
   const h3 = tmp();
   write(`${h3}/.codex/config.toml`, '[mcp_servers.shadcn]\n');
-  sameRc('shadcn in codex config', 'gsd_ui_addon_present', [r3, 'shadcn-mcp'], () => U.uiAddonPresent(r3, 'shadcn-mcp'), { HOME: h3 });
+  sameRc('shadcn in codex config', () => U.uiAddonPresent(r3, 'shadcn-mcp'), { HOME: h3 });
   write(`${h3}/.codex/config.toml`, 'nothing\n');
-  sameRc('no shadcn', 'gsd_ui_addon_present', [r3, 'shadcn-mcp'], () => U.uiAddonPresent(r3, 'shadcn-mcp'), { HOME: h3 });
+  sameRc('no shadcn', () => U.uiAddonPresent(r3, 'shadcn-mcp'), { HOME: h3 });
 });
 
-test('uiScaffoldDesign / uiLayoutTemplate — same files as bash, never overwrite', () => {
+test('uiScaffoldDesign / uiLayoutTemplate — the files written, never overwrite', () => {
   // design
   const a = proj().r;
   const c = proj().r;
   U.uiScaffoldDesign(a);
-  b('gsd_ui_scaffold_design', [c]);
-  assert.equal(readFileSync(`${a}/.planning/design/DESIGN.md`, 'utf8'), readFileSync(`${c}/.planning/design/DESIGN.md`, 'utf8'));
+  gold(`# scaffolded DESIGN.md\n${readFileSync(`${a}/.planning/design/DESIGN.md`, 'utf8')}`);
   assert.equal(existsSync(`${a}/.planning/design/refs/.gitkeep`), true);
   assert.equal(readFileSync(`${a}/.planning/design/refs/.gitkeep`, 'utf8'), '');
   // never overwrites (a filled file, a kept .gitkeep)
@@ -829,9 +808,6 @@ test('uiScaffoldDesign / uiLayoutTemplate — same files as bash, never overwrit
   U.uiScaffoldDesign(a);
   assert.equal(readFileSync(`${a}/.planning/design/DESIGN.md`, 'utf8'), 'mine\n');
   assert.equal(readFileSync(`${a}/.planning/design/refs/.gitkeep`, 'utf8'), 'keep\n');
-  writeFileSync(`${c}/.planning/design/DESIGN.md`, 'mine\n');
-  b('gsd_ui_scaffold_design', [c]);
-  assert.equal(readFileSync(`${c}/.planning/design/DESIGN.md`, 'utf8'), 'mine\n');
   // the scaffolded file is a stub and its R-lines are the defaults
   const d = proj().r;
   U.uiScaffoldDesign(d);
@@ -843,22 +819,19 @@ test('uiScaffoldDesign / uiLayoutTemplate — same files as bash, never overwrit
     const fa = `${t}/a-${n}.md`;
     const fb = `${t}/b-${n}.md`;
     U.uiLayoutTemplate(fa, n);
-    b('gsd_ui_layout_template', [fb, n]);
-    assert.equal(readFileSync(fa, 'utf8'), readFileSync(fb, 'utf8'), `template ${n}`);
+    gold(`# layout template ${n}\n${readFileSync(fa, 'utf8')}`);
   }
   writeFileSync(`${t}/mine.md`, 'mine\n');
   U.uiLayoutTemplate(`${t}/mine.md`, '5');
   assert.equal(readFileSync(`${t}/mine.md`, 'utf8'), 'mine\n');
-  b('gsd_ui_layout_template', [`${t}/mine2.md`, '5']);
   // a scaffolded template is read as nosketch by the state machine
   const { r, pd } = proj();
   U.uiLayoutTemplate(`${pd}/05-LAYOUT.md`, '5');
-  same('template state', 'gsd_ui_layout_state', [r, pd, '05'], () => U.uiLayoutState(r, pd, '05'));
+  same('template state', () => U.uiLayoutState(r, pd, '05'));
   assert.equal(U.uiLayoutState(r, pd, '05'), 'nosketch');
   chmodSync(`${pd}/05-LAYOUT.md`, 0o644);
 });
 
-test('constants match bash', () => {
-  const o = bash('printf "%s\\n%s\\n%s" "$GSD_UI_STUB" "$GSD_UI_WIDTHS" "$GSD_UI_RULES"').out;
-  assert.equal(o, `${U.UI_STUB}\n${U.UI_WIDTHS}\n${U.UI_RULES}`);
+test('constants', () => {
+  gold(`${U.UI_STUB}\n${U.UI_WIDTHS}\n${U.UI_RULES}`);
 });

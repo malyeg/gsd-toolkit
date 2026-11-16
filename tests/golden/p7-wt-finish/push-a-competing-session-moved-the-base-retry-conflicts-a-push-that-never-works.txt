@@ -1,0 +1,534 @@
+@@@ 1 @@@
+step 1 (gsdt-wt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ tests (bash "$RACE_SH", in <T>/shop-worktrees/phase-1-catalog; before merge)…
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ tests (bash "$RACE_SH", in <T>/shop; combined tree after phase merge)…
+▶ pushing 'main'…
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Merge made by the 'ort' strategy.
+ other.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 other.txt
+▶ reconciling .planning after the origin/main sync…
+✔ .planning/ is consistent
+▶ tests (bash "$RACE_SH", in <T>/shop; combined tree after remote retry)…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 229b005).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+--- stderr
+To <T>/shop.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to '<T>/shop.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+   c179caa..7477315  main       -> origin/main
+
+--- files left behind
+── log
+Merge branch 'main' of <T>/shop
+Merge phase-1-catalog into main
+other session
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge branch 'main' of <T>/shop
+Merge phase-1-catalog into main
+other session
+init
+feature
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 2 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ tests (bash "$RACE_SH", in <T>/shop-worktrees/phase-1-catalog; before merge)…
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ tests (bash "$RACE_SH", in <T>/shop; combined tree after phase merge)…
+▶ pushing 'main'…
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Auto-merging f.txt
+CONFLICT (add/add): Merge conflict in f.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr
+To <T>/shop.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to '<T>/shop.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+   c179caa..6dfd54a  main       -> origin/main
+✗ conflict syncing with origin/main — aborted, 'main' left clean. Conflicts: f.txt 
+  Resolve manually: git -C <T>/shop pull --no-rebase origin main, fix, commit, push — then re-run finish to clean up.
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+feature
+other session
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+other session
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 3 @@@
+step 1 (gsdt-wt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ tests (bash "$RACE_SH", in <T>/shop-worktrees/phase-1-catalog; before merge)…
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ tests (bash "$RACE_SH", in <T>/shop; combined tree after phase merge)…
+▶ pushing 'main'…
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Merge made by the 'ort' strategy.
+ .planning/ROADMAP.md | 2 ++
+ 1 file changed, 2 insertions(+)
+▶ reconciling .planning after the origin/main sync…
+✔ .planning/ is consistent
+▶ tests (bash "$RACE_SH", in <T>/shop; combined tree after remote retry)…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was 1416aac).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+--- stderr
+To <T>/shop.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to '<T>/shop.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+   7c05fc7..4d21aba  main       -> origin/main
+
+--- files left behind
+── log
+Merge branch 'main' of <T>/shop
+Merge phase-1-catalog into main
+other session
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+- [x] **Phase 1: Catalog**
+
+### Phase 1: Catalog
+
+## Progress
+
+| Phase | Plans | Status |
+|---|---|---|
+| 1. Catalog | 1/1 | Complete |
+
+### Phase 9: other session
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge branch 'main' of <T>/shop
+Merge phase-1-catalog into main
+other session
+init
+feature
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 4 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ tests (bash "$RACE_SH", in <T>/shop-worktrees/phase-1-catalog; before merge)…
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+
+--- stderr
+✗ .planning is STILL self-contradictory after the repair — not pushing.
+stub: ROADMAP is self-contradictory
+stub check failed
+  The merge is committed locally only. Fix .planning, commit, then re-run finish.
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+other session
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 5 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Already up to date.
+▶ reconciling .planning after the origin/main sync…
+✔ .planning/ is consistent
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Already up to date.
+▶ reconciling .planning after the origin/main sync…
+✔ .planning/ is consistent
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Already up to date.
+▶ reconciling .planning after the origin/main sync…
+✔ .planning/ is consistent
+
+--- stderr
+remote: no pushes today        
+To <T>/shop.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to '<T>/shop.git'
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+remote: no pushes today        
+To <T>/shop.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to '<T>/shop.git'
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+remote: no pushes today        
+To <T>/shop.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to '<T>/shop.git'
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+✗ could not push 'main' after 3 attempts — push manually, then re-run to clean up.
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 6 @@@
+step 1 (gsdt-wt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ tests (bash "$RACE_SH"; echo validated, in <T>/shop-worktrees/phase-1-catalog; before merge)…
+validated
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ tests (bash "$RACE_SH"; echo validated, in <T>/shop; combined tree after phase merge)…
+validated
+▶ pushing 'main'…
+  push rejected (parallel session moved 'main') — merging origin/main and retrying…
+Merge made by the 'ort' strategy.
+ other.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 other.txt
+▶ reconciling .planning after the origin/main sync…
+✔ .planning/ is consistent
+▶ tests (bash "$RACE_SH"; echo validated, in <T>/shop; combined tree after remote retry)…
+validated
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was dd08c85).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+--- stderr
+To <T>/shop.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to '<T>/shop.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+From <T>/shop
+ * branch            main       -> FETCH_HEAD
+   b807820..f94f9b2  main       -> origin/main
+
+--- files left behind
+── log
+Merge branch 'main' of <T>/shop
+Merge phase-1-catalog into main
+other session
+init
+feature
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge branch 'main' of <T>/shop
+Merge phase-1-catalog into main
+other session
+init
+feature
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+

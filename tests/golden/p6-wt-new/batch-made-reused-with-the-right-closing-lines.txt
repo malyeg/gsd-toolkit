@@ -1,0 +1,320 @@
+@@@ 1 @@@
+step 1 (gsdt-wt-new --batch batch-2026-11-12-fixes --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/batch-2026-11-12-fixes   (branch 'batch-2026-11-12-fixes' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-2026-11-12-fixes/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-2026-11-12-fixes   (batch)
+Open an agent session there and run /gsdt-batch. Finish:  gsdt-finish batch-2026-11-12-fixes
+
+--- stderr
+Preparing worktree (new branch 'batch-2026-11-12-fixes')
+
+--- files left behind
+── log
+init
+
+── branches
+batch-2026-11-12-fixes
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-2026-11-12-fixes
+branch refs/heads/batch-2026-11-12-fixes
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-2026-11-12-fixes
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.planning/
+.planning/ROADMAP.md
+── wt batch-2026-11-12-fixes/.gsd-install.status
+skipped
+
+── wt batch-2026-11-12-fixes/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-wt-new --batch batch-2026-11-12-fixes --no-install)
+rc=0
+--- stdout
+• branch 'batch-2026-11-12-fixes' already has a worktree — reusing it.
+
+✅ worktree ready: <T>/shop-worktrees/batch-2026-11-12-fixes   (batch)
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+batch-2026-11-12-fixes
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-2026-11-12-fixes
+branch refs/heads/batch-2026-11-12-fixes
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-2026-11-12-fixes
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.planning/
+.planning/ROADMAP.md
+── wt batch-2026-11-12-fixes/.gsd-install.status
+skipped
+
+── wt batch-2026-11-12-fixes/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 3 @@@
+step 3 (gsdt-wt-new --batch batch-2026-11-12-b.2 --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/batch-2026-11-12-b.2   (branch 'batch-2026-11-12-b.2' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-2026-11-12-b.2/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-2026-11-12-b.2   (batch)
+
+--- stderr
+Preparing worktree (new branch 'batch-2026-11-12-b.2')
+
+--- files left behind
+── log
+init
+
+── branches
+batch-2026-11-12-b.2
+batch-2026-11-12-fixes
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-2026-11-12-b.2
+branch refs/heads/batch-2026-11-12-b.2
+
+worktree <T>/shop-worktrees/batch-2026-11-12-fixes
+branch refs/heads/batch-2026-11-12-fixes
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-2026-11-12-b.2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.planning/
+.planning/ROADMAP.md
+── wt batch-2026-11-12-b.2/.gsd-install.status
+skipped
+
+── wt batch-2026-11-12-b.2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt batch-2026-11-12-fixes
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.planning/
+.planning/ROADMAP.md
+── wt batch-2026-11-12-fixes/.gsd-install.status
+skipped
+
+── wt batch-2026-11-12-fixes/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 4 @@@
+step 1 (gsdt-wt-new --batch batch-x-1 --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/batch-x-1   (branch 'batch-x-1' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/batch-x-1/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/batch-x-1   (batch)
+Open an agent session there and run /gsdt-batch. Finish:  gsdt-finish batch-x-1
+
+--- stderr
+Preparing worktree (new branch 'batch-x-1')
+
+--- files left behind
+── log
+init
+
+── branches
+batch-x-1
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-x-1
+branch refs/heads/batch-x-1
+
+
+── status
+D  .planning/ROADMAP.md
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt batch-x-1
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt batch-x-1/.gsd-install.status
+skipped
+
+── wt batch-x-1/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+

@@ -1,16 +1,11 @@
-// P9: src/ticket.ts against lib/ticket.sh (the oracle), on the same inputs.
+// P9: src/ticket.ts against saved goldens in tests/golden/p9-ticket/ (one text per test).
+// Regenerate with UPDATE_GOLDEN=1; review a regenerated golden by diff.
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
 import path from 'node:path';
-import { test } from 'node:test';
+import { golden, test } from './golden.ts';
 import { ticketExtract, ticketNorm, ticketTagged, trackerWhich } from '../../src/ticket.ts';
-import { PKG, repo, sh, tmp, withEnv, LOCALE_ENV } from './helpers.ts';
+import { repo, sh, tmp, withEnv } from './helpers.ts';
 
-const sourced = (script: string, args: string[], env: Record<string, string> = {}) =>
-  spawnSync('bash', ['-c', `. "$GSD_PKG/lib/common.sh"; . "$GSD_PKG/lib/ticket.sh"; ${script}`, '_', ...args], {
-    encoding: 'utf8',
-    env: { ...process.env, GSD_PKG: PKG, ...LOCALE_ENV, ...env },
-  });
 const chomp = (s: string): string => s.replace(/\n+$/, '');
 
 const long = (n: number): string => 'a'.repeat(n);
@@ -25,16 +20,16 @@ const NORM = [
   'https://x/a\nb', 'https://x/a b\nc',
 ];
 test('ticketNorm = gsd_ticket_norm', () => {
+  const nw: string[] = [];
+  const one = (t: string | null): string => `rc=${t === null ? 1 : 0}${t === null ? '' : ' out=' + JSON.stringify(chomp(t))}`;
   for (const s of NORM) {
     for (const as of ['', 'clickup', 'custom']) {
-      const b = sourced('gsd_ticket_norm "$1" "$2"', [s, as]);
-      const t = ticketNorm(s, as);
-      assert.equal(t === null ? 1 : 0, b.status, `rc for ${JSON.stringify(s)} as=${as}`);
-      if (t !== null) assert.equal(chomp(t), chomp(b.stdout), `out for ${JSON.stringify(s)} as=${as}`);
+      nw.push(`${JSON.stringify(s)} as=${as}: ${one(ticketNorm(s, as))}`);
     }
     // one-arg call, like start's other callers
-    assert.equal(ticketNorm(s) === null ? 1 : 0, sourced('gsd_ticket_norm "$1"', [s]).status, `one-arg ${JSON.stringify(s)}`);
+    nw.push(`${JSON.stringify(s)} one-arg: rc=${ticketNorm(s) === null ? 1 : 0}`);
   }
+  golden(nw.join('\n'));
 });
 
 const EXTRACT = [
@@ -47,11 +42,11 @@ const EXTRACT = [
   'ClickUp\u00a0abcdef', 'ClickUp\u2003abcdef', '### Phase 12: x tk-869e33cv4\n### Phase 13: y',
 ];
 test('ticketExtract = gsd_ticket_extract', () => {
+  const nw: string[] = [];
   for (const s of EXTRACT) {
-    const b = sourced('gsd_ticket_extract "$1"', [s]);
-    assert.equal(b.status, 0, `bash rc for ${JSON.stringify(s)}`);
-    assert.equal(ticketExtract(s), chomp(b.stdout), `extract ${JSON.stringify(s)}`);
+    nw.push(`${JSON.stringify(s)} => ${JSON.stringify(ticketExtract(s))}`);
   }
+  golden(nw.join('\n'));
 });
 
 const TAGGED: Array<[string, string]> = [
@@ -65,10 +60,11 @@ const TAGGED: Array<[string, string]> = [
   ['tk-a', 'a|b'], ['tk-b', 'a|b'], ['tk-ab', 'a.'], ['tk-a', '(a'],
 ];
 test('ticketTagged = gsd_ticket_tagged', () => {
+  const nw: string[] = [];
   for (const [s, id] of TAGGED) {
-    const b = sourced('gsd_ticket_tagged "$1" "$2"', [s, id]);
-    assert.equal(ticketTagged(s, id), b.status === 0, `tagged ${JSON.stringify(s)} ${JSON.stringify(id)}`);
+    nw.push(`${JSON.stringify(s)} ${JSON.stringify(id)} => ${ticketTagged(s, id)}`);
   }
+  golden(nw.join('\n'));
 });
 
 test('trackerWhich = gsd_tracker_which', () => {
@@ -89,11 +85,11 @@ test('trackerWhich = gsd_tracker_which', () => {
   }
   const plain = tmp();
   cases.push(['not a repo', plain, {}], ['missing dir', path.join(plain, 'nope'), {}]);
+  const nw: string[] = [];
   for (const [label, r, e] of cases) {
-    const b = sourced('gsd_tracker_which "$1"', [r], e as Record<string, string>);
-    const t = withEnv({ GSD_TRACKER: undefined, ...e }, () => trackerWhich(r));
-    assert.equal(t, chomp(b.stdout), label);
+    nw.push(`${label} => ${JSON.stringify(withEnv({ GSD_TRACKER: undefined, ...e }, () => trackerWhich(r)))}`);
   }
+  golden(nw.join('\n'));
 });
 
 // The twins: GSD's helpers (src/ticket.ts) and gsdt-tracker's own standalone

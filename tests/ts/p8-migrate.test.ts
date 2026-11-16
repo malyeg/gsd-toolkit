@@ -1,10 +1,9 @@
-// P8 parity (gsdt-migrate): the TypeScript command behind bin/gsdt-migrate against the
-// pre-P8 bash command (tests/fixtures/p8-old-bins/gsdt-migrate), each on its own copy of
-// the same fixture repo (a 0.9.0-style repo made by this release's bootstrap, then aged).
-// Compared per step: stdout, stderr, exit code, and every file under the repo (content +
-// mode), .git/config, the post-merge hook and the user's Claude settings. Only the two
-// side roots are normalized.
-// New-side-only (old bash needed python or crashed): see the last tests.
+// P8 (gsdt-migrate): the TypeScript command behind bin/gsdt-migrate, run on its own copy of a
+// fixture repo (a 0.9.0-style repo made by this checkout's bootstrap, then aged), checked per
+// step against saved goldens in tests/golden/p8-migrate/ (regenerate with UPDATE_GOLDEN=1 and
+// review the diff): stdout, stderr, exit code, and every file under the repo (content + mode),
+// .git/config, the post-merge hook and the user's Claude settings. Only the side root is
+// normalized.
 // Run: node --test tests/ts/p8-migrate.test.ts
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
@@ -13,6 +12,7 @@ import {
   cpSync,
   existsSync,
   lstatSync,
+  statSync,
   mkdirSync,
   mkdtempSync,
   readdirSync,
@@ -24,13 +24,15 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { before, test } from 'node:test';
-import { PKG } from './helpers.ts';
+import { before } from 'node:test';
+import { test, golden, skipFileOnWindows } from './golden.ts';
+
+skipFileOnWindows('POSIX fixtures (file modes in the goldens, symlinks, /dev/null git config, a bash-aged repo); Windows is covered by tests/node/migrate.test.ts');
+import { PKG, subst } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p8m-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
 
-const OLD_BIN = path.join(PKG, 'tests', 'fixtures', 'p8-old-bins', 'gsdt-migrate');
 const NEW_BIN = path.join(PKG, 'bin', 'gsdt-migrate');
 const SHIMS = [
   'scripts/gsdt-new-worktree-feature.sh',
@@ -41,19 +43,11 @@ const SHIMS = [
 ];
 const oldOf = (s: string): string => s.replace('gsdt-', 'gsd-');
 
-// An old-package directory: the old bin beside symlinks to this checkout's lib/ and shims/.
-const OLDPKG = path.join(W, 'oldpkg');
-mkdirSync(path.join(OLDPKG, 'bin'), { recursive: true });
-writeFileSync(path.join(OLDPKG, 'bin', 'gsdt-migrate'), readFileSync(OLD_BIN));
-chmodSync(path.join(OLDPKG, 'bin', 'gsdt-migrate'), 0o755);
-symlinkSync(path.join(PKG, 'lib'), path.join(OLDPKG, 'lib'));
-symlinkSync(path.join(PKG, 'shims'), path.join(OLDPKG, 'shims'));
-
-type Side = { name: 'old' | 'new'; root: string; repo: string; home: string; settings: string };
-const mkSide = (name: 'old' | 'new', tag: string): Side => {
-  const root = path.join(W, `${tag}-${name}`);
+type Side = { root: string; repo: string; home: string; settings: string };
+const mkSide = (tag: string): Side => {
+  const root = path.join(W, tag);
   mkdirSync(root, { recursive: true });
-  return { name, root, repo: path.join(root, 'proj'), home: path.join(root, 'home'), settings: path.join(root, 'user-settings.json') };
+  return { root, repo: path.join(root, 'proj'), home: path.join(root, 'home'), settings: path.join(root, 'user-settings.json') };
 };
 
 const baseEnv = (s: Side, extra: Record<string, string> = {}): NodeJS.ProcessEnv => {
@@ -93,8 +87,8 @@ const gitEnv: NodeJS.ProcessEnv = {
 const git = (cwd: string, ...a: string[]): string => sh(cwd, 'git', a, gitEnv);
 
 // ── fixture: the 0.9.0-style repo (built once, copied per scenario) ─────────
-const TPL = mkSide('new', 'tpl');
-const BOOT = path.join(W, 'headpkg');
+const TPL = mkSide('tpl');
+const BOOT = PKG; // the template repo is made by this checkout's bootstrap
 
 const age = (...files: string[]): void => {
   for (const f of files) {
@@ -111,11 +105,6 @@ const age = (...files: string[]): void => {
 };
 
 before(() => {
-  // The bootstrap comes from HEAD (bash), not the working tree: P8's other half edits it.
-  mkdirSync(BOOT, { recursive: true });
-  const ar = spawnSync('bash', ['-c', `git -C '${PKG}' archive HEAD | tar -x -C '${BOOT}'`]);
-  assert.equal(ar.status, 0);
-  symlinkSync(path.join(PKG, 'node_modules'), path.join(BOOT, 'node_modules'));
   const R = TPL.repo;
   mkdirSync(path.join(R, '.planning'), { recursive: true });
   git(path.dirname(R), 'init', '-q', '-b', 'main', R);
@@ -163,14 +152,14 @@ type Step = { args: string[] } & Opts;
 const st = (args: string[], o: Opts = {}): Step => ({ args, ...o });
 
 function snap(s: Side): string {
-  const norm = (t: string): string => t.split(s.root).join('<S>');
+  const norm = (t: string): string => subst(t, s.root, '<S>');
   const lines: string[] = [];
   const walk = (dir: string, rel: string): void => {
     for (const e of readdirSync(dir, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : 1))) {
       const p = path.join(dir, e.name);
       const r = rel === '' ? e.name : `${rel}/${e.name}`;
       if (e.name === '.git' && rel === '') {
-        lines.push(`.git/config: ${norm(readFileSync(path.join(p, 'config'), 'latin1'))}`);
+        lines.push(`.git/config: ${norm(readFileSync(path.join(p, 'config'), 'latin1').replace(/^\t(ignorecase|precomposeunicode) = .*\n/gm, ''))}`);
         const hk = path.join(p, 'hooks/post-merge');
         if (existsSync(hk)) lines.push(`.git/hooks/post-merge: ${(lstatSync(hk).mode & 0o7777).toString(8)} ${norm(readFileSync(hk, 'latin1'))}`);
         lines.push(`lock: ${existsSync(path.join(p, 'gsd-cmd.lock'))}`);
@@ -183,7 +172,7 @@ function snap(s: Side): string {
   };
   if (existsSync(s.repo)) walk(s.repo, '');
   for (const f of [s.settings, `${s.settings}.gsd-tmp`]) {
-    if (existsSync(f)) lines.push(`USER ${path.basename(f)}: ${(lstatSync(f).mode & 0o7777).toString(8)} ${readFileSync(f, 'latin1')}`);
+    if (existsSync(f)) lines.push(`USER ${path.basename(f)}: ${(statSync(f).mode & 0o7777).toString(8)} ${readFileSync(f, 'latin1')}`);
   }
   return lines.join('\n');
 }
@@ -193,63 +182,34 @@ function runStep(s: Side, step: Step): Ran {
   const cwd = step.cwd ? step.cwd(s) : s.repo;
   const env = baseEnv(s, step.env);
   if (step.path !== undefined) env.PATH = step.path;
-  const cmd = s.name === 'old' ? 'bash' : NEW_BIN;
-  const args = s.name === 'old' ? [path.join(OLDPKG, 'bin', 'gsdt-migrate'), ...step.args] : step.args;
-  const r = spawnSync(cmd, args, { cwd, env, encoding: 'utf8', timeout: 60000 });
-  const norm = (t: string): string => t.split(s.root).join('<S>');
+  const r = spawnSync(NEW_BIN, step.args, { cwd, env, encoding: 'utf8', timeout: 60000 });
+  const norm = (t: string): string => subst(t, s.root, '<S>');
   return { out: norm(r.stdout ?? ''), err: norm(r.stderr ?? ''), rc: r.status ?? -1, files: snap(s) };
 }
 
-/**
- * INTENDED DIFFERENCES from the old bash command (the commit offer, spec in
- * docs/ts-port-progress.md follow-ups): the old `next:  git … add -A && …
- * commit` hint is replaced by a path-limited `to commit by hand:` line, plus
- * optional `not committing:` reason lines; the teammates' line is no longer
- * indented; the `your Claude settings:` heading is printed only when a
- * line follows it; and --help documents --commit and the prompt (its text is
- * not compared; migrate-commit.test.ts checks it). Both sides are normalized the same way before comparing;
- * everything else must still be byte-identical (tests/ts/migrate-commit.test.ts
- * checks the new lines themselves).
- */
-const intended = (t: string): string =>
-  t
-    .replace(/^(next:  |to commit by hand:  )git -C .* add -A.*\n/gm, '')
-    .replace(/^not committing: .*\n(  .*\n)*/gm, '')
-    .replace(/^ +then each teammate/gm, 'then each teammate')
-    .replace(/^your Claude settings:\n(?!  )/gm, '')
-    .replace(/^\ngsdt-migrate — move a repo[\s\S]*$/, '<HELP>');
-
 type Setup = (s: Side) => void;
-/** A fresh copy of the template repo (or whatever `repo` makes) on both sides, then the steps on both. */
-// P12: the port reads a CRLF file as its LF version and keeps the file's endings when it rewrites it; the old bash
-// choked on the \r. `stripCr` compares without any \r; `lfOracle` is the setup the OLD side gets instead (the LF
-// version of the same repo), the files are then compared without \r.
-function scenario(setup: Setup | null, steps: Step[], opts: { template?: boolean; stripCr?: boolean; lfOracle?: Setup } = {}): Ran[] {
-  const tag = `s${Math.random().toString(36).slice(2, 8)}`;
-  const sides = [mkSide('old', tag), mkSide('new', tag)];
-  for (const s of sides) {
-    mkdirSync(s.home, { recursive: true });
-    if (opts.template !== false) cpSync(TPL.repo, s.repo, { recursive: true, verbatimSymlinks: true });
-    else {
-      mkdirSync(s.repo, { recursive: true });
-      git(s.repo, 'init', '-q', '-b', 'main');
-      git(s.repo, 'commit', '-q', '--allow-empty', '-m', 'init');
-    }
-    writeFileSync(s.settings, USER_HOOKS);
-    (s.name === 'old' && opts.lfOracle ? opts.lfOracle : setup)?.(s);
+/** A fresh copy of the template repo (or whatever `repo` makes), then the steps; each step's result is a golden. */
+// A CRLF file is read as its LF version and keeps its endings when rewritten; `stripCr` / `crFiles`
+// save the text without any \r.
+function scenario(setup: Setup | null, steps: Step[], opts: { template?: boolean; stripCr?: boolean; crFiles?: boolean } = {}): Ran[] {
+  const s = mkSide(`s${Math.random().toString(36).slice(2, 8)}`);
+  mkdirSync(s.home, { recursive: true });
+  if (opts.template !== false) cpSync(TPL.repo, s.repo, { recursive: true, verbatimSymlinks: true });
+  else {
+    mkdirSync(s.repo, { recursive: true });
+    git(s.repo, 'init', '-q', '-b', 'main');
+    git(s.repo, 'commit', '-q', '--allow-empty', '-m', 'init');
   }
+  writeFileSync(s.settings, USER_HOOKS);
+  setup?.(s);
   const results: Ran[] = [];
-  const sc = (t: string): string => (opts.stripCr || opts.lfOracle ? t.replace(/\r/g, '') : t);
-  steps.forEach((step, i) => {
-    const [a, b] = sides.map((s) => runStep(s, step)) as [Ran, Ran];
-    const label = `step ${i} (${step.args.join(' ')})`;
-    assert.equal(sc(intended(b.out)), sc(intended(a.out)), `${label}: stdout`);
-    assert.equal(sc(b.err), sc(a.err), `${label}: stderr`);
-    assert.equal(b.rc, a.rc, `${label}: rc`);
-    assert.equal(opts.lfOracle ? sc(b.files) : b.files, opts.lfOracle ? sc(a.files) : a.files, `${label}: files`);
-    results.push(b);
-  });
-  for (const s of sides) rmSync(s.root, { recursive: true, force: true });
+  const sc = (t: string): string => (opts.stripCr || opts.crFiles ? t.replace(/\r/g, '') : t);
+  for (const step of steps) {
+    const r = runStep(s, step);
+    golden(`rc=${r.rc}\n--stdout--\n${sc(r.out)}--stderr--\n${sc(r.err)}--files--\n${opts.crFiles ? sc(r.files) : r.files}`);
+    results.push(r);
+  }
+  rmSync(s.root, { recursive: true, force: true });
   return results;
 }
 
@@ -390,7 +350,7 @@ test('instruction blocks: broken markers, no block, old header, a CRLF file', ()
       writeFileSync(f, readFileSync(f, 'utf8').replace(/\n/g, '\r\n'));
     },
     [st([]), st(['--apply'])],
-    { lfOracle: () => undefined },
+    { crFiles: true },
   );
   scenario((s) => rmSync(path.join(s.repo, '.gsd/INSTRUCTIONS.md')), [st([]), st(['--apply'])]);
 });
@@ -531,7 +491,7 @@ test('repo hook JSON variants (.claude/settings.json)', () => {
 test('an already migrated repo (the template, applied once, then copied): nothing to do', () => {
   scenario(
     (s) => {
-      const r = spawnSync('bash', [path.join(OLDPKG, 'bin/gsdt-migrate'), '--apply'], { cwd: s.repo, env: baseEnv(s) });
+      const r = spawnSync(NEW_BIN, ['--apply'], { cwd: s.repo, env: baseEnv(s) });
       assert.equal(r.status, 0);
     },
     [st([]), st(['--check']), st(['--apply'])],
@@ -553,14 +513,11 @@ function noPythonPath(): string {
   return dir;
 }
 
-test('NEW ONLY: works with no python on PATH, same result as the old command with python', () => {
-  const tag = `np${Math.random().toString(36).slice(2, 6)}`;
-  const [o, n] = [mkSide('old', tag), mkSide('new', tag)];
-  for (const s of [o, n]) {
-    mkdirSync(s.home, { recursive: true });
-    cpSync(TPL.repo, s.repo, { recursive: true, verbatimSymlinks: true });
-    writeFileSync(s.settings, USER_HOOKS);
-  }
+test('no python on PATH: the command still works', () => {
+  const n = mkSide(`np${Math.random().toString(36).slice(2, 6)}`);
+  mkdirSync(n.home, { recursive: true });
+  cpSync(TPL.repo, n.repo, { recursive: true, verbatimSymlinks: true });
+  writeFileSync(n.settings, USER_HOOKS);
   const np = noPythonPath();
   // Same env as the steps (HOME = the side's empty home). With only PATH set, macOS bash 3.2
   // whose stdin is a socket (Node's pipes) and no SHLVL runs the REAL ~/.bashrc, as if started
@@ -568,49 +525,33 @@ test('NEW ONLY: works with no python on PATH, same result as the old command wit
   const seen = spawnSync('bash', ['-c', 'command -v python3 python'], { env: { ...baseEnv(n), PATH: np }, encoding: 'utf8' }).stdout;
   assert.equal(seen, '', `python is still found with PATH=${np}:\n${seen}`);
   for (const args of [[], ['--check'], ['--apply'], ['--check']]) {
-    const a = runStep(o, st(args));
     const b = runStep(n, st(args, { path: np }));
-    assert.equal(intended(b.out), intended(a.out), `${args.join(' ')} stdout`);
-    assert.equal(b.err, a.err, `${args.join(' ')} stderr`);
-    assert.equal(b.rc, a.rc, `${args.join(' ')} rc`);
-    assert.equal(b.files, a.files, `${args.join(' ')} files`);
+    golden(`rc=${b.rc}\n--stdout--\n${b.out}--stderr--\n${b.err}--files--\n${b.files}`);
   }
-  // and the old command with no python refuses
-  const old = spawnSync('bash', [path.join(OLDPKG, 'bin/gsdt-migrate'), '--check'], { cwd: o.repo, env: { ...baseEnv(o), PATH: np }, encoding: 'utf8' });
-  assert.equal(old.status, 2);
-  assert.match(old.stderr, /needs python 3\.7\+/);
-  for (const s of [o, n]) rmSync(s.root, { recursive: true, force: true });
+  rmSync(n.root, { recursive: true, force: true });
 });
 
-test('NEW ONLY: a matcher that is a list: same stdout/rc/files as old; old also printed a python traceback on stderr', () => {
-  // old: python raises TypeError (unhashable key) → rc 1 → "nothing to change" for that file
+test('a matcher that is a list: nothing to migrate, no error output', () => {
   const body = `{"hooks":{"S":[{"matcher":["a"],"hooks":[{"command":${JSON.stringify(RULES)}}]}]}}`;
-  const tag = `ml${Math.random().toString(36).slice(2, 6)}`;
-  const [o, n] = [mkSide('old', tag), mkSide('new', tag)];
-  for (const s of [o, n]) {
-    mkdirSync(s.home, { recursive: true });
-    mkdirSync(s.repo, { recursive: true });
-    git(s.repo, 'init', '-q', '-b', 'main');
-    git(s.repo, 'commit', '-q', '--allow-empty', '-m', 'init');
-    writeFileSync(s.settings, body);
-  }
+  const n = mkSide(`ml${Math.random().toString(36).slice(2, 6)}`);
+  mkdirSync(n.home, { recursive: true });
+  mkdirSync(n.repo, { recursive: true });
+  git(n.repo, 'init', '-q', '-b', 'main');
+  git(n.repo, 'commit', '-q', '--allow-empty', '-m', 'init');
+  writeFileSync(n.settings, body);
   for (const args of [[], ['--apply']]) {
-    const a = runStep(o, st(args));
     const b = runStep(n, st(args));
-    assert.equal(intended(b.out), intended(a.out));
-    assert.equal(b.rc, a.rc);
-    assert.equal(b.files, a.files);
-    assert.match(a.err, /Traceback/);
+    golden(`rc=${b.rc}\n--stdout--\n${b.out}--files--\n${b.files}`);
     assert.equal(b.err, '');
     assert.match(b.out, /nothing to migrate/);
   }
-  for (const s of [o, n]) rmSync(s.root, { recursive: true, force: true });
+  rmSync(n.root, { recursive: true, force: true });
 });
 
-test('NEW ONLY: the package directory is read from the launcher path, even through a symlink', () => {
+test('the package directory is read from the launcher path, even through a symlink', () => {
   const link = path.join(W, 'linked-migrate');
   symlinkSync(NEW_BIN, link);
-  const s = mkSide('new', 'lnk');
+  const s = mkSide('lnk');
   mkdirSync(s.home, { recursive: true });
   cpSync(TPL.repo, s.repo, { recursive: true, verbatimSymlinks: true });
   writeFileSync(s.settings, USER_HOOKS);

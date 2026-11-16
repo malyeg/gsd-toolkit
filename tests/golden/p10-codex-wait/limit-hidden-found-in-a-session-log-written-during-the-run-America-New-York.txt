@@ -1,0 +1,10 @@
+@@@ 1 @@@
+rc=0 clock=1760058120 runs=0
+--- stdout
+ok
+
+--- stderr
+gsdt-codex-wait: Codex usage limit — it resets Thu Oct 09 21:00 EDT (from Codex's session log).
+gsdt-codex-wait: waiting 13h 02m, until Thu Oct 09 21:02 EDT…
+gsdt-codex-wait: running it again: sh -c f="$1/codex/sessions/2025/10/rollout-n.jsonl"; if [ -f "$1/ran" ]; then echo ok; else touch "$1/ran"; printf '{"payload":{"error":{"message":"%s"}}}\n' "$2" > "$f"; exit 2; fi _ <D> You’ve hit your usage limit. Upgrade to Pro or try again at Oct 9th, 2025 9:00 PM.
+

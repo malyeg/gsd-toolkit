@@ -1,0 +1,9 @@
+@@@ 1 @@@
+rc=75 clock=1760011200 runs=0
+--- stdout
+
+--- stderr
+gsdt-codex-wait: Codex usage limit — it resets Fri Oct 10 14:00 UTC (from --message).
+gsdt-codex-wait: GAVE UP: waiting until Fri Oct 10 14:02 UTC would pass --max-wait (12h 00m).
+gsdt-codex-wait: The Codex step did not run: this is NOT a pass. Run it again after the reset.
+

@@ -1,28 +1,27 @@
-// P4 parity (gsdt-ui): the TypeScript command behind bin/gsdt-ui against the
-// pre-P4 bash command (tests/fixtures/p4-old-bins/gsdt-ui, run in a package dir
-// holding a copy of lib/ and the old runner as lib/ui-check.mjs). Two worlds
-// (old, new) get identical fixture repos and the SAME sequence of steps; after
-// every step stdout, stderr, the exit code and every file in the repo (minus
-// .git) plus the stub's call log and the last job file must match.
+// gsdt-ui (src/commands/ui.ts, behind bin/gsdt-ui) against saved goldens in
+// tests/golden/p4-ui-command/. One world (a fixture repo + stub runner/Playwright) runs a
+// long sequence of steps; after every step stdout, stderr, the exit code and every file in
+// the repo (minus .git) plus the stub's call log and the last job file are the golden.
 //
-// Normalized before comparing: the world's root dir (→ <W>), the package dirs
-// (→ <PKG>) and ISO timestamps (→ <TS>). Nothing else.
+// Normalized: the world's root dir (-> <W>), the package dir (-> <PKG>), ISO timestamps
+// (-> <TS>), the app's port (-> <PORT>, <BASE>) and 40-digit hashes (-> <H>).
 // The runner is always the stub (GSD_UI_RUNNER); the real runner has its own
 // suite (tests/test-ui-browser.sh, tests/ts/p4-ui.test.ts for its helpers).
 // Run: node --test tests/ts/p4-ui-command.test.ts
+// Regenerate: UPDATE_GOLDEN=1 node --test tests/ts/p4-ui-command.test.ts; review the diff of
+// tests/golden/p4-ui-command/ by hand before committing.
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { chmodSync, copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
-import { test } from 'node:test';
-import { PKG, repo, sh, tmp, write } from './helpers.ts';
+import { test, golden, goldenSkip } from './golden.ts';
+import { PKG, repo, sh, tmp, write, subst } from './helpers.ts';
 
 const NEW_BIN = path.join(PKG, 'bin', 'gsdt-ui');
-const FIX = path.join(PKG, 'tests', 'fixtures', 'p4-old-bins');
 
-type World = { name: 'old' | 'new'; root: string; app: string; pd: string; stub: string; bin: string; pkg: string };
+type World = { name: 'new'; root: string; app: string; pd: string; stub: string; bin: string; pkg: string };
 type EnvVal = string | undefined | ((w: World) => string | undefined);
 type Step = {
   label: string;
@@ -33,16 +32,6 @@ type Step = {
   expect?: RegExp; // sanity: the NEW stdout+stderr must match (a guard against "both fail the same way")
   rc?: number; // sanity: expected exit code
 };
-
-function oldPackage(root: string): { bin: string; pkg: string } {
-  const pkg = path.join(root, 'pkg');
-  mkdirSync(path.join(pkg, 'bin'), { recursive: true });
-  cpSync(path.join(PKG, 'lib'), path.join(pkg, 'lib'), { recursive: true });
-  copyFileSync(path.join(FIX, 'ui-check.mjs'), path.join(pkg, 'lib', 'ui-check.mjs'));
-  copyFileSync(path.join(FIX, 'gsdt-ui'), path.join(pkg, 'bin', 'gsdt-ui'));
-  chmodSync(path.join(pkg, 'bin', 'gsdt-ui'), 0o755);
-  return { bin: path.join(pkg, 'bin', 'gsdt-ui'), pkg };
-}
 
 const git = (cwd: string, ...a: string[]): string => sh(cwd, 'git', ['-c', 'user.name=t', '-c', 'user.email=t@t', ...a]);
 
@@ -84,14 +73,14 @@ for a; do last=$a; done
 echo png > "$last"
 `;
 
-function makeWorld(name: 'old' | 'new', base: number): World {
+function makeWorld(name: 'new', base: number): World {
   const root = path.join(tmp(), name);
   const app = path.join(root, 'app');
   const stub = path.join(root, 'stub');
   mkdirSync(stub, { recursive: true });
   write(path.join(stub, 'runner'), RUNNER, 0o755);
   write(path.join(stub, 'playwright'), PLAYWRIGHT, 0o755);
-  const { bin, pkg } = name === 'old' ? oldPackage(root) : { bin: NEW_BIN, pkg: PKG };
+  const { bin, pkg } = { bin: NEW_BIN, pkg: PKG };
   repo(app, 'base = develop\ninstall = none\n');
   git(app, 'config', 'user.name', 'Tester');
   write(path.join(app, 'package.json'), `{ "scripts": { "dev": "PORT=$(bash ../../scripts/gsdt-derive-port.sh ${base}) next dev" } }\n`);
@@ -113,8 +102,8 @@ function cleanPath(): string {
 const PATH_CLEAN = cleanPath();
 
 function norm(s: string, w: World): string {
-  let t = s.split(w.pkg).join('<PKG>');
-  t = t.split(w.root).join('<W>');
+  let t = subst(s, w.pkg, '<PKG>');
+  t = subst(t, w.root, '<W>');
   t = t.replace(/\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ/g, '<TS>');
   return t;
 }
@@ -171,10 +160,11 @@ const layout = (text: string) => (w: World) => write(path.join(w.pd, '05-LAYOUT.
 const conf = (text: string) => (w: World) => write(path.join(w.app, '.gsd.conf'), `base = develop\ninstall = none\n${text}`);
 const RUNNER_ENV = { GSD_UI_RUNNER: (w: World): string => path.join(w.stub, 'runner') };
 
-test('gsdt-ui: old bash command vs src/commands/ui.ts, step by step', async () => {
+test('gsdt-ui: src/commands/ui.ts, step by step', async () => {
   await startServer();
   const base = PORT - 5;
-  const worlds = [makeWorld('old', base), makeWorld('new', base)] as const;
+  const PN = (t: string): string => subst(t, String(PORT), '<PORT>').replace(new RegExp(`\\b${base}\\b`, 'g'), '<BASE>').replace(/\b[0-9a-f]{40}\b/g, '<H>');
+  const w = makeWorld('new', base);
   const FULL = 'sketch: skip a test\npages: /, cart\napp: apps/web\nmain_button: / = Start now\nmain_button: /cart = none\nexpect: /cart = cart\nwaive: C3 | * | * | .brand | agreed with the user\n';
   const steps: Step[] = [
     // ── usage and argument refusals ──────────────────────────────────────
@@ -412,31 +402,26 @@ test('gsdt-ui: old bash command vs src/commands/ui.ts, step by step', async () =
   let ran = 0;
   const all = [...steps.slice(0, -1), { label: 'restart the server', argv: ['status', '5'], pre: undefined as undefined }, ...steps2];
   const bad: string[] = [];
+  const text = (label: string, argv: string[], x: { w: World; r: R }): string => {
+    const sn = snapshot(x.w);
+    const files = Object.keys(sn).sort().map((k) => `--- file ${k}\n${sn[k]}`).join('\n');
+    return `### ${label}: ${argv.join(' ')}\nrc=${x.r.rc}\n--- stdout\n${x.r.out}\n--- stderr\n${x.r.err}\n${files}`;
+  };
   for (const s of all) {
     if (s.label === 'restart the server') await restart();
-    const rs = await Promise.all(
-      worlds.map(async (w) => {
-        s.pre?.(w);
-        const sx: Step = { ...s, argv: s.argv.map((a) => (a === '__APP__' ? w.app : a)) };
-        return { w, r: await run(w, sx) };
-      }),
-    );
-    const [o, n] = [rs[0]!, rs[1]!];
+    s.pre?.(w);
+    const sx: Step = { ...s, argv: s.argv.map((a) => (a === '__APP__' ? w.app : a)) };
+    const n = { w, r: await run(w, sx) };
     ran++;
-    const so = snapshot(o.w);
-    const sn = snapshot(n.w);
+    // Windows has no exec bit, so the "not executable" message (bash's own) cannot be the golden there
+    if (process.platform === 'win32' && s.label === 'check: runner not executable') goldenSkip();
+    else golden(PN(text(s.label, s.argv, n)));
     const diffs: string[] = [];
-    if (o.r.out !== n.r.out) diffs.push(`stdout\n    old: ${JSON.stringify(o.r.out)}\n    new: ${JSON.stringify(n.r.out)}`);
-    if (o.r.err !== n.r.err) diffs.push(`stderr\n    old: ${JSON.stringify(o.r.err)}\n    new: ${JSON.stringify(n.r.err)}`);
-    if (o.r.rc !== n.r.rc) diffs.push(`rc old=${o.r.rc} new=${n.r.rc}`);
-    for (const k of new Set([...Object.keys(so), ...Object.keys(sn)])) {
-      if (so[k] !== sn[k]) diffs.push(`file ${k}\n    old: ${JSON.stringify(so[k])}\n    new: ${JSON.stringify(sn[k])}`);
-    }
     if (s.rc !== undefined && n.r.rc !== s.rc) diffs.push(`sanity: expected rc ${s.rc}, got ${n.r.rc} (${JSON.stringify(n.r.err + n.r.out)})`);
     if (s.expect && !s.expect.test(n.r.out + n.r.err)) diffs.push(`sanity: output does not match ${s.expect}: ${JSON.stringify(n.r.out + n.r.err)}`);
     if (diffs.length > 0) bad.push(`[${s.label}] ${s.argv.join(' ')}\n  ${diffs.join('\n  ')}`);
   }
   server.close();
   assert.ok(ran > 100, `ran ${ran} steps`);
-  assert.equal(bad.length, 0, `${bad.length} of ${ran} steps differ:\n${bad.join('\n')}`);
+  assert.equal(bad.length, 0, `${bad.length} of ${ran} steps fail:\n${bad.join('\n')}`);
 });

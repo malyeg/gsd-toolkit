@@ -1,0 +1,1906 @@
+@@@ 1 @@@
+missing mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 2 @@@
+missing mode=undefined value=undefined
+rc=0
+
+@@@ 3 @@@
+missing mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 4 @@@
+empty mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 5 @@@
+empty mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] ""
+@@@ 6 @@@
+empty mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 7 @@@
+empty mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 8 @@@
+empty mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] ""
+@@@ 9 @@@
+empty mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 10 @@@
+empty mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 11 @@@
+empty mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] ""
+@@@ 12 @@@
+empty mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 13 @@@
+blank mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 14 @@@
+blank mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] " \n\t\n"
+@@@ 15 @@@
+blank mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 16 @@@
+blank mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 17 @@@
+blank mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] " \n\t\n"
+@@@ 18 @@@
+blank mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 19 @@@
+blank mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 20 @@@
+blank mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] " \n\t\n"
+@@@ 21 @@@
+blank mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 22 @@@
+unicode space only mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 23 @@@
+unicode space only mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "Â "
+@@@ 24 @@@
+unicode space only mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 25 @@@
+unicode space only mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 26 @@@
+unicode space only mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "Â "
+@@@ 27 @@@
+unicode space only mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 28 @@@
+unicode space only mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 29 @@@
+unicode space only mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "Â "
+@@@ 30 @@@
+unicode space only mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 31 @@@
+object mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 32 @@@
+object mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{}"
+@@@ 33 @@@
+object mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 34 @@@
+object mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 35 @@@
+object mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{}"
+@@@ 36 @@@
+object mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 37 @@@
+object mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 38 @@@
+object mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{}"
+@@@ 39 @@@
+object mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 40 @@@
+other keys mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(ls)\"\n    ]\n  },\n  \"model\": \"x\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 41 @@@
+other keys mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\"permissions\": {\"allow\": [\"Bash(ls)\"]}, \"model\": \"x\"}\n"
+@@@ 42 @@@
+other keys mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(ls)\"\n    ]\n  },\n  \"model\": \"x\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 43 @@@
+other keys mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(ls)\"\n    ]\n  },\n  \"model\": \"x\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 44 @@@
+other keys mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\"permissions\": {\"allow\": [\"Bash(ls)\"]}, \"model\": \"x\"}\n"
+@@@ 45 @@@
+other keys mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(ls)\"\n    ]\n  },\n  \"model\": \"x\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 46 @@@
+other keys mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(ls)\"\n    ]\n  },\n  \"model\": \"x\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 47 @@@
+other keys mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\"permissions\": {\"allow\": [\"Bash(ls)\"]}, \"model\": \"x\"}\n"
+@@@ 48 @@@
+other keys mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(ls)\"\n    ]\n  },\n  \"model\": \"x\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 49 @@@
+has env mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"A\": \"1\",\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  },\n  \"z\": 1\n}\n"
+@@@ 50 @@@
+has env mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": {\"A\": \"1\"}, \"z\": 1}"
+@@@ 51 @@@
+has env mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"A\": \"1\",\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  },\n  \"z\": 1\n}\n"
+@@@ 52 @@@
+has env mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"A\": \"1\",\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  },\n  \"z\": 1\n}\n"
+@@@ 53 @@@
+has env mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": {\"A\": \"1\"}, \"z\": 1}"
+@@@ 54 @@@
+has env mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"A\": \"1\",\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  },\n  \"z\": 1\n}\n"
+@@@ 55 @@@
+has env mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"A\": \"1\",\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  },\n  \"z\": 1\n}\n"
+@@@ 56 @@@
+has env mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": {\"A\": \"1\"}, \"z\": 1}"
+@@@ 57 @@@
+has env mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"A\": \"1\",\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  },\n  \"z\": 1\n}\n"
+@@@ 58 @@@
+same value mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": {\"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"}}"
+@@@ 59 @@@
+same value mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{}\n"
+@@@ 60 @@@
+same value mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 61 @@@
+same value mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": {\"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"}}"
+@@@ 62 @@@
+same value mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{}\n"
+@@@ 63 @@@
+same value mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 64 @@@
+same value mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": {\"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"}}"
+@@@ 65 @@@
+same value mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{}\n"
+@@@ 66 @@@
+same value mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 67 @@@
+other value mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\",\n    \"B\": \"2\"\n  },\n  \"x\": []\n}\n"
+@@@ 68 @@@
+other value mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"B\": \"2\"\n  },\n  \"x\": []\n}\n"
+@@@ 69 @@@
+other value mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\",\n    \"B\": \"2\"\n  },\n  \"x\": []\n}\n"
+@@@ 70 @@@
+other value mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\",\n    \"B\": \"2\"\n  },\n  \"x\": []\n}\n"
+@@@ 71 @@@
+other value mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"B\": \"2\"\n  },\n  \"x\": []\n}\n"
+@@@ 72 @@@
+other value mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\",\n    \"B\": \"2\"\n  },\n  \"x\": []\n}\n"
+@@@ 73 @@@
+other value mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\",\n    \"B\": \"2\"\n  },\n  \"x\": []\n}\n"
+@@@ 74 @@@
+other value mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"B\": \"2\"\n  },\n  \"x\": []\n}\n"
+@@@ 75 @@@
+other value mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\",\n    \"B\": \"2\"\n  },\n  \"x\": []\n}\n"
+@@@ 76 @@@
+only ours mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 77 @@@
+only ours mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{}\n"
+@@@ 78 @@@
+only ours mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 79 @@@
+only ours mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 80 @@@
+only ours mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{}\n"
+@@@ 81 @@@
+only ours mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 82 @@@
+only ours mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 83 @@@
+only ours mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{}\n"
+@@@ 84 @@@
+only ours mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 85 @@@
+env non-string value mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 86 @@@
+env non-string value mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{}\n"
+@@@ 87 @@@
+env non-string value mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 88 @@@
+env non-string value mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 89 @@@
+env non-string value mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{}\n"
+@@@ 90 @@@
+env non-string value mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 91 @@@
+env non-string value mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 92 @@@
+env non-string value mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{}\n"
+@@@ 93 @@@
+env non-string value mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 94 @@@
+numbers mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": 1.0,\n  \"b\": 100000.0,\n  \"c\": 123456789012345678901234567890,\n  \"d\": 0,\n  \"e\": 0.1,\n  \"f\": 100.0,\n  \"g\": 1e-07,\n  \"h\": 1.5e+300,\n  \"i\": Infinity,\n  \"j\": -0.0,\n  \"k\": 1.2345678901234568e+16,\n  \"l\": 0.0001,\n  \"m\": 1e-05,\n  \"n\": 1e+16,\n  \"o\": 123456789.12345679,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 95 @@@
+numbers mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 1.0, \"b\": 1e5, \"c\": 123456789012345678901234567890, \"d\": -0, \"e\": 0.1, \"f\": 1E+2, \"g\": 1e-7, \"h\": 1.5e300, \"i\": 1e999, \"j\": -0.0, \"k\": 12345678901234567.0, \"l\": 0.0001, \"m\": 0.00001, \"n\": 1e16, \"o\": 123456789.123456789}"
+@@@ 96 @@@
+numbers mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": 1.0,\n  \"b\": 100000.0,\n  \"c\": 123456789012345678901234567890,\n  \"d\": 0,\n  \"e\": 0.1,\n  \"f\": 100.0,\n  \"g\": 1e-07,\n  \"h\": 1.5e+300,\n  \"i\": Infinity,\n  \"j\": -0.0,\n  \"k\": 1.2345678901234568e+16,\n  \"l\": 0.0001,\n  \"m\": 1e-05,\n  \"n\": 1e+16,\n  \"o\": 123456789.12345679,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 97 @@@
+numbers mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"a\": 1.0,\n  \"b\": 100000.0,\n  \"c\": 123456789012345678901234567890,\n  \"d\": 0,\n  \"e\": 0.1,\n  \"f\": 100.0,\n  \"g\": 1e-07,\n  \"h\": 1.5e+300,\n  \"i\": Infinity,\n  \"j\": -0.0,\n  \"k\": 1.2345678901234568e+16,\n  \"l\": 0.0001,\n  \"m\": 1e-05,\n  \"n\": 1e+16,\n  \"o\": 123456789.12345679,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 98 @@@
+numbers mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 1.0, \"b\": 1e5, \"c\": 123456789012345678901234567890, \"d\": -0, \"e\": 0.1, \"f\": 1E+2, \"g\": 1e-7, \"h\": 1.5e300, \"i\": 1e999, \"j\": -0.0, \"k\": 12345678901234567.0, \"l\": 0.0001, \"m\": 0.00001, \"n\": 1e16, \"o\": 123456789.123456789}"
+@@@ 99 @@@
+numbers mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"a\": 1.0,\n  \"b\": 100000.0,\n  \"c\": 123456789012345678901234567890,\n  \"d\": 0,\n  \"e\": 0.1,\n  \"f\": 100.0,\n  \"g\": 1e-07,\n  \"h\": 1.5e+300,\n  \"i\": Infinity,\n  \"j\": -0.0,\n  \"k\": 1.2345678901234568e+16,\n  \"l\": 0.0001,\n  \"m\": 1e-05,\n  \"n\": 1e+16,\n  \"o\": 123456789.12345679,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 100 @@@
+numbers mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"a\": 1.0,\n  \"b\": 100000.0,\n  \"c\": 123456789012345678901234567890,\n  \"d\": 0,\n  \"e\": 0.1,\n  \"f\": 100.0,\n  \"g\": 1e-07,\n  \"h\": 1.5e+300,\n  \"i\": Infinity,\n  \"j\": -0.0,\n  \"k\": 1.2345678901234568e+16,\n  \"l\": 0.0001,\n  \"m\": 1e-05,\n  \"n\": 1e+16,\n  \"o\": 123456789.12345679,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 101 @@@
+numbers mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 1.0, \"b\": 1e5, \"c\": 123456789012345678901234567890, \"d\": -0, \"e\": 0.1, \"f\": 1E+2, \"g\": 1e-7, \"h\": 1.5e300, \"i\": 1e999, \"j\": -0.0, \"k\": 12345678901234567.0, \"l\": 0.0001, \"m\": 0.00001, \"n\": 1e16, \"o\": 123456789.123456789}"
+@@@ 102 @@@
+numbers mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"a\": 1.0,\n  \"b\": 100000.0,\n  \"c\": 123456789012345678901234567890,\n  \"d\": 0,\n  \"e\": 0.1,\n  \"f\": 100.0,\n  \"g\": 1e-07,\n  \"h\": 1.5e+300,\n  \"i\": Infinity,\n  \"j\": -0.0,\n  \"k\": 1.2345678901234568e+16,\n  \"l\": 0.0001,\n  \"m\": 1e-05,\n  \"n\": 1e+16,\n  \"o\": 123456789.12345679,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 103 @@@
+nan mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": NaN,\n  \"b\": [\n    Infinity,\n    -Infinity\n  ],\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 104 @@@
+nan mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": NaN, \"b\": [Infinity, -Infinity]}"
+@@@ 105 @@@
+nan mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": NaN,\n  \"b\": [\n    Infinity,\n    -Infinity\n  ],\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 106 @@@
+nan mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"a\": NaN,\n  \"b\": [\n    Infinity,\n    -Infinity\n  ],\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 107 @@@
+nan mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": NaN, \"b\": [Infinity, -Infinity]}"
+@@@ 108 @@@
+nan mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"a\": NaN,\n  \"b\": [\n    Infinity,\n    -Infinity\n  ],\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 109 @@@
+nan mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"a\": NaN,\n  \"b\": [\n    Infinity,\n    -Infinity\n  ],\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 110 @@@
+nan mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": NaN, \"b\": [Infinity, -Infinity]}"
+@@@ 111 @@@
+nan mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"a\": NaN,\n  \"b\": [\n    Infinity,\n    -Infinity\n  ],\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 112 @@@
+nested mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": {\n    \"b\": {\n      \"c\": []\n    },\n    \"d\": {}\n  },\n  \"e\": [\n    [],\n    {},\n    [\n      1,\n      [\n        2\n      ]\n    ]\n  ],\n  \"f\": null,\n  \"g\": true,\n  \"h\": false,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 113 @@@
+nested mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": {\"b\": {\"c\": []}, \"d\": {}}, \"e\": [[], {}, [1, [2]]], \"f\": null, \"g\": true, \"h\": false}"
+@@@ 114 @@@
+nested mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": {\n    \"b\": {\n      \"c\": []\n    },\n    \"d\": {}\n  },\n  \"e\": [\n    [],\n    {},\n    [\n      1,\n      [\n        2\n      ]\n    ]\n  ],\n  \"f\": null,\n  \"g\": true,\n  \"h\": false,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 115 @@@
+nested mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"a\": {\n    \"b\": {\n      \"c\": []\n    },\n    \"d\": {}\n  },\n  \"e\": [\n    [],\n    {},\n    [\n      1,\n      [\n        2\n      ]\n    ]\n  ],\n  \"f\": null,\n  \"g\": true,\n  \"h\": false,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 116 @@@
+nested mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": {\"b\": {\"c\": []}, \"d\": {}}, \"e\": [[], {}, [1, [2]]], \"f\": null, \"g\": true, \"h\": false}"
+@@@ 117 @@@
+nested mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"a\": {\n    \"b\": {\n      \"c\": []\n    },\n    \"d\": {}\n  },\n  \"e\": [\n    [],\n    {},\n    [\n      1,\n      [\n        2\n      ]\n    ]\n  ],\n  \"f\": null,\n  \"g\": true,\n  \"h\": false,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 118 @@@
+nested mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"a\": {\n    \"b\": {\n      \"c\": []\n    },\n    \"d\": {}\n  },\n  \"e\": [\n    [],\n    {},\n    [\n      1,\n      [\n        2\n      ]\n    ]\n  ],\n  \"f\": null,\n  \"g\": true,\n  \"h\": false,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 119 @@@
+nested mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": {\"b\": {\"c\": []}, \"d\": {}}, \"e\": [[], {}, [1, [2]]], \"f\": null, \"g\": true, \"h\": false}"
+@@@ 120 @@@
+nested mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"a\": {\n    \"b\": {\n      \"c\": []\n    },\n    \"d\": {}\n  },\n  \"e\": [\n    [],\n    {},\n    [\n      1,\n      [\n        2\n      ]\n    ]\n  ],\n  \"f\": null,\n  \"g\": true,\n  \"h\": false,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 121 @@@
+duplicate keys mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": 3,\n  \"b\": 2,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 122 @@@
+duplicate keys mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 1, \"b\": 2, \"a\": 3}"
+@@@ 123 @@@
+duplicate keys mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": 3,\n  \"b\": 2,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 124 @@@
+duplicate keys mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"a\": 3,\n  \"b\": 2,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 125 @@@
+duplicate keys mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 1, \"b\": 2, \"a\": 3}"
+@@@ 126 @@@
+duplicate keys mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"a\": 3,\n  \"b\": 2,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 127 @@@
+duplicate keys mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"a\": 3,\n  \"b\": 2,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 128 @@@
+duplicate keys mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 1, \"b\": 2, \"a\": 3}"
+@@@ 129 @@@
+duplicate keys mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"a\": 3,\n  \"b\": 2,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 130 @@@
+unicode mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"n\": \"cafÃ© Ã© ð ð â¨ â¨ / \\u0000  \\b\\f\\n\\r\\t \\\" \\\\\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 131 @@@
+unicode mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\"n\": \"caf\\u00e9 Ã© \\ud83d\\ude00 ð \\u2028 â¨ \\/ \\u0000 \\u007f \\b\\f\\n\\r\\t \\\" \\\\\"}"
+@@@ 132 @@@
+unicode mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"n\": \"cafÃ© Ã© ð ð â¨ â¨ / \\u0000  \\b\\f\\n\\r\\t \\\" \\\\\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 133 @@@
+unicode mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"n\": \"cafÃ© Ã© ð ð â¨ â¨ / \\u0000  \\b\\f\\n\\r\\t \\\" \\\\\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 134 @@@
+unicode mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\"n\": \"caf\\u00e9 Ã© \\ud83d\\ude00 ð \\u2028 â¨ \\/ \\u0000 \\u007f \\b\\f\\n\\r\\t \\\" \\\\\"}"
+@@@ 135 @@@
+unicode mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"n\": \"cafÃ© Ã© ð ð â¨ â¨ / \\u0000  \\b\\f\\n\\r\\t \\\" \\\\\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 136 @@@
+unicode mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"n\": \"cafÃ© Ã© ð ð â¨ â¨ / \\u0000  \\b\\f\\n\\r\\t \\\" \\\\\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 137 @@@
+unicode mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\"n\": \"caf\\u00e9 Ã© \\ud83d\\ude00 ð \\u2028 â¨ \\/ \\u0000 \\u007f \\b\\f\\n\\r\\t \\\" \\\\\"}"
+@@@ 138 @@@
+unicode mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"n\": \"cafÃ© Ã© ð ð â¨ â¨ / \\u0000  \\b\\f\\n\\r\\t \\\" \\\\\",\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 139 @@@
+crlf mode=undefined value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": 1,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 140 @@@
+crlf mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\r\n  \"a\": 1\r\n}\r\n"
+@@@ 141 @@@
+crlf mode=undefined value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\n  \"a\": 1,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 142 @@@
+crlf mode=600 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"a\": 1,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 143 @@@
+crlf mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\r\n  \"a\": 1\r\n}\r\n"
+@@@ 144 @@@
+crlf mode=600 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\n  \"a\": 1,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 145 @@@
+crlf mode=755 value=300000
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"a\": 1,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 146 @@@
+crlf mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\r\n  \"a\": 1\r\n}\r\n"
+@@@ 147 @@@
+crlf mode=755 value=café "q"
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\n  \"a\": 1,\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"cafÃ© \\\"q\\\"\"\n  }\n}\n"
+@@@ 148 @@@
+array mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "[]"
+@@@ 149 @@@
+array mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "[]"
+@@@ 150 @@@
+array mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "[]"
+@@@ 151 @@@
+array mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "[]"
+@@@ 152 @@@
+array mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "[]"
+@@@ 153 @@@
+array mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "[]"
+@@@ 154 @@@
+array mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "[]"
+@@@ 155 @@@
+array mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "[]"
+@@@ 156 @@@
+array mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "[]"
+@@@ 157 @@@
+string mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "\"x\""
+@@@ 158 @@@
+string mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "\"x\""
+@@@ 159 @@@
+string mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "\"x\""
+@@@ 160 @@@
+string mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "\"x\""
+@@@ 161 @@@
+string mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "\"x\""
+@@@ 162 @@@
+string mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "\"x\""
+@@@ 163 @@@
+string mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "\"x\""
+@@@ 164 @@@
+string mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "\"x\""
+@@@ 165 @@@
+string mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "\"x\""
+@@@ 166 @@@
+number mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "1"
+@@@ 167 @@@
+number mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "1"
+@@@ 168 @@@
+number mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "1"
+@@@ 169 @@@
+number mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "1"
+@@@ 170 @@@
+number mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "1"
+@@@ 171 @@@
+number mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "1"
+@@@ 172 @@@
+number mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "1"
+@@@ 173 @@@
+number mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "1"
+@@@ 174 @@@
+number mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "1"
+@@@ 175 @@@
+null mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "null"
+@@@ 176 @@@
+null mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "null"
+@@@ 177 @@@
+null mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "null"
+@@@ 178 @@@
+null mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "null"
+@@@ 179 @@@
+null mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "null"
+@@@ 180 @@@
+null mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "null"
+@@@ 181 @@@
+null mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "null"
+@@@ 182 @@@
+null mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "null"
+@@@ 183 @@@
+null mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "null"
+@@@ 184 @@@
+env array mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": []}"
+@@@ 185 @@@
+env array mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": []}"
+@@@ 186 @@@
+env array mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": []}"
+@@@ 187 @@@
+env array mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": []}"
+@@@ 188 @@@
+env array mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": []}"
+@@@ 189 @@@
+env array mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": []}"
+@@@ 190 @@@
+env array mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": []}"
+@@@ 191 @@@
+env array mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": []}"
+@@@ 192 @@@
+env array mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": []}"
+@@@ 193 @@@
+env null mode=undefined value=300000
+rc=1
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": null}"
+@@@ 194 @@@
+env null mode=undefined value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": null}"
+@@@ 195 @@@
+env null mode=undefined value=café "q"
+rc=1
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": null}"
+@@@ 196 @@@
+env null mode=600 value=300000
+rc=1
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": null}"
+@@@ 197 @@@
+env null mode=600 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": null}"
+@@@ 198 @@@
+env null mode=600 value=café "q"
+rc=1
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": null}"
+@@@ 199 @@@
+env null mode=755 value=300000
+rc=1
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": null}"
+@@@ 200 @@@
+env null mode=755 value=undefined
+rc=0
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": null}"
+@@@ 201 @@@
+env null mode=755 value=café "q"
+rc=1
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": null}"
+@@@ 202 @@@
+env string mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": \"x\"}"
+@@@ 203 @@@
+env string mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": \"x\"}"
+@@@ 204 @@@
+env string mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"env\": \"x\"}"
+@@@ 205 @@@
+env string mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": \"x\"}"
+@@@ 206 @@@
+env string mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": \"x\"}"
+@@@ 207 @@@
+env string mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"env\": \"x\"}"
+@@@ 208 @@@
+env string mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": \"x\"}"
+@@@ 209 @@@
+env string mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": \"x\"}"
+@@@ 210 @@@
+env string mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"env\": \"x\"}"
+@@@ 211 @@@
+invalid mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": "
+@@@ 212 @@@
+invalid mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": "
+@@@ 213 @@@
+invalid mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": "
+@@@ 214 @@@
+invalid mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": "
+@@@ 215 @@@
+invalid mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": "
+@@@ 216 @@@
+invalid mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": "
+@@@ 217 @@@
+invalid mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": "
+@@@ 218 @@@
+invalid mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": "
+@@@ 219 @@@
+invalid mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": "
+@@@ 220 @@@
+trailing comma mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 1,}"
+@@@ 221 @@@
+trailing comma mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 1,}"
+@@@ 222 @@@
+trailing comma mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 1,}"
+@@@ 223 @@@
+trailing comma mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 1,}"
+@@@ 224 @@@
+trailing comma mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 1,}"
+@@@ 225 @@@
+trailing comma mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 1,}"
+@@@ 226 @@@
+trailing comma mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 1,}"
+@@@ 227 @@@
+trailing comma mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 1,}"
+@@@ 228 @@@
+trailing comma mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 1,}"
+@@@ 229 @@@
+trailing data mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{} {}"
+@@@ 230 @@@
+trailing data mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{} {}"
+@@@ 231 @@@
+trailing data mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{} {}"
+@@@ 232 @@@
+trailing data mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{} {}"
+@@@ 233 @@@
+trailing data mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{} {}"
+@@@ 234 @@@
+trailing data mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{} {}"
+@@@ 235 @@@
+trailing data mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{} {}"
+@@@ 236 @@@
+trailing data mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{} {}"
+@@@ 237 @@@
+trailing data mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{} {}"
+@@@ 238 @@@
+single quotes mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{'a': 1}"
+@@@ 239 @@@
+single quotes mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{'a': 1}"
+@@@ 240 @@@
+single quotes mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{'a': 1}"
+@@@ 241 @@@
+single quotes mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{'a': 1}"
+@@@ 242 @@@
+single quotes mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{'a': 1}"
+@@@ 243 @@@
+single quotes mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{'a': 1}"
+@@@ 244 @@@
+single quotes mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{'a': 1}"
+@@@ 245 @@@
+single quotes mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{'a': 1}"
+@@@ 246 @@@
+single quotes mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{'a': 1}"
+@@@ 247 @@@
+bom mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "ï»¿{}"
+@@@ 248 @@@
+bom mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "ï»¿{}"
+@@@ 249 @@@
+bom mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "ï»¿{}"
+@@@ 250 @@@
+bom mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "ï»¿{}"
+@@@ 251 @@@
+bom mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "ï»¿{}"
+@@@ 252 @@@
+bom mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "ï»¿{}"
+@@@ 253 @@@
+bom mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "ï»¿{}"
+@@@ 254 @@@
+bom mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "ï»¿{}"
+@@@ 255 @@@
+bom mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "ï»¿{}"
+@@@ 256 @@@
+control char mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": \"x\ty\"}"
+@@@ 257 @@@
+control char mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": \"x\ty\"}"
+@@@ 258 @@@
+control char mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": \"x\ty\"}"
+@@@ 259 @@@
+control char mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": \"x\ty\"}"
+@@@ 260 @@@
+control char mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": \"x\ty\"}"
+@@@ 261 @@@
+control char mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": \"x\ty\"}"
+@@@ 262 @@@
+control char mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": \"x\ty\"}"
+@@@ 263 @@@
+control char mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": \"x\ty\"}"
+@@@ 264 @@@
+control char mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": \"x\ty\"}"
+@@@ 265 @@@
+bad escape mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": \"\\x\"}"
+@@@ 266 @@@
+bad escape mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": \"\\x\"}"
+@@@ 267 @@@
+bad escape mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": \"\\x\"}"
+@@@ 268 @@@
+bad escape mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": \"\\x\"}"
+@@@ 269 @@@
+bad escape mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": \"\\x\"}"
+@@@ 270 @@@
+bad escape mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": \"\\x\"}"
+@@@ 271 @@@
+bad escape mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": \"\\x\"}"
+@@@ 272 @@@
+bad escape mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": \"\\x\"}"
+@@@ 273 @@@
+bad escape mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": \"\\x\"}"
+@@@ 274 @@@
+bad unicode escape mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": \"\\u12\"}"
+@@@ 275 @@@
+bad unicode escape mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": \"\\u12\"}"
+@@@ 276 @@@
+bad unicode escape mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": \"\\u12\"}"
+@@@ 277 @@@
+bad unicode escape mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": \"\\u12\"}"
+@@@ 278 @@@
+bad unicode escape mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": \"\\u12\"}"
+@@@ 279 @@@
+bad unicode escape mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": \"\\u12\"}"
+@@@ 280 @@@
+bad unicode escape mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": \"\\u12\"}"
+@@@ 281 @@@
+bad unicode escape mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": \"\\u12\"}"
+@@@ 282 @@@
+bad unicode escape mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": \"\\u12\"}"
+@@@ 283 @@@
+leading zero mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 01}"
+@@@ 284 @@@
+leading zero mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 01}"
+@@@ 285 @@@
+leading zero mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 01}"
+@@@ 286 @@@
+leading zero mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 01}"
+@@@ 287 @@@
+leading zero mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 01}"
+@@@ 288 @@@
+leading zero mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 01}"
+@@@ 289 @@@
+leading zero mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 01}"
+@@@ 290 @@@
+leading zero mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 01}"
+@@@ 291 @@@
+leading zero mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 01}"
+@@@ 292 @@@
+plus mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": +1}"
+@@@ 293 @@@
+plus mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": +1}"
+@@@ 294 @@@
+plus mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": +1}"
+@@@ 295 @@@
+plus mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": +1}"
+@@@ 296 @@@
+plus mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": +1}"
+@@@ 297 @@@
+plus mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": +1}"
+@@@ 298 @@@
+plus mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": +1}"
+@@@ 299 @@@
+plus mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": +1}"
+@@@ 300 @@@
+plus mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": +1}"
+@@@ 301 @@@
+dot mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 1.}"
+@@@ 302 @@@
+dot mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 1.}"
+@@@ 303 @@@
+dot mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"a\": 1.}"
+@@@ 304 @@@
+dot mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 1.}"
+@@@ 305 @@@
+dot mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 1.}"
+@@@ 306 @@@
+dot mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"a\": 1.}"
+@@@ 307 @@@
+dot mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 1.}"
+@@@ 308 @@@
+dot mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 1.}"
+@@@ 309 @@@
+dot mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"a\": 1.}"
+@@@ 310 @@@
+invalid utf8 mode=undefined value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"ÿ\":1}"
+@@@ 311 @@@
+invalid utf8 mode=undefined value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"ÿ\":1}"
+@@@ 312 @@@
+invalid utf8 mode=undefined value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [644] "{\"ÿ\":1}"
+@@@ 313 @@@
+invalid utf8 mode=600 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"ÿ\":1}"
+@@@ 314 @@@
+invalid utf8 mode=600 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"ÿ\":1}"
+@@@ 315 @@@
+invalid utf8 mode=600 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [600] "{\"ÿ\":1}"
+@@@ 316 @@@
+invalid utf8 mode=755 value=300000
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"ÿ\":1}"
+@@@ 317 @@@
+invalid utf8 mode=755 value=undefined
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"ÿ\":1}"
+@@@ 318 @@@
+invalid utf8 mode=755 value=café "q"
+rc=3
+.claude/
+--
+.claude/settings.local.json [755] "{\"ÿ\":1}"

@@ -1,0 +1,7 @@
+@@@ 1 @@@
+rc=64 clock=1760011200 runs=0
+--- stdout
+
+--- stderr
+gsdt-codex-wait: nothing to run: gsdt-codex-wait -- <command> [args...], or --wait-only
+

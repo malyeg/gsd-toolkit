@@ -1,0 +1,8 @@
+@@@ 1 @@@
+rc=0 clock=1760011200 runs=0
+--- stdout
+to-stdout
+
+--- stderr
+to-stderr
+

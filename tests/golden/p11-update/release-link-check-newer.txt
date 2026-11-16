@@ -1,0 +1,13 @@
+@@@ 1 @@@
+rc=0
+--stdout--
+installed : 1.0.0  (<R>/release/share/gsd-toolkit/releases/1.0.0)
+latest    : 1.1.0  (acme/gsd-toolkit)
+▶ update available: gsdt-update
+--stderr--
+--install.sh--
+--npm--
+--npx--
+--caches--
+1.1.0
+|

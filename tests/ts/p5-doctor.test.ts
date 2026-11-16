@@ -1,16 +1,15 @@
-// P5 parity (gsdt-doctor): the TypeScript command behind bin/gsdt-doctor against
-// the pre-P5 bash command (tests/fixtures/p5-old-bins/gsdt-doctor). Two worlds
-// (old, new) are built with the SAME layout: <W>/pkg is a copy of the package
-// (bin, lib, src, skills, shims, VERSION, install.sh; only bin/gsdt-doctor
-// differs), <W>/home is HOME, <W>/repo the repo under test. Both run the same
-// steps; stdout, stderr, the exit code and the files left behind must match.
+// gsdt-doctor: the TypeScript command behind bin/gsdt-doctor, run in a throwaway world:
+// <W>/pkg is a copy of the package (bin, lib, src, skills, shims, VERSION, install.sh),
+// <W>/home is HOME, <W>/repo the repo under test. Each scenario's stdout, stderr and exit
+// code per run, and the files left behind, are checked against the saved goldens in
+// tests/golden/p5-doctor/ (one file per scenario). Regenerate with UPDATE_GOLDEN=1 (from the
+// current code); review the golden diff by hand.
 //
-// Normalized before comparing: the world's root dir (→ <W>). Nothing else.
+// Normalized: the world's root dir (-> <W>). Nothing else.
 // Run: node --test tests/ts/p5-doctor.test.ts   (P5_ONLY=<regex> picks scenarios)
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import {
-  chmodSync,
   copyFileSync,
   cpSync,
   existsSync,
@@ -24,8 +23,19 @@ import {
   writeFileSync,
 } from 'node:fs';
 import path from 'node:path';
-import { test } from 'node:test';
-import { AWK_DIR, PKG, tmp, write, LOCALE_ENV } from './helpers.ts';
+import { createHash } from 'node:crypto';
+import { golden, test, skipFileOnWindows } from './golden.ts';
+
+skipFileOnWindows('POSIX world: colon-joined PATH with /usr/bin, symlink farms, jq/awk, bash-built fixtures; Windows doctor is covered by tests/node/doctor.test.ts and tests/os');
+import { AWK_DIR, PKG, tmp, write, LOCALE_ENV, subst } from './helpers.ts';
+
+// A PATH folder holding only `node`: the folder node lives in can hold a global gsd_run
+// (CI installs gsd-core there), and "no gsd-core" scenarios must not find it.
+const NODE_BIN = ((): string => {
+  const d = tmp();
+  symlinkSync(process.execPath, path.join(d, 'node'));
+  return d;
+})();
 
 Object.assign(process.env, {
   GIT_CONFIG_GLOBAL: '/dev/null',
@@ -36,9 +46,7 @@ Object.assign(process.env, {
   GIT_COMMITTER_EMAIL: 't@t',
 });
 
-const FIX = path.join(PKG, 'tests', 'fixtures', 'p5-old-bins');
-
-type Ctx = { name: 'old' | 'new'; W: string; pkg: string; home: string; repo: string; stub: string };
+type Ctx = { W: string; pkg: string; home: string; repo: string; stub: string };
 type EnvVal = string | null | ((c: Ctx) => string);
 type Sc = {
   name: string;
@@ -51,9 +59,8 @@ type Sc = {
   cwd?: (c: Ctx) => string;
   pkgGit?: boolean; // make the package copy a git checkout
   expect?: RegExp; // sanity: the NEW stdout+stderr of some run must match
-  // Not comparable with the old bin on purpose (P6): without perl the old bin skipped the roadmap
-  // check, the TypeScript always runs it. Only the new side runs; it must still show `expect` and a
-  // roadmap finding (T022), and never the old "roadmap row check skipped" note.
+  // No golden: without perl or python the doctor still runs the roadmap check (T022) and says nothing
+  // about the missing tool. Only `expect`, T022 and the absence of any python/perl note are asserted.
   newOnly?: boolean;
   tty?: never;
 };
@@ -65,21 +72,17 @@ function g(cwd: string, ...a: string[]): string {
   return r.stdout ?? '';
 }
 
-function makeWorld(name: 'old' | 'new'): Ctx {
+function makeWorld(): Ctx {
   const W = tmp();
   const pkg = path.join(W, 'pkg');
   mkdirSync(pkg, { recursive: true });
   for (const d of ['bin', 'lib', 'src', 'skills', 'shims']) cpSync(path.join(PKG, d), path.join(pkg, d), { recursive: true });
   for (const f of ['VERSION', 'install.sh']) copyFileSync(path.join(PKG, f), path.join(pkg, f));
-  if (name === 'old') {
-    copyFileSync(path.join(FIX, 'gsdt-doctor'), path.join(pkg, 'bin', 'gsdt-doctor'));
-    chmodSync(path.join(pkg, 'bin', 'gsdt-doctor'), 0o755);
-  }
   const home = path.join(W, 'home');
   mkdirSync(home, { recursive: true });
   const stub = path.join(W, 'stub');
   write(path.join(stub, 'gsd_run'), `#!/bin/sh\necho '{"packageName":"@opengsd/gsd-core","version":"1.18.0"}'\n`, 0o755);
-  return { name, W, pkg, home, repo: path.join(W, 'repo'), stub };
+  return { W, pkg, home, repo: path.join(W, 'repo'), stub };
 }
 
 /** a small GSD repo on develop with an origin (test-doctor.sh's mkrepo) */
@@ -101,7 +104,7 @@ function runBin(c: Ctx, sc: Sc, argv: string[], cwd: string): Promise<{ out: str
   const dirs = [path.join(c.pkg, 'bin')];
   if (!sc.nostub) dirs.push(c.stub);
   if (AWK_DIR) dirs.push(AWK_DIR); // gawk counts bytes, as BSD awk and mawk do (helpers.ts)
-  const node = path.dirname(process.execPath);
+  const node = NODE_BIN;
   dirs.push(node);
   const jq = spawnSync('sh', ['-c', 'command -v jq'], { encoding: 'utf8' }).stdout.trim();
   if (jq) dirs.push(path.dirname(jq));
@@ -170,7 +173,7 @@ function snapshot(dir: string, root = dir, out: Record<string, string> = {}): Re
   }
   for (const n of names) {
     const p = path.join(dir, n);
-    const rel = path.relative(root, p);
+    const rel = path.relative(root, p).replace(/\\/g, "/");
     if (rel === 'pkg' || rel === 'farm' || rel === 'stub' || rel === 'home/Library' || rel.startsWith('home/.npm')) continue;
     if (rel.includes('.git/') && !/\.git\/(config|hooks\/post-merge)$/.test(rel)) continue;
     if (n === '.git' || (rel.startsWith('repo') && rel.endsWith('.git') && false)) {
@@ -187,36 +190,29 @@ function snapshot(dir: string, root = dir, out: Record<string, string> = {}): Re
   return out;
 }
 
-const norm = (s: string, W: string): string => s.replaceAll(W, '<W>');
-// P13 dropped the python (T003) and perl (T006) tool lines: nothing runs them any more. The old
-// bin's "ok" lines for them are removed from its output; nothing else is mapped.
-const t006 = (s: string): string =>
-  s.replace(/^ {2}\x1b\[32m✔\x1b\[0m (?:\S+ \S+ \(the planning repair needs it\)|perl \(claims add roadmap rows; the roadmap check needs it\))\n/gm, '');
-// The old fail() skips a repeated fix with `printf "$FIXES" | grep -qxF` under pipefail. When
-// grep -q quits before printf is done, printf dies of SIGPIPE (141), the pipe "fails" and the fix
-// is listed twice. Rare, under load (25 in 32000 with 16 at once); a bug, not a contract. The
-// port lists each fix once: drop repeats from the old list.
-const oneFixEach = (s: string): string =>
-  s.replace(/(finding\(s\)\.[^\n]*Run:\n\n)((?: {2}[^\n]*\n)*)/, (_m, head: string, list: string) => head + [...new Set(list.split('\n'))].join('\n'));
-
-/** assert.equal with a readable message: the chunks that differ, not the whole JSON line */
-function same(actual: string, expected: string, lab: string): void {
-  if (actual === expected) return;
-  const split = (t: string): string[] => t.split(/\n|(?<=\}),(?=\{)|(?<=\]),(?=")/);
-  const a = split(actual);
-  const e = split(expected);
-  const msgs: string[] = [];
-  for (let i = 0; i < Math.max(a.length, e.length) && msgs.length < 6; i++) {
-    if (a[i] !== e[i]) msgs.push(`  [${i}] new: ${(a[i] ?? '<none>').slice(0, 300)}\n  [${i}] old: ${(e[i] ?? '<none>').slice(0, 300)}`);
-  }
-  assert.fail(`${lab}\n${msgs.join('\n')}`);
-}
+// the world's root dir -> <W>; this test process's pid (the 'live lock' scenario writes it) -> <PID>
+const norm = (s: string, W: string): string => subst(s, W, '<W>').replace(new RegExp(`\\b${process.pid}\\b`, 'g'), '<PID>');
 
 const only = process.env.P5_ONLY ? new RegExp(process.env.P5_ONLY) : null;
 
+/** one run as text: exit code, stdout, stderr (the world's root dir is <W>) */
+const runText = (argv: string[], r: { out: string; err: string; rc: number }, W: string): string =>
+  norm(`run [${argv.join(' ')}]\nrc=${r.rc}\n--- stdout\n${r.out}--- stderr\n${r.err}`, W);
+/** the files left behind, readable: a path line, then its content (a long file as its length + sha1) */
+const filesText = (W: string): string => {
+  const snap = snapshot(W);
+  return Object.keys(snap)
+    .sort()
+    .map((k) => {
+      const v = norm(snap[k] as string, W).replace(/^\t(ignorecase|precomposeunicode) = .*\n/gm, ''); // set by git on macOS only
+      return `### ${k}\n${v.length > 3000 ? `<${v.length} chars sha1 ${createHash('sha1').update(v).digest('hex')}>` : v}`;
+    })
+    .join('\n');
+};
+
 async function check(sc: Sc): Promise<void> {
-  const worlds = [makeWorld('old'), makeWorld('new')];
-  for (const c of worlds) {
+  const nw = makeWorld();
+  for (const c of [nw]) {
     if (sc.pkgGit) {
       g(c.pkg, 'init', '-q', '-b', 'main');
       g(c.pkg, 'add', '-A');
@@ -227,10 +223,9 @@ async function check(sc: Sc): Promise<void> {
   const runs = sc.runs ?? (sc.noplain ? [DEF_RUNS[0] as string[]] : DEF_RUNS);
   let sawExpect = sc.expect === undefined;
   if (sc.newOnly) {
-    const c = worlds[1] as Ctx;
     let all = '';
     for (const argv of runs) {
-      const n = await runBin(c, sc, argv, sc.cwd ? sc.cwd(c) : c.W);
+      const n = await runBin(nw, sc, argv, sc.cwd ? sc.cwd(nw) : nw.W);
       all += n.out + n.err;
     }
     assert.match(all, sc.expect as RegExp, `${sc.name}: expect`);
@@ -240,53 +235,14 @@ async function check(sc: Sc): Promise<void> {
     return;
   }
   for (const argv of runs) {
-    // The frozen oracle prints the full report by default; the TS command now prints it with --verbose,
-    // and its default (= the oracle's --quiet, plus the notes that point at something to do and one
-    // summary line) is compared after dropping those two.
-    const quiet = argv.includes('--quiet') || argv.includes('-q');
-    const asIs = quiet || argv.includes('--json') || argv.includes('--help') || argv.includes('-h');
-    const [o, n] = await Promise.all(worlds.map((c) => runBin(c, sc, c.name === 'new' && !asIs ? ['--verbose', ...argv] : argv, sc.cwd ? sc.cwd(c) : c.W)));
-    if (argv.includes('--json')) {
-      // W027 is a safe fix now (--fix runs git worktree prune): the oracle's "safe" list has no "prune"
-      const nj = n as { out: string };
-      nj.out = nj.out.replace(/("safe":\[[^\]]*?),?"prune"/, '$1').replace('"safe":[,', '"safe":[');
-    }
-    if (argv.includes('--help') || argv.includes('-h')) {
-      // the help text changed on purpose (--verbose, W027); the oracle's is the old one
-      assert.match((n as { out: string }).out, /--verbose/, `${sc.name}: help names --verbose`);
-      assert.match((n as { out: string }).out, /git worktree prune/, `${sc.name}: help names the prune fix`);
-      (n as { out: string }).out = (o as { out: string }).out;
-    }
-    if (quiet || argv.includes('--fix')) {
-      const strip = (t: string): string =>
-        t
-          .replace(/^ {2}(?:• .*|\x1b\[32m✔\x1b\[0m \d+ checks? passed \(--verbose to list them\))\n/gm, '')
-          .replace('(gsdt-doctor --fix can tidy the notes above)', '(there are notes — gsdt-doctor shows them; gsdt-doctor --fix can tidy them)');
-      const nn = n as { out: string };
-      if (quiet) nn.out = strip(nn.out);
-      else {
-        // --fix: the check-again run is the plain (quiet) one in both
-        const i = nn.out.indexOf('Checking again:');
-        if (i >= 0) nn.out = nn.out.slice(0, i) + strip(nn.out.slice(i));
-      }
-    }
-    const lab = `${sc.name} [${argv.join(' ')}]`;
-    const a = worlds[0] as Ctx;
-    const b = worlds[1] as Ctx;
-    same(norm((n as { out: string }).out, b.W), norm(oneFixEach(t006((o as { out: string }).out)), a.W), `${lab}: stdout`);
-    // The old bin leaks bash's own "<script>: line N: <file>: No such file or directory" for a
-    // missing planning file (a `wc -c < file` redirect error); the port does not (a bug, not a contract).
-    const oldErr = (o as { err: string }).err.replace(/^.*gsdt-doctor: line \d+: .*: No such file or directory\n/gm, '');
-    same(norm((n as { err: string }).err, b.W), norm(t006(oldErr), a.W), `${lab}: stderr`);
-    assert.equal((n as { rc: number }).rc, (o as { rc: number }).rc, `${lab}: exit code`);
-    if (sc.expect && sc.expect.test((n as { out: string; err: string }).out + (n as { out: string; err: string }).err)) sawExpect = true;
+    // The full report is --verbose now; the short default has its own scenarios (--quiet, --fix, doctor-output.test.ts).
+    const asIs = ['--quiet', '-q', '--json', '--help', '-h', '--fix'].some((a) => argv.includes(a));
+    const nn = await runBin(nw, sc, asIs ? argv : ['--verbose', ...argv], sc.cwd ? sc.cwd(nw) : nw.W);
+    golden(runText(argv, nn, nw.W));
+    if (sc.expect && sc.expect.test(nn.out + nn.err)) sawExpect = true;
   }
-  const sa = snapshot(worlds[0]!.W);
-  const sb = snapshot(worlds[1]!.W);
-  const ja = JSON.stringify(sa, null, 1).replaceAll(worlds[0]!.W, '<W>');
-  const jb = JSON.stringify(sb, null, 1).replaceAll(worlds[1]!.W, '<W>');
-  same(jb, ja, `${sc.name}: files left behind`);
-  assert.ok(sawExpect, `${sc.name}: expected output ${sc.expect} never appeared (both sides fail the same way?)`);
+  golden(filesText(nw.W));
+  assert.ok(sawExpect, `${sc.name}: expected output ${sc.expect} never appeared `);
 }
 
 // ── scenarios ───────────────────────────────────────────────────────────────
@@ -321,14 +277,14 @@ const S: Sc[] = [
   {
     name: 'symlinked PATH install (like ~/.local/bin)',
     setup: (c) => { repoSc(c); mkdirSync(path.join(c.W, 'ibin')); for (const n of readdirSync(path.join(c.pkg, 'bin'))) symlinkSync(path.join(c.pkg, 'bin', n), path.join(c.W, 'ibin', n)); },
-    env: { PATH: (c) => `${c.W}/ibin:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` },
+    env: { PATH: (c) => `${c.W}/ibin:${c.stub}:${NODE_BIN}:/usr/bin:/bin` },
     runs: [['--repo', '{R}'], ['--quiet', '--repo', '{R}'], ['--json', '--repo', '{R}']],
     expect: /PATH commands resolve to/,
   },
   { name: 'quiet and -q', runs: [['--quiet', '--repo', '{R}'], ['-q', '--repo', '{R}']], expect: /finding/ },
   { name: 'CRLF .gsd.conf', setup: (c) => { repoSc(c); conf(c, 'base = develop\r\nflow = strict\r\nui_gates = warn\r\n'); } },
   { name: 'no gsd-core', nostub: true, expect: /T005/ },
-  { name: 'gsd_run that is not gsd-core', nostub: true, setup: (c) => { repoSc(c); write(path.join(c.W, 'fake/gsd_run'), '#!/bin/sh\necho nope\n', 0o755); }, env: { PATH: (c) => `${c.pkg}/bin:${c.W}/fake:${path.dirname(process.execPath)}:/usr/bin:/bin` }, expect: /T005/ },
+  { name: 'gsd_run that is not gsd-core', nostub: true, setup: (c) => { repoSc(c); write(path.join(c.W, 'fake/gsd_run'), '#!/bin/sh\necho nope\n', 0o755); }, env: { PATH: (c) => `${c.pkg}/bin:${c.W}/fake:${NODE_BIN}:/usr/bin:/bin` }, expect: /T005/ },
   { name: 'npx-installed gsd-core', nostub: true, setup: (c) => { repoSc(c); write(path.join(c.home, '.claude/gsd-core/bin/gsd_run'), '#!/bin/sh\necho \'{"packageName":"@opengsd/gsd-core","version":"1.18.0"}\'\n', 0o755); write(path.join(c.home, '.claude/gsd-core/VERSION'), '1.18.0\n'); }, expect: /gsd-core 1\.18\.0/ },
   { name: 'T009 profile core', setup: (c) => { repoSc(c); write(path.join(c.home, '.claude/.gsd-profile'), 'core\n'); write(path.join(c.home, '.codex/.gsd-profile'), 'core,audit\n'); }, expect: /T009/ },
   { name: 'T009 profile full / includes full', setup: (c) => { repoSc(c); write(path.join(c.home, '.claude/.gsd-profile'), 'core,full\n'); } },
@@ -373,11 +329,11 @@ const S: Sc[] = [
   { name: 'big AGENTS.md with codex', setup: (c) => { repoSc(c); conf(c, 'base = develop\nproviders = codex\n'); writeFileSync(path.join(c.repo, 'AGENTS.md'), 'x'.repeat(40000)); }, expect: /Codex reads only/ },
   // P13: no perl and no python is fine now: no T003/T006 finding, no note (newOnly asserts that)
   { name: 'no perl', farm: ['perl'], expect: /T022/, newOnly: true },
-  // P8: the baseRef check no longer needs python, so without it the new doctor still reports T034 (the old one skipped it)
+  // P8: the baseRef check no longer needs python, so without it the new doctor still reports T034 
   { name: 'no python', farm: ['python3', 'python'], expect: /T034/, newOnly: true },
   { name: 'no gsdt-finish on PATH', farm: ['gsdt-finish'], expect: /T001/ },
   { name: 'no gsdt-planning-repair', farm: ['gsdt-planning-repair'], expect: /T004/ },
-  { name: 'PATH commands from another package', setup: (c) => { repoSc(c); write(path.join(c.W, 'other/bin/gsdt-finish'), '#!/bin/sh\n', 0o755); }, env: { PATH: (c) => `${c.W}/other/bin:${c.pkg}/bin:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` }, expect: /T002/ },
+  { name: 'PATH commands from another package', setup: (c) => { repoSc(c); write(path.join(c.W, 'other/bin/gsdt-finish'), '#!/bin/sh\n', 0o755); }, env: { PATH: (c) => `${c.W}/other/bin:${c.pkg}/bin:${c.stub}:${NODE_BIN}:/usr/bin:/bin` }, expect: /T002/ },
   { name: 'T007 stale skills', setup: (c) => { repoSc(c); const sk = path.join(c.W, 'skills'); cpSync(path.join(c.pkg, 'skills'), sk, { recursive: true }); writeFileSync(path.join(sk, 'gsdt-flow/SKILL.md'), `${readFileSync(path.join(sk, 'gsdt-flow/SKILL.md'), 'utf8')}old step\n`); }, env: { GSD_CLAUDE_SKILL_DIR: (c) => path.join(c.W, 'skills') }, expect: /T007/ },
   { name: 'skills current', setup: (c) => { repoSc(c); cpSync(path.join(c.pkg, 'skills'), path.join(c.W, 'skills'), { recursive: true }); }, env: { GSD_CLAUDE_SKILL_DIR: (c) => path.join(c.W, 'skills') }, expect: /skills installed and current/ },
   { name: 'skills not installed (codex too)', setup: (c) => { repoSc(c); conf(c, 'base = develop\nproviders = claude,codex,custom\n'); }, expect: /skills not installed|no installable/ },
@@ -423,7 +379,7 @@ const S: Sc[] = [
     expect: /T040/,
   },
   { name: 'flow_since', setup: (c) => { repoSc(c); mkdirSync(path.join(c.repo, '.planning/phases/03-a'), { recursive: true }); writeFileSync(path.join(c.repo, '.planning/ROADMAP.md'), '# R\n\n- [x] **Phase 3: A**\n- [x] **Phase 12: B**\n'); conf(c, 'base = develop\nflow = strict\nflow_since = 5\n'); } },
-  { name: 'flow strict + tracker ticket', setup: (c) => { repoSc(c); mkdirSync(path.join(c.repo, '.planning/phases/03-a-tk-ab12'), { recursive: true }); writeFileSync(path.join(c.repo, '.planning/ROADMAP.md'), '# R\n\n- [x] **Phase 3: A tk-ab12**\n'); conf(c, 'base = develop\nflow = strict\ntracker = custom\ntracker_command = /bin/true\n'); }, expect: /ticket/ },
+  { name: 'flow strict + tracker ticket', setup: (c) => { repoSc(c); mkdirSync(path.join(c.repo, '.planning/phases/03-a-tk-ab12'), { recursive: true }); writeFileSync(path.join(c.repo, '.planning/ROADMAP.md'), '# R\n\n- [x] **Phase 3: A tk-ab12**\n'); write(path.join(c.W, 'trk.sh'), '#!/bin/sh\n', 0o755); conf(c, `base = develop\nflow = strict\ntracker = custom\ntracker_command = ${c.W}/trk.sh\n`); }, expect: /ticket/ },
   { name: 'T008 stale hooks', setup: (c) => { repoSc(c); mkdirSync(path.join(c.home, '.claude'), { recursive: true }); write(path.join(c.home, '.claude/settings.json'), hookJson('PostToolUse', `"${c.W}/old/node" "${c.W}/gsd-context-monitor.js"`)); write(path.join(c.home, '.codex/hooks.json'), hookJson('SessionStart', `"${c.W}/old/node" "${c.W}/gsd-check-update.js"`)); write(path.join(c.repo, '.claude/settings.json'), hookJson('PreToolUse', 'node "$CLAUDE_PROJECT_DIR/.claude/hooks/gsd-read-guard.js"')); }, expect: /T008/ },
   { name: 'T008 toolkit guard + statusline', setup: (c) => { repoSc(c); write(path.join(c.home, '.claude/settings.json'), hookJson('PreToolUse', `[ ! -x '${c.W}/gone/gsdt-worktree-guard' ] || exec '${c.W}/gone/gsdt-worktree-guard' --global`)); write(path.join(c.home, '.codex/hooks.json'), `${JSON.stringify({ statusLine: { type: 'command', command: `"${c.W}/old/node" "${c.W}/gsd-statusline.js"` } })}\n`); }, expect: /T008/ },
   { name: 'T008 settings not JSON', setup: (c) => { repoSc(c); write(path.join(c.repo, '.claude/settings.json'), 'not json'); } },
@@ -586,7 +542,7 @@ const S: Sc[] = [
       write(path.join(c.W, 'net/curl'), `#!/bin/sh\necho '{"tag_name": "v99.0.0", "x": 1}'\n`, 0o755);
       write(path.join(c.W, 'net/npm'), '#!/bin/sh\necho 99.1.0\n', 0o755);
     },
-    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` },
+    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${NODE_BIN}:/usr/bin:/bin` },
     expect: /99\.0\.0/,
   },
   {
@@ -597,7 +553,7 @@ const S: Sc[] = [
       write(path.join(c.W, 'net/curl'), `#!/bin/sh\nprintf '{"tag_name": "v%s"}\\n' "$(cat ${c.pkg}/VERSION)"\n`, 0o755);
       write(path.join(c.W, 'net/npm'), '#!/bin/sh\necho 1.0.0\n', 0o755);
     },
-    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` },
+    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${NODE_BIN}:/usr/bin:/bin` },
     expect: /latest release/,
   },
   {
@@ -608,18 +564,15 @@ const S: Sc[] = [
       write(path.join(c.W, 'net/curl'), '#!/bin/sh\nexit 22\n', 0o755);
       write(path.join(c.W, 'net/npm'), '#!/bin/sh\nexit 1\n', 0o755);
     },
-    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${path.dirname(process.execPath)}:/usr/bin:/bin` },
+    env: { GSD_NO_UPDATE_CHECK: null, XDG_CACHE_HOME: (c) => path.join(c.W, 'cache'), PATH: (c) => `${c.pkg}/bin:${c.W}/net:${c.stub}:${NODE_BIN}:/usr/bin:/bin` },
     expect: /not reachable/,
   },
 ];
 
-test('P5 doctor parity: old bash bin vs TypeScript command', { concurrency: 4 }, async (t) => {
-  const all: Promise<void>[] = [];
-  for (const sc of S) {
-    if (only && !only.test(sc.name)) continue;
-    all.push(t.test(sc.name, async () => {
-      await check(sc);
-    }));
-  }
-  await Promise.all(all);
-});
+// each scenario is a test of its own (the goldens are saved per test, so they run one at a time)
+for (const sc of S) {
+  if (only && !only.test(sc.name)) continue;
+  test(sc.name, async () => {
+    await check(sc);
+  });
+}

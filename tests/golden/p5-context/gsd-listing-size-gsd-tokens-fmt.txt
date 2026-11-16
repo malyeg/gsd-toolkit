@@ -1,0 +1,27 @@
+@@@ 1 @@@
+# []
+0 0
+
+@@@ 2 @@@
+# ["a.md","b.md","c.md","d.toml","e.md","f.md","g.md","h.md","i.md"]
+8 214
+
+@@@ 3 @@@
+# ["a.md"]
+1 81
+
+@@@ 4 @@@
+# ["d.toml","e.md"]
+1 29
+
+@@@ 5 @@@
+0 => ~0 tokens
+1 => ~0 tokens
+3 => ~0 tokens
+4 => ~1 tokens
+3999 => ~999 tokens
+4000 => ~1.0k tokens
+4099 => ~1.0k tokens
+12345 => ~3.0k tokens
+123456 => ~30.8k tokens
+99999999 => ~24999.9k tokens

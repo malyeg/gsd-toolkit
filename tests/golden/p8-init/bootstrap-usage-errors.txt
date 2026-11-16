@@ -1,0 +1,1917 @@
+@@@ 1 @@@
+step 1 (gsdt-bootstrap-repo --bogus)
+rc=1
+--- stdout
+
+--- stderr
+✖ unknown arg: --bogus (see gsdt-bootstrap-repo --help)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 2 @@@
+step 2 (gsdt-bootstrap-repo --base)
+rc=1
+--- stdout
+
+--- stderr
+✖ --base needs a value
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 3 @@@
+step 3 (gsdt-bootstrap-repo --agent)
+rc=1
+--- stdout
+
+--- stderr
+✖ --agent needs a provider
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 4 @@@
+step 4 (gsdt-bootstrap-repo --agents)
+rc=1
+--- stdout
+
+--- stderr
+✖ --agents needs a comma-separated list
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 5 @@@
+step 5 (gsdt-bootstrap-repo --agents ,a)
+rc=1
+--- stdout
+
+--- stderr
+✖ malformed --agents list: ,a
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 6 @@@
+step 6 (gsdt-bootstrap-repo --agents a,)
+rc=1
+--- stdout
+
+--- stderr
+✖ malformed --agents list: a,
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 7 @@@
+step 7 (gsdt-bootstrap-repo --agents a,,b)
+rc=1
+--- stdout
+
+--- stderr
+✖ malformed --agents list: a,,b
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 8 @@@
+step 8 (gsdt-bootstrap-repo --agent gemini)
+rc=1
+--- stdout
+
+--- stderr
+✖ Gemini is no longer supported (gsd-core, the new GSD, dropped it); use claude, codex, or custom
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 9 @@@
+step 9 (gsdt-bootstrap-repo --agent foo)
+rc=1
+--- stdout
+
+--- stderr
+✖ unknown provider 'foo' (expected claude, codex, or custom)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 10 @@@
+step 10 (gsdt-bootstrap-repo --agents claude,foo)
+rc=1
+--- stdout
+
+--- stderr
+✖ unknown provider 'foo' (expected claude, codex, or custom)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 11 @@@
+step 11 (gsdt-bootstrap-repo --agent-command)
+rc=1
+--- stdout
+
+--- stderr
+✖ --agent-command needs one executable path/name
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 12 @@@
+step 12 (gsdt-bootstrap-repo --agent-command a b)
+rc=1
+--- stdout
+
+--- stderr
+✖ provider command must be one executable path/name
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 13 @@@
+step 13 (gsdt-bootstrap-repo --agent-command a b --agent claude)
+rc=1
+--- stdout
+
+--- stderr
+✖ provider command must be one executable path/name
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 14 @@@
+step 14 (gsdt-bootstrap-repo --provider-command)
+rc=1
+--- stdout
+
+--- stderr
+✖ --provider-command needs provider=executable
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 15 @@@
+step 15 (gsdt-bootstrap-repo --provider-command x)
+rc=1
+--- stdout
+
+--- stderr
+✖ --provider-command needs provider=executable
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 16 @@@
+step 16 (gsdt-bootstrap-repo --provider-command claude=a b)
+rc=1
+--- stdout
+
+--- stderr
+✖ provider command must be one executable path/name
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 17 @@@
+step 17 (gsdt-bootstrap-repo --provider-command gemini=x)
+rc=1
+--- stdout
+
+--- stderr
+✖ unknown provider 'gemini'
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 18 @@@
+step 18 (gsdt-bootstrap-repo --provider-command codex=/x --agent claude)
+rc=1
+--- stdout
+
+--- stderr
+✖ command override for 'codex' is outside providers 'claude'; select integrations with --agents
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 19 @@@
+step 19 (gsdt-bootstrap-repo --tracker)
+rc=1
+--- stdout
+
+--- stderr
+✖ --tracker needs none, clickup or custom
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 20 @@@
+step 20 (gsdt-bootstrap-repo --tracker-command)
+rc=1
+--- stdout
+
+--- stderr
+✖ --tracker-command needs the script's path
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 21 @@@
+step 21 (gsdt-bootstrap-repo --src)
+rc=1
+--- stdout
+
+--- stderr
+✖ --src needs a value
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 22 @@@
+step 22 (gsdt-bootstrap-repo --tracker x)
+rc=1
+--- stdout
+
+--- stderr
+✖ unknown tracker 'x' (expected none, clickup or custom)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 23 @@@
+step 23 (gsdt-bootstrap-repo --tracker-command a.sh)
+rc=1
+--- stdout
+
+--- stderr
+✖ --tracker-command goes with --tracker custom
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 24 @@@
+step 24 (gsdt-bootstrap-repo --tracker custom)
+rc=1
+--- stdout
+
+--- stderr
+✖ --tracker custom needs --tracker-command <script> (e.g. scripts/tracker.sh)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 25 @@@
+step 25 (gsdt-bootstrap-repo --tracker custom --tracker-command a b)
+rc=1
+--- stdout
+
+--- stderr
+✖ --tracker-command must be one path, not a command line
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 26 @@@
+step 26 (gsdt-bootstrap-repo --base nope)
+rc=1
+--- stdout
+
+--- stderr
+✖ branch 'nope' does not exist
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 27 @@@
+step 27 (gsdt-bootstrap-repo --agent custom)
+rc=64
+--- stdout
+
+--- stderr
+provider 'custom' requires an explicit agent command
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 28 @@@
+step 28 (gsdt-bootstrap-repo --agent codex --agent-command /x y)
+rc=1
+--- stdout
+
+--- stderr
+✖ provider command must be one executable path/name
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 29 @@@
+step 29 (gsdt-bootstrap-repo --src whatever --agent codex)
+rc=0
+--- stdout
+• --src is deprecated and ignored
+Toolkit     : <PKG>
+Target repo : <T>/shop
+Base branch : main
+Providers   : codex (default: codex)
+
+✔ .gsd.conf (created)
+✔ scripts/gsdt-new-worktree-feature.sh (shim)
+✔ scripts/gsdt-finish-worktree-feature.sh (shim)
+✔ scripts/gsdt-derive-port.sh (shim)
+✔ scripts/gsdt-planning-repair.sh (shim)
+✔ scripts/hooks/gsdt-worktree-guard.sh (shim)
+✔ ./.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (created)
+✔ .gsd/INSTRUCTIONS.md (repo settings + core; the rules come from gsdt-rules)
+✔ AGENTS.md (codex entrypoint; unrelated content preserved)
+• codex native guard hook: unsupported; command-level guard remains active
+✔ self-check (shims parse)
+
+✅ provider-neutral GSD workflow installed (default: codex)
+Next: gsdt-init --no-launch (preserves codex), or gsdt-start -n "<desc>"
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+?? .gitattributes
+?? .gitignore
+?? .gsd.conf
+?? .gsd/
+?? AGENTS.md
+?? scripts/
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+--- full tree
+── .claude/settings.local.json [-]
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── .gitattributes [-]
+.planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+── .gitignore [-]
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── .gsd/INSTRUCTIONS.md [-]
+
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsdt-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsdt-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsdt-flow-next <N>` before every phase action and follow it.
+- `gsdt-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `codex` (default: first, `codex`); base `main`;
+worktrees `../shop-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+── .gsd.conf [-]
+# .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = shop-worktrees
+install = none
+providers = codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+── AGENTS.md [-]
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsdt-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsdt-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+── README.md [-]
+hello
+
+── scripts/gsdt-derive-port.sh [x]
+#!/usr/bin/env bash
+# gsd-toolkit shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsdt-derive-port >/dev/null 2>&1 && exec gsdt-derive-port "$@"
+echo "${1:?usage: gsdt-derive-port.sh <base-port>}"
+
+── scripts/gsdt-finish-worktree-feature.sh [x]
+#!/usr/bin/env bash
+# gsd-toolkit shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsdt-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsdt-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsdt-wt-finish "$@"
+
+── scripts/gsdt-new-worktree-feature.sh [x]
+#!/usr/bin/env bash
+# gsd-toolkit shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsdt-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsdt-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsdt-wt-new "$@"
+
+── scripts/gsdt-planning-repair.sh [x]
+#!/usr/bin/env bash
+# gsd-toolkit shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsdt-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsdt-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsdt-planning-repair "$@"
+
+── scripts/hooks/gsdt-worktree-guard.sh [x]
+#!/usr/bin/env bash
+# gsd-toolkit shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsdt-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsdt-worktree-guard "$@"
+
+── post-merge hook [x]
+#!/usr/bin/env sh
+# Installed by gsdt-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsdt-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsdt-planning-repair || true
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+merge.gsd-planning.driver=gsdt-planning-merge %O %A %B %P
+merge.gsd-planning.name=GSD planning files: union, then reconcile single-value lines
+

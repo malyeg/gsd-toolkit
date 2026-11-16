@@ -1,0 +1,34 @@
+@@@ 1 @@@
+# cli <TMP>/good
+rc=0
+<TMP>/good
+@@@ 2 @@@
+# cli <TMP>/spaced
+rc=0
+<TMP>/spaced
+@@@ 3 @@@
+# cli <TMP>/other
+rc=1
+
+@@@ 4 @@@
+# cli <TMP>/failing
+rc=1
+
+@@@ 5 @@@
+# cli <TMP>/notexec
+rc=1
+
+@@@ 6 @@@
+# cli <TMP>/missing
+rc=1
+
+@@@ 7 @@@
+# cli 
+rc=1
+
+@@@ 8 @@@
+# cli from CLAUDE_CONFIG_DIR
+<TMP>/cc/gsd-core/bin/gsd_run
+@@@ 9 @@@
+# cliMissing
+GSD (gsd-core) not found — install it:  npx @opengsd/gsd-core@latest --claude --global --profile=full

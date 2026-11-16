@@ -1,0 +1,8 @@
+@@@ 1 @@@
+{
+  "name": "é ü 日本",
+  "esc": "é\n"
+}
+
+--
+✂ claude user hook removed from <H>/.claude/settings.json

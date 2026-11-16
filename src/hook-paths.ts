@@ -129,10 +129,14 @@ export function shlexSplit(s: string): string[] | null {
   return words;
 }
 
+// an absolute path: `/…`, and on Windows also `C:/…` or `C:\…`
+const isAbs = (p: string): boolean => p.startsWith('/') || (process.platform === 'win32' && /^[A-Za-z]:[\\/]/.test(p));
+
 const baseName = (p: string): string => p.slice(p.lastIndexOf('/') + 1);
 
 function missing(command: string, project: string | null): { owner: string | null; gone: string[] } {
-  let words = shlexSplit(command);
+  // a Windows path in a command (C:\x\hook.js): shlex would read its backslashes as escapes
+  let words = shlexSplit(process.platform === 'win32' ? command.replace(/\\/g, '/') : command);
   if (words === null) return { owner: null, gone: [] };
   const names = words.map(baseName);
   if (!names.some((n) => GSD_WORD.test(n))) return { owner: null, gone: [] };
@@ -142,7 +146,7 @@ function missing(command: string, project: string | null): { owner: string | nul
   const gone: string[] = [];
   for (const w of words) {
     const p = expand(w, project);
-    if (p && p.startsWith('/') && !existsSync(p) && !gone.includes(p)) gone.push(p);
+    if (p && isAbs(p) && !existsSync(p) && !gone.includes(p)) gone.push(p);
   }
   return { owner, gone };
 }

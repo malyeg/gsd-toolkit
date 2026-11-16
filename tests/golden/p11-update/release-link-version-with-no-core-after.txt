@@ -1,0 +1,14 @@
+@@@ 1 @@@
+rc=0
+--stdout--
+installed : 1.0.0  (<R>/release/share/gsd-toolkit/releases/1.0.0)
+latest    : unknown (GitHub not reachable)  (acme/gsd-toolkit)
+--stderr--
+--install.sh--
+install.sh --version 1.2.3 --reuse-install-config
+GSD_BIN_DIR=<R>/release/bin
+GSD_RELEASES_DIR=<R>/release/share/gsd-toolkit/releases
+--npm--
+--npx--
+--caches--
+|

@@ -18,7 +18,7 @@ import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { WIN } from './spawn.ts';
+import { WIN, relUnder } from './spawn.ts';
 import { base, commandOnPath, confGet, findMain, git, isDir, isExec, isFile, lf, phaseDir, run } from './common.ts';
 
 export const UI_STUB = '<!-- gsd:design-stub';
@@ -345,7 +345,7 @@ export function uiExempt(checkout: string, pdir: string, p: string, env?: NodeJS
   // written in the phase's own worktree exempts nothing.
   const main = findMain(checkout, env);
   const b = base(main !== '' ? main : checkout, env);
-  const rel = `${pdir.startsWith(`${checkout}/`) ? pdir.slice(checkout.length + 1) : pdir}/${p}-UI-REVIEW.md`;
+  const rel = `${relUnder(checkout, pdir)}/${p}-UI-REVIEW.md`;
   for (const ref of [`refs/remotes/origin/${b}`, `refs/heads/${b}`]) {
     if (git(checkout, ['cat-file', '-e', `${ref}:${rel}`], { env }).status === 0) return true;
   }
@@ -584,7 +584,7 @@ export function uiStack(checkout: string): string {
 
 /** gsd_ui_addon_present — true when impeccable | shadcn-mcp looks installed (files only) */
 export function uiAddonPresent(checkout: string, addon: string): boolean {
-  const home = process.env.HOME ?? '';
+  const home = (process.env.HOME ?? process.env.USERPROFILE ?? '');
   switch (addon) {
     case 'impeccable':
       for (const d of [`${checkout}/.claude/skills`, `${checkout}/.agents/skills`, `${home}/.claude/skills`, `${home}/.agents/skills`]) {

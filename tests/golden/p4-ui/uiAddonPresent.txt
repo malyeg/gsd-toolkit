@@ -1,0 +1,24 @@
+@@@ 1 @@@
+# none impeccable
+false
+@@@ 2 @@@
+# none shadcn-mcp
+false
+@@@ 3 @@@
+# none other
+false
+@@@ 4 @@@
+# impeccable in ~/.agents
+true
+@@@ 5 @@@
+# broken symlink
+false
+@@@ 6 @@@
+# shadcn in .mcp.json
+true
+@@@ 7 @@@
+# shadcn in codex config
+true
+@@@ 8 @@@
+# no shadcn
+false

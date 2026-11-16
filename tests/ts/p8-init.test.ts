@@ -1,16 +1,19 @@
-// P8 parity (gsdt-init, gsdt-bootstrap-repo): the TypeScript commands behind the launchers against
-// the pre-P8 bash commands (tests/fixtures/p8-old-bins/), each on its own copy of the same fixture
-// repo. Compared: stdout, stderr, exit code of every step, and every file the commands leave
-// (contents + the executable bit; the full tree, backups included), the commits, the hook and the
-// merge driver. Normalized: each side's temp root and package dir.
+// P8 (gsdt-init, gsdt-bootstrap-repo): the TypeScript commands behind the launchers, each step run on
+// its own copy of a fixture repo and checked against saved goldens in tests/golden/p8-init/
+// (regenerate with UPDATE_GOLDEN=1; review the diff). Saved: stdout, stderr, exit code of every step,
+// and every file the commands leave (contents + the executable bit; the full tree, backups included),
+// the commits, the hook and the merge driver. Normalized: the temp root and the package dir.
 // Run: node --test tests/ts/p8-init.test.ts   (P8_ONLY=<regex> runs the tests whose name matches)
 import { chmodSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { test } from 'node:test';
+import { test } from './golden.ts';
 import assert from 'node:assert/strict';
-import { cleanPath, git, norm, runStep, lenient, scenario, sh, write, makeSide, type Project, type Side, type Step } from './p6-helpers.ts';
+import { NOPTY, cleanPath, git, norm, runStep, lenient, scenario, sh, write, makeSide, type Project, type Side, type Step } from './p6-helpers.ts';
+
+// Windows has no exec bit: a script that starts with #! stands for an executable one
+const isX = (p: string, mode: number): boolean => (process.platform === 'win32' ? readFileSync(p, 'latin1').startsWith('#!') : (mode & 0o111) !== 0);
 
 const only = process.env.P8_ONLY ? new RegExp(process.env.P8_ONLY) : null;
 const t = (name: string, fn: () => void): void => void test(name, { skip: only !== null && !only.test(name) }, fn);
@@ -44,13 +47,13 @@ function tree(s: Side): string {
       const st = statSync(p, { throwIfNoEntry: false });
       if (!st) continue;
       if (st.isDirectory()) walk(r);
-      else parts.push(`── ${r} [${st.mode & 0o111 ? 'x' : '-'}]\n${readFileSync(p, 'latin1')}`);
+      else parts.push(`── ${r} [${isX(p, st.mode) ? 'x' : '-'}]\n${readFileSync(p, 'latin1')}`);
     }
   };
   walk('');
   const hook = path.join(s.R, '.git/hooks/post-merge');
   const hs = statSync(hook, { throwIfNoEntry: false });
-  parts.push(`── post-merge hook [${hs ? (hs.mode & 0o111 ? 'x' : '-') : 'none'}]\n${hs ? readFileSync(hook, 'latin1') : ''}`);
+  parts.push(`── post-merge hook [${hs ? (isX(hook, hs.mode) ? 'x' : '-') : 'none'}]\n${hs ? readFileSync(hook, 'latin1') : ''}`);
   const g = (a: string[]): string => {
     const r = spawnSync('git', a, { cwd: s.R, encoding: 'utf8' });
     return (r.stdout ?? '') + (r.stderr ?? '');
@@ -62,11 +65,11 @@ function tree(s: Side): string {
 }
 const sc = (project: Project | ((k: 'old' | 'new') => Project), prep: ((s: Side) => void) | null, steps: Step[]): void => scenario(project, prep, steps, tree);
 
-/** P12: the port reads and keeps CRLF text; the old bash choked on it. NEW gets the CRLF file, OLD its LF version, compared without \r. */
+/** the port reads and keeps CRLF text: `files(true)` is the CRLF repo; the golden is saved without \r. */
 const scCrlf = (files: (crlf: boolean) => Project, steps: Step[]): void => {
   lenient.cr = true;
   try {
-    scenario((k) => files(k === 'new'), null, steps, tree);
+    scenario(() => files(true), null, steps, tree);
   } finally {
     lenient.cr = false;
   }
@@ -276,7 +279,7 @@ mkdir -p .planning
 printf '# Roadmap\\n\\n## Phase 3: first\\n\\n### Phase 4: second\\n\\n#### Phase 5.1: third\\n' > .planning/ROADMAP.md
 exit "\${AGENT_RC:-0}"
 `;
-t('launching in a terminal: plan ready / not written / the agent fails', () => {
+test('launching in a terminal: plan ready / not written / the agent fails', { skip: NOPTY || (only !== null && !only.test('launching in a terminal: plan ready / not written / the agent fails')) }, () => {
   const withAgent = (s: Side): void => write(path.join(s.stub, 'agentplan'), AGENT_PLAN, 0o755);
   const mk = (rc: string, extra: string[] = []): Step =>
     init((s) => ['--tracker', 'none', '--agent', path.join(s.stub, 'agentplan'), ...extra], { tty: true, env: { AGENT_RC: rc } });
@@ -415,15 +418,17 @@ t('.claude/settings.json: the native guard hook', () => {
   sc(S('{\n  "n": 1.0,\n  "big": 123456789012345678901234567890,\n  "s": "é"\n}\n'), null, [init(NL, { rc: 0 })]);
   sc(FRESH, null, [init(['--provider', 'codex', ...NL], { rc: 0, out: /codex native guard hook: unsupported/ })]);
   sc(FRESH, null, [init(['--providers', 'codex,claude', ...NL], { rc: 0 })]);
-  // P13: the new side merges the hook with no jq on PATH; the old bin (jq present) is the oracle
+  // the hook is merged with no jq on PATH
   sc(S('{\n  "model": "x",\n  "n": 1.0,\n  "big": 123456789012345678901234567890\n}\n'), null, [
-    init(NL, { rc: 0, out: /native guard hook/, env: (s: Side) => (s.kind === 'new' ? { PATH: `${s.pkg}/bin${D}${nojqPath()}` } : {}) }),
+    init(NL, { rc: 0, out: /native guard hook/, env: (s: Side) => ({ PATH: `${s.pkg}/bin${D}${nojqPath()}` }) }),
   ]);
 });
 
 let noJq: string | null = null;
 function nojqPath(): string {
   if (noJq) return noJq;
+  // no symlinks on Windows, and nothing there reads jq: the run's own PATH
+  if (process.platform === 'win32') return (noJq = process.env.PATH ?? '');
   const d = mkdtempSync(path.join(tmpdir(), 'gsd-p8-nojq-'));
   for (const bin of ['bash', 'git', 'node', 'sh', 'sed', 'grep', 'tr', 'cat', 'mktemp', 'dirname', 'readlink', 'perl', 'env', 'head', 'cp', 'chmod', 'mkdir', 'rm', 'tail', 'touch', 'mv', 'find', 'awk', 'sort', 'uname', 'ls', 'basename', 'date', 'python3']) {
     for (const dir of (process.env.PATH ?? '').split(D)) {
@@ -492,32 +497,30 @@ t('init inside a linked worktree and from a subfolder', () => {
   sc(withFiles({}), (s) => void sh(s.R, 'git', ['worktree', 'add', '-q', path.join(s.root, 'wt'), '-b', 'feat']), [init(NL, { rc: 0, cwd: (s: Side) => path.join(s.root, 'wt') })]);
 });
 
-// ── new side only: old bugs not reproduced ────────────────────────────────
+// ── more checks on the new side ────────────────────────────────
 
-t('new only: a .gsd.conf with no final newline keeps its last line (bash glued the new key onto it)', () => {
+t('a .gsd.conf with no final newline keeps its last line', () => {
   const n = makeSide('new', withFiles({ '.gsd.conf': 'providers = claude' }));
   const r = runStep(n, init(['--tracker', 'clickup', ...NL]));
   assert.equal(r.rc, 0, r.out + r.err);
   assert.equal(readFileSync(path.join(n.R, '.gsd.conf'), 'utf8'), 'providers = claude\ntracker = clickup\n');
-  const o = makeSide('old', withFiles({ '.gsd.conf': 'providers = claude' }));
-  const ro = runStep(o, init(['--tracker', 'clickup', ...NL]));
-  assert.notEqual(ro.rc, 0); // the old one wrote `providers = claudetracker = clickup` and could not read it back
 });
 
-t('new only: the settings.json the hook is merged into keeps its mode (bash left a 0600 mktemp file)', () => {
+t('the settings.json the hook is merged into keeps its mode', () => {
   const n = makeSide('new', withFiles({ '.claude/settings.json': '{}\n' }));
   chmodSync(path.join(n.R, '.claude/settings.json'), 0o644);
   assert.equal(runStep(n, init(NL)).rc, 0);
-  assert.equal(statSync(path.join(n.R, '.claude/settings.json')).mode & 0o777, 0o644);
+  // Windows has no mode bits to keep
+  if (process.platform !== 'win32') assert.equal(statSync(path.join(n.R, '.claude/settings.json')).mode & 0o777, 0o644);
 });
 
-t('new only: init does not need gsdt-bootstrap-repo on PATH (it runs it in-process)', () => {
+t('init does not need gsdt-bootstrap-repo on PATH (it runs it in-process)', () => {
   const n = makeSide('new', FRESH);
-  const r = runStep(n, { cmd: 'init', args: NL, env: { PATH: `${path.dirname(process.execPath)}${D}/usr/bin${D}/bin${D}/opt/homebrew/bin` } });
+  const r = runStep(n, { cmd: 'init', args: NL, env: { PATH: process.platform === 'win32' ? (process.env.PATH ?? '') : `${path.dirname(process.execPath)}${D}/usr/bin${D}/bin${D}/opt/homebrew/bin` } });
   assert.equal(r.rc, 0, r.out + r.err);
 });
 
-t('new only: the toolkit repo itself is refused (old package has no .git folder to be one)', () => {
+t('the toolkit repo itself is refused', () => {
   const n = makeSide('new', FRESH);
   const r = runStep(n, boot([], { cwd: () => n.pkg }));
   assert.equal(r.rc, 1);

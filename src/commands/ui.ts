@@ -13,7 +13,7 @@
 //  - `pages:` entries are split on commas and blanks (no globbing);
 //  - the stub runner is run as a command: a missing/non-executable file gives
 //    rc 127/126 and a bash-style line in the run's err.txt.
-import { SH, WIN, spawnSyncX as spawnSync } from '../spawn.ts';
+import { SH, WIN, relUnder, spawnSyncX as spawnSync } from '../spawn.ts';
 import { closeSync, copyFileSync, mkdirSync, openSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { constants as osConstants } from 'node:os';
 import path from 'node:path';
@@ -161,7 +161,7 @@ export function resolveUrl(repoDir: string, layout: string, int: number, probe =
   }
   const u = url.endsWith('/') ? url.slice(0, -1) : url;
   if (probe) {
-    const r = spawnSync('curl', ['-s', '-o', '/dev/null', '--max-time', '5', `${u}/`], { stdio: 'ignore' });
+    const r = spawnSync('curl', ['-s', ...(WIN ? [] : ['-o', '/dev/null']), '--max-time', '5', `${u}/`], { stdio: 'ignore' }) // Windows: no /dev/null for curl; stdout is ignored anyway;
     if (r.status !== 0) return { ok: false, error: `nothing answers at ${u} — start the app (e.g. npm run dev in this worktree), then re-run` };
   }
   return { ok: true, url: u };
@@ -354,7 +354,7 @@ function run(argv: string[]): number {
   const CHECK_MD = `${PD}/${P}-UI-CHECK.md`;
   const LOOK_MD = `${PD}/${P}-UI-LOOK.md`;
   const APPROVAL_MD = `${PD}/${P}-UI-APPROVAL.md`;
-  const rel = (f: string): string => (f.startsWith(`${repoDir}/`) ? f.slice(repoDir.length + 1) : f);
+  const rel = (f: string): string => relUnder(repoDir, f);
 
   const clearPictures = (): void => {
     if (!isDir(SHOTS_DIR)) return;

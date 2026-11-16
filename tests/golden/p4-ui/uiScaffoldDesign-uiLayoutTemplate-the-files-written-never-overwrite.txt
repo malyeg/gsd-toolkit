@@ -1,0 +1,162 @@
+@@@ 1 @@@
+# scaffolded DESIGN.md
+# Design system
+
+<!-- gsd:design-stub — delete this line once the sections below are filled -->
+
+Every screen in this project uses what is listed here. Don't invent new
+styles: add to this file first, then use it.
+
+## References
+
+3–5 screenshots of real apps whose look you want, in `.planning/design/refs/`
+(Mobbin, Refero, or apps you use). One line each: what to take from it.
+
+Start from a real design system, not a blank page: ask the agent to browse
+https://styles.refero.design (real systems written for AI: colors, type,
+spacing) and pick the 3 closest to this product; the user chooses one, or
+which parts of each to mix. Name it here.
+
+## Tokens
+
+Color, type scale, spacing, radius, shadow — and the file they live in.
+
+Fonts: pick them on purpose — the default font is the first sign of an
+AI-made page. Free: https://www.fontshare.com; pairs for headings and body:
+https://fontjoy.com.
+
+## Components
+
+Name → file (seed from shadcn/Radix or the project's UI kit). Take a tested
+part before drawing one: https://ui.shadcn.com, https://21st.dev,
+https://reactbits.dev (React). Icons from one set only.
+
+## Page templates
+
+List, detail, form, dashboard, … → file. Each phase names the template its
+screens use in `<P>-LAYOUT.md`.
+
+## Layout rules
+
+Every picture of a built page is held against these (`gsdt-ui look`). Edit
+them for this project; keep the `- R<n>: ` form.
+
+- R1: One main focus per screen
+- R2: The main button is on the first screen, never covered
+- R3: More than ~12 items → search, filters or tabs
+- R4: One alignment system per page
+- R5: Consistent title casing
+- R6: Header and footer are lighter than the content
+- R7: No large empty areas; cards in a row have equal structure
+- R8: Images: same shape and treatment; no blank or near-empty images
+- R9: Nothing wraps alone onto its own row at any size
+- R10: Matches the chosen sketch: same sections, same order
+
+@@@ 2 @@@
+# layout template 5
+# Phase 5 layout
+
+<!-- gsd:layout — the layout contract for this phase's screens. gsdt-flow-next
+     reads sketch: and pages:; gsdt-ui check reads the rest.
+     - url (optional): the app to open when the project has several, e.g.
+       http://localhost:{port:3100} ({port:<base>} = this phase's port).
+     - app (optional): the folder where Playwright is installed, e.g. apps/web.
+     - main_button: one line per page — "/path = Button text", or
+       "/path = css=<selector>", or "/path = none". Without "/path =" the
+       line holds for every page.
+     - expect (optional): "/path = text that must be visible on that page".
+     - waive (only with the user's yes), one line per accepted finding:
+       "<check> | <page> | <width> | <target> | <reason>"  (* = any). -->
+
+sketch:
+pages:
+url:
+app:
+template:
+reference:
+main_button:
+expect:
+
+## Sections, top to bottom
+
+1.
+
+## Main focus
+
+## Main button
+
+## Notes
+
+@@@ 3 @@@
+# layout template 07
+# Phase 07 layout
+
+<!-- gsd:layout — the layout contract for this phase's screens. gsdt-flow-next
+     reads sketch: and pages:; gsdt-ui check reads the rest.
+     - url (optional): the app to open when the project has several, e.g.
+       http://localhost:{port:3100} ({port:<base>} = this phase's port).
+     - app (optional): the folder where Playwright is installed, e.g. apps/web.
+     - main_button: one line per page — "/path = Button text", or
+       "/path = css=<selector>", or "/path = none". Without "/path =" the
+       line holds for every page.
+     - expect (optional): "/path = text that must be visible on that page".
+     - waive (only with the user's yes), one line per accepted finding:
+       "<check> | <page> | <width> | <target> | <reason>"  (* = any). -->
+
+sketch:
+pages:
+url:
+app:
+template:
+reference:
+main_button:
+expect:
+
+## Sections, top to bottom
+
+1.
+
+## Main focus
+
+## Main button
+
+## Notes
+
+@@@ 4 @@@
+# layout template 7.1
+# Phase 7.1 layout
+
+<!-- gsd:layout — the layout contract for this phase's screens. gsdt-flow-next
+     reads sketch: and pages:; gsdt-ui check reads the rest.
+     - url (optional): the app to open when the project has several, e.g.
+       http://localhost:{port:3100} ({port:<base>} = this phase's port).
+     - app (optional): the folder where Playwright is installed, e.g. apps/web.
+     - main_button: one line per page — "/path = Button text", or
+       "/path = css=<selector>", or "/path = none". Without "/path =" the
+       line holds for every page.
+     - expect (optional): "/path = text that must be visible on that page".
+     - waive (only with the user's yes), one line per accepted finding:
+       "<check> | <page> | <width> | <target> | <reason>"  (* = any). -->
+
+sketch:
+pages:
+url:
+app:
+template:
+reference:
+main_button:
+expect:
+
+## Sections, top to bottom
+
+1.
+
+## Main focus
+
+## Main button
+
+## Notes
+
+@@@ 5 @@@
+# template state
+nosketch

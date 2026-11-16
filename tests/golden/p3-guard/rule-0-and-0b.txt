@@ -1,0 +1,765 @@
+@@@ 1 @@@
+gsd-new-project bare 
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 2 @@@
+gsd-new-project bare  typed
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 3 @@@
+gsd-new-project bare --global
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 4 @@@
+gsd-new-project bare --global typed
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 5 @@@
+gsd-new-project set-up 
+rc=0
+out=""
+err=""
+@@@ 6 @@@
+gsd-new-project set-up  typed
+rc=0
+out=""
+err=""
+@@@ 7 @@@
+gsd-new-project set-up --global
+rc=0
+out=""
+err=""
+@@@ 8 @@@
+gsd-new-project set-up --global typed
+rc=0
+out=""
+err=""
+@@@ 9 @@@
+gsd-new-project phase 
+rc=0
+out=""
+err=""
+@@@ 10 @@@
+gsd-new-project phase  typed
+rc=0
+out=""
+err=""
+@@@ 11 @@@
+gsd-new-project phase --global
+rc=0
+out=""
+err=""
+@@@ 12 @@@
+gsd-new-project phase --global typed
+rc=0
+out=""
+err=""
+@@@ 13 @@@
+gsd-ingest-docs bare 
+rc=2
+out=""
+err="BLOCKED: /gsd-ingest-docs needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-ingest-docs. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 14 @@@
+gsd-ingest-docs bare  typed
+rc=2
+out=""
+err="BLOCKED: /gsd-ingest-docs needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-ingest-docs. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 15 @@@
+gsd-ingest-docs bare --global
+rc=2
+out=""
+err="BLOCKED: /gsd-ingest-docs needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-ingest-docs. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 16 @@@
+gsd-ingest-docs bare --global typed
+rc=2
+out=""
+err="BLOCKED: /gsd-ingest-docs needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-ingest-docs. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 17 @@@
+gsd-ingest-docs set-up 
+rc=0
+out=""
+err=""
+@@@ 18 @@@
+gsd-ingest-docs set-up  typed
+rc=0
+out=""
+err=""
+@@@ 19 @@@
+gsd-ingest-docs set-up --global
+rc=0
+out=""
+err=""
+@@@ 20 @@@
+gsd-ingest-docs set-up --global typed
+rc=0
+out=""
+err=""
+@@@ 21 @@@
+gsd-ingest-docs phase 
+rc=0
+out=""
+err=""
+@@@ 22 @@@
+gsd-ingest-docs phase  typed
+rc=0
+out=""
+err=""
+@@@ 23 @@@
+gsd-ingest-docs phase --global
+rc=0
+out=""
+err=""
+@@@ 24 @@@
+gsd-ingest-docs phase --global typed
+rc=0
+out=""
+err=""
+@@@ 25 @@@
+0b gsd-autonomous [] bare 
+rc=0
+out=""
+err=""
+@@@ 26 @@@
+0b gsd-autonomous [] bare --global
+rc=0
+out=""
+err=""
+@@@ 27 @@@
+0b gsd-autonomous [] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-autonomous does not work with gsd-toolkit — it runs every phase in this one checkout and skips the review, validate and secure gates.\nInstead: gsdt-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 28 @@@
+0b gsd-autonomous [] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-autonomous does not work with gsd-toolkit — it runs every phase in this one checkout and skips the review, validate and secure gates.\nInstead: gsdt-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 29 @@@
+0b gsd-autonomous [] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-autonomous does not work with gsd-toolkit — it runs every phase in this one checkout and skips the review, validate and secure gates.\nInstead: gsdt-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 30 @@@
+0b gsd-autonomous [] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-autonomous does not work with gsd-toolkit — it runs every phase in this one checkout and skips the review, validate and secure gates.\nInstead: gsdt-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 31 @@@
+0b gsd-autonomous [--from 3] bare 
+rc=0
+out=""
+err=""
+@@@ 32 @@@
+0b gsd-autonomous [--from 3] bare --global
+rc=0
+out=""
+err=""
+@@@ 33 @@@
+0b gsd-autonomous [--from 3] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-autonomous does not work with gsd-toolkit — it runs every phase in this one checkout and skips the review, validate and secure gates.\nInstead: gsdt-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 34 @@@
+0b gsd-autonomous [--from 3] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-autonomous does not work with gsd-toolkit — it runs every phase in this one checkout and skips the review, validate and secure gates.\nInstead: gsdt-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 35 @@@
+0b gsd-autonomous [--from 3] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-autonomous does not work with gsd-toolkit — it runs every phase in this one checkout and skips the review, validate and secure gates.\nInstead: gsdt-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 36 @@@
+0b gsd-autonomous [--from 3] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-autonomous does not work with gsd-toolkit — it runs every phase in this one checkout and skips the review, validate and secure gates.\nInstead: gsdt-start -n \"<desc>\" (or -p <N>) per phase, then /gsdt-flow in that phase's worktree   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 37 @@@
+0b gsd-manager [] bare 
+rc=0
+out=""
+err=""
+@@@ 38 @@@
+0b gsd-manager [] bare --global
+rc=0
+out=""
+err=""
+@@@ 39 @@@
+0b gsd-manager [] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-manager does not work with gsd-toolkit — it runs several phases as background agents in one checkout, and two writers in one checkout are not safe.\nInstead: gsdt-list to see every phase, gsdt-start per phase (each gets its own worktree and session)   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 40 @@@
+0b gsd-manager [] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-manager does not work with gsd-toolkit — it runs several phases as background agents in one checkout, and two writers in one checkout are not safe.\nInstead: gsdt-list to see every phase, gsdt-start per phase (each gets its own worktree and session)   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 41 @@@
+0b gsd-manager [] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-manager does not work with gsd-toolkit — it runs several phases as background agents in one checkout, and two writers in one checkout are not safe.\nInstead: gsdt-list to see every phase, gsdt-start per phase (each gets its own worktree and session)   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 42 @@@
+0b gsd-manager [] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-manager does not work with gsd-toolkit — it runs several phases as background agents in one checkout, and two writers in one checkout are not safe.\nInstead: gsdt-list to see every phase, gsdt-start per phase (each gets its own worktree and session)   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 43 @@@
+0b gsd-workspace [--new x] bare 
+rc=0
+out=""
+err=""
+@@@ 44 @@@
+0b gsd-workspace [--new x] bare --global
+rc=0
+out=""
+err=""
+@@@ 45 @@@
+0b gsd-workspace [--new x] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-workspace does not work with gsd-toolkit — it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's.\nInstead: gsdt-start -n \"<desc>\" — one worktree per phase, phases run in parallel   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 46 @@@
+0b gsd-workspace [--new x] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-workspace does not work with gsd-toolkit — it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's.\nInstead: gsdt-start -n \"<desc>\" — one worktree per phase, phases run in parallel   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 47 @@@
+0b gsd-workspace [--new x] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-workspace does not work with gsd-toolkit — it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's.\nInstead: gsdt-start -n \"<desc>\" — one worktree per phase, phases run in parallel   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 48 @@@
+0b gsd-workspace [--new x] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-workspace does not work with gsd-toolkit — it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's.\nInstead: gsdt-start -n \"<desc>\" — one worktree per phase, phases run in parallel   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 49 @@@
+0b gsd-workstreams [create x] bare 
+rc=0
+out=""
+err=""
+@@@ 50 @@@
+0b gsd-workstreams [create x] bare --global
+rc=0
+out=""
+err=""
+@@@ 51 @@@
+0b gsd-workstreams [create x] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-workstreams does not work with gsd-toolkit — it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's.\nInstead: gsdt-start -n \"<desc>\" — one worktree per phase, phases run in parallel   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 52 @@@
+0b gsd-workstreams [create x] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-workstreams does not work with gsd-toolkit — it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's.\nInstead: gsdt-start -n \"<desc>\" — one worktree per phase, phases run in parallel   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 53 @@@
+0b gsd-workstreams [create x] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-workstreams does not work with gsd-toolkit — it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's.\nInstead: gsdt-start -n \"<desc>\" — one worktree per phase, phases run in parallel   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 54 @@@
+0b gsd-workstreams [create x] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-workstreams does not work with gsd-toolkit — it is GSD's own isolation (its own worktrees and .planning/), which fights the toolkit's.\nInstead: gsdt-start -n \"<desc>\" — one worktree per phase, phases run in parallel   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 55 @@@
+0b gsd-phase [checkout flow] bare 
+rc=0
+out=""
+err=""
+@@@ 56 @@@
+0b gsd-phase [checkout flow] bare --global
+rc=0
+out=""
+err=""
+@@@ 57 @@@
+0b gsd-phase [checkout flow] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 58 @@@
+0b gsd-phase [checkout flow] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 59 @@@
+0b gsd-phase [checkout flow] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 60 @@@
+0b gsd-phase [checkout flow] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 61 @@@
+0b gsd-phase [] bare 
+rc=0
+out=""
+err=""
+@@@ 62 @@@
+0b gsd-phase [] bare --global
+rc=0
+out=""
+err=""
+@@@ 63 @@@
+0b gsd-phase [] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 64 @@@
+0b gsd-phase [] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 65 @@@
+0b gsd-phase [] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 66 @@@
+0b gsd-phase [] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 67 @@@
+0b gsd-phase [--insert 7 hotfix] bare 
+rc=0
+out=""
+err=""
+@@@ 68 @@@
+0b gsd-phase [--insert 7 hotfix] bare --global
+rc=0
+out=""
+err=""
+@@@ 69 @@@
+0b gsd-phase [--insert 7 hotfix] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 70 @@@
+0b gsd-phase [--insert 7 hotfix] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 71 @@@
+0b gsd-phase [--insert 7 hotfix] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 72 @@@
+0b gsd-phase [--insert 7 hotfix] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 73 @@@
+0b gsd-phase [--remove 9] bare 
+rc=0
+out=""
+err=""
+@@@ 74 @@@
+0b gsd-phase [--remove 9] bare --global
+rc=0
+out=""
+err=""
+@@@ 75 @@@
+0b gsd-phase [--remove 9] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 76 @@@
+0b gsd-phase [--remove 9] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 77 @@@
+0b gsd-phase [--remove 9] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 78 @@@
+0b gsd-phase [--remove 9] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 79 @@@
+0b gsd-phase [--edit 7] bare 
+rc=0
+out=""
+err=""
+@@@ 80 @@@
+0b gsd-phase [--edit 7] bare --global
+rc=0
+out=""
+err=""
+@@@ 81 @@@
+0b gsd-phase [--edit 7] set-up 
+rc=0
+out=""
+err=""
+@@@ 82 @@@
+0b gsd-phase [--edit 7] set-up --global
+rc=0
+out=""
+err=""
+@@@ 83 @@@
+0b gsd-phase [--edit 7] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-7-thing'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 84 @@@
+0b gsd-phase [--edit 7] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-7-thing'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 85 @@@
+0b gsd-phase [--edit] bare 
+rc=0
+out=""
+err=""
+@@@ 86 @@@
+0b gsd-phase [--edit] bare --global
+rc=0
+out=""
+err=""
+@@@ 87 @@@
+0b gsd-phase [--edit] set-up 
+rc=0
+out=""
+err=""
+@@@ 88 @@@
+0b gsd-phase [--edit] set-up --global
+rc=0
+out=""
+err=""
+@@@ 89 @@@
+0b gsd-phase [--edit] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-7-thing'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 90 @@@
+0b gsd-phase [--edit] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-7-thing'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 91 @@@
+0b gsd-phase [--remove 3 --edit] bare 
+rc=0
+out=""
+err=""
+@@@ 92 @@@
+0b gsd-phase [--remove 3 --edit] bare --global
+rc=0
+out=""
+err=""
+@@@ 93 @@@
+0b gsd-phase [--remove 3 --edit] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 94 @@@
+0b gsd-phase [--remove 3 --edit] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 95 @@@
+0b gsd-phase [--remove 3 --edit] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 96 @@@
+0b gsd-phase [--remove 3 --edit] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 97 @@@
+0b gsd-phase [--edit --insert 3 x] bare 
+rc=0
+out=""
+err=""
+@@@ 98 @@@
+0b gsd-phase [--edit --insert 3 x] bare --global
+rc=0
+out=""
+err=""
+@@@ 99 @@@
+0b gsd-phase [--edit --insert 3 x] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 100 @@@
+0b gsd-phase [--edit --insert 3 x] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 101 @@@
+0b gsd-phase [--edit --insert 3 x] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 102 @@@
+0b gsd-phase [--edit --insert 3 x] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 103 @@@
+0b gsd-phase [--edit --remove] bare 
+rc=0
+out=""
+err=""
+@@@ 104 @@@
+0b gsd-phase [--edit --remove] bare --global
+rc=0
+out=""
+err=""
+@@@ 105 @@@
+0b gsd-phase [--edit --remove] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 106 @@@
+0b gsd-phase [--edit --remove] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 107 @@@
+0b gsd-phase [--edit --remove] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 108 @@@
+0b gsd-phase [--edit --remove] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 109 @@@
+0b gsd-phase [--insert] bare 
+rc=0
+out=""
+err=""
+@@@ 110 @@@
+0b gsd-phase [--insert] bare --global
+rc=0
+out=""
+err=""
+@@@ 111 @@@
+0b gsd-phase [--insert] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 112 @@@
+0b gsd-phase [--insert] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 113 @@@
+0b gsd-phase [--insert] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 114 @@@
+0b gsd-phase [--insert] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start --insert <N> \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 115 @@@
+0b gsd-phase [x --remove] bare 
+rc=0
+out=""
+err=""
+@@@ 116 @@@
+0b gsd-phase [x --remove] bare --global
+rc=0
+out=""
+err=""
+@@@ 117 @@@
+0b gsd-phase [x --remove] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 118 @@@
+0b gsd-phase [x --remove] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 119 @@@
+0b gsd-phase [x --remove] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 120 @@@
+0b gsd-phase [x --remove] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on develop with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 121 @@@
+0b gsd-phase [--removed 3] bare 
+rc=0
+out=""
+err=""
+@@@ 122 @@@
+0b gsd-phase [--removed 3] bare --global
+rc=0
+out=""
+err=""
+@@@ 123 @@@
+0b gsd-phase [--removed 3] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 124 @@@
+0b gsd-phase [--removed 3] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 125 @@@
+0b gsd-phase [--removed 3] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 126 @@@
+0b gsd-phase [--removed 3] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 127 @@@
+0b gsd-phase [--edit-all] bare 
+rc=0
+out=""
+err=""
+@@@ 128 @@@
+0b gsd-phase [--edit-all] bare --global
+rc=0
+out=""
+err=""
+@@@ 129 @@@
+0b gsd-phase [--edit-all] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 130 @@@
+0b gsd-phase [--edit-all] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 131 @@@
+0b gsd-phase [--edit-all] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 132 @@@
+0b gsd-phase [--edit-all] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 133 @@@
+0b gsd-phase [--insert=3] bare 
+rc=0
+out=""
+err=""
+@@@ 134 @@@
+0b gsd-phase [--insert=3] bare --global
+rc=0
+out=""
+err=""
+@@@ 135 @@@
+0b gsd-phase [--insert=3] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 136 @@@
+0b gsd-phase [--insert=3] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 137 @@@
+0b gsd-phase [--insert=3] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 138 @@@
+0b gsd-phase [--insert=3] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 139 @@@
+0b gsd-phase [--EDIT 7] bare 
+rc=0
+out=""
+err=""
+@@@ 140 @@@
+0b gsd-phase [--EDIT 7] bare --global
+rc=0
+out=""
+err=""
+@@@ 141 @@@
+0b gsd-phase [--EDIT 7] set-up 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 142 @@@
+0b gsd-phase [--EDIT 7] set-up --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 143 @@@
+0b gsd-phase [--EDIT 7] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 144 @@@
+0b gsd-phase [--EDIT 7] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows.\nInstead: gsdt-start -n \"<desc>\"   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 145 @@@
+0b gsd-phase [say --edit please] bare 
+rc=0
+out=""
+err=""
+@@@ 146 @@@
+0b gsd-phase [say --edit please] bare --global
+rc=0
+out=""
+err=""
+@@@ 147 @@@
+0b gsd-phase [say --edit please] set-up 
+rc=0
+out=""
+err=""
+@@@ 148 @@@
+0b gsd-phase [say --edit please] set-up --global
+rc=0
+out=""
+err=""
+@@@ 149 @@@
+0b gsd-phase [say --edit please] phase 
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-7-thing'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 150 @@@
+0b gsd-phase [say --edit please] phase --global
+rc=2
+out=""
+err="BLOCKED: /gsd-phase must run on 'develop' (main checkout), not 'phase-7-thing'.\nROADMAP.md changes go through develop. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 151 @@@
+base=main, phase --remove
+rc=2
+out=""
+err="BLOCKED: /gsd-phase does not work with gsd-toolkit — --remove renumbers every later phase, and a phase already started keeps a worktree and branch with its old number.\nInstead: check gsdt-list first; only when no later phase is in flight, run it on main with GSD_SKIP_GUARD=1   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)\n"
+@@@ 152 @@@
+base=main, phase --edit on develop
+rc=0
+out=""
+err=""
+@@@ 153 @@@
+base=main, phase --edit on main
+rc=0
+out=""
+err=""

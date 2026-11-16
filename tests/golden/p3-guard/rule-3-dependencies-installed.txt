@@ -1,0 +1,330 @@
+@@@ 1 @@@
+no status gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: unknown). Run 'npm install' successfully and record ok in .gsd-install.status.\n"
+@@@ 2 @@@
+no status gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 3 @@@
+no status wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 4 @@@
+no status global
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: unknown). Run 'npm install' successfully and record ok in .gsd-install.status.\n"
+@@@ 5 @@@
+ok gsd-execute-phase
+rc=0
+out=""
+err=""
+@@@ 6 @@@
+ok gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 7 @@@
+ok wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 8 @@@
+ok global
+rc=0
+out=""
+err=""
+@@@ 9 @@@
+ok newline gsd-execute-phase
+rc=0
+out=""
+err=""
+@@@ 10 @@@
+ok newline gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 11 @@@
+ok newline wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 12 @@@
+ok newline global
+rc=0
+out=""
+err=""
+@@@ 13 @@@
+fail gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED: dependency install FAILED — see <TMP>/r/.gsd-install.log, then install manually.\n"
+@@@ 14 @@@
+fail gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 15 @@@
+fail wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 16 @@@
+fail global
+rc=2
+out=""
+err="BLOCKED: dependency install FAILED — see <TMP>/r/.gsd-install.log, then install manually.\n"
+@@@ 17 @@@
+running gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED: dependencies still installing. Log: <TMP>/r/.gsd-install.log\n"
+@@@ 18 @@@
+running gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 19 @@@
+running wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 20 @@@
+running global
+rc=2
+out=""
+err="BLOCKED: dependencies still installing. Log: <TMP>/r/.gsd-install.log\n"
+@@@ 21 @@@
+empty gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: ). Run 'npm install' successfully and record ok in .gsd-install.status.\n"
+@@@ 22 @@@
+empty gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 23 @@@
+empty wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 24 @@@
+empty global
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: ). Run 'npm install' successfully and record ok in .gsd-install.status.\n"
+@@@ 25 @@@
+weird gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: what\nis this). Run 'npm install' successfully and record ok in .gsd-install.status.\n"
+@@@ 26 @@@
+weird gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 27 @@@
+weird wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 28 @@@
+weird global
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: what\nis this). Run 'npm install' successfully and record ok in .gsd-install.status.\n"
+@@@ 29 @@@
+unknown + node_modules gsd-execute-phase
+rc=0
+out=""
+err=""
+@@@ 30 @@@
+unknown + node_modules gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 31 @@@
+unknown + node_modules wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 32 @@@
+unknown + node_modules global
+rc=0
+out=""
+err=""
+@@@ 33 @@@
+no status + node_modules gsd-execute-phase
+rc=0
+out=""
+err=""
+@@@ 34 @@@
+no status + node_modules gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 35 @@@
+no status + node_modules wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 36 @@@
+no status + node_modules global
+rc=0
+out=""
+err=""
+@@@ 37 @@@
+fail + node_modules gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED: dependency install FAILED — see <TMP>/r/.gsd-install.log, then install manually.\n"
+@@@ 38 @@@
+fail + node_modules gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 39 @@@
+fail + node_modules wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 40 @@@
+fail + node_modules global
+rc=2
+out=""
+err="BLOCKED: dependency install FAILED — see <TMP>/r/.gsd-install.log, then install manually.\n"
+@@@ 41 @@@
+running + node_modules gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED: dependencies still installing. Log: <TMP>/r/.gsd-install.log\n"
+@@@ 42 @@@
+running + node_modules gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 43 @@@
+running + node_modules wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 44 @@@
+running + node_modules global
+rc=2
+out=""
+err="BLOCKED: dependencies still installing. Log: <TMP>/r/.gsd-install.log\n"
+@@@ 45 @@@
+none gsd-execute-phase
+rc=0
+out=""
+err=""
+@@@ 46 @@@
+none gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 47 @@@
+none wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 48 @@@
+none global
+rc=0
+out=""
+err=""
+@@@ 49 @@@
+unset conf, package.json gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: unknown). Run 'npm install' successfully and record ok in .gsd-install.status.\n"
+@@@ 50 @@@
+unset conf, package.json gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 51 @@@
+unset conf, package.json wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 52 @@@
+unset conf, package.json global
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: unknown). Run 'npm install' successfully and record ok in .gsd-install.status.\n"
+@@@ 53 @@@
+unset conf, pnpm lock gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED: dependencies still installing. Log: <TMP>/r/.gsd-install.log\n"
+@@@ 54 @@@
+unset conf, pnpm lock gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 55 @@@
+unset conf, pnpm lock wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 56 @@@
+unset conf, pnpm lock global
+rc=2
+out=""
+err="BLOCKED: dependencies still installing. Log: <TMP>/r/.gsd-install.log\n"
+@@@ 57 @@@
+unset conf, nothing gsd-execute-phase
+rc=0
+out=""
+err=""
+@@@ 58 @@@
+unset conf, nothing gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 59 @@@
+unset conf, nothing wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 60 @@@
+unset conf, nothing global
+rc=0
+out=""
+err=""
+@@@ 61 @@@
+spaces in command gsd-execute-phase
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: unknown). Run 'pnpm  install --frozen-lockfile' successfully and record ok in .gsd-install.status.\n"
+@@@ 62 @@@
+spaces in command gsd-plan-phase
+rc=0
+out=""
+err=""
+@@@ 63 @@@
+spaces in command wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 64 @@@
+spaces in command global
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: unknown). Run 'pnpm  install --frozen-lockfile' successfully and record ok in .gsd-install.status.\n"
+@@@ 65 @@@
+status is a directory
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: unknown). Run 'make' successfully and record ok in .gsd-install.status.\n"
+@@@ 66 @@@
+subdir of the repo
+rc=2
+out=""
+err="BLOCKED: dependency installation is not complete (status: unknown). Run 'make' successfully and record ok in .gsd-install.status.\n"

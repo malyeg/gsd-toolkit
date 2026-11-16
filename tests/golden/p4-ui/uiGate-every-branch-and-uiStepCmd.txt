@@ -1,0 +1,63 @@
+@@@ 1 @@@
+# check missing
+ui-check|missing|the rendered pages were never checked (no 05-UI-CHECK.md)
+@@@ 2 @@@
+# error
+ui-check|error|the last check could not run: nothing answers on :3000
+@@@ 3 @@@
+# error, no message
+ui-check|error|the last check could not run: 
+@@@ 4 @@@
+# failed
+ui-check|failed|the check found 2 problem(s) — see 05-UI-CHECK.md
+@@@ 5 @@@
+# stale
+ui-check|stale|the code or 05-LAYOUT.md changed after the last check
+@@@ 6 @@@
+# stale, nostale → look missing
+ui-look|missing|nobody wrote down what the pictures show (no 05-UI-LOOK.md)
+@@@ 7 @@@
+# look missing
+ui-look|missing|nobody wrote down what the pictures show (no 05-UI-LOOK.md)
+@@@ 8 @@@
+# look stale
+ui-look|stale|05-UI-LOOK.md describes older pictures
+@@@ 9 @@@
+# look bad
+ui-look|bad|05-UI-LOOK.md has a line marked bad — fix the page, then check again
+@@@ 10 @@@
+# look open
+ui-look|open|05-UI-LOOK.md has lines without an answer
+@@@ 11 @@@
+# approval missing
+ui-approve|missing|the user has not approved the pages
+@@@ 12 @@@
+# approval stale
+ui-approve|stale|the user approved older pictures
+@@@ 13 @@@
+# all done
+
+@@@ 14 @@@
+# waived
+
+@@@ 15 @@@
+# skipped check, no approval
+ui-approve|missing|the user has not approved the pages
+@@@ 16 @@@
+# skipped check, approval of pictures (no capture in check) → stale
+ui-approve|stale|the user approved older pictures
+@@@ 17 @@@
+# step_cmd ui-check
+gsdt-ui check 5
+@@@ 18 @@@
+# step_cmd ui-look
+gsdt-ui look 5, then answer every line
+@@@ 19 @@@
+# step_cmd ui-approve
+show the user the sheet (gsdt-ui sheet 5); on a yes: gsdt-ui approve 5
+@@@ 20 @@@
+# step_cmd bogus
+
+@@@ 21 @@@
+# step_cmd 
+

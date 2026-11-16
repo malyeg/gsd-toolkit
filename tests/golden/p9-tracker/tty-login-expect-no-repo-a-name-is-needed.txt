@@ -1,0 +1,22 @@
+@@@ 1 @@@
+rc=1
+spawn <PKG>/bin/gsdt-tracker login 
+gsdt-tracker: not in a git repo — name the profile: gsdt-tracker login <name>
+
+@@@ 2 @@@
+curl.log:
+
+argv:
+
+tracker.log:
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+

@@ -1,0 +1,146 @@
+@@@ 1 @@@
+### step 0: ["snapshot","abc123"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+# Cart é
+
+Ticket: ClickUp abc123 · https://app.clickup.com/t/abc123 · status: to do
+
+As a buyer I keep a cart.
+Second line.
+
+## Comments
+
+- looks good
+- two
+  lines
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["snapshot","nodesc1"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+# Bare
+
+Ticket: ClickUp nodesc1 ·  · status: open
+
+_(no description)_
+
+--- stderr
+
+@@@ 3 @@@
+### step 2: ["snapshot","flat77"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+# Flat
+
+Ticket: ClickUp flat77 · u · status: open
+
+plain desc
+
+--- stderr
+gsdt-tracker: ClickUp API GET /task/flat77/comment → HTTP 500: {"err":"boom"}
+
+@@@ 4 @@@
+### step 3: ["snapshot","missing9"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=2
+--- stdout
+
+--- stderr
+gsdt-tracker: ClickUp API GET /task/missing9?include_markdown_description=true → HTTP 404: {"err":"not found"}
+
+@@@ 5 @@@
+### step 4: ["snapshot","abc123","--out","ticket.md"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ticket abc123 → ticket.md
+
+--- stderr
+
+@@@ 6 @@@
+### step 5: ["snapshot","missing9","--out","bad.md"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: ClickUp API GET /task/missing9?include_markdown_description=true → HTTP 404: {"err":"not found"}
+gsdt-tracker: snapshot of ticket missing9 failed — bad.md not written
+
+@@@ 7 @@@
+### step 6: ["snapshot","abc123","--out","ticket2.md"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ticket abc123 → ticket2.md
+
+--- stderr
+
+@@@ 8 @@@
+### step 7: ["snapshot","abc123","--out"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: --out needs a file
+
+@@@ 9 @@@
+### step 8: ["snapshot","abc123","--out","x.md"] {"GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no CLICKUP_API_TOKEN — run gsdt-tracker login, or put CLICKUP_API_TOKEN=pk_… in /dev/null
+gsdt-tracker: snapshot of ticket abc123 failed — x.md not written
+
+@@@ 10 @@@
+### step 9: ["snapshot","abc123","--out","dead.md"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","CURL_DEAD":"1"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: curl failed (network?)
+gsdt-tracker: snapshot of ticket abc123 failed — dead.md not written
+
+@@@ 11 @@@
+curl.log:
+GET /task/abc123?include_markdown_description=true 
+GET /task/abc123/comment 
+GET /task/nodesc1?include_markdown_description=true 
+GET /task/nodesc1/comment 
+GET /task/flat77?include_markdown_description=true 
+GET /task/flat77/comment 
+GET /task/missing9?include_markdown_description=true 
+GET /task/abc123?include_markdown_description=true 
+GET /task/abc123/comment 
+GET /task/missing9?include_markdown_description=true 
+GET /task/abc123?include_markdown_description=true 
+GET /task/abc123/comment 
+GET /task/abc123?include_markdown_description=true 
+
+argv:
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_markdown_description=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/nodesc1?include_markdown_description=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/nodesc1/comment
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/flat77?include_markdown_description=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/flat77/comment
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/missing9?include_markdown_description=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_markdown_description=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/missing9?include_markdown_description=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_markdown_description=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_markdown_description=true
+
+tracker.log:
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+

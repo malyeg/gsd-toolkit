@@ -571,7 +571,7 @@ async function clickupLogin(a: string[]): Promise<number> {
     p = profileFromRepo(REPO);
   }
   if (!trkProfileOk(p)) die(`'${p}' is not a profile name (letters, digits, . _ -) — use gsdt-tracker login <name>`);
-  const home = process.env.HOME ?? '';
+  const home = (process.env.HOME ?? process.env.USERPROFILE ?? '');
   const file = `${home}/.config/gsd/clickup-${p}.env`;
   const tty = isatty(0);
 

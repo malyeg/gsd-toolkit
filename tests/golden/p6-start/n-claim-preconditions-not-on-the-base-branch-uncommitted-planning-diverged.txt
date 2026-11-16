@@ -1,0 +1,254 @@
+@@@ 1 @@@
+step 1 (gsdt-start -n x --no-launch)
+rc=1
+--- stdout
+
+--- stderr
+✖ main checkout is on 'side', not 'main' — checkout main first (claims serialize through main)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+side
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/side
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 2 @@@
+step 1 (gsdt-start -n x --no-launch)
+rc=1
+--- stdout
+
+--- stderr
+✖ main checkout has uncommitted .planning/ changes — commit or stash them first (the claim commit must be clean)
+✖ if they are only recomputed counters (from the post-merge hook): gsdt-planning-repair --commit
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+ M .planning/ROADMAP.md
+
+── .planning/ROADMAP.md
+# changed
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 3 @@@
+step 1 (gsdt-start -n x --no-launch)
+rc=1
+--- stdout
+▶ syncing 'main' with origin (picking up other sessions' claims)…
+
+--- stderr
+hint: Diverging branches can't be fast-forwarded, you need to either:
+hint:
+hint: 	git merge --no-ff
+hint:
+hint: or:
+hint:
+hint: 	git rebase
+hint:
+hint: Disable this message with "git config set advice.diverging false"
+fatal: Not possible to fast-forward, aborting.
+✖ local 'main' has diverged from origin — reconcile it first
+
+--- files left behind
+── log
+local only
+remote only
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+remote only
+init
+
+── merge driver
+
+@@@ 4 @@@
+step 1 (gsdt-start -n x --no-launch)
+rc=1
+--- stdout
+▶ syncing 'main' with origin (picking up other sessions' claims)…
+
+--- stderr
+fatal: '<T>/nowhere.git' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+✖ could not fetch 'main' from origin — check the network/remote, then re-run
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 5 @@@
+step 1 (gsdt-start -n x --no-launch)
+rc=1
+--- stdout
+▶ syncing 'main' with origin (picking up other sessions' claims)…
+
+--- stderr
+fatal: couldn't find remote ref main
+✖ origin has no 'main' branch — push it first: git -C "<T>/shop" push -u origin main
+✖ (or set base = <branch> in .gsd.conf)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+

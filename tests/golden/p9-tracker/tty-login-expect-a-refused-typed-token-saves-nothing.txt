@@ -1,0 +1,26 @@
+@@@ 1 @@@
+rc=2
+spawn <PKG>/bin/gsdt-tracker login refused
+ClickUp API token for profile refused (ClickUp → Settings → Apps; typing is hidden): 
+gsdt-tracker: ClickUp API GET /user → HTTP 401: {"err":"Token invalid"}
+gsdt-tracker: ClickUp did not accept that token — nothing saved
+
+@@@ 2 @@@
+curl.log:
+GET /user 
+
+argv:
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_bad-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+
+tracker.log:
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+
