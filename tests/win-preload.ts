@@ -109,7 +109,7 @@ if (process.platform === 'win32' && !(cp as { __gsdWin?: boolean }).__gsdWin) {
       }
     }
     // (a verbatim command line is not quoted by Node, not even its program: one with a space in it gets quoted here)
-    return { file: p.file, args: p.args, opts: p.windowsVerbatimArguments ? { ...(opts ?? {}), windowsVerbatimArguments: true, ...(/\s/.test(p.file) ? { argv0: `"${p.file}"` } : {}) } : opts, optIdx };
+    return { file: p.file, args: p.args, opts: p.windowsVerbatimArguments || opts?.windowsVerbatimArguments ? { ...(opts ?? {}), windowsVerbatimArguments: true, ...(/\s/.test(p.file) && !opts?.argv0 ? { argv0: `"${p.file}"` } : {}) } : opts, optIdx };
   }
   const wrap = (name: 'spawn' | 'spawnSync' | 'execFile' | 'execFileSync'): void => {
     const orig = (cp as unknown as Record<string, (...a: unknown[]) => unknown>)[name] as (...a: unknown[]) => unknown;
