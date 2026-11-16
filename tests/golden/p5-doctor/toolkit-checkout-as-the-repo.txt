@@ -2,7 +2,7 @@
 run [--repo {W}/pkg]
 rc=0
 --- stdout
-[1mgsd-doctor[0m — pkg
+[1mgsdt-doctor[0m — pkg
 <W>/pkg
 
 [1mtoolkit[0m

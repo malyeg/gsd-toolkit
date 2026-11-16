@@ -10,7 +10,7 @@ rc=1
 run [--repo {R}]
 rc=1
 --- stdout
-[1mgsd-doctor[0m — repo
+[1mgsdt-doctor[0m — repo
 <W>/repo
 
 [1mtoolkit[0m

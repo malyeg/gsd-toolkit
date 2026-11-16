@@ -2,7 +2,7 @@
 run [--fix --yes --repo {R}]
 rc=1
 --- stdout
-[1mgsd-doctor[0m — repo
+[1mgsdt-doctor[0m — repo
 <W>/repo
 
 [1mtoolkit[0m
@@ -56,7 +56,7 @@ rc=1
   - STATE.md: progress bar recomputed to 0% (was Progress: [█████░░░░░] 50%)
 
 Checking again:
-[1mgsd-doctor[0m — repo
+[1mgsdt-doctor[0m — repo
 <W>/repo
   [31m✖[0m provider executable 'claude' is unavailable (print-only still works) [2m→ install claude or set claude_command in .gsd.conf [T051][0m
   [31m✖[0m configured provider claude executable 'claude' is unavailable [2m→ install it, set claude_command, or use print-only [T057][0m
