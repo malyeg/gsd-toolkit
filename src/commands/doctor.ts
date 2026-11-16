@@ -365,7 +365,7 @@ class Doctor {
     if (mr.ok) DOCTOR_MODEL = mr.value;
     else MODEL_VALID = false;
 
-    if (!o.json) out(`\x1b[1mgsd-doctor\x1b[0m — ${path.basename(MAIN)}\n${MAIN}\n`);
+    if (!o.json) out(`\x1b[1mgsdt-doctor\x1b[0m — ${path.basename(MAIN)}\n${MAIN}\n`);
 
     // ── toolkit ─────────────────────────────────────────────────────────────
     section('toolkit');
@@ -389,6 +389,12 @@ class Doctor {
     if (resolved === '') fail('gsd commands are not on PATH', REINSTALL, 'T001');
     else if (realOrSelf(resolved) !== realOrSelf(pkg)) fail(`PATH commands come from ${resolved}, not this package`, REINSTALL, 'T002');
     else pass(`PATH commands resolve to ${pkg}`);
+    // A Node version manager installs global packages per Node version: switching versions (nvm use, fnm use)
+    // leaves the gsdt-* commands behind, and the Claude hooks (absolute paths into that folder) stop quietly.
+    const vm = /[\\/](?:\.nvm[\\/]versions[\\/]node|fnm[\\/]node-versions|\.volta[\\/]tools[\\/]image[\\/]node)[\\/]([^\\/]+)[\\/]/.exec(realOrSelf(pkg));
+    if (resolved !== '' && vm !== null) {
+      note(`installed for Node ${vm[1]} only (a version manager's folder): after switching Node versions, install again (the curl line in the README, or gsdt-update from the old version) — until then gsdt-* is missing and the Claude hooks do nothing`);
+    }
 
     const gsdAgent = DOCTOR_PROVIDER === 'codex' ? 'codex' : 'claude';
     const gsdRun = cli();
