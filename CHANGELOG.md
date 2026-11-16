@@ -7,7 +7,7 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## 1.0.0 (unreleased)
+## 1.0.0
 
 **Breaking: the toolkit is now TypeScript on Node.js 24 or newer, installed
 from npm.** Commands, flags, output, exit codes, `.gsd.conf`, the shims and the
