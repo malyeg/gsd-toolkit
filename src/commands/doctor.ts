@@ -37,6 +37,7 @@ import {
   skillDiffers,
   validationProblem,
   wtdir as confWtdir,
+  readStdinLine,
 } from '../common.ts';
 import {
   CONTEXT_BIG_KIB,
@@ -1438,21 +1439,8 @@ function securityOpen(file: string): string {
   return '';
 }
 
-/** one line from stdin (null at EOF without a newline: bash's `read` then fails) */
 function readLine(): string | null {
-  const b = Buffer.alloc(1);
-  let s = '';
-  for (;;) {
-    let n = 0;
-    try {
-      n = readSync(0, b, 0, 1, null);
-    } catch {
-      return null;
-    }
-    if (n === 0) return null;
-    if (b[0] === 10) return s;
-    s += String.fromCharCode(b[0] as number);
-  }
+  return readStdinLine();
 }
 
 export function main(argv: string[]): number {

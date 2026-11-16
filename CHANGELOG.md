@@ -21,6 +21,11 @@ becomes its release notes.
 - "then each teammate: …" is printed only when HEAD has a commit by someone
   else.
 
+**y/N prompts wait for the answer again.** `gsdt-doctor --fix` printed "Run
+these? [y/N] Nothing changed." at once in a real terminal: Node had made the
+terminal's input non-blocking and the read's EAGAIN was taken as "no". One
+reader (`readStdinLine`) now waits and retries, for doctor, migrate and init.
+
 ## 0.11.0
 
 **Breaking: the toolkit is now TypeScript on Node.js 24 or newer, installed
