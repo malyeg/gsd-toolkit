@@ -16,49 +16,33 @@ GSD itself (gsd-core, `@opengsd/gsd-core`: the `/gsd-*` planning skills, includi
 
 ## Commands
 
+Everything is `node:test` (Node >= 24 runs the `.ts` files directly). The old bash suites are gone.
+
 ```sh
-# Install = the GitHub release: curl -fsSL …/install.sh | bash [-s -- --agent claude|codex ... --all-agents --no-core --no-user-hook]
-# (downloads gsd-toolkit-X.Y.Z.tgz + SHA256SUMS, npm install -g, then gsdt-setup). Or: npm i -g <release .tgz URL> && gsdt-setup. Then gsdt-update.
-npm ci && npx tsc --noEmit            # dev deps (TypeScript 7, @types/node) + the type check (CI runs it)
-node tools/build.mjs                  # tsc → dist/, plus dist/bin/gsdt-*.js (npm pack/publish run it via prepack)
-# A checkout runs src/*.ts by type stripping. Edits never reach an installed copy until a release; try them with <checkout>/bin (bash launchers) first on PATH, or via tests.
-# 0.10.x release line (bash): ./install.sh [--agent …] installs the RELEASE, never the checkout; lib/install.sh does the copying (tests run it on the checkout).
+npm ci && npx tsc --noEmit                     # types
+node --test 'tests/node/*.test.ts' 'tests/ts/*.test.ts' 'tests/os/*.test.ts'   # everything (what CI runs; ~6-10 min)
+node --test tests/node/doctor.test.ts           # one file
+UPDATE_GOLDEN=1 node --test tests/ts/p5-doctor.test.ts   # regenerate saved goldens, then check `git diff tests/golden`
+GSD_PLAYWRIGHT_ROOT=<dir> node --test tests/node/ui-browser.test.ts   # real browser (<dir> has playwright + chromium); skips without it
+GSD_TEST_REQUIRE_GSD=1 node --test tests/node/e2e.test.ts             # real gsd-core `gsd_run`; the skip becomes a failure
 
-# Tests (what CI runs: bash suites + tests/ts on ubuntu + macos; tests/os also on windows) — each suite is standalone
-tests/test-planning-reconcile.sh      # merge driver, planning repair, gsdt-wt-finish, doctor
-tests/test-worktree-guard.sh          # the guard, incl. flow = strict
-tests/test-flow-next.sh               # the flow step engine
-tests/test-providers.sh               # provider adapters, bootstrap, doctor JSON, gsdt-rules + the split instruction blocks, user hooks
-tests/test-install-copy.sh            # lib/install-copy.sh (the old copy installer, the oracle for gsdt-setup), install.sh --copy goes to the bridge
-tests/test-install.sh                 # install.sh end to end against a fake GitHub release (real `npm pack` .tgz, throwaway npm prefix + HOME), and the BRIDGE: the real v0.10.0 install.sh and gsdt-update install a 0.11.0 release (needs the v0.10.0 tag)
-bash tests/test-review-fixes.sh       # regressions (finish push race, no-jq hook checks, …)
-tests/test-list.sh                    # gsdt-list PLANS/STAGE/WORKTREE derivation + layout
-tests/test-review-round2.sh           # regressions from the 2026-09-25 review (docs/fix-plan.md)
-tests/test-commands.sh                # derive-port, start refusals/insert/-p/--flow/TDD default, conflict abort, stale lock, init docs detection, finish --pr, finish test-audit gate, finish of a batch-* worktree, bash-3.2 lint
-tests/test-tracker.sh                 # tickets: ids, settings order, login (any folder, use/replace), standalone check, gsdt-tracker none/custom/fake ClickUp (curl stub), --ticket through start/finish, doctor T070–T072
-tests/test-npm.sh                     # the npm package: npm pack (builds dist/), install -g into a temp prefix, every entry, a real planning merge through the npm driver, doctor/list/tracker from it, gsdt-setup (skills, user hooks, moving a 0.10.x ~/.local/bin install), gsdt-update npm mode (npm stub). Needs npm ci.
-tests/test-update.sh                  # releases: install.sh, gsdt-update, checksums, pruning, update notice (fake GitHub via a curl stub)
-tests/test-ui.sh                      # UI gates: gsdt-ui design/layout/shots/check/look/approve (stub Playwright, stub runner, local http server), finish gate, doctor T080/T081/T018/UI debt, bootstrap --no-ui
-GSD_PLAYWRIGHT_ROOT=<dir> tests/test-ui-browser.sh   # the REAL runner (src/ui-check.ts) in a browser against tests/fixtures/ui/; <dir> has playwright + chromium installed. Skips without it; CI installs one.
-tests/test-doctor.sh                  # doctor checks T005–T008, T015–T019, T025, T032, T062, T073; reinstall command; install --reuse-install-config + --agent
-tests/test-codex-wait.sh              # gsdt-codex-wait (fake clock via GSD_CODEX_WAIT_CLOCK, stub Codex, CODEX_HOME), reviewsProblem
-tests/test-batch.sh                   # gsdt-batch-report against generated transcripts (boundaries, dedupe by message/tool id, missing meta, nested helpers, cache split, --baseline, never echoes text); gsdt-batch --print per provider, its batch-* worktree (made, -2, --name reuse, --file paths, refused without committed .planning/), the guard/gsdt-list/doctor on it; gsdt-batch skill + install mark; enriched lines = one item each (gsd-core's parser, skips without it)
-tests/test-migrate.sh                 # gsdt-migrate (+ tests/ts/migrate-commit.test.ts: the commit prompt under a pty): a 0.9.0 repo (aged fixture + the real v0.9.0 bootstrap) → dry run, refusals, --apply, --check, idempotent, open worktree merge, edited shim, doctor T090 + --fix
-node --test 'tests/ts/*.test.ts'      # TS suites (Node >= 24): each command/module on throwaway repos, compared with SAVED goldens in tests/golden/<test file>/<test name>.txt (UPDATE_GOLDEN=1 regenerates them from the current code: review `git diff tests/golden` before committing) plus plain assertions: common/provider/gsdt-rules, planning/roadmap, guard, flow-next, ui, list, doctor, start, finish, init, migrate, tracker, batch, codex-wait, setup, update (`node --test tests/ts/` fails: Node 24 reads a directory as a module)
-node --test 'tests/os/*.test.ts'   # every OS incl. Windows: black-box through the REAL npm package (npm pack + npm install -g into a temp prefix; temp HOME), real gsd-core when gsd_run is on PATH (GSD_TEST_REQUIRE_GSD=1 makes a missing one a failure). --help x22, gsdt-setup, init/bootstrap, doctor, guard, start/flow/finish, the merge driver, each in an LF and a core.autocrlf=true project. ~25s
-tests/test-e2e.sh                     # END-TO-END: fake project + real gsd-core `gsd_run` (skips without it; `GSD_TEST_REQUIRE_GSD=1` makes the skip a failure), ~15s.
-                                      # Run it after ANY change to start/finish/guard/flow/planning code —
-                                      # it caught 4 bugs the unit suites missed (fix-plan R15–R18).
-
-# Lint / syntax (CI)
-for f in bin/* lib/*.sh lib/tracker/*.sh install.sh shims/scripts/*.sh shims/scripts/hooks/*.sh tests/*.sh; do bash -n "$f"; done   # bash that is left: launchers, shims, tests, the release installer, the oracles
-shellcheck -x bin/* lib/*.sh lib/tracker/*.sh tools/*.sh shims/scripts/*.sh shims/scripts/hooks/*.sh install.sh tests/*.sh
-
-# Release (maintainer): the 0.10.x line is frozen. 0.11.0 onwards is npm; see docs/releases.md for what release.yml does today. Add "## X.Y.Z" to CHANGELOG.md, commit, then change VERSION and push to main, or
-tools/release.sh X.Y.Z --push   # a push changing VERSION → .github/workflows/release.yml tests, tags, builds, publishes
+# Lint (CI, Ubuntu only): what bash is left
+for f in bin/* install.sh lib/install.sh shims/scripts/*.sh shims/scripts/hooks/*.sh tools/*.sh; do bash -n "$f"; done
+shellcheck -x bin/* install.sh lib/install.sh shims/scripts/*.sh shims/scripts/hooks/*.sh tools/*.sh
 ```
 
-There is no per-test runner: each suite uses `ok`/`bad`/`is` helpers and `section` headers, and builds throwaway repos in `mktemp -d`. To focus, run one suite. Every command has `--help`. New suites must also be added to `.github/workflows/tests.yml` and the suite list above (the README links here).
+Install = a GitHub release (`curl -fsSL …/main/install.sh | bash`, then `gsdt-update`). Edits here never reach an installed command until a release: try them with `<checkout>/bin` first on `PATH`. Release (maintainer): add "## X.Y.Z" to CHANGELOG.md, commit, then `tools/release.sh X.Y.Z --push`.
+
+Test files (a new one needs no list: the globs find it; keep this table current):
+
+| Folder | Covers |
+|---|---|
+| `tests/node/` | black-box suites, ported from the old bash ones: `planning-reconcile` (merge driver, repair, `gsdt-wt-finish`), `worktree-guard`, `flow-next`, `list`, `doctor`, `providers` (adapters, bootstrap, rules blocks, user hooks), `codex-wait`, `tracker`, `commands` (start/finish/derive-port/init/lint), `review-fixes`, `review-round2`, `ui` (UI gates, stub runner), `ui-browser` (real browser), `batch`, `migrate`, `install` (install.sh + the 0.10.x bridge, real v0.10.0), `update`, `npm` (pack + install -g), `e2e` (real gsd-core). Helpers: `g1-helpers`, `g2-helpers`, `g3-helpers`, `g4-env`, `g4-static-server`, `ui-fixture`, `g5-helpers`. |
+| `tests/ts/` | per-module tests of `src/` against saved goldens (`tests/golden/`, `tests/ts/golden.ts`): planning, roadmap, flow-next, guard, ui, context, doctor, list, start, wt-new, finish, wt-finish, setup, update, tracker, ticket, batch-report, codex-wait, CRLF, Windows units, tty prompts |
+| `tests/os/` | the cross-platform black-box suite: the real npm package driven through its commands |
+| `tests/fixtures/` | static inputs (ROADMAP samples, UI pages, `batch-gen.py` transcript generator) |
+
+Rules for tests: never touch the real `~/.claude`, `~/.codex`, `~/.local`, `~/.config` or the global npm prefix (use throwaway dirs and env). A regenerated golden must be reviewed by `git diff`. CI (`.github/workflows/tests.yml`): lint on Ubuntu, then the suite on Ubuntu + Windows (+ macOS when called from `release.yml`).
 
 ## Architecture
 

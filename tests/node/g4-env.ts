@@ -12,6 +12,9 @@ export const PKG = path.resolve(import.meta.dirname, '..', '..');
 export const WIN = process.platform === 'win32';
 export const LAUNCH = path.join(PKG, 'src', 'launch.mjs');
 
+/** Read BEFORE the host's GSD_* settings are dropped from the test env. */
+export const HOST_PLAYWRIGHT_ROOT: string = process.env.GSD_PLAYWRIGHT_ROOT ?? '';
+
 // ── counting, so the report can compare with the bash suite's "N passed" ──
 let COUNT = 0;
 export const count = (): number => COUNT;

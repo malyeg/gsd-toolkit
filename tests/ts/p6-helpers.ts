@@ -144,15 +144,18 @@ export function makeSide(kind: 'old' | 'new', p: Project = {}): Side {
 // test must never start a real claude/codex, and "no gsd-core" must be true). A directory
 // that holds one of them is replaced by a farm of links to everything else in it.
 const BLOCKED = ['claude', 'codex', 'gsd_run'];
+// ...and any gsdt-* command: a checkout's bin/ or an installed release on this machine's PATH would
+// answer for a tool a test says is missing ("no gsdt-planning-repair on PATH")
+const blocked = (n: string): boolean => BLOCKED.includes(n) || n.startsWith('gsdt-');
 const farmRoot = path.join(root, 'pathfarm');
 export const cleanPath = (process.env.PATH ?? '')
   .split(path.delimiter)
   .map((d, i) => {
-    if (!d || !existsSync(d) || !BLOCKED.some((b) => existsSync(path.join(d, b)))) return d;
+    if (!d || !existsSync(d) || !readdirSync(d).some(blocked)) return d;
     const farm = path.join(farmRoot, String(i));
     mkdirSync(farm, { recursive: true });
     for (const n of readdirSync(d)) {
-      if (BLOCKED.includes(n)) continue;
+      if (blocked(n)) continue;
       try {
         symlinkSync(path.join(d, n), path.join(farm, n));
       } catch {

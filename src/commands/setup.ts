@@ -110,7 +110,8 @@ function backupPath(base: string): string {
 }
 
 /** toolkit_pkg — a folder that holds a toolkit package (release runtime or checkout) */
-const toolkitPkg = (d: string): boolean => isFile(`${d}/install.sh`) && isFile(`${d}/lib/common.sh`);
+/** 0.10.x runtimes held lib/common.sh; from 0.11.0 only lib/install.sh (the bridge) is left of lib/ shell */
+const toolkitPkg = (d: string): boolean => isFile(`${d}/install.sh`) && (isFile(`${d}/lib/common.sh`) || isFile(`${d}/lib/install.sh`));
 
 /** owned_link — a link this toolkit placed earlier (from any checkout or release runtime) */
 function ownedLink(link: string, kind: 'bin' | 'skills'): boolean {

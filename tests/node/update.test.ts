@@ -1,13 +1,13 @@
 // update.test.ts — the "newer release" notice, the doctor note, gsdt-update's
 // release-runtime mode (--check, gsd-core) and the release check (was tests/test-update.sh).
 // CI-safe: GitHub is a curl stub. The runtime under test is installed with
-// lib/install-copy.sh (the 0.10.x copy installer, the oracle).
+// a hand-made 0.10.x-style runtime (releases/9.9.7 + links in a bin dir).
 // The 0.10.x release line (the old install.sh: fresh install, update, go back,
 // prune, checksum refusals, the gsd-worktrees → gsd-toolkit move) is frozen and
 // no longer built here; install.test.ts runs the REAL v0.10.0 install.sh
 // and gsdt-update against a 0.11.0 release, and the npm mode of gsdt-update is
 // in npm.test.ts and tests/ts/p11-update.test.ts.
-import { existsSync, readlinkSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readlinkSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
 import {
@@ -122,14 +122,14 @@ const points = (cmd: string): string => {
 const cacheFile = (n: string): string => path.join(CACHE, 'gsd-toolkit', n);
 const nonEmpty = (f: string): boolean => { try { return statSync(f).size > 0; } catch { return false; } };
 
-const SKIP_RT = SKIP_WIN_LINKS;   // the 0.10.x copy installer links its commands: POSIX only
+const SKIP_RT = SKIP_WIN_LINKS;   // a 0.10.x runtime links its commands: POSIX only
 
-test('an installed release runtime (lib/install-copy.sh, 9.9.7)', { skip: SKIP_RT }, () => {
-  const d = path.join(WORK, 'build', 'gsd-toolkit-9.9.7');
+test('an installed release runtime (9.9.7, laid out the way 0.10.x did)', { skip: SKIP_RT }, () => {
+  const d = path.join(RUN, '9.9.7');
   copyFromPkg(d, ['bin', 'lib', 'src', 'shims', 'skills', 'install.sh']);
   writeFileSync(path.join(d, 'VERSION'), '9.9.7\n');
-  const r = bash(path.join(d, 'lib', 'install-copy.sh'), ['--agent', 'claude'], { env: envFor({ GSD_COPY_DIR: path.join(RUN, '9.9.7') }) });
-  is('installs', r.status, 0);
+  mkdirp(BIN);
+  for (const n of readdirSync(path.join(d, 'bin'))) symlinkSync(path.join(d, 'bin', n), path.join(BIN, n));
   is('commands link into releases/9.9.7', points('gsdt-list'), '9.9.7');
   is('an installed command runs', run(path.join(BIN, 'gsdt-list'), ['--help'], { env: envFor() }).status, 0);
 });

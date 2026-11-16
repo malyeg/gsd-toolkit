@@ -595,7 +595,7 @@ describe('gsdt-tracker is standalone', () => {
   });
   it('the tracker files use no GSD code, and GSD never sources or imports them', () => {
     const noComment = (l: string): boolean => /^\s*#/.test(l);
-    is('tracker files use no GSD code', lineHits(['bin/gsdt-tracker', ...ls('lib/tracker', /\.sh$/)], /(^|[^A-Za-z0-9_])gsd_[a-z]|lib\/(common|ticket|provider)\.sh/, noComment).join('\n'), '');
+    is('tracker files use no GSD code', lineHits(['bin/gsdt-tracker'], /(^|[^A-Za-z0-9_])gsd_[a-z]|lib\/(common|ticket|provider)\.sh/, noComment).join('\n'), '');
     // the TypeScript: every import is node:… or a path inside src/tracker (and no GSD name is called)
     const tsFiles = [...ls('src/tracker', /\.ts$/), 'src/commands/tracker.ts'];
     is('tracker TypeScript uses no GSD names', lineHits(tsFiles, /(^|[^A-Za-z0-9_])gsd_[a-z]|lib\/(common|ticket|provider)\.sh/, (l) => /^\s*(\/\/|\*)/.test(l)).join('\n'), '');
@@ -610,7 +610,7 @@ describe('gsdt-tracker is standalone', () => {
       }
     }
     is('tracker TypeScript imports only node:* and src/tracker', foreign.join('\n'), '');
-    const sourcers = lineHits([...ls('bin', /.*/), ...ls('lib', /\.sh$/)].filter((f) => statSync(path.join(PKG, f)).isFile()), /^\s*\. .*lib\/tracker\//, () => false).filter((h) => !h.startsWith('bin/gsdt-tracker:'));
+    const sourcers = lineHits([...ls('bin', /.*/)].filter((f) => statSync(path.join(PKG, f)).isFile()), /^\s*\. .*lib\/tracker\//, () => false).filter((h) => !h.startsWith('bin/gsdt-tracker:'));
     is('GSD never sources tracker files', sourcers.join('\n'), '');
     const srcFiles: string[] = [];
     const walk = (d: string): void => {

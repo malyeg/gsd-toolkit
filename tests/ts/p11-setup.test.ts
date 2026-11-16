@@ -376,7 +376,7 @@ test('0.10.x clean-up: GSD_OLD_BIN_DIR names the old folder', () => {
   const oldBin = path.join(w.root, 'oldbin');
   const rt = path.join(w.root, 'share', 'gsd-toolkit', 'releases', '0.10.0');
   write(path.join(rt, 'install.sh'), '');
-  write(path.join(rt, 'lib', 'common.sh'), '');
+  write(path.join(rt, 'lib', 'install.sh'), '');
   write(path.join(rt, 'bin', 'gsdt-list'), '', 0o755);
   mkdirSync(oldBin);
   symlinkSync(path.join(rt, 'bin', 'gsdt-list'), path.join(oldBin, 'gsdt-list'));

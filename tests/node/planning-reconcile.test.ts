@@ -674,50 +674,6 @@ test('post-merge hook: versioned when it lands in the working tree', () => {
   assert.equal(count(git(HK, 'status', '--porcelain').stdout, /^\?\?/), 0, 'and nothing is left untracked');
 });
 
-// Not every system names it python3 — minimal images use `python`. The name alone is not enough to
-// trust: `python` is still Python 2 in places, and Python 2 cannot run the reconciler at all.
-// gsd_python is the bash probe in lib/common.sh (used by lib/install-copy.sh), so this stays bash.
-const REALPY = WIN ? null : run('sh', ['-c', 'command -v python3']).stdout.trim() || null;
-const PYSKIP = WIN
-  ? 'gsd_python is the POSIX-shell interpreter probe of lib/common.sh; its fake-PATH cases need /bin/bash and POSIX stubs'
-  : REALPY === null
-    ? 'no python3 on PATH'
-    : false;
-test('python interpreter fallback', { skip: PYSKIP }, () => {
-  const common = path.join(PKG, 'lib', 'common.sh');
-  const bash = (script: string, pathVar?: string): Run =>
-    run('/bin/bash', ['-c', script], { env: { GSD_PYTHON: undefined, ...(pathVar !== undefined ? { PATH: pathVar } : {}) } });
-
-  const resolved = chomp(bash(`. '${common}'; gsd_python || true`).stdout);
-  assert.ok(resolved !== '', 'resolves an interpreter here');
-  assert.equal(chomp(run(resolved, ['-c', 'import sys; print(sys.version_info[0])']).stdout), '3', 'and it really is python 3');
-
-  // A PATH holding ONLY a fake `python` — no python3 to fall back on, which is what a minimal image
-  // looks like. PATH must exclude /usr/bin or the real python3 is found first and the fallback is
-  // never exercised.
-  const FAKEBIN = tmp('fakebin');
-  const stub = path.join(FAKEBIN, 'python');
-  // Case 1: `python` is Python 2 — must be REJECTED, not handed back to break mid-merge. The probe asks
-  // the interpreter, so a stub that fails it is enough.
-  write(
-    stub,
-    '#!/bin/bash\ncase "$*" in\n  *version_info*) exit 1 ;;              # fails the >= 3.7 probe, as py2 does\n  --version) echo "Python 2.7.18"; exit 0 ;;\nesac\nexit 1\n',
-  );
-  chmodSync(stub, 0o755);
-  let out = bash(`. '${common}'; gsd_python && echo PICKED || echo REJECTED`, FAKEBIN).out;
-  assert.equal(count(out, /REJECTED/), 1, "rejects a python 2 named 'python'");
-
-  // Case 2: `python` IS Python 3 — must be ACCEPTED. That is the whole point.
-  write(stub, `#!/bin/bash\nexec ${REALPY} "$@"\n`);
-  chmodSync(stub, 0o755);
-  out = bash(`. '${common}'; gsd_python`, FAKEBIN).out;
-  assert.equal(chomp(out), 'python', "accepts a python 3 named 'python'");
-
-  // And the reconciler genuinely runs under that name, not just the name check.
-  out = bash(`"$(. '${common}'; gsd_python)" '${path.join(PKG, 'lib', 'gsd_planning.py')}' --help`, FAKEBIN).out;
-  assert.equal(count(lines(out).slice(0, 1).join('\n'), /usage/), 1, "the engine runs under 'python'");
-});
-
 test("GSD's own STATE.md form is not drift", () => {
   const G = path.join(tmp('gsdform'), '.planning');
   mkdirSync(path.join(G, 'phases'), { recursive: true });

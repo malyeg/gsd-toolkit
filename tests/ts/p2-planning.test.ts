@@ -592,5 +592,5 @@ test('launchers: no node means a clear message from repair', () => {
 });
 
 test('the workflow still runs the node tests', () => {
-  assert.match(read(path.join(PKG, '.github', 'workflows', 'tests.yml')), /node --test 'tests\/ts\/\*\.test\.ts'/);
+  assert.match(read(path.join(PKG, '.github', 'workflows', 'tests.yml')), /node --test 'tests\/node\/\*\.test\.ts' 'tests\/ts\/\*\.test\.ts' 'tests\/os\/\*\.test\.ts'/);
 });

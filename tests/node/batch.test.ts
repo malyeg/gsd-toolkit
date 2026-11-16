@@ -404,14 +404,6 @@ test('the skill and the instructions', () => {
   fileHas('in the main checkout it stops and prints the gsdt-batch command', SK, 'MAIN checkout: STOP');
   fileHas('it never lands the batch itself: it prints gsdt-finish', SK, 'gsdt-finish <batch-branch>');
   fileHasnt('provider-neutral: no literal Skill() calls', SK, 'Skill(');
-  // lib/install-copy.sh is bash by nature (the old installer, kept as the oracle for gsdt-setup)
-  const H2 = path.join(WORK, 'insthome');
-  mkdirSync(H2, { recursive: true });
-  const fwd = (p: string): string => p.replace(/\\/g, '/');
-  const inst = run(ENV, 'bash', [fwd(path.join(PKG, 'lib/install-copy.sh')), '--agent', 'claude', '--no-user-hook', '--no-core'],
-    { cwd: WORK, env: { HOME: H2, USERPROFILE: H2, XDG_CONFIG_HOME: undefined, XDG_DATA_HOME: undefined, XDG_CACHE_HOME: undefined, GSD_NO_CORE: '1' } });
-  if (inst.status === 0) fileHas('install copies it, with the toolkit mark', path.join(H2, '.claude/skills/gsdt-batch/SKILL.md'), /^<!-- gsd-toolkit-skill /m);
-  else ok('lib/install-copy.sh ran', false, inst.out.split('\n').slice(-5).join('\n'));
   const canon = rulesText('off');
   has('the toolkit rules (gsdt-rules) point at the gsdt-batch script', canon, "`gsdt-batch '<task list or brief>'` in a terminal (the script, not the skill)");
 });

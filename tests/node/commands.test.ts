@@ -689,7 +689,6 @@ describe('lint — bash 3.2 traps', () => {
     const files = [
       ...filesIn('bin', /.*/),
       ...filesIn('lib', /\.sh$/),
-      ...filesIn(path.join('lib', 'tracker'), /\.sh$/),
       'install.sh',
       ...filesIn('tools', /\.sh$/),
       ...filesIn(path.join('shims', 'scripts'), /\.sh$/),

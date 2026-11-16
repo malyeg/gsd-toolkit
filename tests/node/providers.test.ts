@@ -843,29 +843,6 @@ describe('Gemini: refused, and an older setup is cleaned up', () => {
     assert.ok(j.theme === 1 && !('hooks' in j));
   });
   it('…and doctor: no T061', () => assert.ok(!hasCode(HP, 'T061')));
-  // an install that set Gemini up (its manifest says so) loses our skills and user hook there;
-  // the user's own skill and hook stay. The 0.10.x copy installer (kept as the oracle) did this
-  // clean-up; gsdt-setup dropped machine-level Gemini legacy, so this check runs that script.
-  const GI = path.join(WORK, 'gi');
-  let gi: Run;
-  const legacySkip = winSkip('runs the legacy bash installer (python, symlinks, POSIX modes)') || (hasPython() ? false : 'needs python3 (the legacy installer)');
-  it('reinstall over an old gemini install works', { skip: legacySkip }, () => {
-    mkdirSync(path.join(GI, 'bin'), { recursive: true });
-    write(path.join(GI, 'gemini', 'skills', 'gsdw-flow', 'SKILL.md'), 'x\n<!-- gsd-worktrees-skill 0.4.12 -->\n');
-    write(path.join(GI, 'gemini', 'skills', 'mine', 'SKILL.md'), 'mine\n');
-    symlinkSync(path.join(PKG, 'skills', 'gsdt-tracker'), path.join(GI, 'gemini', 'skills', 'gsdw-tracker'));
-    write(path.join(GI, 'gemini', 'settings.json'), '{"hooks":{"BeforeTool":[{"matcher":"activate_skill","hooks":[{"type":"command","command":"[ ! -x x ] || exec x/gsdt-worktree-guard --global"}]},{"matcher":"x","hooks":[{"type":"command","command":"echo mine"}]}]}}\n');
-    write(path.join(GI, 'bin', '.gsd-install-manifest'), `providers\tclaude,gemini\nclaude_skills\t${GI}/claude/skills\ngemini_skills\t${GI}/gemini/skills\n`);
-    gi = exec('bash', [path.join(PKG, 'lib', 'install-copy.sh'), '--reuse-install-config'], { cwd: PKG, env: E({ GSD_BIN_DIR: path.join(GI, 'bin'), GSD_CLAUDE_SKILL_DIR: path.join(GI, 'claude', 'skills') }) });
-    assert.ok(gi.status === 0 && lines(path.join(GI, 'bin', '.gsd-install-manifest')).includes('providers\tclaude'), gi.out);
-  });
-  it("…our gemini skills are removed, the user's stays", { skip: legacySkip }, () => {
-    assert.ok(!existsSync(path.join(GI, 'gemini', 'skills', 'gsdw-flow')) && !existsSyncLink(path.join(GI, 'gemini', 'skills', 'gsdw-tracker')) && existsSync(path.join(GI, 'gemini', 'skills', 'mine', 'SKILL.md')));
-  });
-  it("…our gemini user hook is removed, the user's stays", { skip: legacySkip }, () => {
-    const t = rd(path.join(GI, 'gemini', 'settings.json'));
-    assert.ok(!t.includes('gsdt-worktree-guard') && t.includes('echo mine'));
-  });
 });
 function existsSyncLink(p: string): boolean {
   try {

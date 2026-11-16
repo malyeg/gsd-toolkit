@@ -30,12 +30,11 @@ running from it.
 | `src/spawn.ts`, `src/stdio.ts` | child processes and paths (Windows rules live here); output and session launching |
 | `src/commands/setup.ts` | `gsdt-setup`: skills, user hooks, gsd-core, moving off a 0.10.x install |
 
-The bash files still in `lib/` (`common.sh`, `provider.sh`, `ui.sh`,
-`tracker/*.sh`, the Python and Perl helpers) are not run by any command and the
-npm package does not ship them (except `lib/vendor/axe-core/`). Tests keep them
-as parity oracles: the TypeScript tests run old and new side by side. `lib/install.sh`
-is the bridge from an installed 0.10.x (it hands over to the top-level `install.sh`);
-`lib/install-copy.sh` is the old copy installer, kept as the oracle for `gsdt-setup`.
+The old bash, Python and Perl implementations are deleted. What is left of
+`lib/`: `lib/install.sh`, the bridge from an installed 0.10.x (those releases
+download the git-archive tarball and run it; it hands over to the top-level
+`install.sh`), and `lib/vendor/axe-core/`. The tests are `node:test` files with
+saved goldens (see CLAUDE.md).
 
 ## Windows
 

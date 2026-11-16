@@ -5,86 +5,78 @@ on:
     branches: ['**']     # a push that changes VERSION also runs them through release.yml
   pull_request:
   workflow_call:         # release.yml gates a release on this suite
+    inputs:
+      macos:
+        description: 'also run on macOS (a release does)'
+        type: boolean
+        default: false
 
 jobs:
-  reconcile:
-    # The reconciler is the one piece here that can silently destroy data, so it
-    # is the piece that gets a gate. Both runners: the shims and hooks use
-    # git plumbing whose behaviour differs between the BSD and GNU userlands.
+  lint:
+    # Static analysis: its verdict does not differ per platform, so Ubuntu only.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: TypeScript (tsc --noEmit)
+        run: npm ci --no-audit --no-fund && npx tsc --noEmit
+      - name: syntax (bash -n, node --check)
+        run: |
+          for f in bin/* install.sh lib/install.sh shims/scripts/*.sh shims/scripts/hooks/*.sh tools/*.sh; do
+            bash -n "$f" || exit 1
+          done
+          node --check src/launch.mjs
+      - name: shellcheck
+        # Policy (intentional-pattern exclusions, with reasons): .shellcheckrc
+        run: shellcheck -x bin/* install.sh lib/install.sh shims/scripts/*.sh shims/scripts/hooks/*.sh tools/*.sh
+
+  matrix:
+    # The OS list: Linux and Windows always, macOS too when the caller asks (release.yml).
+    runs-on: ubuntu-latest
+    outputs:
+      os: ${{ steps.os.outputs.os }}
+    steps:
+      - id: os
+        run: |
+          if [ "${{ inputs.macos }}" = true ]; then
+            echo 'os=["ubuntu-latest","windows-latest","macos-latest"]' >> "$GITHUB_OUTPUT"
+          else
+            echo 'os=["ubuntu-latest","windows-latest"]' >> "$GITHUB_OUTPUT"
+          fi
+
+  test:
+    needs: matrix
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: ${{ fromJSON(needs.matrix.outputs.os) }}
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # tags: test-update.sh installs the real v0.7.0 (the move to gsd-toolkit)
+          fetch-depth: 0   # tags: install.test.ts installs the real v0.10.0 / v0.7.0
       - uses: actions/setup-node@v4
         with:
-          node-version: 24   # ported commands run src/*.ts by type stripping (TS port)
-      - name: TypeScript (tsc --noEmit)
-        run: npm ci --no-audit --no-fund && npx tsc --noEmit
-      - name: TypeScript suites (node --test, goldens)
-        run: node --test 'tests/ts/*.test.ts'
+          node-version: 24   # the commands run src/*.ts by type stripping
+      - name: git settings
+        run: |
+          git config --global user.name ci
+          git config --global user.email ci@example.invalid
+          git config --global core.longpaths true
+      - run: npm ci --no-audit --no-fund
       - name: versions
         run: |
           node --version
+          npm --version
           bash --version | head -1
           git --version
-          python3 --version
-      - name: syntax
-        run: |
-          for f in bin/* lib/*.sh lib/tracker/*.sh install.sh shims/scripts/*.sh shims/scripts/hooks/*.sh tests/*.sh; do
-            bash -n "$f" || exit 1
-          done
-          python3 -c "import ast, pathlib; ast.parse(pathlib.Path('lib/gsd_planning.py').read_text())"
-          python3 -c "import ast, pathlib; ast.parse(pathlib.Path('lib/gsd_hook_payload.py').read_text())"
-          node --check src/launch.mjs
-      - name: shellcheck
-        # Ubuntu only: shellcheck is static analysis, so its verdict does not
-        # differ per platform, and the macOS runner has no shellcheck (a brew
-        # install on every run would buy nothing). The matrix is here for the
-        # BSD-vs-GNU RUNTIME differences the suite exercises.
-        if: matrix.os == 'ubuntu-latest'
-        # Policy (intentional-pattern exclusions, with reasons): .shellcheckrc
-        run: shellcheck -x bin/* lib/*.sh lib/tracker/*.sh tools/*.sh shims/scripts/*.sh shims/scripts/hooks/*.sh install.sh tests/*.sh
-      - name: planning reconcile suite
-        run: tests/test-planning-reconcile.sh
-      - name: worktree guard suite
-        run: tests/test-worktree-guard.sh
-      - name: flow-next suite
-        run: tests/test-flow-next.sh
-      - name: provider adapter suite
-        run: tests/test-providers.sh
-      - name: standalone copy installation suite
-        run: tests/test-install-copy.sh
-      - name: fresh-review regression suite
-        run: bash tests/test-review-fixes.sh
-      - name: gsdt-list suite
-        run: tests/test-list.sh
-      - name: full-review regression suite (2026-09-25)
-        run: tests/test-review-round2.sh
-      - name: command paths suite
-        run: tests/test-commands.sh
-      - name: ticket tracker suite
-        run: tests/test-tracker.sh
-      - name: release notice + gsdt-update (release runtime) suite
-        run: tests/test-update.sh
-      - name: install.sh + the bridge from 0.10.x suite
-        run: tests/test-install.sh
-      - name: npm package suite (pack, install -g, gsdt-setup, gsdt-update)
-        run: tests/test-npm.sh
-      - name: UI gates suite
-        run: tests/test-ui.sh
-      - name: doctor checks suite
-        run: tests/test-doctor.sh
-      - name: codex usage-limit wait suite
-        run: tests/test-codex-wait.sh
-      - name: batch report suite
-        run: tests/test-batch.sh
-      - name: gsdt-migrate suite
-        run: tests/test-migrate.sh
+      - name: GSD (gsd-core) for the end-to-end and OS suites
+        run: npm install -g --no-audit --no-fund @opengsd/gsd-core@1.18.0
       - name: a browser for the UI check suite
         # The runner behind `gsdt-ui check` is only tested when it drives a real
         # browser: a pinned Playwright and its Chromium, outside the checkout.
@@ -92,47 +84,11 @@ jobs:
           mkdir -p "$RUNNER_TEMP/pw" && cd "$RUNNER_TEMP/pw"
           printf '{"name":"pw","private":true}\n' > package.json
           npm install --no-audit --no-fund playwright@1.63.0
-          npx playwright install --with-deps chromium
-      - name: UI check suite (real browser)
+          if [ "$RUNNER_OS" = Linux ]; then npx playwright install --with-deps chromium; else npx playwright install chromium; fi
+      - name: tests (node --test)
         env:
+          GSD_TEST_REQUIRE_GSD: 1       # a skip here would mean an untested claim path
           GSD_TEST_REQUIRE_BROWSER: 1   # a skip here would mean an untested checker
-        run: GSD_PLAYWRIGHT_ROOT="$RUNNER_TEMP/pw" tests/test-ui-browser.sh
-      - name: GSD (gsd-core) for the end-to-end suite
-        run: npm install -g --no-audit --no-fund @opengsd/gsd-core@1.18.0
-      - name: end-to-end suite (real gsd-core)
-        env:
-          GSD_TEST_REQUIRE_GSD: 1   # a skip here would mean an untested claim path
-        run: tests/test-e2e.sh
-
-  os-suite:
-    # The cross-platform black-box suite: the real npm package (npm pack +
-    # npm install -g) driven through its commands, with real gsd-core. The bash
-    # suites above stay the Mac+Linux parity oracle; this is the one Windows runs.
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - name: git settings (Windows)
-        if: runner.os == 'Windows'
-        run: git config --global core.longpaths true
-      - name: TypeScript (tsc --noEmit)
-        run: npm ci --no-audit --no-fund && npx tsc --noEmit
-      - name: GSD (gsd-core)
-        run: npm install -g --no-audit --no-fund @opengsd/gsd-core@1.18.0
-      - name: versions
         run: |
-          node --version
-          npm --version
-          git --version
-      - name: OS suite (node --test)
-        env:
-          GSD_TEST_REQUIRE_GSD: 1   # a skip here would mean an untested claim path
-        run: node --test tests/os/os.test.ts
+          export GSD_PLAYWRIGHT_ROOT="$RUNNER_TEMP/pw"
+          node --test 'tests/node/*.test.ts' 'tests/ts/*.test.ts' 'tests/os/*.test.ts'

@@ -919,7 +919,7 @@ describe('GSD hooks that run a missing file (T008)', () => {
   });
 });
 
-describe('gsdt-setup keeps recorded agents (the old lib/install-copy.sh --reuse-install-config)', () => {
+describe('gsdt-setup keeps recorded agents', () => {
   const IB = path.join(WORK, 'ibin');
   const CODEX_SK = path.join(WORK, 'codex-skills');
   const CLAUDE_SK = path.join(WORK, 'claude-skills');
