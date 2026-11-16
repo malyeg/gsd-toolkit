@@ -32,6 +32,7 @@ import {
   mkdtempSync,
   readdirSync,
   readFileSync,
+  readSync,
   renameSync,
   rmSync,
   statSync,
@@ -956,4 +957,32 @@ export function installCmd(repo: string): string {
   if (isFile(`${repo}/yarn.lock`)) return 'yarn install';
   if (isFile(`${repo}/package-lock.json`) || isFile(`${repo}/package.json`)) return 'npm install';
   return '';
+}
+
+/**
+ * `IFS= read -r line` on fd 0, for the y/N prompts: one line, byte by byte (nothing past it is consumed);
+ * null at end of input (also with a partial line, as bash's read returns 1 then).
+ * A terminal's fd 0 can be non-blocking (Node's own tty setup, or the shell that started it): readSync then
+ * throws EAGAIN until a key is typed. Wait and retry: taking EAGAIN as "no answer" made every prompt say
+ * no at once (gsdt-doctor --fix "Run these? [y/N] Nothing changed.").
+ */
+export function readStdinLine(): string | null {
+  const b = Buffer.alloc(1);
+  const bytes: number[] = [];
+  const nap = new Int32Array(new SharedArrayBuffer(4));
+  for (;;) {
+    let n: number;
+    try {
+      n = readSync(0, b, 0, 1, null);
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException).code === 'EAGAIN') {
+        Atomics.wait(nap, 0, 0, 20);
+        continue;
+      }
+      return null;
+    }
+    if (n === 0) return null;
+    if (b[0] === 10) return Buffer.from(bytes).toString('utf8');
+    bytes.push(b[0] as number);
+  }
 }

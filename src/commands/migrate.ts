@@ -34,6 +34,7 @@ import {
   lf,
   planningHook,
   wtdir,
+  readStdinLine,
 } from '../common.ts';
 import {
   canonicalBlock,
@@ -107,21 +108,8 @@ const PATH_RE_SRC = '(?<![A-Za-z0-9_-])scripts/(?:gsd-(?:new-worktree-feature|fi
 
 const COMMIT_MSG = 'Switch to gsdt-* toolkit commands';
 
-/** one line from stdin (null at EOF without a newline) */
 function readLine(): string | null {
-  const b = Buffer.alloc(1);
-  let s = '';
-  for (;;) {
-    let n = 0;
-    try {
-      n = readSync(0, b, 0, 1, null);
-    } catch {
-      return null;
-    }
-    if (n === 0) return null;
-    if (b[0] === 10) return s;
-    s += String.fromCharCode(b[0] as number);
-  }
+  return readStdinLine();
 }
 
 const newName = (p: string): string => p.replace(/(^|\/)gsd-/, '$1gsdt-');

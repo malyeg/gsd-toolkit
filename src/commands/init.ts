@@ -7,7 +7,7 @@
 import { existsSync, lstatSync, readFileSync, readSync, readdirSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import path from 'node:path';
-import { chomp, commandOnPath, confGet, findMain, git, isExec, lf, migrateRefuse, planningHook } from '../common.ts';
+import { chomp, commandOnPath, confGet, findMain, git, isExec, lf, migrateRefuse, planningHook, readStdinLine } from '../common.ts';
 import {
   compactResolve,
   GSD_GEMINI_GONE,
@@ -106,24 +106,8 @@ export function main(argv: string[]): number | Promise<number> {
 
 const say = (s = ''): void => out(`${s}\n`);
 
-/** `IFS= read -r`: one raw line from stdin; null at end of input (bash returns 1 then, even with a partial line) */
 function readLine(): string | null {
-  const buf = Buffer.alloc(1);
-  const bytes: number[] = [];
-  for (;;) {
-    let n: number;
-    try {
-      n = readSync(0, buf, 0, 1, null);
-    } catch (e) {
-      const code = (e as NodeJS.ErrnoException).code;
-      if (code === 'EAGAIN') continue;
-      if (code === 'EOF') return null;
-      return null;
-    }
-    if (n === 0) return null;
-    if (buf[0] === 10) return Buffer.from(bytes).toString('utf8');
-    bytes.push(buf[0] as number);
-  }
+  return readStdinLine();
 }
 
 const DOC_NAME = [/^.*adr.*\.md$/i, /^.*prd.*\.md$/i, /^.*rfc.*\.md$/i, /^spec.*\.md$/i, /^requirements.*\.md$/i, /^architecture.*\.md$/i, /^design.*\.md$/i];
