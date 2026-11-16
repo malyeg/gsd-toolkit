@@ -180,7 +180,11 @@ function download(url: string, file: string, maxTime: number): boolean {
   const r = spawnSync('curl', ['-fsSL', '--retry', '3', '--retry-delay', '2', '--max-time', String(maxTime), url, '-o', file], {
     stdio: ['ignore', 'pipe', 'pipe'],
   });
-  return r.status === 0 && existsSync(file);
+  if (r.status === 0 && existsSync(file)) return true;
+  // say why (a missing curl, its exit code, its last words): a bare "download failed" hides a Windows-only cause
+  const why = [r.error?.message, r.status !== null && r.status !== 0 ? `curl exit ${r.status}` : '', String(r.stderr ?? '').trim().split('\n').pop()].filter(Boolean).join('; ');
+  if (why !== '') err(`  (${why})\n`);
+  return false;
 }
 
 /** npm mode: install that release's .tgz globally, then run the NEW package's setup. 0 = fine, 1 = setup failed, 2 = the install failed. */
