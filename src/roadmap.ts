@@ -228,3 +228,38 @@ export function roadmapRows(file: string, phase?: string): RowsResult {
   }
   return { rc: 0, stderr: '', changed };
 }
+
+/**
+ * Phases that look done but were never marked complete (doctor T027): ROADMAP's checklist row is
+ * "- [ ] **Phase N", its .planning/phases/<N>-* folder has plans and every plan has a SUMMARY, and no
+ * phase-N-* branch is open (so it is merged, not in flight). gsd-core ticks the row only when
+ * /gsd-verify-work sees verification "passed"; a phase landed with "human_needed" stays unticked,
+ * and then gsdt-list, T040 and STATE.md all read it as not done.
+ * `text` is ROADMAP.md, `phaseDirs` the names in .planning/phases, `plansOf` lists one folder's files.
+ */
+export function unmarkedDone(text: string, phaseDirs: string[], plansOf: (dir: string) => string[], branches: string[]): string[] {
+  const norm = (k: string): string => k.replace(/^0+(?=\d)/, '');
+  const dirOf = new Map<string, string>();
+  for (const d of phaseDirs) {
+    const m = /^(\d+(?:\.\d+)?)-/.exec(d);
+    if (m && !dirOf.has(norm(m[1] as string))) dirOf.set(norm(m[1] as string), d);
+  }
+  const open = new Set<string>();
+  for (const b of branches) {
+    const m = /^phase-(\d+(?:\.\d+)?)-/.exec(b);
+    if (m) open.add(norm(m[1] as string));
+  }
+  const out: string[] = [];
+  for (const line of text.split('\n')) {
+    const m = /^- \[ \] \*\*Phase (\d+(?:\.\d+)?)(?![\d.])/.exec(line);
+    if (!m) continue;
+    const n = norm(m[1] as string);
+    const dir = dirOf.get(n);
+    if (dir === undefined || open.has(n) || out.includes(m[1] as string)) continue;
+    const files = plansOf(dir);
+    const plans = files.filter((f) => /-PLAN\.md$/i.test(f)).length;
+    const summaries = files.filter((f) => /-SUMMARY\.md$/i.test(f)).length;
+    if (plans > 0 && summaries >= plans) out.push(m[1] as string);
+  }
+  return out;
+}

@@ -201,8 +201,13 @@ check "worktrees removed" '[ ! -d "$WT_CART" ] && [ ! -d "$WT_LOGIN" ]'
 git -C shop pull -q --ff-only 2>/dev/null
 (cd shop && gsdt-planning-repair --check) > repair.log 2>&1; rr=$?
 check "planning files coherent" '[ "$rr" = 0 ]' "$(cat repair.log)"
+# cart landed with every plan run but no /gsd-verify-work, so nothing ticked its row (doctor T027)
+check "finish warns: cart merged but never marked complete" 'grep -q "roadmap bookkeeping needs a hand" finish-a.log && grep -q "Phase ${CART_N} is merged and every plan ran" finish-a.log' "$(tail -8 finish-a.log)"
+sed "s/^- \[ \] \*\*Phase ${CART_N}:/- [x] **Phase ${CART_N}:/" shop/.planning/ROADMAP.md > roadmap.tmp && mv roadmap.tmp shop/.planning/ROADMAP.md
+git -C shop commit -qam "docs: mark phase ${CART_N} complete"
 (cd shop && gsdt-doctor --quiet) > doctor1.log 2>&1; d1=$?
-check "doctor after finishing" '[ "$d1" = 0 ]' "$(grep -E '✖|T0' doctor1.log)"
+# once ticked, T040 sees the flow steps this test skipped on purpose (it stopped at the verifier): the only finding
+check "doctor after finishing: only cart's flow debt" '! grep "✖" doctor1.log | grep -qv "Phase ${CART_N} merged without:.*T040" && grep -q "T040" doctor1.log' "$(grep -E '✖|T0' doctor1.log)"
 
 printf '\n%d passed, %d failed\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]

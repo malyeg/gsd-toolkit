@@ -9,6 +9,28 @@ becomes its release notes.
 
 ## Unreleased
 
+- **`gsdt-list` shows a ticked phase with no plan files as `done`.** A phase
+  done outside GSD (a pre-GSD baseline, work done by hand) has no
+  `.planning/phases/<N>-*` folder, so it showed `—` even when ROADMAP ticks it
+  `- [x]`.
+- **New doctor finding T027: merged but never marked complete.** A phase whose
+  plans all have a SUMMARY, with no `phase-N-*` branch left, whose ROADMAP
+  checklist row is still `- [ ]`. gsd-core ticks the row (and moves STATE.md
+  on) only when `/gsd-verify-work` sees verification `passed`, so a phase
+  landed with `human_needed` stayed "not done" in ROADMAP, STATE.md,
+  `gsdt-list` and the T040 flow report. The fix it names: `/gsd-verify-work N`
+  once the open checks are done, or tick the row by hand. `gsdt-finish` prints
+  it after the merge with the other roadmap bookkeeping lines. Nothing is
+  ticked for you.
+- **The planning merge driver and `gsdt-planning-repair` catch a Progress row
+  left below a `### Phase N` section.** gsd-core's `phase.add` appends the new
+  phase's section after the Progress table; a merge could then leave a second
+  row for an older phase under it, which the dedupe never saw (it stopped at
+  the `###` heading), so `--check` said "consistent". Up to the next `#` /
+  `##` heading, a phase row with the table's column count is now the table's
+  row (best content kept, in the table's place). Rows are also ranked by the
+  header's Plans and Status columns, so a table with a Milestone column keeps
+  the right copy.
 - **`gsdt-doctor` prints only what matters by default.** The passed checks are
   now one line (`✔ 30 checks passed (--verbose to list them)`); findings,
   newer-version lines and notes that point at something to do in this repo (an

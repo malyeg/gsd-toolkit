@@ -47,6 +47,7 @@ const baseEnv = (extra: Record<string, string | undefined> = {}): NodeJS.Process
 };
 
 type R = { out: string; err: string; rc: number };
+const HELP_ADDED = '            A phase with no plan files is done when ROADMAP ticks it\n            (- [x] **Phase N): work done outside GSD, like a baseline.\n';
 const go = (bin: string, args: string[], cwd: string, env: NodeJS.ProcessEnv): R => {
   const r = spawnSync(bin, args, { cwd, env, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   return { out: r.stdout, err: r.stderr, rc: r.status ?? -1 };
@@ -65,6 +66,7 @@ const both = (label: string, args: string[], cwd: string, extraEnv: Record<strin
   const n = go(NEW_BIN, args, cwd, env);
   o.err = o.err.split(oldPkg).join('<PKG>');
   n.err = n.err.split(PKG).join('<PKG>');
+  n.out = n.out.replace(HELP_ADDED, ''); // help lines added after the port (the ticked-phase rule)
   const norm = (s: string): string => (opts.sortErr ? s.split('\n').sort().join('\n') : s);
   eq(n.out, o.out, `${label}: stdout`);
   eq(norm(n.err), norm(o.err), `${label}: stderr`);
@@ -271,6 +273,27 @@ test('renderList: odd widths in-process (no repo needed)', () => {
       assert.ok(o.endsWith('● worktree attached\n'));
     }
   }
+});
+
+test('a phase ticked [x] in the checklist with no plan files is done', () => {
+  const text = [
+    '- [x] **Phase 0: Baseline** - built before GSD',
+    '- [X] **Phase 01: Gating** - done by hand',
+    '- [ ] **Phase 2: Tests** - not done',
+    '- [x] **Phase 10: Ten**',
+    '### Phase 0: Baseline',
+    '### Phase 1: Gating',
+    '### Phase 2: Tests',
+    '### Phase 3: Not in the checklist',
+    '### Phase 1.1: Hotfix',
+  ].join('\n');
+  const o = renderList({ roadmap: '/r', text, wt: new Map(), branches: [], batches: [], phasesRoot: '/nonexistent', termcols: 100, full: false });
+  const stage = (n: string): string | undefined => o.split('\n').find((l) => new RegExp(`^│ +${n.replace('.', '\\.')} │`).test(l))?.split('│')[4]?.trim();
+  assert.equal(stage('0'), 'done');
+  assert.equal(stage('1'), 'done', 'zero-padded checklist number matches');
+  assert.equal(stage('2'), '—');
+  assert.equal(stage('3'), '—');
+  assert.equal(stage('1.1'), '—', 'Phase 1 ticked does not tick 1.1');
 });
 
 test('symlinked launcher still finds the package', () => {

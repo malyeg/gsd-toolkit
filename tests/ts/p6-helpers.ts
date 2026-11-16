@@ -154,19 +154,29 @@ export function makeSide(kind: 'old' | 'new', p: Project = {}): Side {
   return { kind, root: rootDir, R, origin, wtdir: path.join(rootDir, 'shop-worktrees'), home, stub, pkg: kind === 'old' ? oldPkg : PKG };
 }
 
-// The test PATH: this machine's, minus every agent CLI and gsd-core's gsd_run (a launch
-// test must never start a real claude/codex, and "no gsd-core" must be true). A directory
-// that holds one of them is replaced by a farm of links to everything else in it.
+// The test PATH: this machine's, minus every agent CLI, gsd-core's gsd_run (a launch
+// test must never start a real claude/codex, and "no gsd-core" must be true) and an
+// installed toolkit's gsdt-* commands (npm -g puts them next to node; a test that says
+// "no gsdt-doctor on PATH" must mean it). A directory that holds one of them is replaced
+// by a farm of links to everything else in it.
 const BLOCKED = ['claude', 'codex', 'gsd_run'];
+const blocked = (n: string): boolean => BLOCKED.includes(n) || n.startsWith('gsdt-');
 const farmRoot = path.join(root, 'pathfarm');
+const readdirSafe = (d: string): string[] => {
+  try {
+    return readdirSync(d);
+  } catch {
+    return [];
+  }
+};
 export const cleanPath = (process.env.PATH ?? '')
   .split(path.delimiter)
   .map((d, i) => {
-    if (!d || !existsSync(d) || !BLOCKED.some((b) => existsSync(path.join(d, b)))) return d;
+    if (!d || !existsSync(d) || !readdirSafe(d).some(blocked)) return d;
     const farm = path.join(farmRoot, String(i));
     mkdirSync(farm, { recursive: true });
     for (const n of readdirSync(d)) {
-      if (BLOCKED.includes(n)) continue;
+      if (blocked(n)) continue;
       try {
         symlinkSync(path.join(d, n), path.join(farm, n));
       } catch {

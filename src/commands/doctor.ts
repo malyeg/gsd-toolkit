@@ -68,7 +68,7 @@ import {
   providerUserHookFile,
   staleHooks,
 } from '../provider.ts';
-import { roadmapAudit } from '../roadmap.ts';
+import { roadmapAudit, unmarkedDone } from '../roadmap.ts';
 import {
   coreUpdateHow,
   gsdCached,
@@ -877,6 +877,32 @@ class Doctor {
           }
           note("cross-references in a checklist row must read 'phase-13', never 'Phase 13'");
           if (BR !== '') note(`these may all clear with:  git merge ${confBase(MAIN)}`);
+        }
+        // T027 — merged with every plan run, but never marked complete (main checkout only: a worktree's copy is in flight)
+        if (HERE === MAIN) {
+          const pdir = `${MAIN}/.planning/phases`;
+          let dirs: string[] = [];
+          try {
+            dirs = readdirSync(pdir).filter((d) => !d.startsWith('.') && isDir(`${pdir}/${d}`));
+          } catch {
+            // no phases folder
+          }
+          const refs = git(MAIN, ['for-each-ref', '--format=%(refname:short)', 'refs/heads/']);
+          const branches = refs.status === 0 ? lineList(refs.stdout) : [];
+          const plansOf = (d: string): string[] => {
+            try {
+              return readdirSync(`${pdir}/${d}`);
+            } catch {
+              return [];
+            }
+          };
+          for (const n of unmarkedDone(readFileText(ROADMAP) ?? '', dirs, plansOf, branches)) {
+            fail(
+              `Phase ${n} is merged and every plan ran, but its ROADMAP checklist row is not ticked — never marked complete`,
+              `/gsd-verify-work ${n} once its open checks are done (gsd-core ticks it only when verification passed), or tick it by hand`,
+              'T027',
+            );
+          }
         }
       }
 
