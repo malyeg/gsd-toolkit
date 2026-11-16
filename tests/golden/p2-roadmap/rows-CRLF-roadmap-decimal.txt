@@ -1,0 +1,5 @@
+@@@ 1 @@@
+rc=0
+out=""
+err=""
+file="# Roadmap\r\n- [x] **Phase 1: First** - done\r\n- [ ] **Phase 2: Second** - next\r\n- [ ] **Phase 2.1: Hot fix | urgent (INSERTED)**\r\n\r\n## Phase Details\r\n### Phase 1: First\r\n### Phase 2: Second\r\n### Phase 2.1: Hot fix | urgent (INSERTED)\r\n- [ ] TBD (run /gsd-plan-phase 2.1 to break down)\r\n### Phase 3: Third\r\n- [ ] TBD (run /gsd-plan-phase 3 to break down)\r\n### Phase 10: Tenth\r\n### Phase 0.5: Half\r\n### Phase 02: Padded\r\n\r\n## Progress\r\n\r\n| Phase | Milestone | Plans Complete | Status | Completed |\r\n|-------|-----------|----------------|--------|-----------|\r\n| 1. First | v1 | 1/1 | Complete | 2026-09-01 |\r\n| 2. Second | v1 | 0/2 | In progress | - |\r\n| 2.1. Hot fix / urgent (INSERTED) | - | 0/TBD | Not started | - |\r\n"

@@ -1,0 +1,17 @@
+@@@ 1 @@@
+rc=0
+--stdout--
+installed : 1.0.0  (<R>/release/share/gsd-toolkit/releases/1.0.0)
+latest    : 1.0.0  (acme/gsd-toolkit)
+gsd-core  : claude 1.2.0, latest 1.2.0
+✔ gsd-toolkit is up to date
+✔ claude gsd-core 1.2.0 is the latest
+--stderr--
+--install.sh--
+--npm--
+view @opengsd/gsd-core dist-tags.latest --fetch-retries=0 --fetch-timeout=5000
+--npx--
+--caches--
+1.0.0
+|1.2.0
+

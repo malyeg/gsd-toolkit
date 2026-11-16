@@ -1,0 +1,74 @@
+@@@ 1 @@@
+# empty
+
+@@@ 2 @@@
+# bad
+
+@@@ 3 @@@
+# arr
+
+@@@ 4 @@@
+# str
+
+@@@ 5 @@@
+# null
+
+@@@ 6 @@@
+# bom
+
+@@@ 7 @@@
+# latin1
+
+@@@ 8 @@@
+# nan
+<TMP>/nan.json	user	gsd	1	A	/gone/nan/gsd-x
+
+@@@ 9 @@@
+# dup
+<TMP>/dup.json	user	gsd	1	B	/gone/b/gsd-x
+
+@@@ 10 @@@
+# nohooks
+
+@@@ 11 @@@
+# status
+<TMP>/status.json	user	gsd	1	statusLine	/gone/gsd-statusline.js
+
+@@@ 12 @@@
+# badstatus
+
+@@@ 13 @@@
+# shapes
+<TMP>/shapes.json	user	gsd	1	B	/gone/flat/gsd-a
+<TMP>/shapes.json	user	gsd	2	B	/gone/n/gsd-b
+<TMP>/shapes.json	user	gsd	3	C	/gone/flat2/gsd-c
+<TMP>/shapes.json	user	gsd	4	statusLine	/gone/gsd-s
+
+@@@ 14 @@@
+# nonexistent
+
+@@@ 15 @@@
+# no argv
+
+@@@ 16 @@@
+# arg without a colon
+
+@@@ 17 @@@
+# empty arg
+
+@@@ 18 @@@
+# several files, numbering per file
+<TMP>/shapes.json	user	gsd	1	B	/gone/flat/gsd-a
+<TMP>/shapes.json	user	gsd	2	B	/gone/n/gsd-b
+<TMP>/shapes.json	user	gsd	3	C	/gone/flat2/gsd-c
+<TMP>/shapes.json	user	gsd	4	statusLine	/gone/gsd-s
+<TMP>/status.json	user	gsd	1	statusLine	/gone/gsd-statusline.js
+<TMP>/dup.json	codex	gsd	1	B	/gone/b/gsd-x
+
+@@@ 19 @@@
+# shapes finds things
+<TMP>/shapes.json	user	gsd	1	B	/gone/flat/gsd-a
+<TMP>/shapes.json	user	gsd	2	B	/gone/n/gsd-b
+<TMP>/shapes.json	user	gsd	3	C	/gone/flat2/gsd-c
+<TMP>/shapes.json	user	gsd	4	statusLine	/gone/gsd-s
+

@@ -1,0 +1,94 @@
+@@@ 1 @@@
+# compactSettings ["",null,"300000",null,true]
+output:
+
+file: "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 2 @@@
+# compactSettings ["",null,"300000",null,false]
+output:
+
+file: "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 3 @@@
+# compactSettings ["","{\"keep\":1,\"env\":{\"A\":\"b\"}}","250000",null,true]
+output:
+
+file: "{\n  \"keep\": 1,\n  \"env\": {\n    \"A\": \"b\",\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"250000\"\n  }\n}\n"
+@@@ 4 @@@
+# compactSettings ["","{\"keep\":1,\"env\":{\"A\":\"b\"}}","250000",null,false]
+output:
+
+file: "{\n  \"keep\": 1,\n  \"env\": {\n    \"A\": \"b\",\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"250000\"\n  }\n}\n"
+@@@ 5 @@@
+# compactSettings ["","{\"env\":{\"CLAUDE_CODE_AUTO_COMPACT_WINDOW\":\"1\"}}","",null,true]
+output:
+
+file: "{}\n"
+@@@ 6 @@@
+# compactSettings ["","{\"env\":{\"CLAUDE_CODE_AUTO_COMPACT_WINDOW\":\"1\"}}","",null,false]
+output:
+
+file: "{}\n"
+@@@ 7 @@@
+# compactSettings ["","{\"env\":{\"CLAUDE_CODE_AUTO_COMPACT_WINDOW\":\"1\"}}","300000","500000",true]
+output:
+
+file: "{}\n"
+@@@ 8 @@@
+# compactSettings ["","{\"env\":{\"CLAUDE_CODE_AUTO_COMPACT_WINDOW\":\"1\"}}","300000","500000",false]
+output:
+
+file: "{}\n"
+@@@ 9 @@@
+# compactSettings ["",null,"",null,true]
+output:
+
+file: null
+@@@ 10 @@@
+# compactSettings ["",null,"",null,false]
+output:
+
+file: null
+@@@ 11 @@@
+# compactSettings ["","not json","300000",null,true]
+output:
+• could not update .claude/settings.local.json (not a JSON object?) — compact point not saved there
+
+file: "not json"
+@@@ 12 @@@
+# compactSettings ["","not json","300000",null,false]
+output:
+• could not update .claude/settings.local.json (not a JSON object?) — compact point not saved there
+
+file: "not json"
+@@@ 13 @@@
+# compactSettings ["","[1]","300000",null,true]
+output:
+• could not update .claude/settings.local.json (not a JSON object?) — compact point not saved there
+
+file: "[1]"
+@@@ 14 @@@
+# compactSettings ["","[1]","300000",null,false]
+output:
+• could not update .claude/settings.local.json (not a JSON object?) — compact point not saved there
+
+file: "[1]"
+@@@ 15 @@@
+# compactSettings ["providers = codex\n",null,"300000",null,true]
+output:
+
+file: null
+@@@ 16 @@@
+# compactSettings ["providers = codex\n",null,"300000",null,false]
+output:
+
+file: null
+@@@ 17 @@@
+# compactSettings ["providers = codex,claude\n",null,"300000",null,true]
+output:
+
+file: "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"
+@@@ 18 @@@
+# compactSettings ["providers = codex,claude\n",null,"300000",null,false]
+output:
+
+file: "{\n  \"env\": {\n    \"CLAUDE_CODE_AUTO_COMPACT_WINDOW\": \"300000\"\n  }\n}\n"

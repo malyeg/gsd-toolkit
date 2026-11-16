@@ -1,0 +1,5 @@
+@@@ 1 @@@
+rc=0
+out="NOROW|1\nTICK|1|a non-phase line, \"foo PHASE 1: bar\"\n"
+err=""
+file="- [ ] foo PHASE 1: bar\n### Phase 1: One\n| Phase | S |\n|---|---|\n| 1. One | x |\n"

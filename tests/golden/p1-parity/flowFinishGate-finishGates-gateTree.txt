@@ -1,0 +1,86 @@
+@@@ 1 @@@
+# flowFinishGate strict wtExists=true skip=undefined
+rc=1
+stderr:
+✗ phase 3 has no test audit (flow = strict): no 03-VALIDATION.md.
+  In the phase worktree: /gsd-validate-phase 3   (or GSD_SKIP_GUARD=1 if the user asked to skip it)
+
+@@@ 2 @@@
+# finishGates strict wtExists=true skip=undefined
+rc=1
+stderr:
+✗ phase 3 has no test audit (flow = strict): no 03-VALIDATION.md.
+  In the phase worktree: /gsd-validate-phase 3   (or GSD_SKIP_GUARD=1 if the user asked to skip it)
+
+@@@ 3 @@@
+# flowFinishGate strict wtExists=true skip=1
+rc=0
+stderr:
+
+@@@ 4 @@@
+# finishGates strict wtExists=true skip=1
+rc=0
+stderr:
+
+@@@ 5 @@@
+# flowFinishGate strict wtExists=false skip=undefined
+rc=0
+stderr:
+
+@@@ 6 @@@
+# finishGates strict wtExists=false skip=undefined
+rc=1
+stderr:
+✗ phase 3 has no test audit (flow = strict): no 03-VALIDATION.md.
+  In the phase worktree: /gsd-validate-phase 3   (or GSD_SKIP_GUARD=1 if the user asked to skip it)
+
+@@@ 7 @@@
+# flowFinishGate strict wtExists=false skip=1
+rc=0
+stderr:
+
+@@@ 8 @@@
+# finishGates strict wtExists=false skip=1
+rc=0
+stderr:
+
+@@@ 9 @@@
+# flowFinishGate off wtExists=true skip=undefined
+rc=0
+stderr:
+
+@@@ 10 @@@
+# finishGates off wtExists=true skip=undefined
+rc=0
+stderr:
+
+@@@ 11 @@@
+# flowFinishGate off wtExists=true skip=1
+rc=0
+stderr:
+
+@@@ 12 @@@
+# finishGates off wtExists=true skip=1
+rc=0
+stderr:
+
+@@@ 13 @@@
+# flowFinishGate off wtExists=false skip=undefined
+rc=0
+stderr:
+
+@@@ 14 @@@
+# finishGates off wtExists=false skip=undefined
+rc=0
+stderr:
+
+@@@ 15 @@@
+# flowFinishGate off wtExists=false skip=1
+rc=0
+stderr:
+
+@@@ 16 @@@
+# finishGates off wtExists=false skip=1
+rc=0
+stderr:
+

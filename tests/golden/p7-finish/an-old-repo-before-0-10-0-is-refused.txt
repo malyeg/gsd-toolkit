@@ -1,0 +1,59 @@
+@@@ 1 @@@
+step 1 (gsdt-finish 1)
+rc=1
+--- stdout
+
+--- stderr
+✖ this repo uses the old gsd-* names (before 0.10.0) — run: gsdt-migrate --apply
+  (in <T>/shop; plain gsdt-migrate first shows what it changes)
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+scripts/
+scripts/gsd-new-worktree-feature.sh
+── merge driver
+

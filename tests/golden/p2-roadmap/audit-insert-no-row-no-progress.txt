@@ -1,0 +1,5 @@
+@@@ 1 @@@
+rc=0
+out="NOROW|2.1\nNOPROG|2.1\n"
+err=""
+file="# Roadmap\n\n## Phases\n- [x] **Phase 1: First** - done\n- [ ] **Phase 2: Second** - next\n\n## Phase Details\n\n### Phase 1: First\n### Phase 2: Second\n### Phase 2.1: Hot fix (INSERTED)\n\n## Progress\n\n| Phase | Milestone | Plans Complete | Status | Completed |\n|-------|-----------|----------------|--------|-----------|\n| 1. First | v1 | 1/1 | Complete | 2026-09-01 |\n| 2. Second | v1 | 0/2 | In progress | - |\n"

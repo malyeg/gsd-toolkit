@@ -1,30 +1,26 @@
-// P9 parity (gsdt-tracker): the TypeScript command behind bin/gsdt-tracker against the pre-P9
-// bash command (tests/fixtures/p9-old-bins/gsdt-tracker + a copy of lib/tracker/, which stays
-// in place as its library), each side on its own copy of the same fixture (a HOME, a plain repo,
+// gsdt-tracker (src/commands/tracker.ts, behind bin/gsdt-tracker) against saved goldens in
+// tests/golden/p9-tracker/. Each scenario runs its steps on a fresh fixture (a HOME, a plain repo,
 // a GSD repo, custom-tracker repos, a folder outside any repo, a curl stub that fakes ClickUp and
-// logs every argv). Every step runs on both; compared: stdout, stderr, exit code, then the curl
+// logs every argv). Per step the golden is stdout, stderr and the exit code; at the end the curl
 // log, the custom script's log, the token files (content + mode) and each repo's git config.
-// Only the side roots and the package dirs are normalized.
-// Known gaps (new side only, see the last tests): a snapshot --out into a missing folder (bash
-// prints its own `line N:` redirect error), an octal-looking --page, a malformed JSON reply.
+// Only the side root and the package dir are normalized.
+// Cases the old bash command did differently (new side only, see the last tests): a snapshot --out
+// into a missing folder, an octal-looking --page, a malformed JSON reply.
 // Run: node --test tests/ts/p9-tracker.test.ts
+// Regenerate: UPDATE_GOLDEN=1 node --test tests/ts/p9-tracker.test.ts; review the diff of
+// tests/golden/p9-tracker/ by hand before committing.
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { test } from 'node:test';
+import { test, golden } from './golden.ts';
 import { PKG, LOCALE_ENV } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p9-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
 
-const OLDPKG = path.join(W, 'oldpkg');
-mkdirSync(path.join(OLDPKG, 'bin'), { recursive: true });
-writeFileSync(path.join(OLDPKG, 'bin', 'gsdt-tracker'), readFileSync(path.join(PKG, 'tests/fixtures/p9-old-bins/gsdt-tracker')));
-chmodSync(path.join(OLDPKG, 'bin', 'gsdt-tracker'), 0o755);
-cpSync(path.join(PKG, 'lib', 'tracker'), path.join(OLDPKG, 'lib', 'tracker'), { recursive: true });
-const BINS = { old: path.join(OLDPKG, 'bin', 'gsdt-tracker'), neu: path.join(PKG, 'bin', 'gsdt-tracker') };
+const BINS = { neu: path.join(PKG, 'bin', 'gsdt-tracker') };
 
 // A fake ClickUp API. Logs every argv (US-separated) and "METHOD PATH BODY"; prints body + http code.
 const CURL = `#!/usr/bin/env bash
@@ -140,7 +136,7 @@ function makeSide(name: string): Side {
 
 type Step = { a: string[]; cwd?: string; env?: Record<string, string>; stdin?: string };
 type Res = { out: string; err: string; rc: number };
-const norm = (s: string, side: Side): string => s.split(side.root).join('<ROOT>').split(OLDPKG).join('<PKG>').split(PKG).join('<PKG>').replace(/\.tmp\.\d+/g, '.tmp.<pid>');
+const norm = (s: string, side: Side): string => s.split(side.root).join('<ROOT>').split(PKG).join('<PKG>').replace(/\.tmp\.\d+/g, '.tmp.<pid>');
 
 function exec(side: Side, bin: string, st: Step): Res {
   const r = spawnSync(bin, st.a, { cwd: path.join(side.root, st.cwd ?? 'gsd'), env: { ...side.env, ...(st.env ?? {}) }, input: st.stdin ?? '', encoding: 'utf8', timeout: 60000 });
@@ -165,22 +161,17 @@ function state(side: Side): string {
 }
 const read = (f: string, side: Side): string => (existsSync(f) ? norm(readFileSync(f, 'utf8'), side) : '');
 
-/** Run the steps on both sides (fresh sides per scenario); compare every result and the final state. */
+/** Run the steps on a fresh fixture per scenario; golden every result and the final state. */
 function parity(title: string, steps: Step[], opts: { before?: (s: Side) => void } = {}): void {
   test(title, () => {
-    const o = makeSide(`o-${counter}`);
     const n = makeSide(`n-${counter++}`);
-    opts.before?.(o);
     opts.before?.(n);
+    const txt = (r: Res, st: Step, i: number): string => `### step ${i}: ${JSON.stringify(st.a)} ${JSON.stringify(st.env ?? {})}\nrc=${r.rc}\n--- stdout\n${r.out}\n--- stderr\n${r.err}`;
     steps.forEach((st, i) => {
-      const ro = exec(o, BINS.old, st);
       const rn = exec(n, BINS.neu, st);
-      const why = `step ${i}: ${JSON.stringify(st.a)} ${JSON.stringify(st.env ?? {})}`;
-      assert.equal(rn.out, ro.out, `stdout — ${why}`);
-      assert.equal(rn.err, ro.err, `stderr — ${why}`);
-      assert.equal(rn.rc, ro.rc, `exit code — ${why}`);
+      golden(txt(rn, st, i));
     });
-    assert.equal(state(n), state(o), 'files / logs / git config');
+    golden(state(n));
   });
 }
 let counter = 0;
@@ -540,19 +531,16 @@ function expectCase(title: string, setup: (s: Side) => void, prof: string, ans: 
   test(`tty login (expect): ${title}`, { skip: !hasExpect }, () => {
     const exp = path.join(W, `login-${counter}.exp`);
     writeFileSync(exp, 'spawn {*}$env(CMD) login $env(PROF)\nexpect {\n  -ex {[U/r] }    { send "$env(ANS)\\r"; exp_continue }\n  -ex {hidden): } { send "$env(TOK)\\r"; exp_continue }\n  eof\n}\nlassign [wait] a b c rc\nexit $rc\n');
-    const o = makeSide(`eo-${counter}`);
     const n = makeSide(`en-${counter++}`);
-    setup(o);
     setup(n);
     const go = (s: Side, bin: string): Res => {
       const r = spawnSync('expect', [exp], { cwd: path.join(s.root, cwd), env: { ...s.env, CLICKUP_API_TOKEN: '', GSD_CLICKUP_CONFIG: '', CMD: bin, PROF: prof, ANS: ans, TOK: tokenText }, encoding: 'utf8', timeout: 60000 });
       return { out: norm((r.stdout ?? '').replace(/\r/g, ''), s), err: '', rc: r.status ?? -1 };
     };
-    const ro = go(o, BINS.old);
     const rn = go(n, BINS.neu);
-    assert.equal(rn.out, ro.out);
-    assert.equal(rn.rc, ro.rc);
-    assert.equal(state(n), state(o));
+    const t = (r: Res): string => `rc=${r.rc}\n${r.out}`;
+    golden(t(rn));
+    golden(state(n));
   });
 }
 const saved = (s: Side): void => gsdFile(s, 'clickup-solo.env', 'CLICKUP_API_TOKEN=pk_solo\n');

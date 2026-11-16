@@ -1,29 +1,19 @@
-// P5 parity (gsdt-list): the TypeScript command behind bin/gsdt-list against
-// the pre-P5 bash+Perl command (tests/fixtures/p5-old-bins/gsdt-list, run in a
-// package dir holding a copy of lib/). Both run on the SAME fixture repos (the
-// command is read-only), so stdout, stderr and the exit code are compared as
-// they are, with no normalizing.
+// gsdt-list: the TypeScript command behind bin/gsdt-list. Each run's stdout, stderr and exit
+// code are checked against the saved goldens in tests/golden/p5-list/ (the command is read-only,
+// so every case runs on its fixture repo as it is). Regenerate with UPDATE_GOLDEN=1 (from the
+// current code); review the golden diff by hand.
 // Run: node --test tests/ts/p5-list.test.ts
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { chmodSync, copyFileSync, cpSync, mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { test } from 'node:test';
+import { golden, test } from './golden.ts';
 import { PKG, repo, sh, tmp, write, LOCALE_ENV } from './helpers.ts';
 import { renderList } from '../../src/commands/list.ts';
 
 const NEW_BIN = path.join(PKG, 'bin', 'gsdt-list');
-const OLD_SRC = path.join(PKG, 'tests', 'fixtures', 'p5-old-bins', 'gsdt-list');
 
 const root = tmp();
-const oldPkg = path.join(root, 'oldpkg');
-mkdirSync(path.join(oldPkg, 'bin'), { recursive: true });
-cpSync(path.join(PKG, 'lib'), path.join(oldPkg, 'lib'), { recursive: true });
-copyFileSync(OLD_SRC, path.join(oldPkg, 'bin', 'gsdt-list'));
-chmodSync(path.join(oldPkg, 'bin', 'gsdt-list'), 0o755);
-const OLD_BIN = path.join(oldPkg, 'bin', 'gsdt-list');
-cpSync(path.join(PKG, 'VERSION'), path.join(oldPkg, 'VERSION'));
-writeFileSync(path.join(oldPkg, '.git'), ''); // like a checkout: the update notice names <pkg>/install.sh
 
 const home = path.join(root, 'home');
 mkdirSync(home, { recursive: true });
@@ -51,24 +41,14 @@ const go = (bin: string, args: string[], cwd: string, env: NodeJS.ProcessEnv): R
   const r = spawnSync(bin, args, { cwd, env, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   return { out: r.stdout, err: r.stderr, rc: r.status ?? -1 };
 };
-/** assert.equal, but name the first differing line instead of dumping both texts */
-const eq = (got: string, want: string, label: string): void => {
-  if (got === want) return;
-  const g = got.split('\n');
-  const w = want.split('\n');
-  const i = g.findIndex((l, k) => l !== w[k]);
-  assert.fail(`${label}: line ${i + 1}\n  new: ${JSON.stringify(g[i])}\n  old: ${JSON.stringify(w[i])}`);
-};
+const text = (label: string, r: R): string => `${label}\nrc=${r.rc}\n--- stdout\n${r.out}--- stderr\n${r.err}`;
 const both = (label: string, args: string[], cwd: string, extraEnv: Record<string, string | undefined> = {}, opts: { sortErr?: boolean; rc?: number; out?: RegExp; err?: RegExp } = {}): R => {
   const env = baseEnv(extraEnv);
-  const o = go(OLD_BIN, args, cwd, env);
   const n = go(NEW_BIN, args, cwd, env);
-  o.err = o.err.split(oldPkg).join('<PKG>');
-  n.err = n.err.split(PKG).join('<PKG>');
+  // (the installed gsd-core's version is the machine's own)
+  n.err = n.err.split(PKG).join('<PKG>').replace(/(GSD [0-9.]+ is out \(you have )[0-9.]+/g, '$1<V>');
   const norm = (s: string): string => (opts.sortErr ? s.split('\n').sort().join('\n') : s);
-  eq(n.out, o.out, `${label}: stdout`);
-  eq(norm(n.err), norm(o.err), `${label}: stderr`);
-  assert.equal(n.rc, o.rc, `${label}: exit code`);
+  golden(text(label, { ...n, err: norm(n.err) }));
   if (opts.rc !== undefined) assert.equal(n.rc, opts.rc, `${label}: expected rc`);
   if (opts.out) assert.match(n.out, opts.out, label);
   if (opts.err) assert.match(n.err, opts.err, label);
@@ -115,14 +95,11 @@ test('the test-list.sh fixture: widths, compact and wrapped, every COLUMNS', () 
       both(`COLUMNS=${cols} ${flags.join(' ')}`, ['--repo', R, ...flags], R, { COLUMNS: cols });
     }
   }
-  // A COLUMNS that is not a number: Perl warns on stderr ("Argument … isn't numeric … at - line N, <$fh> line M"); the table is the same
+  // A COLUMNS that is not a number: the table is still drawn, with nothing on stderr
   for (const cols of ['abc', '70abc']) {
     const env = baseEnv({ COLUMNS: cols });
-    const o = go(OLD_BIN, ['--repo', R], R, env);
     const n = go(NEW_BIN, ['--repo', R], R, env);
-    eq(n.out, o.out, `COLUMNS=${cols}: stdout`);
-    assert.equal(n.rc, o.rc);
-    assert.match(o.err, /isn't numeric/);
+    golden(text(`COLUMNS=${cols}`, n));
     assert.equal(n.err, '');
   }
   both('no COLUMNS (tput)', ['--repo', R], R, {}, { out: /┌/ });

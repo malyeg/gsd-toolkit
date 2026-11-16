@@ -1,0 +1,250 @@
+@@@ 1 @@@
+run [--help]
+rc=0
+--- stdout
+
+gsdt-doctor — read-only health check of a repo's GSD setup.
+
+Diagnoses. Every finding names the command that fixes it. Being read-only is
+what makes it safe to run anywhere, any time, including on a repo you are
+mid-feature in. `--fix` is opt-in and narrow: after the same read-only check
+it runs only the mechanical, undoable fixes (the scoped writers gsdt-init and
+gsdt-planning-repair, plus three one-liners), shows them first, asks, and
+never commits. Anything that needs judgment stays a command for you.
+
+Without --fix nothing here writes to your repos: no fetch, no git config, no
+files there.
+Comparisons against origin therefore use the refs from your last fetch and are
+marked as such. The one exception is the version check, which may ask GitHub
+and npm for the latest versions (at most once a day) and caches the answers
+in ~/.cache/gsd-toolkit/ (GSD_NO_UPDATE_CHECK=1 turns it off).
+
+Usage:
+  gsdt-doctor [--repo <path>] [--quiet] [--json]
+  gsdt-doctor --fix [--yes] [--repo <path>]
+
+Options:
+  --repo <path>  repo to inspect (default: the checkout containing cwd)
+  --quiet        print findings and available updates only, not the checks that passed
+  --fix          after the check, run the SAFE fixes it found — shown first,
+                 then asked (y/N) — and check again. Safe = mechanical and
+                 undoable: gsdt-init --no-launch --no-commit (T010–T014,
+                 T016, T052, T058, T061), gsdt-planning-repair (T020, stale counters),
+                 git branch --track <base> (T015), chmod +x the pre-merge
+                 script (T019), remove a dead lock (T030), gsdt-migrate --apply
+                 (T090: old gsd-* names), add
+                 worktree.baseRef = "head" to .claude/settings.local.json
+                 (T034; other keys kept). Never commits,
+                 pushes, checks out, deletes branches or edits ROADMAP.md;
+                 everything else stays a listed command.
+  --yes          with --fix: don't ask (for scripts)
+  --json         machine output, one object: repo, gsd_repo (false = not a
+                 GSD repo, setup checks skipped), session_model, configured
+                 (provider list), provider {name, command, available,
+                 instruction_file, instruction_integrated, skill_installed,
+                 command_guard, native_hook}, count, findings [{code,message,fix}],
+                 updates [{name,installed,latest,fix}] (newer gsd-toolkit /
+                 GSD; shown with --quiet too, never a finding),
+                 notes [text] (what the text report shows as • lines)
+                 Codes shared with gsd-core's /gsd-health where they mean the
+                 same thing (W017 orphan branch, W027 stale worktree record);
+                 toolkit-only findings use T0xx.
+                 T040 = a merged phase skipped a mandatory step: the flow
+                 steps with `flow = strict`, the checks of the rendered
+                 pages (ui-check, ui-approve) with `ui_gates = strict`.
+                 `flow_since = <N>` in .gsd.conf limits it to phases >= N,
+                 `flow_skip = <N>, <N>…` leaves out single phases, listed
+                 as a note.
+                 T008 = a GSD hook (in an agent's user settings or this
+                 repo's) runs a file that is gone — usually a node path a
+                 Node upgrade moved; it fails silently. The fix swaps in
+                 the current node path (GSD's installer keeps a hook it
+                 already has) or, for a gone script, re-runs GSD's
+                 installer for that agent; doctor never edits it.
+                 T009 = gsd-core skills the phase flow runs are missing (a
+                 set trimmed with /gsd-surface is fine while they are there).
+                 T016 = the generated GSD instructions are older than this
+                 toolkit (gsdt-init refreshes them; --fix runs it).
+                 T062 = Claude is configured but its sessions cannot load
+                 the toolkit rules: gsdt-rules is not on PATH, or no
+                 user-level SessionStart hook runs it (re-run the
+                 installer; a note after install --no-user-hook).
+                 T070–T073 = ticket tracker config (read from `gsdt-tracker config`).
+                 T080 = phases have screens but DESIGN.md is missing or a
+                 stub (only with `ui_gates = strict`; a note otherwise).
+                 T081 = pictures in a <P>-SHOTS/ folder are committed (the
+                 same: a note unless `ui_gates = strict`).
+                 Projects with screens also get notes (never findings) for
+                 optional add-ons that fit their stack: the Impeccable
+                 design skill, and the shadcn MCP for Tailwind / shadcn.
+                 context: what gsd-core's skills and agents cost in every
+                 session, and GSD files over
+                 32 KiB — notes, never findings; in --json under context
+                 {agents [{name, skills, skill_tokens, agents,
+                 agent_tokens, hideable [{group, skills, tokens}]}]
+                 (groups the flow never runs; JSON only),
+                 big_files [{path, kib, tokens, fix}]}. The gsdt-doctor
+                 skill acts on them, asking first.
+                 safe [action] = what --fix would run (empty: nothing).
+  -h, --help     show this help
+
+Exit status: 0 when everything checks out, 1 when there is a finding.
+
+RELATED
+  gsdt-init             fixes repo-setup findings (re-run: it is idempotent)
+  gsdt-planning-repair  fixes planning-state findings
+  gsdt-update           fixes toolkit findings
+--- stderr
+
+@@@ 2 @@@
+run [-h]
+rc=0
+--- stdout
+
+gsdt-doctor — read-only health check of a repo's GSD setup.
+
+Diagnoses. Every finding names the command that fixes it. Being read-only is
+what makes it safe to run anywhere, any time, including on a repo you are
+mid-feature in. `--fix` is opt-in and narrow: after the same read-only check
+it runs only the mechanical, undoable fixes (the scoped writers gsdt-init and
+gsdt-planning-repair, plus three one-liners), shows them first, asks, and
+never commits. Anything that needs judgment stays a command for you.
+
+Without --fix nothing here writes to your repos: no fetch, no git config, no
+files there.
+Comparisons against origin therefore use the refs from your last fetch and are
+marked as such. The one exception is the version check, which may ask GitHub
+and npm for the latest versions (at most once a day) and caches the answers
+in ~/.cache/gsd-toolkit/ (GSD_NO_UPDATE_CHECK=1 turns it off).
+
+Usage:
+  gsdt-doctor [--repo <path>] [--quiet] [--json]
+  gsdt-doctor --fix [--yes] [--repo <path>]
+
+Options:
+  --repo <path>  repo to inspect (default: the checkout containing cwd)
+  --quiet        print findings and available updates only, not the checks that passed
+  --fix          after the check, run the SAFE fixes it found — shown first,
+                 then asked (y/N) — and check again. Safe = mechanical and
+                 undoable: gsdt-init --no-launch --no-commit (T010–T014,
+                 T016, T052, T058, T061), gsdt-planning-repair (T020, stale counters),
+                 git branch --track <base> (T015), chmod +x the pre-merge
+                 script (T019), remove a dead lock (T030), gsdt-migrate --apply
+                 (T090: old gsd-* names), add
+                 worktree.baseRef = "head" to .claude/settings.local.json
+                 (T034; other keys kept). Never commits,
+                 pushes, checks out, deletes branches or edits ROADMAP.md;
+                 everything else stays a listed command.
+  --yes          with --fix: don't ask (for scripts)
+  --json         machine output, one object: repo, gsd_repo (false = not a
+                 GSD repo, setup checks skipped), session_model, configured
+                 (provider list), provider {name, command, available,
+                 instruction_file, instruction_integrated, skill_installed,
+                 command_guard, native_hook}, count, findings [{code,message,fix}],
+                 updates [{name,installed,latest,fix}] (newer gsd-toolkit /
+                 GSD; shown with --quiet too, never a finding),
+                 notes [text] (what the text report shows as • lines)
+                 Codes shared with gsd-core's /gsd-health where they mean the
+                 same thing (W017 orphan branch, W027 stale worktree record);
+                 toolkit-only findings use T0xx.
+                 T040 = a merged phase skipped a mandatory step: the flow
+                 steps with `flow = strict`, the checks of the rendered
+                 pages (ui-check, ui-approve) with `ui_gates = strict`.
+                 `flow_since = <N>` in .gsd.conf limits it to phases >= N,
+                 `flow_skip = <N>, <N>…` leaves out single phases, listed
+                 as a note.
+                 T008 = a GSD hook (in an agent's user settings or this
+                 repo's) runs a file that is gone — usually a node path a
+                 Node upgrade moved; it fails silently. The fix swaps in
+                 the current node path (GSD's installer keeps a hook it
+                 already has) or, for a gone script, re-runs GSD's
+                 installer for that agent; doctor never edits it.
+                 T009 = gsd-core skills the phase flow runs are missing (a
+                 set trimmed with /gsd-surface is fine while they are there).
+                 T016 = the generated GSD instructions are older than this
+                 toolkit (gsdt-init refreshes them; --fix runs it).
+                 T062 = Claude is configured but its sessions cannot load
+                 the toolkit rules: gsdt-rules is not on PATH, or no
+                 user-level SessionStart hook runs it (re-run the
+                 installer; a note after install --no-user-hook).
+                 T070–T073 = ticket tracker config (read from `gsdt-tracker config`).
+                 T080 = phases have screens but DESIGN.md is missing or a
+                 stub (only with `ui_gates = strict`; a note otherwise).
+                 T081 = pictures in a <P>-SHOTS/ folder are committed (the
+                 same: a note unless `ui_gates = strict`).
+                 Projects with screens also get notes (never findings) for
+                 optional add-ons that fit their stack: the Impeccable
+                 design skill, and the shadcn MCP for Tailwind / shadcn.
+                 context: what gsd-core's skills and agents cost in every
+                 session, and GSD files over
+                 32 KiB — notes, never findings; in --json under context
+                 {agents [{name, skills, skill_tokens, agents,
+                 agent_tokens, hideable [{group, skills, tokens}]}]
+                 (groups the flow never runs; JSON only),
+                 big_files [{path, kib, tokens, fix}]}. The gsdt-doctor
+                 skill acts on them, asking first.
+                 safe [action] = what --fix would run (empty: nothing).
+  -h, --help     show this help
+
+Exit status: 0 when everything checks out, 1 when there is a finding.
+
+RELATED
+  gsdt-init             fixes repo-setup findings (re-run: it is idempotent)
+  gsdt-planning-repair  fixes planning-state findings
+  gsdt-update           fixes toolkit findings
+--- stderr
+
+@@@ 3 @@@
+run [--bogus]
+rc=1
+--- stdout
+--- stderr
+✖ unknown argument: --bogus (see gsdt-doctor --help)
+
+@@@ 4 @@@
+run [--repo]
+rc=1
+--- stdout
+--- stderr
+✖ --repo needs a value
+
+@@@ 5 @@@
+run [--fix --json --repo {R}]
+rc=1
+--- stdout
+--- stderr
+✖ --fix and --json don't mix
+
+@@@ 6 @@@
+run [--yes --repo {R}]
+rc=1
+--- stdout
+--- stderr
+✖ --yes only goes with --fix
+
+@@@ 7 @@@
+### repo/.git/config
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[remote "origin"]
+	url = <W>/repo.origin.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "develop"]
+	remote = origin
+	merge = refs/heads/develop
+
+### repo/.gsd.conf
+base = develop
+
+### repo/.planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: One
+
+### Phase 2: Two
+

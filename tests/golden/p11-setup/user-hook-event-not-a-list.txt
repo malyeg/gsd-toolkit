@@ -1,0 +1,4 @@
+@@@ 1 @@@
+{"hooks": {"SessionStart": {"x": 1}}}
+--
+⚠ <H>/.claude/settings.json: hooks.SessionStart is not a list; left unchanged (no claude user hook)

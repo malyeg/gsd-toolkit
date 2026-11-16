@@ -1,0 +1,7 @@
+@@@ 1 @@@
+rc=64 clock=1760011200 runs=0
+--- stdout
+
+--- stderr
+gsdt-codex-wait: --max-wait: not a duration: x (use 90s, 30m, 4h, 1d)
+

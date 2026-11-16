@@ -1,0 +1,9 @@
+@@@ 1 @@@
+rc=0 clock=1760011800 runs=0
+--- stdout
+
+--- stderr
+gsdt-codex-wait: Codex usage limit — no reset time found (from --message); checking again in 10m.
+gsdt-codex-wait: waiting 10m, until Thu Oct 09 12:10 UTC…
+gsdt-codex-wait: done waiting — Codex should take requests again. Run the step again.
+

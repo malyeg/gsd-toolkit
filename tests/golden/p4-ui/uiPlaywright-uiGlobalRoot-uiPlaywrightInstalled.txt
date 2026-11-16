@@ -1,0 +1,72 @@
+@@@ 1 @@@
+# playwright none
+
+@@@ 2 @@@
+# playwright GSD_PLAYWRIGHT
+/x/pw
+@@@ 3 @@@
+# playwright packages/ui
+<TMP>/proj/packages/ui/node_modules/.bin/playwright
+@@@ 4 @@@
+# playwright apps/b before packages
+<TMP>/proj/apps/b/node_modules/.bin/playwright
+@@@ 5 @@@
+# playwright app: web first
+<TMP>/proj/web/node_modules/.bin/playwright
+@@@ 6 @@@
+# playwright app: missing → rest
+<TMP>/proj/apps/b/node_modules/.bin/playwright
+@@@ 7 @@@
+# playwright root wins over apps
+<TMP>/proj/node_modules/.bin/playwright
+@@@ 8 @@@
+# playwright on PATH
+<TMP>/playwright
+@@@ 9 @@@
+# global_root undefined
+
+@@@ 10 @@@
+# global_root 
+
+@@@ 11 @@@
+# global_root /some/where
+/some/where
+@@@ 12 @@@
+# global_root <TMP>
+<TMP>
+@@@ 13 @@@
+# global_root via npm
+<TMP>
+@@@ 14 @@@
+# global_root via npm, no dir
+
+@@@ 15 @@@
+# global_root via failing npm
+
+@@@ 16 @@@
+# none
+|rc=1
+@@@ 17 @@@
+# global
+global|rc=0
+@@@ 18 @@@
+# global @playwright/test
+global|rc=0
+@@@ 19 @@@
+# global folder empty
+|rc=1
+@@@ 20 @@@
+# GSD_PLAYWRIGHT_ROOT
+project|rc=0
+@@@ 21 @@@
+# GSD_PLAYWRIGHT_ROOT beats global
+project|rc=0
+@@@ 22 @@@
+# apps/web
+project|rc=0
+@@@ 23 @@@
+# packages/p
+project
+@@@ 24 @@@
+# root node_modules
+project

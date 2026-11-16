@@ -1,0 +1,148 @@
+@@@ 1 @@@
+### --dir <W>/nowhere
+rc=0
+--- stdout
+gsdt-batch-report: no Claude Code transcripts for this repo (looked in <W>/nowhere).
+
+--- stderr
+
+@@@ 2 @@@
+### --dir <W>/empty
+rc=0
+--- stdout
+gsdt-batch-report: no /gsd-quick-batch or /gsdt-batch run found in <W>/empty
+
+--- stderr
+
+@@@ 3 @@@
+### --dir <W>/empty --json
+rc=0
+--- stdout
+{
+ "batches": [],
+ "combined": {
+  "batches": 0,
+  "items": 0,
+  "roles": [],
+  "total": {
+   "agents": 0,
+   "turns": 0,
+   "bash": 0,
+   "fresh_input": 0,
+   "cache_write": 0,
+   "cache_write_1h": 0,
+   "cache_read": 0,
+   "input": 0,
+   "output": 0,
+   "weighted_input": 0
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+
+@@@ 4 @@@
+### --dir <W>/empty --items 3
+rc=0
+--- stdout
+gsdt-batch-report: no /gsd-quick-batch or /gsdt-batch run found in <W>/empty
+
+--- stderr
+
+@@@ 5 @@@
+### --dir <W>/nobatch
+rc=0
+--- stdout
+gsdt-batch-report: no /gsd-quick-batch or /gsdt-batch run found in <W>/nobatch
+
+--- stderr
+
+@@@ 6 @@@
+### --dir <W>/nobatch --json
+rc=0
+--- stdout
+{
+ "batches": [],
+ "combined": {
+  "batches": 0,
+  "items": 0,
+  "roles": [],
+  "total": {
+   "agents": 0,
+   "turns": 0,
+   "bash": 0,
+   "fresh_input": 0,
+   "cache_write": 0,
+   "cache_write_1h": 0,
+   "cache_read": 0,
+   "input": 0,
+   "output": 0,
+   "weighted_input": 0
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+

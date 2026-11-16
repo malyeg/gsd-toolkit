@@ -1,0 +1,49 @@
+@@@ 1 @@@
+# gates 
+warn
+@@@ 2 @@@
+# design_file
+<TMP>/proj/.planning/design/DESIGN.md
+@@@ 3 @@@
+# gates ui_gates = strict
+
+strict
+@@@ 4 @@@
+# design_file
+<TMP>/proj/.planning/design/DESIGN.md
+@@@ 5 @@@
+# gates ui_gates = off
+
+off
+@@@ 6 @@@
+# design_file
+<TMP>/proj/.planning/design/DESIGN.md
+@@@ 7 @@@
+# gates ui_gates = warn
+
+warn
+@@@ 8 @@@
+# design_file
+<TMP>/proj/.planning/design/DESIGN.md
+@@@ 9 @@@
+# gates ui_gates = bogus
+
+warn
+@@@ 10 @@@
+# design_file
+<TMP>/proj/.planning/design/DESIGN.md
+@@@ 11 @@@
+# gates from a linked worktree
+strict
+@@@ 12 @@@
+# design missing
+missing
+@@@ 13 @@@
+# design stub
+stub
+@@@ 14 @@@
+# design ok
+ok
+@@@ 15 @@@
+# design stub inline
+stub

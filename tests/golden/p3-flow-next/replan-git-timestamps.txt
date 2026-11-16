@@ -1,0 +1,60 @@
+@@@ 1 @@@
+reviews uncommitted 
+rc=0
+out="step=replan\nrun=/gsd-plan-phase 7 --reviews\nnote=REVIEWS.md exists but no plan was committed after it — the review was not folded into the plans\n"
+err=""
+@@@ 2 @@@
+reviews uncommitted --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"replan\",\"run\":\"/gsd-plan-phase 7 --reviews\",\"then\":\"\",\"stop\":\"\",\"note\":\"REVIEWS.md exists but no plan was committed after it — the review was not folded into the plans\"}\n{\"phase\":\"7\",\"step\":\"execute\",\"run\":\"/gsd-execute-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"1 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 3 @@@
+reviews + plan same commit 
+rc=0
+out="step=execute\nrun=/gsd-execute-phase 7\nnote=1 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\n"
+err=""
+@@@ 4 @@@
+reviews + plan same commit --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"execute\",\"run\":\"/gsd-execute-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"1 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 5 @@@
+reviews committed after plan 
+rc=0
+out="step=replan\nrun=/gsd-plan-phase 7 --reviews\nnote=REVIEWS.md exists but no plan was committed after it — the review was not folded into the plans\n"
+err=""
+@@@ 6 @@@
+reviews committed after plan --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"replan\",\"run\":\"/gsd-plan-phase 7 --reviews\",\"then\":\"\",\"stop\":\"\",\"note\":\"REVIEWS.md exists but no plan was committed after it — the review was not folded into the plans\"}\n{\"phase\":\"7\",\"step\":\"execute\",\"run\":\"/gsd-execute-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"1 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 7 @@@
+plan committed after reviews 
+rc=0
+out="step=execute\nrun=/gsd-execute-phase 7\nnote=1 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\n"
+err=""
+@@@ 8 @@@
+plan committed after reviews --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"execute\",\"run\":\"/gsd-execute-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"1 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 9 @@@
+two plans, one old 
+rc=0
+out="step=execute\nrun=/gsd-execute-phase 7\nnote=2 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\n"
+err=""
+@@@ 10 @@@
+two plans, one old --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"execute\",\"run\":\"/gsd-execute-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"2 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 11 @@@
+plan untracked (no commit) 
+rc=0
+out="step=replan\nrun=/gsd-plan-phase 7 --reviews\nnote=REVIEWS.md exists but no plan was committed after it — the review was not folded into the plans\n"
+err=""
+@@@ 12 @@@
+plan untracked (no commit) --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"replan\",\"run\":\"/gsd-plan-phase 7 --reviews\",\"then\":\"\",\"stop\":\"\",\"note\":\"REVIEWS.md exists but no plan was committed after it — the review was not folded into the plans\"}\n{\"phase\":\"7\",\"step\":\"execute\",\"run\":\"/gsd-execute-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"2 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""

@@ -1,0 +1,170 @@
+@@@ 1 @@@
+argv ["--command"]
+rc=64
+out=""
+err="--command needs a value\n"
+@@@ 2 @@@
+argv ["--command",""]
+rc=64
+out=""
+err="--command needs a value\n"
+@@@ 3 @@@
+argv ["--args"]
+rc=64
+out=""
+err="--args needs a value\n"
+@@@ 4 @@@
+argv ["--args",""]
+rc=64
+out=""
+err="--args needs a value\n"
+@@@ 5 @@@
+argv ["--repo"]
+rc=64
+out=""
+err="--repo needs a value\n"
+@@@ 6 @@@
+argv ["--phase"]
+rc=64
+out=""
+err="--phase needs a value\n"
+@@@ 7 @@@
+argv ["--phase",""]
+rc=64
+out=""
+err="--phase needs a value\n"
+@@@ 8 @@@
+argv ["--phase","abc"]
+rc=64
+out=""
+err="--phase needs a numeric phase\n"
+@@@ 9 @@@
+argv ["--phase","7.1.2"]
+rc=64
+out=""
+err="--phase needs a numeric phase\n"
+@@@ 10 @@@
+argv ["--phase","-7"]
+rc=64
+out=""
+err="--phase needs a numeric phase\n"
+@@@ 11 @@@
+argv ["--phase","7a"]
+rc=64
+out=""
+err="--phase needs a numeric phase\n"
+@@@ 12 @@@
+argv ["--phase","7\nx"]
+rc=0
+out=""
+err=""
+@@@ 13 @@@
+argv ["--phase","x\n7"]
+rc=0
+out=""
+err=""
+@@@ 14 @@@
+argv ["--bogus"]
+rc=64
+out=""
+err="unknown option: --bogus\n"
+@@@ 15 @@@
+argv ["-x"]
+rc=64
+out=""
+err="unknown option: -x\n"
+@@@ 16 @@@
+argv ["positional"]
+rc=64
+out=""
+err="unknown option: positional\n"
+@@@ 17 @@@
+argv ["--help"]
+rc=0
+out="usage: gsdt-worktree-guard [--global] [--command gsd-… --args \"…\" --repo <dir>]\n"
+err=""
+@@@ 18 @@@
+argv ["-h"]
+rc=0
+out="usage: gsdt-worktree-guard [--global] [--command gsd-… --args \"…\" --repo <dir>]\n"
+err=""
+@@@ 19 @@@
+argv ["--bogus","--help"]
+rc=64
+out=""
+err="unknown option: --bogus\n"
+@@@ 20 @@@
+argv ["--help","--bogus"]
+rc=0
+out="usage: gsdt-worktree-guard [--global] [--command gsd-… --args \"…\" --repo <dir>]\n"
+err=""
+@@@ 21 @@@
+argv ["--global","--help"]
+rc=0
+out="usage: gsdt-worktree-guard [--global] [--command gsd-… --args \"…\" --repo <dir>]\n"
+err=""
+@@@ 22 @@@
+argv ["--command","gsd-plan-phase","--phase","x"]
+rc=64
+out=""
+err="--phase needs a numeric phase\n"
+@@@ 23 @@@
+argv ["--command","gsd-plan-phase","--bogus"]
+rc=64
+out=""
+err="unknown option: --bogus\n"
+@@@ 24 @@@
+argv ["--GLOBAL"]
+rc=64
+out=""
+err="unknown option: --GLOBAL\n"
+@@@ 25 @@@
+argv ["--command=gsd-plan-phase"]
+rc=64
+out=""
+err="unknown option: --command=gsd-plan-phase\n"
+@@@ 26 @@@
+skip=1 bogus
+rc=0
+out=""
+err=""
+@@@ 27 @@@
+skip=1 base feature work
+rc=0
+out=""
+err=""
+@@@ 28 @@@
+skip=0 bogus
+rc=64
+out=""
+err="unknown option: --bogus\n"
+@@@ 29 @@@
+skip=0 base feature work
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 30 @@@
+skip= bogus
+rc=64
+out=""
+err="unknown option: --bogus\n"
+@@@ 31 @@@
+skip= base feature work
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 32 @@@
+skip=yes bogus
+rc=64
+out=""
+err="unknown option: --bogus\n"
+@@@ 33 @@@
+skip=yes base feature work
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p <N>  (then open a session in phase-<N>-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 34 @@@
+skip=1 with a bad payload
+rc=0
+out=""
+err=""

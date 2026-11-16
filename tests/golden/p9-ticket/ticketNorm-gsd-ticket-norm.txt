@@ -1,0 +1,261 @@
+@@@ 1 @@@
+"869e33cv4" as=: rc=0 out="869e33cv4"
+"869e33cv4" as=clickup: rc=0 out="869e33cv4"
+"869e33cv4" as=custom: rc=0 out="869e33cv4"
+"869e33cv4" one-arg: rc=0
+"tk-PROJ-42" as=: rc=0 out="PROJ-42"
+"tk-PROJ-42" as=clickup: rc=0 out="PROJ-42"
+"tk-PROJ-42" as=custom: rc=0 out="PROJ-42"
+"tk-PROJ-42" one-arg: rc=0
+"TK-proj-42" as=: rc=0 out="proj-42"
+"TK-proj-42" as=clickup: rc=0 out="proj-42"
+"TK-proj-42" as=custom: rc=0 out="proj-42"
+"TK-proj-42" one-arg: rc=0
+"Tk-x" as=: rc=0 out="x"
+"Tk-x" as=clickup: rc=0 out="x"
+"Tk-x" as=custom: rc=0 out="x"
+"Tk-x" one-arg: rc=0
+"cu_869e33cv4" as=: rc=0 out="869e33cv4"
+"cu_869e33cv4" as=clickup: rc=0 out="869e33cv4"
+"cu_869e33cv4" as=custom: rc=0 out="869e33cv4"
+"cu_869e33cv4" one-arg: rc=0
+"CU_abc" as=: rc=0 out="abc"
+"CU_abc" as=clickup: rc=0 out="abc"
+"CU_abc" as=custom: rc=0 out="abc"
+"CU_abc" one-arg: rc=0
+"cU_abc" as=: rc=0 out="abc"
+"cU_abc" as=clickup: rc=0 out="abc"
+"cU_abc" as=custom: rc=0 out="abc"
+"cU_abc" one-arg: rc=0
+"CU-12" as=: rc=0 out="CU-12"
+"CU-12" as=clickup: rc=0 out="12"
+"CU-12" as=custom: rc=0 out="CU-12"
+"CU-12" one-arg: rc=0
+"cu-12" as=: rc=0 out="cu-12"
+"cu-12" as=clickup: rc=0 out="12"
+"cu-12" as=custom: rc=0 out="cu-12"
+"cu-12" one-arg: rc=0
+"CU-869e33cv4" as=: rc=0 out="CU-869e33cv4"
+"CU-869e33cv4" as=clickup: rc=0 out="869e33cv4"
+"CU-869e33cv4" as=custom: rc=0 out="CU-869e33cv4"
+"CU-869e33cv4" one-arg: rc=0
+"https://app.clickup.com/t/869e33cv4" as=: rc=0 out="869e33cv4"
+"https://app.clickup.com/t/869e33cv4" as=clickup: rc=0 out="869e33cv4"
+"https://app.clickup.com/t/869e33cv4" as=custom: rc=0 out="869e33cv4"
+"https://app.clickup.com/t/869e33cv4" one-arg: rc=0
+"https://x.atlassian.net/browse/PROJ-42?focus=1" as=: rc=0 out="PROJ-42"
+"https://x.atlassian.net/browse/PROJ-42?focus=1" as=clickup: rc=0 out="PROJ-42"
+"https://x.atlassian.net/browse/PROJ-42?focus=1" as=custom: rc=0 out="PROJ-42"
+"https://x.atlassian.net/browse/PROJ-42?focus=1" one-arg: rc=0
+"https://x.example/t/abc/" as=: rc=0 out="abc"
+"https://x.example/t/abc/" as=clickup: rc=0 out="abc"
+"https://x.example/t/abc/" as=custom: rc=0 out="abc"
+"https://x.example/t/abc/" one-arg: rc=0
+"https://x.example/t/abc/?q=1#frag" as=: rc=0 out="abc"
+"https://x.example/t/abc/?q=1#frag" as=clickup: rc=0 out="abc"
+"https://x.example/t/abc/?q=1#frag" as=custom: rc=0 out="abc"
+"https://x.example/t/abc/?q=1#frag" one-arg: rc=0
+"https://x.example/t/abc#frag" as=: rc=0 out="abc"
+"https://x.example/t/abc#frag" as=clickup: rc=0 out="abc"
+"https://x.example/t/abc#frag" as=custom: rc=0 out="abc"
+"https://x.example/t/abc#frag" one-arg: rc=0
+"https://x.example/t/abc?a=b/c" as=: rc=0 out="abc"
+"https://x.example/t/abc?a=b/c" as=clickup: rc=0 out="abc"
+"https://x.example/t/abc?a=b/c" as=custom: rc=0 out="abc"
+"https://x.example/t/abc?a=b/c" one-arg: rc=0
+"https://x.example/t/tk-abc" as=: rc=0 out="abc"
+"https://x.example/t/tk-abc" as=clickup: rc=0 out="abc"
+"https://x.example/t/tk-abc" as=custom: rc=0 out="abc"
+"https://x.example/t/tk-abc" one-arg: rc=0
+"https://x.example/t/CU-abc" as=: rc=0 out="CU-abc"
+"https://x.example/t/CU-abc" as=clickup: rc=0 out="abc"
+"https://x.example/t/CU-abc" as=custom: rc=0 out="CU-abc"
+"https://x.example/t/CU-abc" one-arg: rc=0
+"https://x.example/" as=: rc=1
+"https://x.example/" as=clickup: rc=1
+"https://x.example/" as=custom: rc=1
+"https://x.example/" one-arg: rc=1
+"https://x.example" as=: rc=1
+"https://x.example" as=clickup: rc=1
+"https://x.example" as=custom: rc=1
+"https://x.example" one-arg: rc=1
+"ftp://h/a//" as=: rc=1
+"ftp://h/a//" as=clickup: rc=1
+"ftp://h/a//" as=custom: rc=1
+"ftp://h/a//" one-arg: rc=1
+"x://" as=: rc=1
+"x://" as=clickup: rc=1
+"x://" as=custom: rc=1
+"x://" one-arg: rc=1
+"#42" as=: rc=0 out="42"
+"#42" as=clickup: rc=0 out="42"
+"#42" as=custom: rc=0 out="42"
+"#42" one-arg: rc=0
+"##42" as=: rc=1
+"##42" as=clickup: rc=1
+"##42" as=custom: rc=1
+"##42" one-arg: rc=1
+"#tk-5" as=: rc=0 out="5"
+"#tk-5" as=clickup: rc=0 out="5"
+"#tk-5" as=custom: rc=0 out="5"
+"#tk-5" one-arg: rc=0
+"tk-#5" as=: rc=1
+"tk-#5" as=clickup: rc=1
+"tk-#5" as=custom: rc=1
+"tk-#5" one-arg: rc=1
+"tk-" as=: rc=1
+"tk-" as=clickup: rc=1
+"tk-" as=custom: rc=1
+"tk-" one-arg: rc=1
+"tk--a" as=: rc=1
+"tk--a" as=clickup: rc=1
+"tk--a" as=custom: rc=1
+"tk--a" one-arg: rc=1
+"tk-a-" as=: rc=1
+"tk-a-" as=clickup: rc=1
+"tk-a-" as=custom: rc=1
+"tk-a-" one-arg: rc=1
+"a--b" as=: rc=1
+"a--b" as=clickup: rc=1
+"a--b" as=custom: rc=1
+"a--b" one-arg: rc=1
+"a-b-c" as=: rc=0 out="a-b-c"
+"a-b-c" as=clickup: rc=0 out="a-b-c"
+"a-b-c" as=custom: rc=0 out="a-b-c"
+"a-b-c" one-arg: rc=0
+"-a" as=: rc=1
+"-a" as=clickup: rc=1
+"-a" as=custom: rc=1
+"-a" one-arg: rc=1
+"a-" as=: rc=1
+"a-" as=clickup: rc=1
+"a-" as=custom: rc=1
+"a-" one-arg: rc=1
+"" as=: rc=1
+"" as=clickup: rc=1
+"" as=custom: rc=1
+"" one-arg: rc=1
+"#" as=: rc=1
+"#" as=clickup: rc=1
+"#" as=custom: rc=1
+"#" one-arg: rc=1
+"tk-tk-a" as=: rc=0 out="tk-a"
+"tk-tk-a" as=clickup: rc=0 out="tk-a"
+"tk-tk-a" as=custom: rc=0 out="tk-a"
+"tk-tk-a" one-arg: rc=0
+"cu_cu_a" as=: rc=1
+"cu_cu_a" as=clickup: rc=1
+"cu_cu_a" as=custom: rc=1
+"cu_cu_a" one-arg: rc=1
+"tk-cu_a" as=: rc=1
+"tk-cu_a" as=clickup: rc=1
+"tk-cu_a" as=custom: rc=1
+"tk-cu_a" one-arg: rc=1
+"a b" as=: rc=1
+"a b" as=clickup: rc=1
+"a b" as=custom: rc=1
+"a b" one-arg: rc=1
+" a" as=: rc=1
+" a" as=clickup: rc=1
+" a" as=custom: rc=1
+" a" one-arg: rc=1
+"a " as=: rc=1
+"a " as=clickup: rc=1
+"a " as=custom: rc=1
+"a " one-arg: rc=1
+"x;rm" as=: rc=1
+"x;rm" as=clickup: rc=1
+"x;rm" as=custom: rc=1
+"x;rm" one-arg: rc=1
+"a_b" as=: rc=1
+"a_b" as=clickup: rc=1
+"a_b" as=custom: rc=1
+"a_b" one-arg: rc=1
+"a.b" as=: rc=1
+"a.b" as=clickup: rc=1
+"a.b" as=custom: rc=1
+"a.b" one-arg: rc=1
+"é" as=: rc=1
+"é" as=clickup: rc=1
+"é" as=custom: rc=1
+"é" one-arg: rc=1
+"aé" as=: rc=1
+"aé" as=clickup: rc=1
+"aé" as=custom: rc=1
+"aé" one-arg: rc=1
+"tk-é" as=: rc=1
+"tk-é" as=clickup: rc=1
+"tk-é" as=custom: rc=1
+"tk-é" one-arg: rc=1
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=: rc=0 out="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=clickup: rc=0 out="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=custom: rc=0 out="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" one-arg: rc=0
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=: rc=1
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=clickup: rc=1
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=custom: rc=1
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" one-arg: rc=1
+"tk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=: rc=0 out="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+"tk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=clickup: rc=0 out="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+"tk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=custom: rc=0 out="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+"tk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" one-arg: rc=0
+"tk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=: rc=1
+"tk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=clickup: rc=1
+"tk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=custom: rc=1
+"tk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" one-arg: rc=1
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=: rc=0 out="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=clickup: rc=0 out="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as=custom: rc=0 out="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" one-arg: rc=0
+"éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé" as=: rc=1
+"éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé" as=clickup: rc=1
+"éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé" as=custom: rc=1
+"éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé" one-arg: rc=1
+"ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé" as=: rc=1
+"ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé" as=clickup: rc=1
+"ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé" as=custom: rc=1
+"ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé" one-arg: rc=1
+"ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé\nok" as=: rc=1
+"ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé\nok" as=clickup: rc=1
+"ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé\nok" as=custom: rc=1
+"ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé\nok" one-arg: rc=1
+"a\nb" as=: rc=0 out="a\nb"
+"a\nb" as=clickup: rc=0 out="a\nb"
+"a\nb" as=custom: rc=0 out="a\nb"
+"a\nb" one-arg: rc=0
+"a b\nc" as=: rc=0 out="a b\nc"
+"a b\nc" as=clickup: rc=0 out="a b\nc"
+"a b\nc" as=custom: rc=0 out="a b\nc"
+"a b\nc" one-arg: rc=0
+"a\n b" as=: rc=0 out="a\n b"
+"a\n b" as=clickup: rc=0 out="a\n b"
+"a\n b" as=custom: rc=0 out="a\n b"
+"a\n b" one-arg: rc=0
+"\nabc" as=: rc=0 out="\nabc"
+"\nabc" as=clickup: rc=0 out="\nabc"
+"\nabc" as=custom: rc=0 out="\nabc"
+"\nabc" one-arg: rc=0
+"abc\n" as=: rc=0 out="abc"
+"abc\n" as=clickup: rc=0 out="abc"
+"abc\n" as=custom: rc=0 out="abc"
+"abc\n" one-arg: rc=0
+"bad one\nabc" as=: rc=0 out="bad one\nabc"
+"bad one\nabc" as=clickup: rc=0 out="bad one\nabc"
+"bad one\nabc" as=custom: rc=0 out="bad one\nabc"
+"bad one\nabc" one-arg: rc=0
+"a\n\nb" as=: rc=0 out="a\n\nb"
+"a\n\nb" as=clickup: rc=0 out="a\n\nb"
+"a\n\nb" as=custom: rc=0 out="a\n\nb"
+"a\n\nb" one-arg: rc=0
+"tk-a\nb" as=: rc=0 out="a\nb"
+"tk-a\nb" as=clickup: rc=0 out="a\nb"
+"tk-a\nb" as=custom: rc=0 out="a\nb"
+"tk-a\nb" one-arg: rc=0
+"https://x/a\nb" as=: rc=0 out="a\nb"
+"https://x/a\nb" as=clickup: rc=0 out="a\nb"
+"https://x/a\nb" as=custom: rc=0 out="a\nb"
+"https://x/a\nb" one-arg: rc=0
+"https://x/a b\nc" as=: rc=0 out="a b\nc"
+"https://x/a b\nc" as=clickup: rc=0 out="a b\nc"
+"https://x/a b\nc" as=custom: rc=0 out="a b\nc"
+"https://x/a b\nc" one-arg: rc=0

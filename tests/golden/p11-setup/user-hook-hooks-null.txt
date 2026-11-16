@@ -1,0 +1,4 @@
+@@@ 1 @@@
+{"hooks": null}
+--
+⚠ <H>/.claude/settings.json has an unexpected shape; left unchanged (no claude user hook)

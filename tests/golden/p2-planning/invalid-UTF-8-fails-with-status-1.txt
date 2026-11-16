@@ -1,0 +1,7 @@
+@@@ 1 @@@
+invalid utf8
+rc=1
+out=""
+err="gsd_planning: The encoded data was not valid for encoding utf-8\n"
+.planning/ROADMAP.md: "- [ ] **Phase 1: aÿþ**\n"
+.planning/STATE.md: "---\ngsd_state_version: 1.0\nstatus: planning\nlast_updated: \"2026-08-05T09:34:25.661Z\"\nprogress:\n  total_phases: 3\n  completed_phases: 1\n  total_plans: 2\n  completed_plans: 2\n  percent: 33\n---\n\n# Project State\n\n**Current focus:** Phase 2 â beta\n\n## Current Position\n\nPhase: 2\nPlan: Not started\nStatus: Ready\nProgress: [ââââââââââ] 33%\n\n## Performance Metrics\n\n- Total plans completed: 2\n- Average duration: 4 min\n\n| Phase | Plans | Total |\n|-------|-------|-------|\n| 1 | 2 | 8 min |\n\n## Session Continuity\n\nLast session: 2026-08-01\nStopped at: Phase 1\nLast session: 2026-08-02\nStopped at: Phase 2\n"

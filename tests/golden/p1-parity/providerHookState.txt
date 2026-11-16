@@ -1,0 +1,99 @@
+@@@ 1 @@@
+# hookState claude null
+absent
+@@@ 2 @@@
+# hookState codex null
+unsupported
+@@@ 3 @@@
+# hookState custom null
+unsupported
+@@@ 4 @@@
+# hookState claude {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]}}
+present
+@@@ 5 @@@
+# hookState codex {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]}}
+unsupported
+@@@ 6 @@@
+# hookState custom {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]}}
+unsupported
+@@@ 7 @@@
+# hookState claude {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]},"disableAllHooks":true}
+absent
+@@@ 8 @@@
+# hookState codex {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]},"disableAllHooks":true}
+unsupported
+@@@ 9 @@@
+# hookState custom {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]},"disableAllHooks":true}
+unsupported
+@@@ 10 @@@
+# hookState claude {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]},"hooksConfig":{"enabled":false}}
+absent
+@@@ 11 @@@
+# hookState codex {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]},"hooksConfig":{"enabled":false}}
+unsupported
+@@@ 12 @@@
+# hookState custom {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]},"hooksConfig":{"enabled":false}}
+unsupported
+@@@ 13 @@@
+# hookState claude {"hooks":{"PreToolUse":[]}}
+absent
+@@@ 14 @@@
+# hookState codex {"hooks":{"PreToolUse":[]}}
+unsupported
+@@@ 15 @@@
+# hookState custom {"hooks":{"PreToolUse":[]}}
+unsupported
+@@@ 16 @@@
+# hookState claude {"hooks":{"PreToolUse":"x"}}
+invalid
+@@@ 17 @@@
+# hookState codex {"hooks":{"PreToolUse":"x"}}
+unsupported
+@@@ 18 @@@
+# hookState custom {"hooks":{"PreToolUse":"x"}}
+unsupported
+@@@ 19 @@@
+# hookState claude []
+invalid
+@@@ 20 @@@
+# hookState codex []
+unsupported
+@@@ 21 @@@
+# hookState custom []
+unsupported
+@@@ 22 @@@
+# hookState claude garbage
+invalid
+@@@ 23 @@@
+# hookState codex garbage
+unsupported
+@@@ 24 @@@
+# hookState custom garbage
+unsupported
+@@@ 25 @@@
+# hookState claude {"hooks":{"PreToolUse":[{"matcher":"Skill","disabled":true,"hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]}}
+absent
+@@@ 26 @@@
+# hookState codex {"hooks":{"PreToolUse":[{"matcher":"Skill","disabled":true,"hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]}}
+unsupported
+@@@ 27 @@@
+# hookState custom {"hooks":{"PreToolUse":[{"matcher":"Skill","disabled":true,"hooks":[{"type":"command","command":"$CLAUDE_PROJECT_DIR/scripts/hooks/gsdt-worktree-guard.sh"}]}]}}
+unsupported
+@@@ 28 @@@
+# hookState claude {"hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[]}]}}
+absent
+@@@ 29 @@@
+# hookState codex {"hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[]}]}}
+unsupported
+@@@ 30 @@@
+# hookState custom {"hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[]}]}}
+unsupported
+@@@ 31 @@@
+# hookState claude {"hooks":{}}
+absent
+@@@ 32 @@@
+# hookState codex {"hooks":{}}
+unsupported
+@@@ 33 @@@
+# hookState custom {"hooks":{}}
+unsupported

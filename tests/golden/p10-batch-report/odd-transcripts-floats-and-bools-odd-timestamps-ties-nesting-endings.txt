@@ -1,0 +1,2662 @@
+@@@ 1 @@@
+### --dir <W>/odd
+rc=0
+--- stdout
+gsdt-batch-report — 1 batch · 0 items · <W>/odd
+  bbbb-2  <DT> →   /gsdt-batch  0 items [planners]
+
+ROLE                         AGENTS  TURNS BASH/AG  FRESH IN  CACHE WR  CACHE RD   OUTPUT  WEIGHTED
+TOTAL                             –      0       –         0         0         0        0         0
+
+Per item: no item count (pass --items N).
+
+--- stderr
+
+@@@ 2 @@@
+### --dir <W>/odd
+rc=0
+--- stdout
+gsdt-batch-report — 1 batch · 0 items · <W>/odd
+  bbbb-2  <DT> →   /gsdt-batch  0 items [planners]
+
+ROLE                         AGENTS  TURNS BASH/AG  FRESH IN  CACHE WR  CACHE RD   OUTPUT  WEIGHTED
+TOTAL                             –      0       –         0         0         0        0         0
+
+Per item: no item count (pass --items N).
+
+--- stderr
+
+@@@ 3 @@@
+### --dir <W>/odd --json
+rc=0
+--- stdout
+{
+ "batches": [
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": null,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "end of session",
+   "roles": []
+  }
+ ],
+ "combined": {
+  "batches": 1,
+  "items": 0,
+  "roles": [],
+  "total": {
+   "agents": 0,
+   "turns": 0,
+   "bash": 0,
+   "fresh_input": 0,
+   "cache_write": 0,
+   "cache_write_1h": 0,
+   "cache_read": 0,
+   "input": 0,
+   "output": 0,
+   "weighted_input": 0
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+
+@@@ 4 @@@
+### --dir <W>/odd --json
+rc=0
+--- stdout
+{
+ "batches": [
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": null,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "end of session",
+   "roles": []
+  }
+ ],
+ "combined": {
+  "batches": 1,
+  "items": 0,
+  "roles": [],
+  "total": {
+   "agents": 0,
+   "turns": 0,
+   "bash": 0,
+   "fresh_input": 0,
+   "cache_write": 0,
+   "cache_write_1h": 0,
+   "cache_read": 0,
+   "input": 0,
+   "output": 0,
+   "weighted_input": 0
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+
+@@@ 5 @@@
+### --dir <W>/odd --last 9
+rc=0
+--- stdout
+gsdt-batch-report — 5 batches · 10 items · <W>/odd
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  2 items [quick ids]
+  ünï-0001  <DT> → <TM>  /gsdt-batch  7 items (real 5, tiny 2) [done line]  ⚠ 1 helper(s) not found
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  0 items [planners]
+  bbbb-2  <DT> → <TM>  /gsdt-batch  1 item [quick ids]
+  bbbb-2  <DT> →   /gsdt-batch  0 items [planners]
+
+ROLE                         AGENTS  TURNS BASH/AG  FRESH IN  CACHE WR  CACHE RD   OUTPUT  WEIGHTED
+coordinator · fable               –      2       –         4         4         4        4         9
+coordinator · opus                –      7       –      1.3k      1.4k      2.5k     1.3k      3.3k
+gsd-planner · other               2      1     0.0        10        10        10       10        24
+gsd-executor · opus               1      1     0.0         2         2         2        2         5
+gsd-executor · other              1      1     0.0         1         2         3        4         4
+general-purpose · opus            1      1     0.0         1         1         1        1         2
+gsd-planner
+ · opus               1      1     1.0       100       200       300      400       380
+TOTAL                             6     14     0.2      1.4k      1.6k      2.9k     1.7k      3.8k
+
+PER ITEM — input = fresh + cache write + cache read (the baseline has only this sum)
+ROLE                             INPUT  WEIGHTED    OUTPUT    BASE IN   CHANGE
+coordinator · fable+opus           521       334       131       3.0M    -100%
+gsd-planner · other                  3         2         1       6.0M    -100%
+gsd-executor · opus+other            1         1         1       3.7M    -100%
+general-purpose · opus               0         0         0       1.0M    -100%
+gsd-planner
+ · opus                 60        38        40          –      new
+TOTAL                              586       376       172      13.7M    -100%
+
+Baseline: 8 /gsd-quick-batch runs, 50 items, the week before 2026-11-09 (docs/plan-gsdt-batch.md). It summed WHOLE sessions, so its coordinator and helper numbers include work outside the batches.
+
+--- stderr
+
+@@@ 6 @@@
+### --dir <W>/odd --last 9
+rc=0
+--- stdout
+gsdt-batch-report — 5 batches · 10 items · <W>/odd
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  2 items [quick ids]
+  ünï-0001  <DT> → <TM>  /gsdt-batch  7 items (real 5, tiny 2) [done line]  ⚠ 1 helper(s) not found
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  0 items [planners]
+  bbbb-2  <DT> → <TM>  /gsdt-batch  1 item [quick ids]
+  bbbb-2  <DT> →   /gsdt-batch  0 items [planners]
+
+ROLE                         AGENTS  TURNS BASH/AG  FRESH IN  CACHE WR  CACHE RD   OUTPUT  WEIGHTED
+coordinator · fable               –      2       –         4         4         4        4         9
+coordinator · opus                –      7       –      1.3k      1.4k      2.5k     1.3k      3.3k
+gsd-planner · other               2      1     0.0        10        10        10       10        24
+gsd-executor · opus               1      1     0.0         2         2         2        2         5
+gsd-executor · other              1      1     0.0         1         2         3        4         4
+general-purpose · opus            1      1     0.0         1         1         1        1         2
+gsd-planner
+ · opus               1      1     1.0       100       200       300      400       380
+TOTAL                             6     14     0.2      1.4k      1.6k      2.9k     1.7k      3.8k
+
+PER ITEM — input = fresh + cache write + cache read (the baseline has only this sum)
+ROLE                             INPUT  WEIGHTED    OUTPUT    BASE IN   CHANGE
+coordinator · fable+opus           521       334       131       3.0M    -100%
+gsd-planner · other                  3         2         1       6.0M    -100%
+gsd-executor · opus+other            1         1         1       3.7M    -100%
+general-purpose · opus               0         0         0       1.0M    -100%
+gsd-planner
+ · opus                 60        38        40          –      new
+TOTAL                              586       376       172      13.7M    -100%
+
+Baseline: 8 /gsd-quick-batch runs, 50 items, the week before 2026-11-09 (docs/plan-gsdt-batch.md). It summed WHOLE sessions, so its coordinator and helper numbers include work outside the batches.
+
+--- stderr
+
+@@@ 7 @@@
+### --dir <W>/odd --last 9 --json
+rc=0
+--- stdout
+{
+ "batches": [
+  {
+   "session": "bbbb-2",
+   "skill": "gsd-quick-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 2,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "/clear",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 3,
+     "input": 6,
+     "output": 4,
+     "weighted_input": 4,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 3,
+      "output": 2,
+      "weighted_input": 2
+     }
+    },
+    {
+     "agents": 2,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 10,
+     "cache_write": 10,
+     "cache_write_1h": 0,
+     "cache_read": 10,
+     "input": 30,
+     "output": 10,
+     "weighted_input": 24,
+     "role": "gsd-planner",
+     "model": "other",
+     "per_item": {
+      "input": 15,
+      "output": 5,
+      "weighted_input": 12
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 1,
+     "cache_write_1h": 0,
+     "cache_read": 1,
+     "input": 3,
+     "output": 1,
+     "weighted_input": 2,
+     "role": "general-purpose",
+     "model": "opus",
+     "per_item": {
+      "input": 2,
+      "output": 0,
+      "weighted_input": 1
+     }
+    }
+   ]
+  },
+  {
+   "session": "\u00fcn\u00ef-0001-session",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 7,
+   "items_from": "done line",
+   "real": 5,
+   "tiny": 2,
+   "unlinked_agents": 1,
+   "ended_by": "done line",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 3,
+     "bash": 0,
+     "fresh_input": 1265,
+     "cache_write": 1371,
+     "cache_write_1h": 100,
+     "cache_read": 2530,
+     "input": 5166,
+     "output": 1290,
+     "weighted_input": 3307,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 738,
+      "output": 184,
+      "weighted_input": 472
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 3,
+     "input": 6,
+     "output": 4,
+     "weighted_input": 4,
+     "role": "gsd-executor",
+     "model": "other",
+     "per_item": {
+      "input": 1,
+      "output": 1,
+      "weighted_input": 1
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 1,
+     "fresh_input": 100,
+     "cache_write": 200,
+     "cache_write_1h": 0,
+     "cache_read": 300,
+     "input": 600,
+     "output": 400,
+     "weighted_input": 380,
+     "role": "gsd-planner\n",
+     "model": "opus",
+     "per_item": {
+      "input": 86,
+      "output": 57,
+      "weighted_input": 54
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsd-quick-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "done line",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 2,
+     "bash": 0,
+     "fresh_input": 4,
+     "cache_write": 4,
+     "cache_write_1h": 0,
+     "cache_read": 4,
+     "input": 12,
+     "output": 4,
+     "weighted_input": 9,
+     "role": "coordinator",
+     "model": "fable"
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 1,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "next batch",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 3,
+     "bash": 0,
+     "fresh_input": 9,
+     "cache_write": 9,
+     "cache_write_1h": 0,
+     "cache_read": 9,
+     "input": 27,
+     "output": 9,
+     "weighted_input": 21,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 27,
+      "output": 9,
+      "weighted_input": 21
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 2,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 2,
+     "input": 6,
+     "output": 2,
+     "weighted_input": 5,
+     "role": "gsd-executor",
+     "model": "opus",
+     "per_item": {
+      "input": 6,
+      "output": 2,
+      "weighted_input": 5
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": null,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "end of session",
+   "roles": []
+  }
+ ],
+ "combined": {
+  "batches": 5,
+  "items": 10,
+  "roles": [
+   {
+    "agents": 0,
+    "turns": 2,
+    "bash": 0,
+    "fresh_input": 4,
+    "cache_write": 4,
+    "cache_write_1h": 0,
+    "cache_read": 4,
+    "input": 12,
+    "output": 4,
+    "weighted_input": 9,
+    "role": "coordinator",
+    "model": "fable",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 1
+    }
+   },
+   {
+    "agents": 0,
+    "turns": 7,
+    "bash": 0,
+    "fresh_input": 1275,
+    "cache_write": 1382,
+    "cache_write_1h": 100,
+    "cache_read": 2542,
+    "input": 5199,
+    "output": 1303,
+    "weighted_input": 3332,
+    "role": "coordinator",
+    "model": "opus",
+    "per_item": {
+     "input": 520,
+     "output": 130,
+     "weighted_input": 333
+    }
+   },
+   {
+    "agents": 2,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 10,
+    "cache_write": 10,
+    "cache_write_1h": 0,
+    "cache_read": 10,
+    "input": 30,
+    "output": 10,
+    "weighted_input": 24,
+    "role": "gsd-planner",
+    "model": "other",
+    "per_item": {
+     "input": 3,
+     "output": 1,
+     "weighted_input": 2
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 2,
+    "cache_write": 2,
+    "cache_write_1h": 0,
+    "cache_read": 2,
+    "input": 6,
+    "output": 2,
+    "weighted_input": 5,
+    "role": "gsd-executor",
+    "model": "opus",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 1,
+    "cache_write": 2,
+    "cache_write_1h": 0,
+    "cache_read": 3,
+    "input": 6,
+    "output": 4,
+    "weighted_input": 4,
+    "role": "gsd-executor",
+    "model": "other",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 1,
+    "cache_write": 1,
+    "cache_write_1h": 0,
+    "cache_read": 1,
+    "input": 3,
+    "output": 1,
+    "weighted_input": 2,
+    "role": "general-purpose",
+    "model": "opus",
+    "per_item": {
+     "input": 0,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 1,
+    "fresh_input": 100,
+    "cache_write": 200,
+    "cache_write_1h": 0,
+    "cache_read": 300,
+    "input": 600,
+    "output": 400,
+    "weighted_input": 380,
+    "role": "gsd-planner\n",
+    "model": "opus",
+    "per_item": {
+     "input": 60,
+     "output": 40,
+     "weighted_input": 38
+    }
+   }
+  ],
+  "total": {
+   "agents": 6,
+   "turns": 14,
+   "bash": 1,
+   "fresh_input": 1393,
+   "cache_write": 1601,
+   "cache_write_1h": 100,
+   "cache_read": 2862,
+   "input": 5856,
+   "output": 1724,
+   "weighted_input": 3755
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+
+@@@ 8 @@@
+### --dir <W>/odd --last 9 --json
+rc=0
+--- stdout
+{
+ "batches": [
+  {
+   "session": "bbbb-2",
+   "skill": "gsd-quick-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 2,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "/clear",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 3,
+     "input": 6,
+     "output": 4,
+     "weighted_input": 4,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 3,
+      "output": 2,
+      "weighted_input": 2
+     }
+    },
+    {
+     "agents": 2,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 10,
+     "cache_write": 10,
+     "cache_write_1h": 0,
+     "cache_read": 10,
+     "input": 30,
+     "output": 10,
+     "weighted_input": 24,
+     "role": "gsd-planner",
+     "model": "other",
+     "per_item": {
+      "input": 15,
+      "output": 5,
+      "weighted_input": 12
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 1,
+     "cache_write_1h": 0,
+     "cache_read": 1,
+     "input": 3,
+     "output": 1,
+     "weighted_input": 2,
+     "role": "general-purpose",
+     "model": "opus",
+     "per_item": {
+      "input": 2,
+      "output": 0,
+      "weighted_input": 1
+     }
+    }
+   ]
+  },
+  {
+   "session": "\u00fcn\u00ef-0001-session",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 7,
+   "items_from": "done line",
+   "real": 5,
+   "tiny": 2,
+   "unlinked_agents": 1,
+   "ended_by": "done line",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 3,
+     "bash": 0,
+     "fresh_input": 1265,
+     "cache_write": 1371,
+     "cache_write_1h": 100,
+     "cache_read": 2530,
+     "input": 5166,
+     "output": 1290,
+     "weighted_input": 3307,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 738,
+      "output": 184,
+      "weighted_input": 472
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 3,
+     "input": 6,
+     "output": 4,
+     "weighted_input": 4,
+     "role": "gsd-executor",
+     "model": "other",
+     "per_item": {
+      "input": 1,
+      "output": 1,
+      "weighted_input": 1
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 1,
+     "fresh_input": 100,
+     "cache_write": 200,
+     "cache_write_1h": 0,
+     "cache_read": 300,
+     "input": 600,
+     "output": 400,
+     "weighted_input": 380,
+     "role": "gsd-planner\n",
+     "model": "opus",
+     "per_item": {
+      "input": 86,
+      "output": 57,
+      "weighted_input": 54
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsd-quick-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "done line",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 2,
+     "bash": 0,
+     "fresh_input": 4,
+     "cache_write": 4,
+     "cache_write_1h": 0,
+     "cache_read": 4,
+     "input": 12,
+     "output": 4,
+     "weighted_input": 9,
+     "role": "coordinator",
+     "model": "fable"
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 1,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "next batch",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 3,
+     "bash": 0,
+     "fresh_input": 9,
+     "cache_write": 9,
+     "cache_write_1h": 0,
+     "cache_read": 9,
+     "input": 27,
+     "output": 9,
+     "weighted_input": 21,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 27,
+      "output": 9,
+      "weighted_input": 21
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 2,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 2,
+     "input": 6,
+     "output": 2,
+     "weighted_input": 5,
+     "role": "gsd-executor",
+     "model": "opus",
+     "per_item": {
+      "input": 6,
+      "output": 2,
+      "weighted_input": 5
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": null,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "end of session",
+   "roles": []
+  }
+ ],
+ "combined": {
+  "batches": 5,
+  "items": 10,
+  "roles": [
+   {
+    "agents": 0,
+    "turns": 2,
+    "bash": 0,
+    "fresh_input": 4,
+    "cache_write": 4,
+    "cache_write_1h": 0,
+    "cache_read": 4,
+    "input": 12,
+    "output": 4,
+    "weighted_input": 9,
+    "role": "coordinator",
+    "model": "fable",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 1
+    }
+   },
+   {
+    "agents": 0,
+    "turns": 7,
+    "bash": 0,
+    "fresh_input": 1275,
+    "cache_write": 1382,
+    "cache_write_1h": 100,
+    "cache_read": 2542,
+    "input": 5199,
+    "output": 1303,
+    "weighted_input": 3332,
+    "role": "coordinator",
+    "model": "opus",
+    "per_item": {
+     "input": 520,
+     "output": 130,
+     "weighted_input": 333
+    }
+   },
+   {
+    "agents": 2,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 10,
+    "cache_write": 10,
+    "cache_write_1h": 0,
+    "cache_read": 10,
+    "input": 30,
+    "output": 10,
+    "weighted_input": 24,
+    "role": "gsd-planner",
+    "model": "other",
+    "per_item": {
+     "input": 3,
+     "output": 1,
+     "weighted_input": 2
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 2,
+    "cache_write": 2,
+    "cache_write_1h": 0,
+    "cache_read": 2,
+    "input": 6,
+    "output": 2,
+    "weighted_input": 5,
+    "role": "gsd-executor",
+    "model": "opus",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 1,
+    "cache_write": 2,
+    "cache_write_1h": 0,
+    "cache_read": 3,
+    "input": 6,
+    "output": 4,
+    "weighted_input": 4,
+    "role": "gsd-executor",
+    "model": "other",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 1,
+    "cache_write": 1,
+    "cache_write_1h": 0,
+    "cache_read": 1,
+    "input": 3,
+    "output": 1,
+    "weighted_input": 2,
+    "role": "general-purpose",
+    "model": "opus",
+    "per_item": {
+     "input": 0,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 1,
+    "fresh_input": 100,
+    "cache_write": 200,
+    "cache_write_1h": 0,
+    "cache_read": 300,
+    "input": 600,
+    "output": 400,
+    "weighted_input": 380,
+    "role": "gsd-planner\n",
+    "model": "opus",
+    "per_item": {
+     "input": 60,
+     "output": 40,
+     "weighted_input": 38
+    }
+   }
+  ],
+  "total": {
+   "agents": 6,
+   "turns": 14,
+   "bash": 1,
+   "fresh_input": 1393,
+   "cache_write": 1601,
+   "cache_write_1h": 100,
+   "cache_read": 2862,
+   "input": 5856,
+   "output": 1724,
+   "weighted_input": 3755
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+
+@@@ 9 @@@
+### --dir <W>/odd --days 30
+rc=0
+--- stdout
+gsdt-batch-report — 5 batches · 10 items · <W>/odd
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  2 items [quick ids]
+  ünï-0001  <DT> → <TM>  /gsdt-batch  7 items (real 5, tiny 2) [done line]  ⚠ 1 helper(s) not found
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  0 items [planners]
+  bbbb-2  <DT> → <TM>  /gsdt-batch  1 item [quick ids]
+  bbbb-2  <DT> →   /gsdt-batch  0 items [planners]
+
+ROLE                         AGENTS  TURNS BASH/AG  FRESH IN  CACHE WR  CACHE RD   OUTPUT  WEIGHTED
+coordinator · fable               –      2       –         4         4         4        4         9
+coordinator · opus                –      7       –      1.3k      1.4k      2.5k     1.3k      3.3k
+gsd-planner · other               2      1     0.0        10        10        10       10        24
+gsd-executor · opus               1      1     0.0         2         2         2        2         5
+gsd-executor · other              1      1     0.0         1         2         3        4         4
+general-purpose · opus            1      1     0.0         1         1         1        1         2
+gsd-planner
+ · opus               1      1     1.0       100       200       300      400       380
+TOTAL                             6     14     0.2      1.4k      1.6k      2.9k     1.7k      3.8k
+
+PER ITEM — input = fresh + cache write + cache read (the baseline has only this sum)
+ROLE                             INPUT  WEIGHTED    OUTPUT    BASE IN   CHANGE
+coordinator · fable+opus           521       334       131       3.0M    -100%
+gsd-planner · other                  3         2         1       6.0M    -100%
+gsd-executor · opus+other            1         1         1       3.7M    -100%
+general-purpose · opus               0         0         0       1.0M    -100%
+gsd-planner
+ · opus                 60        38        40          –      new
+TOTAL                              586       376       172      13.7M    -100%
+
+Baseline: 8 /gsd-quick-batch runs, 50 items, the week before 2026-11-09 (docs/plan-gsdt-batch.md). It summed WHOLE sessions, so its coordinator and helper numbers include work outside the batches.
+
+--- stderr
+
+@@@ 10 @@@
+### --dir <W>/odd --days 30
+rc=0
+--- stdout
+gsdt-batch-report — 5 batches · 10 items · <W>/odd
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  2 items [quick ids]
+  ünï-0001  <DT> → <TM>  /gsdt-batch  7 items (real 5, tiny 2) [done line]  ⚠ 1 helper(s) not found
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  0 items [planners]
+  bbbb-2  <DT> → <TM>  /gsdt-batch  1 item [quick ids]
+  bbbb-2  <DT> →   /gsdt-batch  0 items [planners]
+
+ROLE                         AGENTS  TURNS BASH/AG  FRESH IN  CACHE WR  CACHE RD   OUTPUT  WEIGHTED
+coordinator · fable               –      2       –         4         4         4        4         9
+coordinator · opus                –      7       –      1.3k      1.4k      2.5k     1.3k      3.3k
+gsd-planner · other               2      1     0.0        10        10        10       10        24
+gsd-executor · opus               1      1     0.0         2         2         2        2         5
+gsd-executor · other              1      1     0.0         1         2         3        4         4
+general-purpose · opus            1      1     0.0         1         1         1        1         2
+gsd-planner
+ · opus               1      1     1.0       100       200       300      400       380
+TOTAL                             6     14     0.2      1.4k      1.6k      2.9k     1.7k      3.8k
+
+PER ITEM — input = fresh + cache write + cache read (the baseline has only this sum)
+ROLE                             INPUT  WEIGHTED    OUTPUT    BASE IN   CHANGE
+coordinator · fable+opus           521       334       131       3.0M    -100%
+gsd-planner · other                  3         2         1       6.0M    -100%
+gsd-executor · opus+other            1         1         1       3.7M    -100%
+general-purpose · opus               0         0         0       1.0M    -100%
+gsd-planner
+ · opus                 60        38        40          –      new
+TOTAL                              586       376       172      13.7M    -100%
+
+Baseline: 8 /gsd-quick-batch runs, 50 items, the week before 2026-11-09 (docs/plan-gsdt-batch.md). It summed WHOLE sessions, so its coordinator and helper numbers include work outside the batches.
+
+--- stderr
+
+@@@ 11 @@@
+### --dir <W>/odd --days 30 --json
+rc=0
+--- stdout
+{
+ "batches": [
+  {
+   "session": "bbbb-2",
+   "skill": "gsd-quick-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 2,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "/clear",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 3,
+     "input": 6,
+     "output": 4,
+     "weighted_input": 4,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 3,
+      "output": 2,
+      "weighted_input": 2
+     }
+    },
+    {
+     "agents": 2,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 10,
+     "cache_write": 10,
+     "cache_write_1h": 0,
+     "cache_read": 10,
+     "input": 30,
+     "output": 10,
+     "weighted_input": 24,
+     "role": "gsd-planner",
+     "model": "other",
+     "per_item": {
+      "input": 15,
+      "output": 5,
+      "weighted_input": 12
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 1,
+     "cache_write_1h": 0,
+     "cache_read": 1,
+     "input": 3,
+     "output": 1,
+     "weighted_input": 2,
+     "role": "general-purpose",
+     "model": "opus",
+     "per_item": {
+      "input": 2,
+      "output": 0,
+      "weighted_input": 1
+     }
+    }
+   ]
+  },
+  {
+   "session": "\u00fcn\u00ef-0001-session",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 7,
+   "items_from": "done line",
+   "real": 5,
+   "tiny": 2,
+   "unlinked_agents": 1,
+   "ended_by": "done line",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 3,
+     "bash": 0,
+     "fresh_input": 1265,
+     "cache_write": 1371,
+     "cache_write_1h": 100,
+     "cache_read": 2530,
+     "input": 5166,
+     "output": 1290,
+     "weighted_input": 3307,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 738,
+      "output": 184,
+      "weighted_input": 472
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 3,
+     "input": 6,
+     "output": 4,
+     "weighted_input": 4,
+     "role": "gsd-executor",
+     "model": "other",
+     "per_item": {
+      "input": 1,
+      "output": 1,
+      "weighted_input": 1
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 1,
+     "fresh_input": 100,
+     "cache_write": 200,
+     "cache_write_1h": 0,
+     "cache_read": 300,
+     "input": 600,
+     "output": 400,
+     "weighted_input": 380,
+     "role": "gsd-planner\n",
+     "model": "opus",
+     "per_item": {
+      "input": 86,
+      "output": 57,
+      "weighted_input": 54
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsd-quick-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "done line",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 2,
+     "bash": 0,
+     "fresh_input": 4,
+     "cache_write": 4,
+     "cache_write_1h": 0,
+     "cache_read": 4,
+     "input": 12,
+     "output": 4,
+     "weighted_input": 9,
+     "role": "coordinator",
+     "model": "fable"
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 1,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "next batch",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 3,
+     "bash": 0,
+     "fresh_input": 9,
+     "cache_write": 9,
+     "cache_write_1h": 0,
+     "cache_read": 9,
+     "input": 27,
+     "output": 9,
+     "weighted_input": 21,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 27,
+      "output": 9,
+      "weighted_input": 21
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 2,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 2,
+     "input": 6,
+     "output": 2,
+     "weighted_input": 5,
+     "role": "gsd-executor",
+     "model": "opus",
+     "per_item": {
+      "input": 6,
+      "output": 2,
+      "weighted_input": 5
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": null,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "end of session",
+   "roles": []
+  }
+ ],
+ "combined": {
+  "batches": 5,
+  "items": 10,
+  "roles": [
+   {
+    "agents": 0,
+    "turns": 2,
+    "bash": 0,
+    "fresh_input": 4,
+    "cache_write": 4,
+    "cache_write_1h": 0,
+    "cache_read": 4,
+    "input": 12,
+    "output": 4,
+    "weighted_input": 9,
+    "role": "coordinator",
+    "model": "fable",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 1
+    }
+   },
+   {
+    "agents": 0,
+    "turns": 7,
+    "bash": 0,
+    "fresh_input": 1275,
+    "cache_write": 1382,
+    "cache_write_1h": 100,
+    "cache_read": 2542,
+    "input": 5199,
+    "output": 1303,
+    "weighted_input": 3332,
+    "role": "coordinator",
+    "model": "opus",
+    "per_item": {
+     "input": 520,
+     "output": 130,
+     "weighted_input": 333
+    }
+   },
+   {
+    "agents": 2,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 10,
+    "cache_write": 10,
+    "cache_write_1h": 0,
+    "cache_read": 10,
+    "input": 30,
+    "output": 10,
+    "weighted_input": 24,
+    "role": "gsd-planner",
+    "model": "other",
+    "per_item": {
+     "input": 3,
+     "output": 1,
+     "weighted_input": 2
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 2,
+    "cache_write": 2,
+    "cache_write_1h": 0,
+    "cache_read": 2,
+    "input": 6,
+    "output": 2,
+    "weighted_input": 5,
+    "role": "gsd-executor",
+    "model": "opus",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 1,
+    "cache_write": 2,
+    "cache_write_1h": 0,
+    "cache_read": 3,
+    "input": 6,
+    "output": 4,
+    "weighted_input": 4,
+    "role": "gsd-executor",
+    "model": "other",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 1,
+    "cache_write": 1,
+    "cache_write_1h": 0,
+    "cache_read": 1,
+    "input": 3,
+    "output": 1,
+    "weighted_input": 2,
+    "role": "general-purpose",
+    "model": "opus",
+    "per_item": {
+     "input": 0,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 1,
+    "fresh_input": 100,
+    "cache_write": 200,
+    "cache_write_1h": 0,
+    "cache_read": 300,
+    "input": 600,
+    "output": 400,
+    "weighted_input": 380,
+    "role": "gsd-planner\n",
+    "model": "opus",
+    "per_item": {
+     "input": 60,
+     "output": 40,
+     "weighted_input": 38
+    }
+   }
+  ],
+  "total": {
+   "agents": 6,
+   "turns": 14,
+   "bash": 1,
+   "fresh_input": 1393,
+   "cache_write": 1601,
+   "cache_write_1h": 100,
+   "cache_read": 2862,
+   "input": 5856,
+   "output": 1724,
+   "weighted_input": 3755
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+
+@@@ 12 @@@
+### --dir <W>/odd --days 30 --json
+rc=0
+--- stdout
+{
+ "batches": [
+  {
+   "session": "bbbb-2",
+   "skill": "gsd-quick-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 2,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "/clear",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 3,
+     "input": 6,
+     "output": 4,
+     "weighted_input": 4,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 3,
+      "output": 2,
+      "weighted_input": 2
+     }
+    },
+    {
+     "agents": 2,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 10,
+     "cache_write": 10,
+     "cache_write_1h": 0,
+     "cache_read": 10,
+     "input": 30,
+     "output": 10,
+     "weighted_input": 24,
+     "role": "gsd-planner",
+     "model": "other",
+     "per_item": {
+      "input": 15,
+      "output": 5,
+      "weighted_input": 12
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 1,
+     "cache_write_1h": 0,
+     "cache_read": 1,
+     "input": 3,
+     "output": 1,
+     "weighted_input": 2,
+     "role": "general-purpose",
+     "model": "opus",
+     "per_item": {
+      "input": 2,
+      "output": 0,
+      "weighted_input": 1
+     }
+    }
+   ]
+  },
+  {
+   "session": "\u00fcn\u00ef-0001-session",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 7,
+   "items_from": "done line",
+   "real": 5,
+   "tiny": 2,
+   "unlinked_agents": 1,
+   "ended_by": "done line",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 3,
+     "bash": 0,
+     "fresh_input": 1265,
+     "cache_write": 1371,
+     "cache_write_1h": 100,
+     "cache_read": 2530,
+     "input": 5166,
+     "output": 1290,
+     "weighted_input": 3307,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 738,
+      "output": 184,
+      "weighted_input": 472
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 3,
+     "input": 6,
+     "output": 4,
+     "weighted_input": 4,
+     "role": "gsd-executor",
+     "model": "other",
+     "per_item": {
+      "input": 1,
+      "output": 1,
+      "weighted_input": 1
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 1,
+     "fresh_input": 100,
+     "cache_write": 200,
+     "cache_write_1h": 0,
+     "cache_read": 300,
+     "input": 600,
+     "output": 400,
+     "weighted_input": 380,
+     "role": "gsd-planner\n",
+     "model": "opus",
+     "per_item": {
+      "input": 86,
+      "output": 57,
+      "weighted_input": 54
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsd-quick-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "done line",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 2,
+     "bash": 0,
+     "fresh_input": 4,
+     "cache_write": 4,
+     "cache_write_1h": 0,
+     "cache_read": 4,
+     "input": 12,
+     "output": 4,
+     "weighted_input": 9,
+     "role": "coordinator",
+     "model": "fable"
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 1,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "next batch",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 3,
+     "bash": 0,
+     "fresh_input": 9,
+     "cache_write": 9,
+     "cache_write_1h": 0,
+     "cache_read": 9,
+     "input": 27,
+     "output": 9,
+     "weighted_input": 21,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 27,
+      "output": 9,
+      "weighted_input": 21
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 2,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 2,
+     "input": 6,
+     "output": 2,
+     "weighted_input": 5,
+     "role": "gsd-executor",
+     "model": "opus",
+     "per_item": {
+      "input": 6,
+      "output": 2,
+      "weighted_input": 5
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": null,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "end of session",
+   "roles": []
+  }
+ ],
+ "combined": {
+  "batches": 5,
+  "items": 10,
+  "roles": [
+   {
+    "agents": 0,
+    "turns": 2,
+    "bash": 0,
+    "fresh_input": 4,
+    "cache_write": 4,
+    "cache_write_1h": 0,
+    "cache_read": 4,
+    "input": 12,
+    "output": 4,
+    "weighted_input": 9,
+    "role": "coordinator",
+    "model": "fable",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 1
+    }
+   },
+   {
+    "agents": 0,
+    "turns": 7,
+    "bash": 0,
+    "fresh_input": 1275,
+    "cache_write": 1382,
+    "cache_write_1h": 100,
+    "cache_read": 2542,
+    "input": 5199,
+    "output": 1303,
+    "weighted_input": 3332,
+    "role": "coordinator",
+    "model": "opus",
+    "per_item": {
+     "input": 520,
+     "output": 130,
+     "weighted_input": 333
+    }
+   },
+   {
+    "agents": 2,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 10,
+    "cache_write": 10,
+    "cache_write_1h": 0,
+    "cache_read": 10,
+    "input": 30,
+    "output": 10,
+    "weighted_input": 24,
+    "role": "gsd-planner",
+    "model": "other",
+    "per_item": {
+     "input": 3,
+     "output": 1,
+     "weighted_input": 2
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 2,
+    "cache_write": 2,
+    "cache_write_1h": 0,
+    "cache_read": 2,
+    "input": 6,
+    "output": 2,
+    "weighted_input": 5,
+    "role": "gsd-executor",
+    "model": "opus",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 1,
+    "cache_write": 2,
+    "cache_write_1h": 0,
+    "cache_read": 3,
+    "input": 6,
+    "output": 4,
+    "weighted_input": 4,
+    "role": "gsd-executor",
+    "model": "other",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 1,
+    "cache_write": 1,
+    "cache_write_1h": 0,
+    "cache_read": 1,
+    "input": 3,
+    "output": 1,
+    "weighted_input": 2,
+    "role": "general-purpose",
+    "model": "opus",
+    "per_item": {
+     "input": 0,
+     "output": 0,
+     "weighted_input": 0
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 1,
+    "fresh_input": 100,
+    "cache_write": 200,
+    "cache_write_1h": 0,
+    "cache_read": 300,
+    "input": 600,
+    "output": 400,
+    "weighted_input": 380,
+    "role": "gsd-planner\n",
+    "model": "opus",
+    "per_item": {
+     "input": 60,
+     "output": 40,
+     "weighted_input": 38
+    }
+   }
+  ],
+  "total": {
+   "agents": 6,
+   "turns": 14,
+   "bash": 1,
+   "fresh_input": 1393,
+   "cache_write": 1601,
+   "cache_write_1h": 100,
+   "cache_read": 2862,
+   "input": 5856,
+   "output": 1724,
+   "weighted_input": 3755
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+
+@@@ 13 @@@
+### --dir <W>/odd --last 9 --items 2
+rc=0
+--- stdout
+gsdt-batch-report — 5 batches · 2 items · <W>/odd
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  2 items [quick ids]
+  ünï-0001  <DT> → <TM>  /gsdt-batch  7 items (real 5, tiny 2) [done line]  ⚠ 1 helper(s) not found
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  0 items [planners]
+  bbbb-2  <DT> → <TM>  /gsdt-batch  1 item [quick ids]
+  bbbb-2  <DT> →   /gsdt-batch  0 items [planners]
+
+ROLE                         AGENTS  TURNS BASH/AG  FRESH IN  CACHE WR  CACHE RD   OUTPUT  WEIGHTED
+coordinator · fable               –      2       –         4         4         4        4         9
+coordinator · opus                –      7       –      1.3k      1.4k      2.5k     1.3k      3.3k
+gsd-planner · other               2      1     0.0        10        10        10       10        24
+gsd-executor · opus               1      1     0.0         2         2         2        2         5
+gsd-executor · other              1      1     0.0         1         2         3        4         4
+general-purpose · opus            1      1     0.0         1         1         1        1         2
+gsd-planner
+ · opus               1      1     1.0       100       200       300      400       380
+TOTAL                             6     14     0.2      1.4k      1.6k      2.9k     1.7k      3.8k
+
+PER ITEM — input = fresh + cache write + cache read (the baseline has only this sum)
+ROLE                             INPUT  WEIGHTED    OUTPUT    BASE IN   CHANGE
+coordinator · fable+opus          2.6k      1.7k       654       3.0M    -100%
+gsd-planner · other                 15        12         5       6.0M    -100%
+gsd-executor · opus+other            6         4         3       3.7M    -100%
+general-purpose · opus               2         1         0       1.0M    -100%
+gsd-planner
+ · opus                300       190       200          –      new
+TOTAL                             2.9k      1.9k       862      13.7M    -100%
+
+Baseline: 8 /gsd-quick-batch runs, 50 items, the week before 2026-11-09 (docs/plan-gsdt-batch.md). It summed WHOLE sessions, so its coordinator and helper numbers include work outside the batches.
+
+--- stderr
+
+@@@ 14 @@@
+### --dir <W>/odd --last 9 --items 2
+rc=0
+--- stdout
+gsdt-batch-report — 5 batches · 2 items · <W>/odd
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  2 items [quick ids]
+  ünï-0001  <DT> → <TM>  /gsdt-batch  7 items (real 5, tiny 2) [done line]  ⚠ 1 helper(s) not found
+  bbbb-2  <DT> → <TM>  /gsd-quick-batch  0 items [planners]
+  bbbb-2  <DT> → <TM>  /gsdt-batch  1 item [quick ids]
+  bbbb-2  <DT> →   /gsdt-batch  0 items [planners]
+
+ROLE                         AGENTS  TURNS BASH/AG  FRESH IN  CACHE WR  CACHE RD   OUTPUT  WEIGHTED
+coordinator · fable               –      2       –         4         4         4        4         9
+coordinator · opus                –      7       –      1.3k      1.4k      2.5k     1.3k      3.3k
+gsd-planner · other               2      1     0.0        10        10        10       10        24
+gsd-executor · opus               1      1     0.0         2         2         2        2         5
+gsd-executor · other              1      1     0.0         1         2         3        4         4
+general-purpose · opus            1      1     0.0         1         1         1        1         2
+gsd-planner
+ · opus               1      1     1.0       100       200       300      400       380
+TOTAL                             6     14     0.2      1.4k      1.6k      2.9k     1.7k      3.8k
+
+PER ITEM — input = fresh + cache write + cache read (the baseline has only this sum)
+ROLE                             INPUT  WEIGHTED    OUTPUT    BASE IN   CHANGE
+coordinator · fable+opus          2.6k      1.7k       654       3.0M    -100%
+gsd-planner · other                 15        12         5       6.0M    -100%
+gsd-executor · opus+other            6         4         3       3.7M    -100%
+general-purpose · opus               2         1         0       1.0M    -100%
+gsd-planner
+ · opus                300       190       200          –      new
+TOTAL                             2.9k      1.9k       862      13.7M    -100%
+
+Baseline: 8 /gsd-quick-batch runs, 50 items, the week before 2026-11-09 (docs/plan-gsdt-batch.md). It summed WHOLE sessions, so its coordinator and helper numbers include work outside the batches.
+
+--- stderr
+
+@@@ 15 @@@
+### --dir <W>/odd --session bbbb --last 1
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: use one of --last, --days, --session
+
+@@@ 16 @@@
+### --dir <W>/odd --session bbbb --json
+rc=0
+--- stdout
+{
+ "batches": [
+  {
+   "session": "bbbb-2",
+   "skill": "gsd-quick-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 2,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "/clear",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 3,
+     "input": 6,
+     "output": 4,
+     "weighted_input": 4,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 3,
+      "output": 2,
+      "weighted_input": 2
+     }
+    },
+    {
+     "agents": 2,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 10,
+     "cache_write": 10,
+     "cache_write_1h": 0,
+     "cache_read": 10,
+     "input": 30,
+     "output": 10,
+     "weighted_input": 24,
+     "role": "gsd-planner",
+     "model": "other",
+     "per_item": {
+      "input": 15,
+      "output": 5,
+      "weighted_input": 12
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 1,
+     "cache_write": 1,
+     "cache_write_1h": 0,
+     "cache_read": 1,
+     "input": 3,
+     "output": 1,
+     "weighted_input": 2,
+     "role": "general-purpose",
+     "model": "opus",
+     "per_item": {
+      "input": 2,
+      "output": 0,
+      "weighted_input": 1
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsd-quick-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "done line",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 2,
+     "bash": 0,
+     "fresh_input": 4,
+     "cache_write": 4,
+     "cache_write_1h": 0,
+     "cache_read": 4,
+     "input": 12,
+     "output": 4,
+     "weighted_input": 9,
+     "role": "coordinator",
+     "model": "fable"
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 1,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "next batch",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 3,
+     "bash": 0,
+     "fresh_input": 9,
+     "cache_write": 9,
+     "cache_write_1h": 0,
+     "cache_read": 9,
+     "input": 27,
+     "output": 9,
+     "weighted_input": 21,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 27,
+      "output": 9,
+      "weighted_input": 21
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 2,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 2,
+     "input": 6,
+     "output": 2,
+     "weighted_input": 5,
+     "role": "gsd-executor",
+     "model": "opus",
+     "per_item": {
+      "input": 6,
+      "output": 2,
+      "weighted_input": 5
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": null,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "end of session",
+   "roles": []
+  }
+ ],
+ "combined": {
+  "batches": 4,
+  "items": 3,
+  "roles": [
+   {
+    "agents": 0,
+    "turns": 2,
+    "bash": 0,
+    "fresh_input": 4,
+    "cache_write": 4,
+    "cache_write_1h": 0,
+    "cache_read": 4,
+    "input": 12,
+    "output": 4,
+    "weighted_input": 9,
+    "role": "coordinator",
+    "model": "fable",
+    "per_item": {
+     "input": 4,
+     "output": 1,
+     "weighted_input": 3
+    }
+   },
+   {
+    "agents": 0,
+    "turns": 4,
+    "bash": 0,
+    "fresh_input": 10,
+    "cache_write": 11,
+    "cache_write_1h": 0,
+    "cache_read": 12,
+    "input": 33,
+    "output": 13,
+    "weighted_input": 25,
+    "role": "coordinator",
+    "model": "opus",
+    "per_item": {
+     "input": 11,
+     "output": 4,
+     "weighted_input": 8
+    }
+   },
+   {
+    "agents": 2,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 10,
+    "cache_write": 10,
+    "cache_write_1h": 0,
+    "cache_read": 10,
+    "input": 30,
+    "output": 10,
+    "weighted_input": 24,
+    "role": "gsd-planner",
+    "model": "other",
+    "per_item": {
+     "input": 10,
+     "output": 3,
+     "weighted_input": 8
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 2,
+    "cache_write": 2,
+    "cache_write_1h": 0,
+    "cache_read": 2,
+    "input": 6,
+    "output": 2,
+    "weighted_input": 5,
+    "role": "gsd-executor",
+    "model": "opus",
+    "per_item": {
+     "input": 2,
+     "output": 1,
+     "weighted_input": 2
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 1,
+    "cache_write": 1,
+    "cache_write_1h": 0,
+    "cache_read": 1,
+    "input": 3,
+    "output": 1,
+    "weighted_input": 2,
+    "role": "general-purpose",
+    "model": "opus",
+    "per_item": {
+     "input": 1,
+     "output": 0,
+     "weighted_input": 1
+    }
+   }
+  ],
+  "total": {
+   "agents": 4,
+   "turns": 9,
+   "bash": 0,
+   "fresh_input": 27,
+   "cache_write": 28,
+   "cache_write_1h": 0,
+   "cache_read": 29,
+   "input": 84,
+   "output": 30,
+   "weighted_input": 65
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+
+@@@ 17 @@@
+### --dir <W>/odd --last 1 --json
+rc=0
+--- stdout
+{
+ "batches": [
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": null,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "end of session",
+   "roles": []
+  }
+ ],
+ "combined": {
+  "batches": 1,
+  "items": 0,
+  "roles": [],
+  "total": {
+   "agents": 0,
+   "turns": 0,
+   "bash": 0,
+   "fresh_input": 0,
+   "cache_write": 0,
+   "cache_write_1h": 0,
+   "cache_read": 0,
+   "input": 0,
+   "output": 0,
+   "weighted_input": 0
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+
+@@@ 18 @@@
+### --dir <W>/odd --last 2 --json
+rc=0
+--- stdout
+{
+ "batches": [
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": <EPOCH>,
+   "items": 1,
+   "items_from": "quick ids",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "next batch",
+   "roles": [
+    {
+     "agents": 0,
+     "turns": 3,
+     "bash": 0,
+     "fresh_input": 9,
+     "cache_write": 9,
+     "cache_write_1h": 0,
+     "cache_read": 9,
+     "input": 27,
+     "output": 9,
+     "weighted_input": 21,
+     "role": "coordinator",
+     "model": "opus",
+     "per_item": {
+      "input": 27,
+      "output": 9,
+      "weighted_input": 21
+     }
+    },
+    {
+     "agents": 1,
+     "turns": 1,
+     "bash": 0,
+     "fresh_input": 2,
+     "cache_write": 2,
+     "cache_write_1h": 0,
+     "cache_read": 2,
+     "input": 6,
+     "output": 2,
+     "weighted_input": 5,
+     "role": "gsd-executor",
+     "model": "opus",
+     "per_item": {
+      "input": 6,
+      "output": 2,
+      "weighted_input": 5
+     }
+    }
+   ]
+  },
+  {
+   "session": "bbbb-2",
+   "skill": "gsdt-batch",
+   "start": <EPOCH>,
+   "end": null,
+   "items": 0,
+   "items_from": "planners",
+   "real": null,
+   "tiny": null,
+   "unlinked_agents": 0,
+   "ended_by": "end of session",
+   "roles": []
+  }
+ ],
+ "combined": {
+  "batches": 2,
+  "items": 1,
+  "roles": [
+   {
+    "agents": 0,
+    "turns": 3,
+    "bash": 0,
+    "fresh_input": 9,
+    "cache_write": 9,
+    "cache_write_1h": 0,
+    "cache_read": 9,
+    "input": 27,
+    "output": 9,
+    "weighted_input": 21,
+    "role": "coordinator",
+    "model": "opus",
+    "per_item": {
+     "input": 27,
+     "output": 9,
+     "weighted_input": 21
+    }
+   },
+   {
+    "agents": 1,
+    "turns": 1,
+    "bash": 0,
+    "fresh_input": 2,
+    "cache_write": 2,
+    "cache_write_1h": 0,
+    "cache_read": 2,
+    "input": 6,
+    "output": 2,
+    "weighted_input": 5,
+    "role": "gsd-executor",
+    "model": "opus",
+    "per_item": {
+     "input": 6,
+     "output": 2,
+     "weighted_input": 5
+    }
+   }
+  ],
+  "total": {
+   "agents": 1,
+   "turns": 4,
+   "bash": 0,
+   "fresh_input": 11,
+   "cache_write": 11,
+   "cache_write_1h": 0,
+   "cache_read": 11,
+   "input": 33,
+   "output": 11,
+   "weighted_input": 26
+  }
+ },
+ "baseline": {
+  "items": 50,
+  "batches": 8,
+  "roles": {
+   "gsd-planner": {
+    "model": "opus",
+    "agents": 50,
+    "input": 299000000.0,
+    "output": 2500000.0
+   },
+   "gsd-executor": {
+    "model": "sonnet",
+    "agents": 50,
+    "input": 183000000.0,
+    "output": 1200000.0
+   },
+   "coordinator": {
+    "model": "opus",
+    "agents": 0,
+    "turns": 914,
+    "input": 151000000.0,
+    "output": 500000.0
+   },
+   "general-purpose": {
+    "model": "sonnet",
+    "agents": 5,
+    "input": 52000000.0,
+    "output": 150000.0
+   }
+  }
+ }
+}
+
+--- stderr
+

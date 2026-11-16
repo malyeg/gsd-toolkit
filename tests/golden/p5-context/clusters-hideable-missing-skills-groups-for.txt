@@ -1,0 +1,101 @@
+@@@ 1 @@@
+# clusters null
+core_loop on plan-phase execute-phase help
+audit_review on validate-phase audit-uat
+milestone on new-milestone health
+workspace_state on thread
+docs on ingest-docs docs-update
+empty_one on not-installed
+stats_group on stats
+
+@@@ 2 @@@
+# hideable null
+milestone 2 110
+workspace_state 1 48
+stats_group 1 46
+
+@@@ 3 @@@
+# missing null
+
+@@@ 4 @@@
+# groups for "gsd-validate-phase" null
+
+@@@ 5 @@@
+# groups for "gsd-validate-phase gsd-stats" null
+
+@@@ 6 @@@
+# groups for "gsd-nothing" null
+
+@@@ 7 @@@
+# groups for "gsd-validate-phase gsd-nothing" null
+
+@@@ 8 @@@
+# groups for "" null
+
+@@@ 9 @@@
+# clusters {"baseProfile":"full","disabledClusters":["stats_group","audit_review"]}
+core_loop on plan-phase execute-phase help
+audit_review off validate-phase audit-uat
+milestone on new-milestone health
+workspace_state on thread
+docs on ingest-docs docs-update
+empty_one on not-installed
+stats_group off stats
+
+@@@ 10 @@@
+# hideable {"baseProfile":"full","disabledClusters":["stats_group","audit_review"]}
+milestone 2 110
+workspace_state 1 48
+
+@@@ 11 @@@
+# missing {"baseProfile":"full","disabledClusters":["stats_group","audit_review"]}
+
+@@@ 12 @@@
+# groups for "gsd-validate-phase" {"baseProfile":"full","disabledClusters":["stats_group","audit_review"]}
+audit_review
+@@@ 13 @@@
+# groups for "gsd-validate-phase gsd-stats" {"baseProfile":"full","disabledClusters":["stats_group","audit_review"]}
+audit_review stats_group
+@@@ 14 @@@
+# groups for "gsd-nothing" {"baseProfile":"full","disabledClusters":["stats_group","audit_review"]}
+
+@@@ 15 @@@
+# groups for "gsd-validate-phase gsd-nothing" {"baseProfile":"full","disabledClusters":["stats_group","audit_review"]}
+
+@@@ 16 @@@
+# groups for "" {"baseProfile":"full","disabledClusters":["stats_group","audit_review"]}
+
+@@@ 17 @@@
+# clusters not json
+core_loop on plan-phase execute-phase help
+audit_review on validate-phase audit-uat
+milestone on new-milestone health
+workspace_state on thread
+docs on ingest-docs docs-update
+empty_one on not-installed
+stats_group on stats
+
+@@@ 18 @@@
+# hideable not json
+milestone 2 110
+workspace_state 1 48
+stats_group 1 46
+
+@@@ 19 @@@
+# missing not json
+
+@@@ 20 @@@
+# groups for "gsd-validate-phase" not json
+
+@@@ 21 @@@
+# groups for "gsd-validate-phase gsd-stats" not json
+
+@@@ 22 @@@
+# groups for "gsd-nothing" not json
+
+@@@ 23 @@@
+# groups for "gsd-validate-phase gsd-nothing" not json
+
+@@@ 24 @@@
+# groups for "" not json
+

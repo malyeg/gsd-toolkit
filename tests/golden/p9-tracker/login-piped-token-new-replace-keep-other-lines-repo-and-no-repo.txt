@@ -1,0 +1,319 @@
+@@@ 1 @@@
+### step 0: ["login","solo"] {"GSD_CLICKUP_CONFIG":""}
+rc=0
+--- stdout
+✔ ClickUp token OK — saved → <ROOT>/home/.config/gsd/clickup-solo.env (only you can read it)
+✔ this repo now uses profile solo (git config gsdt-tracker.profile: this clone and its worktrees, never committed)
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["login","solo"] {"GSD_CLICKUP_CONFIG":""}
+rc=0
+--- stdout
+✔ ClickUp token OK — replaced → <ROOT>/home/.config/gsd/clickup-solo.env (only you can read it)
+✔ this repo already uses profile solo (git config gsdt-tracker.profile)
+
+--- stderr
+
+@@@ 3 @@@
+### step 2: ["login","solo"] {"GSD_CLICKUP_CONFIG":""}
+rc=0
+--- stdout
+✔ ClickUp token OK — replaced → <ROOT>/home/.config/gsd/clickup-solo.env (only you can read it)
+✔ this repo already uses profile solo (git config gsdt-tracker.profile)
+
+--- stderr
+
+@@@ 4 @@@
+### step 3: ["login","withother"] {}
+rc=0
+--- stdout
+✔ ClickUp token OK — replaced → <ROOT>/home/.config/gsd/clickup-withother.env (only you can read it)
+✔ this repo now uses profile withother (git config gsdt-tracker.profile: this clone and its worktrees, never committed)
+
+--- stderr
+
+@@@ 5 @@@
+### step 4: ["login","bad"] {}
+rc=2
+--- stdout
+
+--- stderr
+gsdt-tracker: ClickUp API GET /user → HTTP 401: {"err":"Token invalid"}
+gsdt-tracker: ClickUp did not accept that token — nothing saved
+
+@@@ 6 @@@
+### step 5: ["login","badchars"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: that does not look like a ClickUp token (pk_…) — nothing saved
+
+@@@ 7 @@@
+### step 6: ["login","empty"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no token given — nothing saved
+
+@@@ 8 @@@
+### step 7: ["login","noeol"] {}
+rc=0
+--- stdout
+✔ ClickUp token OK — saved → <ROOT>/home/.config/gsd/clickup-noeol.env (only you can read it)
+✔ this repo now uses profile noeol (git config gsdt-tracker.profile: this clone and its worktrees, never committed)
+
+--- stderr
+
+@@@ 9 @@@
+### step 8: ["login","nothing"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no token given — nothing saved
+
+@@@ 10 @@@
+### step 9: ["login",".hidden"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: '.hidden' is not a profile name (letters, digits, . _ -) — use gsdt-tracker login <name>
+
+@@@ 11 @@@
+### step 10: ["login","a/b"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: 'a/b' is not a profile name (letters, digits, . _ -) — use gsdt-tracker login <name>
+
+@@@ 12 @@@
+### step 11: ["login","x","y"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: usage: gsdt-tracker login [<profile>]
+
+@@@ 13 @@@
+### step 12: ["login","dead"] {"CURL_DEAD":"1"}
+rc=2
+--- stdout
+
+--- stderr
+gsdt-tracker: curl failed (network?)
+gsdt-tracker: ClickUp did not accept that token — nothing saved
+
+@@@ 14 @@@
+### step 13: ["login"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not in a git repo — name the profile: gsdt-tracker login <name>
+
+@@@ 15 @@@
+### step 14: ["login","solo2"] {}
+rc=0
+--- stdout
+✔ ClickUp token OK — replaced → <ROOT>/home/.config/gsd/clickup-solo2.env (only you can read it)
+• not in a git repo, so no repo uses it yet — in the repo, run: gsdt-tracker login solo2 (it offers this saved token)
+
+--- stderr
+
+@@@ 16 @@@
+### step 15: ["login"] {}
+rc=0
+--- stdout
+✔ ClickUp token OK — replaced → <ROOT>/home/.config/gsd/clickup-noeol.env (only you can read it)
+✔ this repo already uses profile noeol (git config gsdt-tracker.profile)
+
+--- stderr
+
+@@@ 17 @@@
+### step 16: ["login"] {}
+rc=0
+--- stdout
+✔ ClickUp token OK — replaced → <ROOT>/home/.config/gsd/clickup-noeol.env (only you can read it)
+✔ this repo already uses profile noeol (git config gsdt-tracker.profile)
+
+--- stderr
+
+@@@ 18 @@@
+### step 17: ["login"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: unknown command: login (the tracker here is none — set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf) — see gsdt-tracker --help
+
+@@@ 19 @@@
+### step 18: ["login"] {}
+rc=0
+--- stdout
+✔ ClickUp token OK — saved → <ROOT>/home/.config/gsd/clickup-confprof.env (only you can read it)
+✔ this repo now uses profile confprof (git config gsdt-tracker.profile: this clone and its worktrees, never committed)
+
+--- stderr
+
+@@@ 20 @@@
+### step 19: ["login","confprof"] {}
+rc=0
+--- stdout
+✔ ClickUp token OK — replaced → <ROOT>/home/.config/gsd/clickup-confprof.env (only you can read it)
+✔ this repo already uses profile confprof (git config gsdt-tracker.profile)
+
+--- stderr
+
+@@@ 21 @@@
+### step 20: ["login","other"] {"GSD_TRACKER_PROFILE":"zzz","GSD_CLICKUP_CONFIG":"/x/y.env","CLICKUP_API_TOKEN":"pk_env"}
+rc=0
+--- stdout
+✔ ClickUp token OK — saved → <ROOT>/home/.config/gsd/clickup-other.env (only you can read it)
+✔ this repo now uses profile other (git config gsdt-tracker.profile: this clone and its worktrees, never committed)
+• .gsd.conf says tracker_profile = confprof; in this clone git config wins, so other is used
+• GSD_TRACKER_PROFILE=zzz is set in this shell and picks another profile
+• GSD_CLICKUP_CONFIG is set in this shell, so /x/y.env is read instead — unset GSD_CLICKUP_CONFIG
+• CLICKUP_API_TOKEN is set in this shell and wins over the file — unset CLICKUP_API_TOKEN
+
+--- stderr
+
+@@@ 22 @@@
+### step 21: ["--repo","/nonexistent","login","viarepo"] {"GSD_TRACKER":"clickup"}
+rc=0
+--- stdout
+✔ ClickUp token OK — saved → <ROOT>/home/.config/gsd/clickup-viarepo.env (only you can read it)
+• not in a git repo, so no repo uses it yet — in the repo, run: gsdt-tracker login viarepo (it offers this saved token)
+
+--- stderr
+
+@@@ 23 @@@
+### step 22: ["--repo","cu","login"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not in a git repo — name the profile: gsdt-tracker login <name>
+
+@@@ 24 @@@
+### step 23: ["--tracker","clickup","login","viaflag"] {}
+rc=0
+--- stdout
+✔ ClickUp token OK — saved → <ROOT>/home/.config/gsd/clickup-viaflag.env (only you can read it)
+✔ this repo now uses profile viaflag (git config gsdt-tracker.profile: this clone and its worktrees, never committed)
+• the tracker here is none, so start/finish/comment don't use ClickUp yet — set it: git config gsdt-tracker.tracker clickup (this clone), or tracker = clickup in .gsd.conf (the team)
+
+--- stderr
+
+@@@ 25 @@@
+### step 24: ["--tracker","none","login","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: unknown command: login (the tracker here is none — set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf) — see gsdt-tracker --help
+
+@@@ 26 @@@
+### step 25: ["check"] {"GSD_CLICKUP_CONFIG":""}
+rc=0
+--- stdout
+✔ ClickUp token OK (profile noeol)
+
+--- stderr
+
+@@@ 27 @@@
+### step 26: ["config"] {"GSD_CLICKUP_CONFIG":""}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=default
+tracker_ok=yes
+profile=noeol
+profile_from=git
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-noeol.env
+token=file
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 28 @@@
+curl.log:
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+
+argv:
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_solo-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_solo-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_spaced-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_new-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_bad-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_noeol-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_x-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_x-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_auto-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_wt-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_cu-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_cu2-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_cu3-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_x-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_x-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_wt-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+
+tracker.log:
+
+home:
+.config/gsd/clickup-confprof.env 600 CLICKUP_API_TOKEN=pk_cu2
+
+---
+.config/gsd/clickup-noeol.env 600 CLICKUP_API_TOKEN=pk_wt
+
+---
+.config/gsd/clickup-other.env 600 CLICKUP_API_TOKEN=pk_cu3
+
+---
+.config/gsd/clickup-solo.env 600 CLICKUP_API_TOKEN=pk_spaced
+
+---
+.config/gsd/clickup-solo2.env 600 CLICKUP_API_TOKEN=pk_x
+
+---
+.config/gsd/clickup-viaflag.env 600 CLICKUP_API_TOKEN=pk_x
+
+---
+.config/gsd/clickup-viarepo.env 600 CLICKUP_API_TOKEN=pk_x
+
+---
+.config/gsd/clickup-withother.env 600 # mine
+TEAM=1
+CLICKUP_TEAM_ID=T1
+CLICKUP_API_TOKEN=pk_new
+
+plain git config:
+gsdt-tracker.profile=noeol
+gsd git config:
+gsdt-tracker.profile=viaflag
+cust git config:
+
+cu git config:
+gsdt-tracker.profile=other

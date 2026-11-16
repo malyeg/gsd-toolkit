@@ -1,0 +1,45 @@
+@@@ 1 @@@
+# claude env=HOME
+home="<TMP>/.claude"
+skilldir="<TMP>/.claude/skills"
+rc=0
+@@@ 2 @@@
+# codex env=HOME
+home="<TMP>/.codex"
+skilldir=null
+rc=1
+@@@ 3 @@@
+# other env=HOME
+home=null
+skilldir=null
+rc=1
+@@@ 4 @@@
+# claude env=HOME,CLAUDE_CONFIG_DIR,CODEX_HOME
+home="<TMP>/cc"
+skilldir="<TMP>/.claude/skills"
+rc=0
+@@@ 5 @@@
+# codex env=HOME,CLAUDE_CONFIG_DIR,CODEX_HOME
+home="<TMP>/cx"
+skilldir=null
+rc=1
+@@@ 6 @@@
+# other env=HOME,CLAUDE_CONFIG_DIR,CODEX_HOME
+home=null
+skilldir=null
+rc=1
+@@@ 7 @@@
+# claude env=HOME,GSD_CLAUDE_SKILL_DIR
+home="<TMP>/.claude"
+skilldir="<TMP>/.claude/skills"
+rc=0
+@@@ 8 @@@
+# codex env=HOME,GSD_CLAUDE_SKILL_DIR
+home="<TMP>/.codex"
+skilldir=null
+rc=1
+@@@ 9 @@@
+# other env=HOME,GSD_CLAUDE_SKILL_DIR
+home=null
+skilldir=null
+rc=1

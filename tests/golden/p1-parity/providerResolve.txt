@@ -1,0 +1,582 @@
+@@@ 1 @@@
+# resolve "" {"env":{},"p":"","c":""}
+rc=0|claude|claude
+@@@ 2 @@@
+# resolve "" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=0|codex|codex
+@@@ 3 @@@
+# resolve "" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 4 @@@
+# resolve "" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=0|claude|/tmp/claude-x
+@@@ 5 @@@
+# resolve "" {"env":{},"p":"nope","c":""}
+rc=64|
+unknown provider 'nope' (expected claude, codex, or custom)
+@@@ 6 @@@
+# resolve "" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+agent command must be one executable path/name, not a shell template
+@@@ 7 @@@
+# resolve "" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=0|custom|ok-cmd
+@@@ 8 @@@
+# resolve "" {"env":{},"p":"gemini","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+@@@ 9 @@@
+# resolve "" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=0|codex|codex
+@@@ 10 @@@
+# resolve "" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=0|custom|my-legacy-agent
+@@@ 11 @@@
+# resolve "" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=0|custom|envc
+@@@ 12 @@@
+# resolve "" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+@@@ 13 @@@
+# resolve "" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=0|claude|cc
+@@@ 14 @@@
+# resolve "" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=0|codex|cx
+@@@ 15 @@@
+# resolve "" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=0|claude|generic
+@@@ 16 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 17 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 18 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 19 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=0|claude|/tmp/claude-x
+@@@ 20 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{},"p":"nope","c":""}
+rc=64|
+unknown provider 'nope' (expected claude, codex, or custom)
+@@@ 21 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+agent command must be one executable path/name, not a shell template
+@@@ 22 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=0|custom|ok-cmd
+@@@ 23 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{},"p":"gemini","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+@@@ 24 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 25 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 26 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 27 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 28 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=0|codex|cx
+@@@ 29 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=0|codex|cx
+@@@ 30 @@@
+# resolve "provider = codex\nagent_command = codex-x\n" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=0|claude|generic
+@@@ 31 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 32 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 33 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 34 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=0|claude|/tmp/claude-x
+@@@ 35 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{},"p":"nope","c":""}
+rc=64|
+unknown provider 'nope' (expected claude, codex, or custom)
+@@@ 36 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+agent command must be one executable path/name, not a shell template
+@@@ 37 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=0|custom|ok-cmd
+@@@ 38 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{},"p":"gemini","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+@@@ 39 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 40 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 41 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 42 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 43 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=0|codex|cx
+@@@ 44 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=0|codex|cx
+@@@ 45 @@@
+# resolve "provider = claude\nproviders = codex,claude\nagent_command = codex-x\n" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=0|claude|generic
+@@@ 46 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{},"p":"","c":""}
+rc=0|claude|c1
+@@@ 47 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=0|codex|c2
+@@@ 48 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 49 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=0|claude|/tmp/claude-x
+@@@ 50 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{},"p":"nope","c":""}
+rc=64|
+unknown provider 'nope' (expected claude, codex, or custom)
+@@@ 51 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+agent command must be one executable path/name, not a shell template
+@@@ 52 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=0|custom|ok-cmd
+@@@ 53 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{},"p":"gemini","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+@@@ 54 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=0|claude|c1
+@@@ 55 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=0|claude|c1
+@@@ 56 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=0|claude|c1
+@@@ 57 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=0|claude|c1
+@@@ 58 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=0|claude|cc
+@@@ 59 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=0|codex|cx
+@@@ 60 @@@
+# resolve "providers = claude,codex\nclaude_command = c1\ncodex_command = c2\nagent_command = dflt\n" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=0|claude|generic
+@@@ 61 @@@
+# resolve "providers =\n" {"env":{},"p":"","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 62 @@@
+# resolve "providers =\n" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 63 @@@
+# resolve "providers =\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 64 @@@
+# resolve "providers =\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 65 @@@
+# resolve "providers =\n" {"env":{},"p":"nope","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 66 @@@
+# resolve "providers =\n" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 67 @@@
+# resolve "providers =\n" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 68 @@@
+# resolve "providers =\n" {"env":{},"p":"gemini","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 69 @@@
+# resolve "providers =\n" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 70 @@@
+# resolve "providers =\n" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 71 @@@
+# resolve "providers =\n" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 72 @@@
+# resolve "providers =\n" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 73 @@@
+# resolve "providers =\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 74 @@@
+# resolve "providers =\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 75 @@@
+# resolve "providers =\n" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=64|
+malformed providers list ''; use comma-separated names, e.g. claude,codex
+@@@ 76 @@@
+# resolve "providers = claude,claude\n" {"env":{},"p":"","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 77 @@@
+# resolve "providers = claude,claude\n" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 78 @@@
+# resolve "providers = claude,claude\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 79 @@@
+# resolve "providers = claude,claude\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 80 @@@
+# resolve "providers = claude,claude\n" {"env":{},"p":"nope","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 81 @@@
+# resolve "providers = claude,claude\n" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 82 @@@
+# resolve "providers = claude,claude\n" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 83 @@@
+# resolve "providers = claude,claude\n" {"env":{},"p":"gemini","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 84 @@@
+# resolve "providers = claude,claude\n" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 85 @@@
+# resolve "providers = claude,claude\n" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 86 @@@
+# resolve "providers = claude,claude\n" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 87 @@@
+# resolve "providers = claude,claude\n" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 88 @@@
+# resolve "providers = claude,claude\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 89 @@@
+# resolve "providers = claude,claude\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 90 @@@
+# resolve "providers = claude,claude\n" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=64|
+duplicate provider 'claude' in providers; list each provider once
+@@@ 91 @@@
+# resolve "providers = gemini\n" {"env":{},"p":"","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 92 @@@
+# resolve "providers = gemini\n" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 93 @@@
+# resolve "providers = gemini\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 94 @@@
+# resolve "providers = gemini\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 95 @@@
+# resolve "providers = gemini\n" {"env":{},"p":"nope","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 96 @@@
+# resolve "providers = gemini\n" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 97 @@@
+# resolve "providers = gemini\n" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 98 @@@
+# resolve "providers = gemini\n" {"env":{},"p":"gemini","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 99 @@@
+# resolve "providers = gemini\n" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 100 @@@
+# resolve "providers = gemini\n" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 101 @@@
+# resolve "providers = gemini\n" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 102 @@@
+# resolve "providers = gemini\n" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 103 @@@
+# resolve "providers = gemini\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 104 @@@
+# resolve "providers = gemini\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 105 @@@
+# resolve "providers = gemini\n" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — drop it from this repo with: gsdt-init --no-launch
+@@@ 106 @@@
+# resolve "providers = custom\n" {"env":{},"p":"","c":""}
+rc=64|
+provider 'custom' requires an explicit agent command
+@@@ 107 @@@
+# resolve "providers = custom\n" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=0|codex|codex
+@@@ 108 @@@
+# resolve "providers = custom\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 109 @@@
+# resolve "providers = custom\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=0|claude|/tmp/claude-x
+@@@ 110 @@@
+# resolve "providers = custom\n" {"env":{},"p":"nope","c":""}
+rc=64|
+unknown provider 'nope' (expected claude, codex, or custom)
+@@@ 111 @@@
+# resolve "providers = custom\n" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+agent command must be one executable path/name, not a shell template
+@@@ 112 @@@
+# resolve "providers = custom\n" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=0|custom|ok-cmd
+@@@ 113 @@@
+# resolve "providers = custom\n" {"env":{},"p":"gemini","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+@@@ 114 @@@
+# resolve "providers = custom\n" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=64|
+provider 'custom' requires an explicit agent command
+@@@ 115 @@@
+# resolve "providers = custom\n" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=64|
+provider 'custom' requires an explicit agent command
+@@@ 116 @@@
+# resolve "providers = custom\n" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=0|custom|envc
+@@@ 117 @@@
+# resolve "providers = custom\n" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=64|
+provider 'custom' requires an explicit agent command
+@@@ 118 @@@
+# resolve "providers = custom\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=64|
+provider 'custom' requires an explicit agent command
+@@@ 119 @@@
+# resolve "providers = custom\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=0|codex|cx
+@@@ 120 @@@
+# resolve "providers = custom\n" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=0|claude|generic
+@@@ 121 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{},"p":"","c":""}
+rc=0|custom|my-agent
+@@@ 122 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=0|codex|codex
+@@@ 123 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 124 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=0|claude|/tmp/claude-x
+@@@ 125 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{},"p":"nope","c":""}
+rc=64|
+unknown provider 'nope' (expected claude, codex, or custom)
+@@@ 126 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+agent command must be one executable path/name, not a shell template
+@@@ 127 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=0|custom|ok-cmd
+@@@ 128 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{},"p":"gemini","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+@@@ 129 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=0|custom|my-agent
+@@@ 130 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=0|custom|my-agent
+@@@ 131 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=0|custom|envc
+@@@ 132 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=0|custom|my-agent
+@@@ 133 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=0|custom|my-agent
+@@@ 134 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=0|codex|cx
+@@@ 135 @@@
+# resolve "providers = custom\ncustom_command = my-agent\n" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=0|claude|generic
+@@@ 136 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{},"p":"","c":""}
+rc=0|custom|wrapper
+@@@ 137 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=0|codex|codex
+@@@ 138 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=0|codex|codex-x
+@@@ 139 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=0|claude|/tmp/claude-x
+@@@ 140 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{},"p":"nope","c":""}
+rc=64|
+unknown provider 'nope' (expected claude, codex, or custom)
+@@@ 141 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+agent command must be one executable path/name, not a shell template
+@@@ 142 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=0|custom|ok-cmd
+@@@ 143 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{},"p":"gemini","c":""}
+rc=64|
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+@@@ 144 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=0|custom|wrapper
+@@@ 145 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=0|custom|wrapper
+@@@ 146 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=0|custom|envc
+@@@ 147 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=0|custom|wrapper
+@@@ 148 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=0|custom|wrapper
+@@@ 149 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=0|codex|cx
+@@@ 150 @@@
+# resolve "provider = custom\nagent_command = wrapper\n" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=0|claude|generic
+@@@ 151 @@@
+# resolve "providers = nope\n" {"env":{},"p":"","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 152 @@@
+# resolve "providers = nope\n" {"env":{"GSD_PROVIDER":"codex"},"p":"","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 153 @@@
+# resolve "providers = nope\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 154 @@@
+# resolve "providers = nope\n" {"env":{"GSD_PROVIDER":"codex","GSD_AGENT_COMMAND":"codex-x"},"p":"claude","c":"/tmp/claude-x"}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 155 @@@
+# resolve "providers = nope\n" {"env":{},"p":"nope","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 156 @@@
+# resolve "providers = nope\n" {"env":{},"p":"custom","c":"bad command"}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 157 @@@
+# resolve "providers = nope\n" {"env":{},"p":"custom","c":"ok-cmd"}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 158 @@@
+# resolve "providers = nope\n" {"env":{},"p":"gemini","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 159 @@@
+# resolve "providers = nope\n" {"env":{"GSD_AGENT":"codex"},"p":"","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 160 @@@
+# resolve "providers = nope\n" {"env":{"GSD_AGENT":"my-legacy-agent"},"p":"","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 161 @@@
+# resolve "providers = nope\n" {"env":{"GSD_AGENT":"my-legacy-agent","GSD_CUSTOM_COMMAND":"envc"},"p":"","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 162 @@@
+# resolve "providers = nope\n" {"env":{"GSD_AGENT":"gemini"},"p":"","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 163 @@@
+# resolve "providers = nope\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 164 @@@
+# resolve "providers = nope\n" {"env":{"GSD_CLAUDE_COMMAND":"cc","GSD_CODEX_COMMAND":"cx"},"p":"codex","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom
+@@@ 165 @@@
+# resolve "providers = nope\n" {"env":{"GSD_AGENT_COMMAND":"generic"},"p":"claude","c":""}
+rc=64|
+unknown provider 'nope' in providers; expected claude, codex, or custom

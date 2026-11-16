@@ -1,0 +1,2298 @@
+@@@ 1 @@@
+rc=0
+--stdout--
+
+gsdt-migrate — move a repo to the gsdt-* command names (gsd-toolkit 0.10.0).
+
+Before 0.10.0 the toolkit's commands were gsd-*, the same start as every
+gsd-core skill. They are gsdt-* now, with no old-name aliases, so a repo set
+up before keeps files and settings that name the old commands. This moves
+them. Run it in the repo (any checkout; it works on the main one).
+
+Usage:
+  gsdt-migrate             dry run: list every change, change nothing
+                           (exit 1 when there is anything to do)
+  gsdt-migrate --apply     make the changes, then offer to commit the repo
+                           files it changed (steps 1-5 only; never pushes,
+                           never checks out). On a terminal it asks
+                           "Commit these N files? [y/N]"; with no terminal
+                           it does not commit and prints the command. It does
+                           not commit when one of those files already had
+                           uncommitted changes, or when this checkout is not
+                           on the base branch.
+  --commit                 with --apply: commit without asking. Only the
+                           files this run changed, nothing else that is
+                           staged or modified. Steps 6-7 are never committed.
+  gsdt-migrate --check     quiet; exit 1 when the repo or this clone still
+                           uses an old name (not step 7: install replaces
+                           those hooks, and doctor's T008 sees a stale one)
+  --repo DIR               the repo (default: the current directory)
+  -h, --help               show this help
+
+What it changes (each only when it is there):
+  1. the five shims: scripts/gsd-*.sh → scripts/gsdt-*.sh (a shim you
+     edited is reported and left alone)
+  2. your pre-merge script: scripts/gsd-premerge-check.sh → gsdt-…
+  3. those paths where other tracked files name them (package.json, CI,
+     Makefile, .husky/…): exact paths only; never .planning/ or *.md
+  4. the repo hook in .claude/settings.json
+  5. the toolkit's marked blocks in .gsd/INSTRUCTIONS.md, CLAUDE.md,
+     AGENTS.md (text outside the markers is never touched)
+  6. this clone's git config: the merge driver's command, the
+     gsd-tracker section (→ gsdt-tracker), the post-merge hook
+  7. your Claude user settings: the toolkit's --global guard and
+     gsdt-rules hooks (only when an old one is there)
+What it only reports: open phase worktrees, old names in free text
+(.planning/, docs), files you edited by hand.
+
+Steps 6–7 are per clone: each teammate runs gsdt-migrate --apply in their
+own clone after the commit with steps 1–5 reaches them.
+--stderr--
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 2 @@@
+rc=0
+--stdout--
+
+gsdt-migrate — move a repo to the gsdt-* command names (gsd-toolkit 0.10.0).
+
+Before 0.10.0 the toolkit's commands were gsd-*, the same start as every
+gsd-core skill. They are gsdt-* now, with no old-name aliases, so a repo set
+up before keeps files and settings that name the old commands. This moves
+them. Run it in the repo (any checkout; it works on the main one).
+
+Usage:
+  gsdt-migrate             dry run: list every change, change nothing
+                           (exit 1 when there is anything to do)
+  gsdt-migrate --apply     make the changes, then offer to commit the repo
+                           files it changed (steps 1-5 only; never pushes,
+                           never checks out). On a terminal it asks
+                           "Commit these N files? [y/N]"; with no terminal
+                           it does not commit and prints the command. It does
+                           not commit when one of those files already had
+                           uncommitted changes, or when this checkout is not
+                           on the base branch.
+  --commit                 with --apply: commit without asking. Only the
+                           files this run changed, nothing else that is
+                           staged or modified. Steps 6-7 are never committed.
+  gsdt-migrate --check     quiet; exit 1 when the repo or this clone still
+                           uses an old name (not step 7: install replaces
+                           those hooks, and doctor's T008 sees a stale one)
+  --repo DIR               the repo (default: the current directory)
+  -h, --help               show this help
+
+What it changes (each only when it is there):
+  1. the five shims: scripts/gsd-*.sh → scripts/gsdt-*.sh (a shim you
+     edited is reported and left alone)
+  2. your pre-merge script: scripts/gsd-premerge-check.sh → gsdt-…
+  3. those paths where other tracked files name them (package.json, CI,
+     Makefile, .husky/…): exact paths only; never .planning/ or *.md
+  4. the repo hook in .claude/settings.json
+  5. the toolkit's marked blocks in .gsd/INSTRUCTIONS.md, CLAUDE.md,
+     AGENTS.md (text outside the markers is never touched)
+  6. this clone's git config: the merge driver's command, the
+     gsd-tracker section (→ gsdt-tracker), the post-merge hook
+  7. your Claude user settings: the toolkit's --global guard and
+     gsdt-rules hooks (only when an old one is there)
+What it only reports: open phase worktrees, old names in free text
+(.planning/, docs), files you edited by hand.
+
+Steps 6–7 are per clone: each teammate runs gsdt-migrate --apply in their
+own clone after the commit with steps 1–5 reaches them.
+--stderr--
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 3 @@@
+rc=0
+--stdout--
+
+gsdt-migrate — move a repo to the gsdt-* command names (gsd-toolkit 0.10.0).
+
+Before 0.10.0 the toolkit's commands were gsd-*, the same start as every
+gsd-core skill. They are gsdt-* now, with no old-name aliases, so a repo set
+up before keeps files and settings that name the old commands. This moves
+them. Run it in the repo (any checkout; it works on the main one).
+
+Usage:
+  gsdt-migrate             dry run: list every change, change nothing
+                           (exit 1 when there is anything to do)
+  gsdt-migrate --apply     make the changes, then offer to commit the repo
+                           files it changed (steps 1-5 only; never pushes,
+                           never checks out). On a terminal it asks
+                           "Commit these N files? [y/N]"; with no terminal
+                           it does not commit and prints the command. It does
+                           not commit when one of those files already had
+                           uncommitted changes, or when this checkout is not
+                           on the base branch.
+  --commit                 with --apply: commit without asking. Only the
+                           files this run changed, nothing else that is
+                           staged or modified. Steps 6-7 are never committed.
+  gsdt-migrate --check     quiet; exit 1 when the repo or this clone still
+                           uses an old name (not step 7: install replaces
+                           those hooks, and doctor's T008 sees a stale one)
+  --repo DIR               the repo (default: the current directory)
+  -h, --help               show this help
+
+What it changes (each only when it is there):
+  1. the five shims: scripts/gsd-*.sh → scripts/gsdt-*.sh (a shim you
+     edited is reported and left alone)
+  2. your pre-merge script: scripts/gsd-premerge-check.sh → gsdt-…
+  3. those paths where other tracked files name them (package.json, CI,
+     Makefile, .husky/…): exact paths only; never .planning/ or *.md
+  4. the repo hook in .claude/settings.json
+  5. the toolkit's marked blocks in .gsd/INSTRUCTIONS.md, CLAUDE.md,
+     AGENTS.md (text outside the markers is never touched)
+  6. this clone's git config: the merge driver's command, the
+     gsd-tracker section (→ gsdt-tracker), the post-merge hook
+  7. your Claude user settings: the toolkit's --global guard and
+     gsdt-rules hooks (only when an old one is there)
+What it only reports: open phase worktrees, old names in free text
+(.planning/, docs), files you edited by hand.
+
+Steps 6–7 are per clone: each teammate runs gsdt-migrate --apply in their
+own clone after the commit with steps 1–5 reaches them.
+--stderr--
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 4 @@@
+rc=2
+--stdout--
+--stderr--
+✖ unknown argument: --bogus (see gsdt-migrate --help)
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 5 @@@
+rc=0
+--stdout--
+
+gsdt-migrate — move a repo to the gsdt-* command names (gsd-toolkit 0.10.0).
+
+Before 0.10.0 the toolkit's commands were gsd-*, the same start as every
+gsd-core skill. They are gsdt-* now, with no old-name aliases, so a repo set
+up before keeps files and settings that name the old commands. This moves
+them. Run it in the repo (any checkout; it works on the main one).
+
+Usage:
+  gsdt-migrate             dry run: list every change, change nothing
+                           (exit 1 when there is anything to do)
+  gsdt-migrate --apply     make the changes, then offer to commit the repo
+                           files it changed (steps 1-5 only; never pushes,
+                           never checks out). On a terminal it asks
+                           "Commit these N files? [y/N]"; with no terminal
+                           it does not commit and prints the command. It does
+                           not commit when one of those files already had
+                           uncommitted changes, or when this checkout is not
+                           on the base branch.
+  --commit                 with --apply: commit without asking. Only the
+                           files this run changed, nothing else that is
+                           staged or modified. Steps 6-7 are never committed.
+  gsdt-migrate --check     quiet; exit 1 when the repo or this clone still
+                           uses an old name (not step 7: install replaces
+                           those hooks, and doctor's T008 sees a stale one)
+  --repo DIR               the repo (default: the current directory)
+  -h, --help               show this help
+
+What it changes (each only when it is there):
+  1. the five shims: scripts/gsd-*.sh → scripts/gsdt-*.sh (a shim you
+     edited is reported and left alone)
+  2. your pre-merge script: scripts/gsd-premerge-check.sh → gsdt-…
+  3. those paths where other tracked files name them (package.json, CI,
+     Makefile, .husky/…): exact paths only; never .planning/ or *.md
+  4. the repo hook in .claude/settings.json
+  5. the toolkit's marked blocks in .gsd/INSTRUCTIONS.md, CLAUDE.md,
+     AGENTS.md (text outside the markers is never touched)
+  6. this clone's git config: the merge driver's command, the
+     gsd-tracker section (→ gsdt-tracker), the post-merge hook
+  7. your Claude user settings: the toolkit's --global guard and
+     gsdt-rules hooks (only when an old one is there)
+What it only reports: open phase worktrees, old names in free text
+(.planning/, docs), files you edited by hand.
+
+Steps 6–7 are per clone: each teammate runs gsdt-migrate --apply in their
+own clone after the commit with steps 1–5 reaches them.
+--stderr--
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 6 @@@
+rc=2
+--stdout--
+--stderr--
+✖ unknown argument: --bogus (see gsdt-migrate --help)
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 7 @@@
+rc=2
+--stdout--
+--stderr--
+✖ --repo needs a directory
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 8 @@@
+rc=2
+--stdout--
+--stderr--
+✖ --repo needs a directory
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 9 @@@
+rc=2
+--stdout--
+--stderr--
+✖ unknown argument: x (see gsdt-migrate --help)
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 10 @@@
+rc=2
+--stdout--
+--stderr--
+✖ not a git repo: /nonexistent/dir
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+
+@@@ 11 @@@
+rc=1
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+shims:
+  scripts/gsd-new-worktree-feature.sh → scripts/gsdt-new-worktree-feature.sh
+  scripts/gsd-finish-worktree-feature.sh → scripts/gsdt-finish-worktree-feature.sh
+  scripts/gsd-derive-port.sh → scripts/gsdt-derive-port.sh
+  scripts/gsd-planning-repair.sh → scripts/gsdt-planning-repair.sh
+  scripts/hooks/gsd-worktree-guard.sh → scripts/hooks/gsdt-worktree-guard.sh
+  scripts/gsd-premerge-check.sh → scripts/gsdt-premerge-check.sh (your pre-merge script, renamed as it is)
+references:
+  Makefile:2: 	@scripts/gsd-premerge-check.sh
+  Makefile:3: 	scripts/hooks/gsd-worktree-guard.sh x
+  package.json:1: {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","é":"scripts/gsd-premerge-check.sh ü"}}
+repo hook:
+  .claude/settings.json: hook scripts/hooks/gsd-worktree-guard.sh → gsdt-worktree-guard.sh
+instruction blocks:
+  .gsd/INSTRUCTIONS.md: the gsd-toolkit:canonical block, rewritten with the gsdt-* names
+  CLAUDE.md: the gsd-toolkit:provider block, rewritten with the gsdt-* names
+  AGENTS.md: the gsd-toolkit:provider block, rewritten with the gsdt-* names
+this clone (.git/config):
+  merge.gsd-planning.driver: gsd-planning-merge → gsdt-planning-merge (the driver key stays gsd-planning)
+  git config section gsd-tracker → gsdt-tracker (3 key(s))
+  .git/hooks/post-merge (not versioned): gsd-planning-repair → gsdt-planning-repair
+your Claude settings:
+  <S>/user-settings.json: the toolkit's hooks gsd-worktree-guard / gsd-rules → gsdt-*
+
+notes:
+  • 2 line(s) of free text still name old gsd-* commands (not changed; fix them if you like): .planning/notes.md:1 CLAUDE.md:3 
+
+17 change(s). Nothing changed yet — run: gsdt-migrate --apply
+--stderr--
+--files--
+.claude/settings.json: 644 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/hooks/gsd-worktree-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+.claude/settings.local.json: 644 {
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[merge "gsd-planning"]
+	driver = gsd-planning-merge %O %A %B %P
+	name = GSD planning files: union, then reconcile single-value lines
+[gsd-tracker]
+	profile = acme
+	statusStart = in progress
+	emptyval = 
+
+.git/hooks/post-merge: 755 #!/usr/bin/env sh
+# Installed by gsd-bootstrap-repo (gsd-toolkit).
+# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.
+# A pull whose driver was missing, or a merge done by another tool, can still
+# leave both sides of a single-value line behind â reconcile them here.
+command -v gsd-planning-repair >/dev/null 2>&1 || exit 0
+[ -d .planning ] || exit 0
+gsd-planning-repair || true
+
+lock: false
+.gitattributes: 644 .planning/ROADMAP.md merge=gsd-planning
+.planning/STATE.md merge=gsd-planning
+
+.gitignore: 644 .gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+.gsd/INSTRUCTIONS.md: 644 
+<!-- gsd-toolkit:canonical:start -->
+# GSD worktree workflow
+
+This repo uses gsd-toolkit. Its full rules come from the installed toolkit:
+run `gsd-rules` and follow its output (Claude Code loads it when a session
+starts). If `gsd-rules` is not found, install the toolkit:
+https://github.com/malyeg/gsd-toolkit#install
+
+These hold even without the toolkit (a teammate, CI, a cloud session):
+- One phase = one `phase-<N>-<slug>` git worktree; the main checkout stays
+  on the base branch.
+- Run `gsd-flow-next <N>` before every phase action and follow it.
+- `gsd-finish` is never automatic: run it only when the user asks, as the
+  last action (it removes the worktree).
+- Never bypass a guard unless the user explicitly asks for `GSD_SKIP_GUARD=1`.
+
+Providers: `claude,codex` (default: first, `claude`); base `main`;
+worktrees `../proj-worktrees/`.
+<!-- gsd-toolkit:canonical:end -->
+
+.gsd.conf: 644 # .gsd.conf â committed, inspectable GSD worktree configuration.
+base = main
+wtdir = proj-worktrees
+install = none
+providers = claude,codex
+# start_mode = discuss  # optional; default is flow (gsdt-start opens /gsdt-flow)
+# flow = strict
+# ui_gates = strict  # UI gates: warn (default), strict, off
+
+.planning/ROADMAP.md: 644 # Roadmap
+
+### Phase 1: One
+
+.planning/STATE.md: 644 # State
+
+.planning/notes.md: 644 Run gsd-start -p 1, then gsd-finish.
+
+AGENTS.md: 644 
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (codex adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+Before any GSD or phase work, run `gsd-rules` and follow its output: it prints
+the toolkit's rules for the installed version.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+CLAUDE.md: 644 # My project
+
+Our own text: run gsd-start for a phase.
+
+<!-- gsd-toolkit:provider:start -->
+## GSD worktrees (claude adapter)
+
+Read and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).
+The toolkit's rules are the output of `gsd-rules`: a session-start hook loads
+them ("GSD toolkit rules"); when they are not in your context, run `gsd-rules`
+before any GSD or phase work and follow its output.
+Use the `gsdt-flow` skill when it is available; otherwise run
+`gsd-flow-next <N>` and follow each printed action.
+For toolkit command syntax and workflow order, this marked adapter and the
+canonical document supersede older unmarked GSD text in this file. Continue to
+follow repository-specific policy from that older text.
+<!-- gsd-toolkit:provider:end -->
+
+Makefile: 644 a:
+	@scripts/gsd-premerge-check.sh
+	scripts/hooks/gsd-worktree-guard.sh x
+b: # xscripts/gsd-derive-port.sh
+
+package.json: 644 {"scripts":{"dev":"PORT=$(bash ../../scripts/gsd-derive-port.sh 3000) next dev","repair":"scripts/gsd-planning-repair.sh","Ã©":"scripts/gsd-premerge-check.sh Ã¼"}}
+
+scripts/gsd-derive-port.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-derive-port). Referenced from app package.json dev scripts, so it
+# degrades gracefully: without the toolkit (CI, a teammate's machine) it
+# prints the bare base port and plain `dev` keeps working.
+command -v gsd-derive-port >/dev/null 2>&1 && exec gsd-derive-port "$@"
+echo "${1:?usage: gsd-derive-port.sh <base-port>}"
+
+scripts/gsd-finish-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-finish). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-finish >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-finish not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-finish "$@"
+
+scripts/gsd-new-worktree-feature.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-wt-new). This file exists so committed references keep working
+# and never needs updating. Repo settings: .gsd.conf at the repo root.
+command -v gsd-wt-new >/dev/null 2>&1 \
+  || { echo "error: gsd-wt-new not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-wt-new "$@"
+
+scripts/gsd-planning-repair.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real logic lives in the gsd-toolkit package
+# (bin/gsdt-planning-repair). This file exists so committed references (CI
+# jobs, git hooks, package.json scripts) keep working and never need updating.
+# Repo settings: .gsd.conf at the repo root.
+command -v gsd-planning-repair >/dev/null 2>&1 \
+  || { echo "error: gsd-planning-repair not found â install gsd-toolkit (https://github.com/malyeg/gsd-toolkit)" >&2; exit 1; }
+exec gsd-planning-repair "$@"
+
+scripts/gsd-premerge-check.sh: 755 #!/bin/sh
+# the team's own checks
+exit 0
+
+scripts/hooks/gsd-worktree-guard.sh: 755 #!/usr/bin/env bash
+# gsd-worktrees shim â the real guard lives in the gsd-toolkit package
+# (bin/gsdt-worktree-guard). Provider adapters may register this defense-in-depth
+# native hook; the supported shell flow calls the shared guard directly. This
+# shim fails open when the toolkit is missing.
+command -v gsd-worktree-guard >/dev/null 2>&1 || exit 0
+exec gsd-worktree-guard "$@"
+
+USER user-settings.json: 644 {
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [{"matcher": "Skill", "hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": "[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}, {"type": "command", "command": "echo mine"}]}]
+  }
+}
+

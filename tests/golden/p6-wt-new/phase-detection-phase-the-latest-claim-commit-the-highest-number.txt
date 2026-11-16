@@ -1,0 +1,1331 @@
+@@@ 1 @@@
+step 1 (gsdt-wt-new --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-02-padded   (branch 'phase-02-padded' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-02-padded/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-02-padded   (phase 02)
+Open an agent session there, then:
+    /gsd-discuss-phase 02 → /gsd-plan-phase 02 → /gsd-execute-phase 02
+Finish:  gsdt-finish 02
+
+--- stderr
+Preparing worktree (new branch 'phase-02-padded')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-02-padded
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-02-padded
+branch refs/heads/phase-02-padded
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: one
+
+### Phase 9: nine
+
+### Phase 10: ten
+
+### Phase 10.1: ten point one
+
+### Phase 02: padded
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-02-padded
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-02-padded/.gsd-install.status
+skipped
+
+── wt phase-02-padded/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-wt-new --phase 9 --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-9-nine   (branch 'phase-9-nine' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-9-nine/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-9-nine   (phase 9)
+Open an agent session there, then:
+    /gsd-discuss-phase 9 → /gsd-plan-phase 9 → /gsd-execute-phase 9
+Finish:  gsdt-finish 9
+
+--- stderr
+Preparing worktree (new branch 'phase-9-nine')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-02-padded
+phase-9-nine
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-02-padded
+branch refs/heads/phase-02-padded
+
+worktree <T>/shop-worktrees/phase-9-nine
+branch refs/heads/phase-9-nine
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: one
+
+### Phase 9: nine
+
+### Phase 10: ten
+
+### Phase 10.1: ten point one
+
+### Phase 02: padded
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-02-padded
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-02-padded/.gsd-install.status
+skipped
+
+── wt phase-02-padded/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt phase-9-nine
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-9-nine/.gsd-install.status
+skipped
+
+── wt phase-9-nine/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 3 @@@
+step 3 (gsdt-wt-new --phase 02 --no-install)
+rc=0
+--- stdout
+• branch 'phase-02-padded' already has a worktree — reusing it.
+
+✅ worktree ready: <T>/shop-worktrees/phase-02-padded   (phase 02)
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-02-padded
+phase-9-nine
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-02-padded
+branch refs/heads/phase-02-padded
+
+worktree <T>/shop-worktrees/phase-9-nine
+branch refs/heads/phase-9-nine
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: one
+
+### Phase 9: nine
+
+### Phase 10: ten
+
+### Phase 10.1: ten point one
+
+### Phase 02: padded
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-02-padded
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-02-padded/.gsd-install.status
+skipped
+
+── wt phase-02-padded/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt phase-9-nine
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-9-nine/.gsd-install.status
+skipped
+
+── wt phase-9-nine/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 4 @@@
+step 4 (gsdt-wt-new --phase 10 custom-slug --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-10-custom-slug   (branch 'phase-10-custom-slug' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-10-custom-slug/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-10-custom-slug   (phase 10)
+Open an agent session there, then:
+    /gsd-discuss-phase 10 → /gsd-plan-phase 10 → /gsd-execute-phase 10
+Finish:  gsdt-finish 10
+
+--- stderr
+Preparing worktree (new branch 'phase-10-custom-slug')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-02-padded
+phase-10-custom-slug
+phase-9-nine
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-02-padded
+branch refs/heads/phase-02-padded
+
+worktree <T>/shop-worktrees/phase-10-custom-slug
+branch refs/heads/phase-10-custom-slug
+
+worktree <T>/shop-worktrees/phase-9-nine
+branch refs/heads/phase-9-nine
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: one
+
+### Phase 9: nine
+
+### Phase 10: ten
+
+### Phase 10.1: ten point one
+
+### Phase 02: padded
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-02-padded
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-02-padded/.gsd-install.status
+skipped
+
+── wt phase-02-padded/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt phase-10-custom-slug
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-10-custom-slug/.gsd-install.status
+skipped
+
+── wt phase-10-custom-slug/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt phase-9-nine
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-9-nine/.gsd-install.status
+skipped
+
+── wt phase-9-nine/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 5 @@@
+step 1 (gsdt-wt-new --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-10.1-ten-point-one   (branch 'phase-10.1-ten-point-one' off main)
+HEAD is now at <sha> unrelated
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-10.1-ten-point-one/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-10.1-ten-point-one   (phase 10.1)
+Open an agent session there, then:
+    /gsd-discuss-phase 10.1 → /gsd-plan-phase 10.1 → /gsd-execute-phase 10.1
+Finish:  gsdt-finish 10.1
+
+--- stderr
+Preparing worktree (new branch 'phase-10.1-ten-point-one')
+
+--- files left behind
+── log
+unrelated
+init
+
+── branches
+main
+phase-10.1-ten-point-one
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-10.1-ten-point-one
+branch refs/heads/phase-10.1-ten-point-one
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: one
+
+### Phase 9: nine
+
+### Phase 10: ten
+
+### Phase 10.1: ten point one
+
+### Phase 02: padded
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-10.1-ten-point-one
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-10.1-ten-point-one/.gsd-install.status
+skipped
+
+── wt phase-10.1-ten-point-one/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 6 @@@
+step 1 (gsdt-wt-new --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-9-nine   (branch 'phase-9-nine' off main)
+HEAD is now at <sha> unrelated
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-9-nine/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-9-nine   (phase 9)
+Open an agent session there, then:
+    /gsd-discuss-phase 9 → /gsd-plan-phase 9 → /gsd-execute-phase 9
+Finish:  gsdt-finish 9
+
+--- stderr
+Preparing worktree (new branch 'phase-9-nine')
+
+--- files left behind
+── log
+unrelated
+init
+
+── branches
+main
+phase-9-nine
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-9-nine
+branch refs/heads/phase-9-nine
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 9: nine
+
+### Phase 02.10: a
+
+### Phase 02.2: b
+
+### Phase 2: c
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-9-nine
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-9-nine/.gsd-install.status
+skipped
+
+── wt phase-9-nine/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 7 @@@
+step 1 (gsdt-wt-new --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-3-three   (branch 'phase-3-three' off main)
+HEAD is now at <sha> claim
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-3-three/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-3-three   (phase 3)
+Open an agent session there, then:
+    /gsd-discuss-phase 3 → /gsd-plan-phase 3 → /gsd-execute-phase 3
+Finish:  gsdt-finish 3
+
+--- stderr
+Preparing worktree (new branch 'phase-3-three')
+
+--- files left behind
+── log
+claim
+init
+
+── branches
+main
+phase-3-three
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-3-three
+branch refs/heads/phase-3-three
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: one
+
+### Phase 3: three
+
+### Phase 7: seven
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-3-three
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-3-three/.gsd-install.status
+skipped
+
+── wt phase-3-three/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 8 @@@
+step 1 (gsdt-wt-new --phase 1 --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-1-fix-the-caf-api-v2   (branch 'phase-1-fix-the-caf-api-v2' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-1-fix-the-caf-api-v2/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-1-fix-the-caf-api-v2   (phase 1)
+Open an agent session there, then:
+    /gsd-discuss-phase 1 → /gsd-plan-phase 1 → /gsd-execute-phase 1
+Finish:  gsdt-finish 1
+
+--- stderr
+Preparing worktree (new branch 'phase-1-fix-the-caf-api-v2')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-fix-the-caf-api-v2
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-fix-the-caf-api-v2
+branch refs/heads/phase-1-fix-the-caf-api-v2
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: Fix the "CafÃ©" â API (v2)!
+
+### Phase 2: ***
+
+### Phase 3:
+
+### Phase 4: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-fix-the-caf-api-v2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-fix-the-caf-api-v2/.gsd-install.status
+skipped
+
+── wt phase-1-fix-the-caf-api-v2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 9 @@@
+step 2 (gsdt-wt-new --phase 2 --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-2-feature   (branch 'phase-2-feature' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-2-feature/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-2-feature   (phase 2)
+Open an agent session there, then:
+    /gsd-discuss-phase 2 → /gsd-plan-phase 2 → /gsd-execute-phase 2
+Finish:  gsdt-finish 2
+
+--- stderr
+Preparing worktree (new branch 'phase-2-feature')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-fix-the-caf-api-v2
+phase-2-feature
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-fix-the-caf-api-v2
+branch refs/heads/phase-1-fix-the-caf-api-v2
+
+worktree <T>/shop-worktrees/phase-2-feature
+branch refs/heads/phase-2-feature
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: Fix the "CafÃ©" â API (v2)!
+
+### Phase 2: ***
+
+### Phase 3:
+
+### Phase 4: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-fix-the-caf-api-v2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-fix-the-caf-api-v2/.gsd-install.status
+skipped
+
+── wt phase-1-fix-the-caf-api-v2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt phase-2-feature
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-2-feature/.gsd-install.status
+skipped
+
+── wt phase-2-feature/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 10 @@@
+step 3 (gsdt-wt-new --phase 3 --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-3-feature   (branch 'phase-3-feature' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-3-feature/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-3-feature   (phase 3)
+Open an agent session there, then:
+    /gsd-discuss-phase 3 → /gsd-plan-phase 3 → /gsd-execute-phase 3
+Finish:  gsdt-finish 3
+
+--- stderr
+Preparing worktree (new branch 'phase-3-feature')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-fix-the-caf-api-v2
+phase-2-feature
+phase-3-feature
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-fix-the-caf-api-v2
+branch refs/heads/phase-1-fix-the-caf-api-v2
+
+worktree <T>/shop-worktrees/phase-2-feature
+branch refs/heads/phase-2-feature
+
+worktree <T>/shop-worktrees/phase-3-feature
+branch refs/heads/phase-3-feature
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: Fix the "CafÃ©" â API (v2)!
+
+### Phase 2: ***
+
+### Phase 3:
+
+### Phase 4: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-fix-the-caf-api-v2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-fix-the-caf-api-v2/.gsd-install.status
+skipped
+
+── wt phase-1-fix-the-caf-api-v2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt phase-2-feature
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-2-feature/.gsd-install.status
+skipped
+
+── wt phase-2-feature/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt phase-3-feature
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-3-feature/.gsd-install.status
+skipped
+
+── wt phase-3-feature/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 11 @@@
+step 4 (gsdt-wt-new --phase 4 --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   (branch 'phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   (phase 4)
+Open an agent session there, then:
+    /gsd-discuss-phase 4 → /gsd-plan-phase 4 → /gsd-execute-phase 4
+Finish:  gsdt-finish 4
+
+--- stderr
+Preparing worktree (new branch 'phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-fix-the-caf-api-v2
+phase-2-feature
+phase-3-feature
+phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-fix-the-caf-api-v2
+branch refs/heads/phase-1-fix-the-caf-api-v2
+
+worktree <T>/shop-worktrees/phase-2-feature
+branch refs/heads/phase-2-feature
+
+worktree <T>/shop-worktrees/phase-3-feature
+branch refs/heads/phase-3-feature
+
+worktree <T>/shop-worktrees/phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+branch refs/heads/phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: Fix the "CafÃ©" â API (v2)!
+
+### Phase 2: ***
+
+### Phase 3:
+
+### Phase 4: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-fix-the-caf-api-v2
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-fix-the-caf-api-v2/.gsd-install.status
+skipped
+
+── wt phase-1-fix-the-caf-api-v2/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt phase-2-feature
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-2-feature/.gsd-install.status
+skipped
+
+── wt phase-2-feature/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt phase-3-feature
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-3-feature/.gsd-install.status
+skipped
+
+── wt phase-3-feature/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── wt phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/.gsd-install.status
+skipped
+
+── wt phase-4-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+
+@@@ 12 @@@
+step 1 (gsdt-wt-new --phase 1. --no-install)
+rc=1
+--- stdout
+
+--- stderr
+error: phase 1. not found in <T>/shop/.planning/ROADMAP.md
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 12: twelve
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 13 @@@
+step 2 (gsdt-wt-new --phase 1.2 --no-install)
+rc=1
+--- stdout
+
+--- stderr
+error: phase 1.2 not found in <T>/shop/.planning/ROADMAP.md
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 12: twelve
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 14 @@@
+step 3 (gsdt-wt-new --phase 12 --no-install)
+rc=0
+--- stdout
+▶ creating worktree: <T>/shop-worktrees/phase-12-twelve   (branch 'phase-12-twelve' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-12-twelve/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-12-twelve   (phase 12)
+Open an agent session there, then:
+    /gsd-discuss-phase 12 → /gsd-plan-phase 12 → /gsd-execute-phase 12
+Finish:  gsdt-finish 12
+
+--- stderr
+Preparing worktree (new branch 'phase-12-twelve')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-12-twelve
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-12-twelve
+branch refs/heads/phase-12-twelve
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 12: twelve
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-12-twelve
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-12-twelve/.gsd-install.status
+skipped
+
+── wt phase-12-twelve/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+
+── merge driver
+

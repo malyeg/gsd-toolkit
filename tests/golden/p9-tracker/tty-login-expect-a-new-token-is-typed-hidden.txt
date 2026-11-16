@@ -1,0 +1,27 @@
+@@@ 1 @@@
+rc=0
+spawn <PKG>/bin/gsdt-tracker login brandnew
+ClickUp API token for profile brandnew (ClickUp → Settings → Apps; typing is hidden): 
+✔ ClickUp token OK — saved → <ROOT>/home/.config/gsd/clickup-brandnew.env (only you can read it)
+✔ this repo now uses profile brandnew (git config gsdt-tracker.profile: this clone and its worktrees, never committed)
+
+@@@ 2 @@@
+curl.log:
+GET /user 
+
+argv:
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_brand-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+
+tracker.log:
+
+home:
+.config/gsd/clickup-brandnew.env 600 CLICKUP_API_TOKEN=pk_brand
+
+plain git config:
+gsdt-tracker.profile=brandnew
+gsd git config:
+
+cust git config:
+
+cu git config:
+

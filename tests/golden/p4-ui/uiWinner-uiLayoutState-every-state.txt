@@ -1,0 +1,93 @@
+@@@ 1 @@@
+# missing
+missing
+@@@ 2 @@@
+# nosketch
+nosketch
+@@@ 3 @@@
+# skip
+skip
+@@@ 4 @@@
+# skip reason
+skip
+@@@ 5 @@@
+# skipper is a path
+badsketch
+@@@ 6 @@@
+# badsketch
+badsketch
+@@@ 7 @@@
+# no README → nowinner
+nowinner
+@@@ 8 @@@
+# winner "---\nwinner: v2\n---\n"
+v2
+@@@ 9 @@@
+# readme "---\nwinner: v2\n---\n"
+ok
+@@@ 10 @@@
+# winner "---\nwinner: \"v2\"\n---\n"
+v2
+@@@ 11 @@@
+# readme "---\nwinner: \"v2\"\n---\n"
+ok
+@@@ 12 @@@
+# winner "---\nwinner: null\n---\n"
+
+@@@ 13 @@@
+# readme "---\nwinner: null\n---\n"
+nowinner
+@@@ 14 @@@
+# winner "---\nwinner: ~\n---\n"
+
+@@@ 15 @@@
+# readme "---\nwinner: ~\n---\n"
+nowinner
+@@@ 16 @@@
+# winner "---\nwinner: none\n---\n"
+
+@@@ 17 @@@
+# readme "---\nwinner: none\n---\n"
+nowinner
+@@@ 18 @@@
+# winner "---\nwinner:\n---\n"
+
+@@@ 19 @@@
+# readme "---\nwinner:\n---\n"
+nowinner
+@@@ 20 @@@
+# winner "winner: v2\n"
+
+@@@ 21 @@@
+# readme "winner: v2\n"
+nowinner
+@@@ 22 @@@
+# winner "---\ntitle: x\n---\nwinner: v2\n"
+
+@@@ 23 @@@
+# readme "---\ntitle: x\n---\nwinner: v2\n"
+nowinner
+@@@ 24 @@@
+# winner "---\nwinner: 'a b'\n---\n"
+ab
+@@@ 25 @@@
+# readme "---\nwinner: 'a b'\n---\n"
+ok
+@@@ 26 @@@
+# nopages
+nopages
+@@@ 27 @@@
+# ok
+ok
+@@@ 28 @@@
+# shots
+missing
+@@@ 29 @@@
+# shots
+ok
+@@@ 30 @@@
+# shots
+skip
+@@@ 31 @@@
+# shots
+ok

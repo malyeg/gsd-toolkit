@@ -1,0 +1,72 @@
+@@@ 1 @@@
+### --provider codex
+rc=0
+--- stdout
+gsdt-batch-report: not supported yet for codex — it reads Claude Code transcripts only.
+
+--- stderr
+
+@@@ 2 @@@
+### --provider custom --dir <W>/proj
+rc=0
+--- stdout
+gsdt-batch-report: not supported yet for custom — it reads Claude Code transcripts only.
+
+--- stderr
+
+@@@ 3 @@@
+### --provider gemini
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: Gemini is no longer supported (gsd-core, the new GSD, dropped it)
+
+@@@ 4 @@@
+### --provider gemini --dir <W>/proj
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: Gemini is no longer supported (gsd-core, the new GSD, dropped it)
+
+@@@ 5 @@@
+### --provider nope
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: unknown provider: nope (claude, codex, custom)
+
+@@@ 6 @@@
+### --provider claude --dir <W>/proj
+rc=0
+--- stdout
+gsdt-batch-report — 1 batch · 3 items · <W>/proj
+  cccc3333  <DT> → <TM>  /gsdt-batch  3 items (real 2, tiny 1) [done line]
+
+ROLE                         AGENTS  TURNS BASH/AG  FRESH IN  CACHE WR  CACHE RD   OUTPUT  WEIGHTED
+coordinator · sonnet              –      5       –         5        50       500        5       118
+gsd-planner · opus                2      2     0.0         2         2         2        2         5
+general-purpose · sonnet          1      1     0.0         1         1         1        1         2
+TOTAL                             3      8     0.0         8        53       503        8       125
+
+PER ITEM — input = fresh + cache write + cache read (the baseline has only this sum)
+ROLE                             INPUT  WEIGHTED    OUTPUT    BASE IN   CHANGE
+coordinator · sonnet               185        39         2       3.0M    -100%
+gsd-planner · opus                   2         2         1       6.0M    -100%
+general-purpose · sonnet             1         1         0       1.0M    -100%
+TOTAL                              188        42         3      13.7M    -100%
+
+Baseline: 8 /gsd-quick-batch runs, 50 items, the week before 2026-11-09 (docs/plan-gsdt-batch.md). It summed WHOLE sessions, so its coordinator and helper numbers include work outside the batches.
+
+--- stderr
+
+@@@ 7 @@@
+### --provider Claude --dir <W>/proj
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch-report: unknown provider: Claude (claude, codex, custom)
+

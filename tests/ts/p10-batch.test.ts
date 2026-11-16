@@ -1,24 +1,15 @@
-// P10 parity (gsdt-batch): the TypeScript command behind bin/gsdt-batch against the pre-P10
-// bash command (tests/fixtures/p10-old-bins/gsdt-batch, run inside a package copy), each on
-// its own copy of the same fixture project. Compared: stdout, stderr, exit code of every step,
-// and the worktrees/branches/files/agent log left behind. Only temp roots and the package
-// dirs are normalized (both sides name a batch with today's local date, so it needs no
-// normalizing).
+// gsdt-batch: the command behind bin/gsdt-batch on a fixture project; stdout, stderr, exit code of
+// every step and the worktrees/branches/files/agent log left behind are compared with the saved
+// goldens in tests/golden/p10-batch/ (today's date is shown as <DATE>). Regenerate with
+// UPDATE_GOLDEN=1 and review the diff before committing.
 // Run: node --test tests/ts/p10-batch.test.ts
 import { spawnSync } from 'node:child_process';
-import { chmodSync, copyFileSync, cpSync, existsSync, mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { test } from 'node:test';
+import { test, golden } from './golden.ts';
 import assert from 'node:assert/strict';
 import { main, slugify, firstItem, isListItem } from '../../src/commands/batch.ts';
-import { PKG, commitAll, envFor, git, makeSide, norm, oldPkg, settle, snapshot, tmp, write, type Project, type R, type Side } from './p6-helpers.ts';
-
-// the old package: p6's copy (old start/wt-new bins) with the old gsdt-batch on top
-const old10 = path.join(tmp(), 'oldpkg10');
-cpSync(oldPkg, old10, { recursive: true });
-copyFileSync(path.join(PKG, 'tests', 'fixtures', 'p10-old-bins', 'gsdt-batch'), path.join(old10, 'bin', 'gsdt-batch'));
-chmodSync(path.join(old10, 'bin', 'gsdt-batch'), 0o755);
-writeFileSync(path.join(old10, '.git'), '');
+import { PKG, commitAll, envFor, git, makeSide, norm, settle, snapshot, tmp, write, type Project, type R, type Side } from './p6-helpers.ts';
 
 const pad = (n: number): string => String(n).padStart(2, '0');
 const D = ((d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`)(new Date());
@@ -59,9 +50,8 @@ type Step = {
 };
 const B = (s: Side, n: string): string => path.join(s.wtdir, n);
 
-function mk(kind: 'old' | 'new', p: Project, prep?: (s: Side) => void): Side {
-  const s = makeSide(kind, p);
-  s.pkg = kind === 'old' ? old10 : PKG;
+function mk(p: Project, prep?: (s: Side) => void): Side {
+  const s = makeSide('new', p);
   if (prep) prep(s);
   return s;
 }
@@ -79,30 +69,18 @@ function runStep(s: Side, st: Step): R {
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? -1 };
 }
 
-function eq(got: string, want: string, label: string): void {
-  if (got === want) return;
-  const a = got.split('\n');
-  const b = want.split('\n');
-  const i = a.findIndex((l, k) => l !== b[k]);
-  assert.fail(`${label}: line ${i + 1}\n  new: ${JSON.stringify(a[i])}\n  old: ${JSON.stringify(b[i])}`);
-}
-
 function scenario(project: Project, prep: ((s: Side) => void) | null, steps: Step[]): void {
-  const o = mk('old', project, prep ?? undefined);
-  const n = mk('new', project, prep ?? undefined);
+  const n = mk(project, prep ?? undefined);
+  const report = (s: Side, label: string, r: R): string =>
+    [label, `rc=${r.rc}`, '--- stdout', norm(s, r.out), '--- stderr', norm(s, r.err), '--- files left behind', snapshot(s)].join('\n').split(D).join('<DATE>');
   steps.forEach((st, i) => {
     const label = `step ${i + 1} (gsdt-batch ${(typeof st.args === 'function' ? st.args(n) : st.args).map((a) => norm(n, a)).join(' ')})`;
-    const ro = runStep(o, st);
     const rn = runStep(n, st);
-    settle(o);
     settle(n);
-    eq(norm(n, rn.out), norm(o, ro.out), `${label}: stdout`);
-    eq(norm(n, rn.err), norm(o, ro.err), `${label}: stderr`);
-    assert.equal(rn.rc, ro.rc, `${label}: exit code (old ${ro.rc})`);
     if (st.rc !== undefined) assert.equal(rn.rc, st.rc, `${label}: expected rc\n${rn.out}${rn.err}`);
     if (st.out) assert.match(rn.out, st.out, label);
     if (st.err) assert.match(rn.err, st.err, label);
-    eq(snapshot(n), snapshot(o), `${label}: files left behind`);
+    golden(report(n, label, rn));
   });
 }
 
@@ -366,7 +344,7 @@ test('a terminal: the session opens in the worktree (argv + cwd logged), exit co
 // which mangles it (a known bash quirk, see shellQuote in src/provider.ts); the TS output is
 // bash 5's. The name is still the same: each non-ASCII character is a word break.
 test('non-ASCII task text: the batch name and the quoted command', () => {
-  const n = mk('new', {});
+  const n = mk({});
   const r = runStep(n, P('Ünïcode ÀÉ stuff 123'));
   assert.equal(r.rc, 0);
   assert.match(r.out, /batch-\d{4}-\d{2}-\d{2}-n-code-stuff-123 && claude --model sonnet /);
@@ -376,7 +354,7 @@ test('non-ASCII task text: the batch name and the quoted command', () => {
 // bash exec'd the session, so a signal killed gsdt-batch itself; Node has no exec, so the signal
 // comes back as 128+n (the P6 convention).
 test('a session killed by a signal gives 128+n', () => {
-  const n = mk('new', {}, (s) => write(path.join(s.stub, 'claude'), '#!/bin/sh\nkill -TERM $$\n', 0o755));
+  const n = mk({}, (s) => write(path.join(s.stub, 'claude'), '#!/bin/sh\nkill -TERM $$\n', 0o755));
   assert.equal(runStep(n, { args: ['x'], tty: true }).rc, 143);
 });
 

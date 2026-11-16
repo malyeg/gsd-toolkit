@@ -1,0 +1,8 @@
+@@@ 1 @@@
+# registerMergeDriver stub=true
+rc=0
+driver="gsdt-planning-merge %O %A %B %P\n"
+@@@ 2 @@@
+# registerMergeDriver stub=false
+rc=0
+driver=""

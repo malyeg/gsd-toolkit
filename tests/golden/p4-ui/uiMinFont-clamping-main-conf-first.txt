@@ -1,0 +1,51 @@
+@@@ 1 @@@
+# min_font 
+12
+@@@ 2 @@@
+# min_font ui_min_font = 14
+14
+@@@ 3 @@@
+# min_font ui_min_font = 8
+8
+@@@ 4 @@@
+# min_font ui_min_font = 32
+32
+@@@ 5 @@@
+# min_font ui_min_font = 7
+12
+@@@ 6 @@@
+# min_font ui_min_font = 33
+12
+@@@ 7 @@@
+# min_font ui_min_font = 014
+14
+@@@ 8 @@@
+# min_font ui_min_font = 08
+8
+@@@ 9 @@@
+# min_font ui_min_font = 0
+12
+@@@ 10 @@@
+# min_font ui_min_font = abc
+12
+@@@ 11 @@@
+# min_font ui_min_font = 1.5
+12
+@@@ 12 @@@
+# min_font ui_min_font = -9
+12
+@@@ 13 @@@
+# min_font ui_min_font = 99999999999999999999
+12
+@@@ 14 @@@
+# min_font ui_min_font = 12px
+12
+@@@ 15 @@@
+# min_font ui_min_font = 18  # big
+18
+@@@ 16 @@@
+# min_font worktree → main wins
+20
+@@@ 17 @@@
+# min_font non-repo
+12

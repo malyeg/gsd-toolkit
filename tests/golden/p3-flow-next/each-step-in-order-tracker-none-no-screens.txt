@@ -1,0 +1,240 @@
+@@@ 1 @@@
+order empty 
+rc=0
+out="step=discuss\nrun=/gsd-discuss-phase 7\nstop=discuss asks the user the open questions\nnote=run it live — never auto-answer\n"
+err=""
+@@@ 2 @@@
+order empty --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"discuss\",\"run\":\"/gsd-discuss-phase 7\",\"then\":\"\",\"stop\":\"discuss asks the user the open questions\",\"note\":\"run it live — never auto-answer\"}\n{\"phase\":\"7\",\"step\":\"plan\",\"run\":\"/gsd-plan-phase 7 --research\",\"then\":\"\",\"stop\":\"\",\"note\":\"\"}\n{\"phase\":\"7\",\"step\":\"review\",\"run\":\"/gsd-review --phase 7 --codex\",\"then\":\"/gsd-plan-phase 7 --reviews\",\"stop\":\"show the user the independent findings before the replan; verify each against the plans, never accept on trust\",\"note\":\"independent reviewer: codex; external gsd-review capability required for automatic delegation. If unavailable, hand off the plans to a separate reviewer session and record 07-REVIEWS.md; never skip the gate. On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete 07-REVIEWS.md if one was written, then run this step again.\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 3 @@@
+order empty (N from the branch)
+rc=0
+out="step=discuss\nrun=/gsd-discuss-phase 7\nstop=discuss asks the user the open questions\nnote=run it live — never auto-answer\n"
+err=""
+@@@ 4 @@@
+order context 
+rc=0
+out="step=plan\nrun=/gsd-plan-phase 7 --research\n"
+err=""
+@@@ 5 @@@
+order context --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"plan\",\"run\":\"/gsd-plan-phase 7 --research\",\"then\":\"\",\"stop\":\"\",\"note\":\"\"}\n{\"phase\":\"7\",\"step\":\"review\",\"run\":\"/gsd-review --phase 7 --codex\",\"then\":\"/gsd-plan-phase 7 --reviews\",\"stop\":\"show the user the independent findings before the replan; verify each against the plans, never accept on trust\",\"note\":\"independent reviewer: codex; external gsd-review capability required for automatic delegation. If unavailable, hand off the plans to a separate reviewer session and record 07-REVIEWS.md; never skip the gate. On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete 07-REVIEWS.md if one was written, then run this step again.\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 6 @@@
+order context (N from the branch)
+rc=0
+out="step=ui-decision\nstop=does phase 7 have screens? if the user already said (discuss, ticket, this session), use that; otherwise ask once. Then re-run with --ui or --no-ui\nnote=UI is agreed BEFORE planning; plan-phase would otherwise auto-generate an un-agreed UI-SPEC\n"
+err=""
+@@@ 7 @@@
+order plans, no reviews 
+rc=0
+out="step=review\nrun=/gsd-review --phase 7 --codex\nthen=/gsd-plan-phase 7 --reviews\nstop=show the user the independent findings before the replan; verify each against the plans, never accept on trust\nnote=independent reviewer: codex; external gsd-review capability required for automatic delegation. If unavailable, hand off the plans to a separate reviewer session and record 07-REVIEWS.md; never skip the gate. On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete 07-REVIEWS.md if one was written, then run this step again.\n"
+err=""
+@@@ 8 @@@
+order plans, no reviews --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"review\",\"run\":\"/gsd-review --phase 7 --codex\",\"then\":\"/gsd-plan-phase 7 --reviews\",\"stop\":\"show the user the independent findings before the replan; verify each against the plans, never accept on trust\",\"note\":\"independent reviewer: codex; external gsd-review capability required for automatic delegation. If unavailable, hand off the plans to a separate reviewer session and record 07-REVIEWS.md; never skip the gate. On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete 07-REVIEWS.md if one was written, then run this step again.\"}\n{\"phase\":\"7\",\"step\":\"execute\",\"run\":\"/gsd-execute-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"2 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 9 @@@
+order plans, no reviews (N from the branch)
+rc=0
+out="step=review\nrun=/gsd-review --phase 7 --codex\nthen=/gsd-plan-phase 7 --reviews\nstop=show the user the independent findings before the replan; verify each against the plans, never accept on trust\nnote=independent reviewer: codex; external gsd-review capability required for automatic delegation. If unavailable, hand off the plans to a separate reviewer session and record 07-REVIEWS.md; never skip the gate. On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete 07-REVIEWS.md if one was written, then run this step again.\n"
+err=""
+@@@ 10 @@@
+order reviews empty 
+rc=0
+out="step=execute\nrun=/gsd-execute-phase 7\nnote=2 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\n"
+err=""
+@@@ 11 @@@
+order reviews empty --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"execute\",\"run\":\"/gsd-execute-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"2 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 12 @@@
+order reviews empty (N from the branch)
+rc=0
+out="step=execute\nrun=/gsd-execute-phase 7\nnote=2 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\n"
+err=""
+@@@ 13 @@@
+order summary 1 
+rc=0
+out="step=execute\nrun=/gsd-execute-phase 7\nnote=1 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\n"
+err=""
+@@@ 14 @@@
+order summary 1 --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"execute\",\"run\":\"/gsd-execute-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"1 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 15 @@@
+order summary 1 (N from the branch)
+rc=0
+out="step=execute\nrun=/gsd-execute-phase 7\nnote=1 plan(s) without a SUMMARY; execute-phase runs code review and the verifier itself\n"
+err=""
+@@@ 16 @@@
+order summaries 
+rc=0
+out="step=verifier\nrun=/gsd-execute-phase 7\nnote=every plan has a SUMMARY but there is no VERIFICATION.md; with all plans complete, execute-phase only runs the verifier\n"
+err=""
+@@@ 17 @@@
+order summaries --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"verifier\",\"run\":\"/gsd-execute-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"every plan has a SUMMARY but there is no VERIFICATION.md; with all plans complete, execute-phase only runs the verifier\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 18 @@@
+order summaries (N from the branch)
+rc=0
+out="step=verifier\nrun=/gsd-execute-phase 7\nnote=every plan has a SUMMARY but there is no VERIFICATION.md; with all plans complete, execute-phase only runs the verifier\n"
+err=""
+@@@ 19 @@@
+order verification gaps 
+rc=0
+out="step=gaps\nrun=/gsd-plan-phase 7 --gaps\nthen=/gsd-execute-phase 7 --gaps-only\nnote=VERIFICATION.md reports gaps\n"
+err=""
+@@@ 20 @@@
+order verification gaps --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"gaps\",\"run\":\"/gsd-plan-phase 7 --gaps\",\"then\":\"/gsd-execute-phase 7 --gaps-only\",\"stop\":\"\",\"note\":\"VERIFICATION.md reports gaps\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 21 @@@
+order verification gaps (N from the branch)
+rc=0
+out="step=gaps\nrun=/gsd-plan-phase 7 --gaps\nthen=/gsd-execute-phase 7 --gaps-only\nnote=VERIFICATION.md reports gaps\n"
+err=""
+@@@ 22 @@@
+order verification passed 
+rc=0
+out="step=verify-work\nrun=/gsd-verify-work 7\nnote=agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\n"
+err=""
+@@@ 23 @@@
+order verification passed --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 24 @@@
+order verification passed (N from the branch)
+rc=0
+out="step=verify-work\nrun=/gsd-verify-work 7\nnote=agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\n"
+err=""
+@@@ 25 @@@
+order uat partial 
+rc=0
+out="step=verify-work\nrun=/gsd-verify-work 7\nnote=open UAT items: 07-HUMAN-UAT.md(partial)\n"
+err=""
+@@@ 26 @@@
+order uat partial --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"open UAT items: 07-HUMAN-UAT.md(partial)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 27 @@@
+order uat partial (N from the branch)
+rc=0
+out="step=verify-work\nrun=/gsd-verify-work 7\nnote=open UAT items: 07-HUMAN-UAT.md(partial)\n"
+err=""
+@@@ 28 @@@
+order uat complete 
+rc=0
+out="step=code-review\nrun=/gsd-code-review 7\nnote=execute-phase normally produces this; missing means it errored\n"
+err=""
+@@@ 29 @@@
+order uat complete --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 30 @@@
+order uat complete (N from the branch)
+rc=0
+out="step=code-review\nrun=/gsd-code-review 7\nnote=execute-phase normally produces this; missing means it errored\n"
+err=""
+@@@ 31 @@@
+order review issues 
+rc=0
+out="step=code-review\nrun=/gsd-code-review 7 --fix\nnote=REVIEW.md status: issues_found\n"
+err=""
+@@@ 32 @@@
+order review issues --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7 --fix\",\"then\":\"\",\"stop\":\"\",\"note\":\"REVIEW.md status: issues_found\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 33 @@@
+order review issues (N from the branch)
+rc=0
+out="step=code-review\nrun=/gsd-code-review 7 --fix\nnote=REVIEW.md status: issues_found\n"
+err=""
+@@@ 34 @@@
+order review fix 
+rc=0
+out="step=validate\nrun=/gsd-validate-phase 7\nnote=no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\n"
+err=""
+@@@ 35 @@@
+order review fix --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 36 @@@
+order review fix (N from the branch)
+rc=0
+out="step=validate\nrun=/gsd-validate-phase 7\nnote=no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\n"
+err=""
+@@@ 37 @@@
+order validation draft 
+rc=0
+out="step=validate\nrun=/gsd-validate-phase 7\nnote=07-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit): find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\n"
+err=""
+@@@ 38 @@@
+order validation draft --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"07-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit): find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 39 @@@
+order validation draft (N from the branch)
+rc=0
+out="step=validate\nrun=/gsd-validate-phase 7\nnote=07-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit): find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\n"
+err=""
+@@@ 40 @@@
+order validation ok 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 41 @@@
+order validation ok --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 42 @@@
+order validation ok (N from the branch)
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 43 @@@
+order security open 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=2 open threat(s)\n"
+err=""
+@@@ 44 @@@
+order security open --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"2 open threat(s)\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 45 @@@
+order security open (N from the branch)
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=2 open threat(s)\n"
+err=""
+@@@ 46 @@@
+order security closed 
+rc=0
+out="step=done\nrun=gsdt-finish\nstop=gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\n"
+err=""
+@@@ 47 @@@
+order security closed --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 48 @@@
+order security closed (N from the branch)
+rc=0
+out="step=done\nrun=gsdt-finish\nstop=gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\n"
+err=""

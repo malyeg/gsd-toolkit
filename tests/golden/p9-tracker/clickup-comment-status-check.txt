@@ -1,0 +1,155 @@
+@@@ 1 @@@
+### step 0: ["comment","abc123","hello"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp abc123 → comment posted
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["comment","failput1","hello"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp failput1 → comment posted
+
+--- stderr
+
+@@@ 3 @@@
+### step 2: ["status","abc123","In QA é"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp abc123 → status 'In QA é'
+
+--- stderr
+
+@@@ 4 @@@
+### step 3: ["status","failput1","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=2
+--- stdout
+
+--- stderr
+gsdt-tracker: ClickUp API PUT /task/failput1 → HTTP 403: {"err":"nope"}
+
+@@@ 5 @@@
+### step 4: ["check"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp token OK
+
+--- stderr
+
+@@@ 6 @@@
+### step 5: ["check"] {"CLICKUP_API_TOKEN":"pk_bad","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=2
+--- stdout
+
+--- stderr
+gsdt-tracker: ClickUp API GET /user → HTTP 401: {"err":"Token invalid"}
+
+@@@ 7 @@@
+### step 6: ["check"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","CURL_DEAD":"1"}
+rc=2
+--- stdout
+
+--- stderr
+gsdt-tracker: curl failed (network?)
+
+@@@ 8 @@@
+### step 7: ["check"] {"GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no CLICKUP_API_TOKEN — run gsdt-tracker login, or put CLICKUP_API_TOKEN=pk_… in /dev/null
+
+@@@ 9 @@@
+### step 8: ["check"] {"GSD_CLICKUP_CONFIG":"/dev/null","GSD_TRACKER_PROFILE":"work"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no CLICKUP_API_TOKEN for profile 'work' — run gsdt-tracker login work, or put CLICKUP_API_TOKEN=pk_… in /dev/null
+
+@@@ 10 @@@
+### step 9: ["check"] {"GSD_CLICKUP_CONFIG":"/dev/null","GSD_TRACKER_PROFILE":"bad/name"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: profile 'bad/name' is not a name (letters, digits, . _ -)
+
+@@@ 11 @@@
+### step 10: ["check"] {"GSD_TRACKER_PROFILE":"work"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no CLICKUP_API_TOKEN for profile 'work' — run gsdt-tracker login work, or put CLICKUP_API_TOKEN=pk_… in <ROOT>/home/.config/gsd/clickup-work.env
+
+@@@ 12 @@@
+### step 11: ["--tracker","clickup","check"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp token OK
+
+--- stderr
+
+@@@ 13 @@@
+### step 12: ["check"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","GSD_TRACKER":"clickup","GSD_TRACKER_PROFILE":"work"}
+rc=0
+--- stdout
+✔ ClickUp token OK (profile work)
+
+--- stderr
+
+@@@ 14 @@@
+### step 13: ["check"] {"GSD_TRACKER_PROFILE":""}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no CLICKUP_API_TOKEN for profile 'confprof' — run gsdt-tracker login confprof, or put CLICKUP_API_TOKEN=pk_… in <ROOT>/home/.config/gsd/clickup-confprof.env
+
+@@@ 15 @@@
+### step 14: ["check"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no CLICKUP_API_TOKEN for profile 'confprof' — run gsdt-tracker login confprof, or put CLICKUP_API_TOKEN=pk_… in <ROOT>/home/.config/gsd/clickup-confprof.env
+
+@@@ 16 @@@
+curl.log:
+POST /task/abc123/comment {"comment_text": "hello"}
+POST /task/failput1/comment {"comment_text": "hello"}
+PUT /task/abc123 {"status": "In QA \u00e9"}
+PUT /task/failput1 {"status": "x"}
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+GET /user 
+
+argv:
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "hello"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "hello"}-w\n%{http_code}https://api.clickup.com/api/v2/task/failput1/comment
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In QA \u00e9"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "x"}-w\n%{http_code}https://api.clickup.com/api/v2/task/failput1
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_bad-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+
+tracker.log:
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+

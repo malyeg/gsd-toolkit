@@ -1,0 +1,99 @@
+@@@ 1 @@@
+# owned same
+true
+@@@ 2 @@@
+# differs same
+false
+@@@ 3 @@@
+# differs same
+false
+@@@ 4 @@@
+# owned oldmark
+true
+@@@ 5 @@@
+# differs oldmark
+false
+@@@ 6 @@@
+# differs oldmark
+false
+@@@ 7 @@@
+# owned nomark
+false
+@@@ 8 @@@
+# differs nomark
+false
+@@@ 9 @@@
+# differs nomark
+false
+@@@ 10 @@@
+# owned changedfile
+true
+@@@ 11 @@@
+# differs changedfile
+true
+@@@ 12 @@@
+# differs changedfile
+true
+@@@ 13 @@@
+# owned extrafile
+true
+@@@ 14 @@@
+# differs extrafile
+true
+@@@ 15 @@@
+# differs extrafile
+true
+@@@ 16 @@@
+# owned missingfile
+true
+@@@ 17 @@@
+# differs missingfile
+true
+@@@ 18 @@@
+# differs missingfile
+true
+@@@ 19 @@@
+# owned changedskill
+true
+@@@ 20 @@@
+# differs changedskill
+true
+@@@ 21 @@@
+# differs changedskill
+true
+@@@ 22 @@@
+# owned oldfile
+true
+@@@ 23 @@@
+# differs oldfile
+true
+@@@ 24 @@@
+# differs oldfile
+true
+@@@ 25 @@@
+# owned nomd
+false
+@@@ 26 @@@
+# differs nomd
+true
+@@@ 27 @@@
+# differs nomd
+true
+@@@ 28 @@@
+# owned nonl
+false
+@@@ 29 @@@
+# differs nonl
+false
+@@@ 30 @@@
+# differs nonl
+false
+@@@ 31 @@@
+# owned absent
+false
+@@@ 32 @@@
+# differs absent
+true
+@@@ 33 @@@
+# differs absent
+true

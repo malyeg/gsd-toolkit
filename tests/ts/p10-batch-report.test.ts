@@ -1,28 +1,24 @@
-// P10 parity (gsdt-batch-report): the TypeScript command behind bin/gsdt-batch-report against the
-// pre-P10 bash + python command (tests/fixtures/p10-old-bins/, the python under lib/ of a copied
-// package), both reading the same transcript folders: the generator of tests/test-batch.sh, plus
-// folders made here (floats/bools in usage, timestamps in odd spellings, a non-ASCII session id,
+// gsdt-batch-report (src/batch-report.ts, behind bin/gsdt-batch-report) against saved goldens in
+// tests/golden/p10-batch-report/. It reads transcript folders: the generator of tests/test-batch.sh,
+// plus folders made here (floats/bools in usage, timestamps in odd spellings, a non-ASCII session id,
 // ties for "%.1f", /clear, next-batch and done-line endings, unlinked helpers, odd agent names).
-// Compared: stdout, stderr, exit code. Only the --help Exit line differs on purpose (exit 69 left).
+// Golden per call: args, exit code, stdout, stderr. Normalized: the temp dir (<W>) and every date,
+// time and epoch (the fixtures are made relative to now).
 // Run: node --test tests/ts/p10-batch-report.test.ts
+// Regenerate: UPDATE_GOLDEN=1 node --test tests/ts/p10-batch-report.test.ts; review the diff of
+// tests/golden/p10-batch-report/ by hand before committing.
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { chmodSync, cpSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { test } from 'node:test';
+import { test, golden } from './golden.ts';
 import { PKG, LOCALE_ENV } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p10-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
 
-const OLDPKG = path.join(W, 'oldpkg');
-mkdirSync(path.join(OLDPKG, 'bin'), { recursive: true });
-cpSync(path.join(PKG, 'lib'), path.join(OLDPKG, 'lib'), { recursive: true });
-writeFileSync(path.join(OLDPKG, 'lib', 'gsd_batch_report.py'), readFileSync(path.join(PKG, 'tests/fixtures/p10-old-bins/gsd_batch_report.py')));
-writeFileSync(path.join(OLDPKG, 'bin', 'gsdt-batch-report'), readFileSync(path.join(PKG, 'tests/fixtures/p10-old-bins/gsdt-batch-report')));
-chmodSync(path.join(OLDPKG, 'bin', 'gsdt-batch-report'), 0o755);
-const BINS = { old: path.join(OLDPKG, 'bin', 'gsdt-batch-report'), neu: path.join(PKG, 'bin', 'gsdt-batch-report') };
+const BINS = { neu: path.join(PKG, 'bin', 'gsdt-batch-report') };
 
 type R = { out: string; err: string; rc: number };
 function run(bin: string, args: string[], o: { cwd?: string; env?: Record<string, string> } = {}): R {
@@ -30,12 +26,19 @@ function run(bin: string, args: string[], o: { cwd?: string; env?: Record<string
   const r = spawnSync('bash', [bin, ...args], { cwd: o.cwd ?? W, encoding: 'utf8', env });
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? 1 };
 }
-/** run both; assert equal (help text: the old Exit line is the one allowed difference) */
+// machine- and run-specific text: the temp dir, and every date/time (the fixtures are made relative to now)
+const NORM = (t: string): string =>
+  t
+    .split(W.replace(/[^A-Za-z0-9]/g, '-')).join('<W-MANGLED>')
+    .split(W).join('<W>')
+    .replace(/\b\d{4}-\d\d-\d\d \d\d:\d\d\b/g, '<DT>')
+    .replace(/→ \d\d:\d\d\b/g, '→ <TM>')
+    .replace(/\b1[5-9]\d{8}(\.\d+)?\b/g, '<EPOCH>');
+const text = (r: R, args: string[]): string => `### ${args.join(' ')}\nrc=${r.rc}\n--- stdout\n${r.out}\n--- stderr\n${r.err}`;
+/** run the command, golden its result */
 function same(args: string[], o: { cwd?: string; env?: Record<string, string> } = {}): R {
-  const a = run(BINS.old, args, o);
   const b = run(BINS.neu, args, o);
-  a.out = a.out.replace('64 = bad usage;\n69 = no Python 3.7+.\n', '64 = bad usage.\n');
-  assert.deepEqual(b, a, `args: ${args.join(' ')}`);
+  golden(NORM(text(b, args)));
   return b;
 }
 
@@ -85,7 +88,7 @@ function writeSession(dir: string, id: string, lines: Array<Line | string>, help
 const ODD = path.join(W, 'odd');
 {
   const t = (m: number): string => iso(NOW - 5 * 86400 + 60 * m);
-  // Ties for "%.1f" (1250 → 1.2k, 1350 → 1.4k, 2500), floats and bools count as python counts them,
+  // Ties for "%.1f" (1250 → 1.2k, 1350 → 1.4k, 2500), floats and bools are counted like the old python did,
   // a done line with real/tiny, timestamps in other spellings, a helper nobody linked.
   writeSession(ODD, 'ünï-0001-session', [
     human(t(0), `earlier ${SECRET}`),
@@ -366,11 +369,6 @@ test('projdir() of the engine: the long path rule, first spelling when none exis
   mkdirSync(path.join(H, 'projects', `${lname.slice(0, 200)}-abc123`), { recursive: true });
   assert.equal(projdir(H, [long]), path.join(H, 'projects', `${lname.slice(0, 200)}-abc123`));
   assert.equal(projdir(H, ['/no/such dir']), path.join(H, 'projects', '-no-such-dir'));
-  // the same call through the old python
-  const old = spawnSync('python3', [path.join(OLDPKG, 'lib', 'gsd_batch_report.py'), 'projdir', '--home', H, '--repo', long, '--repo', '/no/such dir'], { encoding: 'utf8' });
-  assert.equal(old.stdout.trim(), projdir(H, [long, '/no/such dir']));
-  const old2 = spawnSync('python3', [path.join(OLDPKG, 'lib', 'gsd_batch_report.py'), 'projdir', '--home', H, '--repo', '/no/such dir'], { encoding: 'utf8' });
-  assert.equal(old2.stdout.trim(), projdir(H, ['/no/such dir']));
 });
 
 test('the launcher: no node on PATH', () => {

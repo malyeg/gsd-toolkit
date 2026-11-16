@@ -1,0 +1,9 @@
+@@@ 1 @@@
+# current branch
+trunk
+@@@ 2 @@@
+# main
+main
+@@@ 3 @@@
+# develop
+develop

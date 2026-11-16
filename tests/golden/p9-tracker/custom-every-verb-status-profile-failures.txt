@@ -1,0 +1,233 @@
+@@@ 1 @@@
+### step 0: ["start","PROJ-42","claimed it"] {}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["finish","PROJ-42","done it","extra"] {"GSD_TRACKER_STATUS_START":"Doing","GSD_TRACKER_STATUS_FINISH":"Shipped","GSD_TRACKER_PROFILE":"work"}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 3 @@@
+### step 2: ["start","PROJ-42","x"] {"GSD_CLICKUP_STATUS_START":"Legacy"}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 4 @@@
+### step 3: ["finish","PROJ-42","x"] {"GSD_CLICKUP_STATUS_FINISH":"LegacyF","GSD_TRACKER_STATUS_FINISH":""}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 5 @@@
+### step 4: ["comment","https://x/browse/PROJ-42","a comment"] {}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 6 @@@
+### step 5: ["status","tk-PROJ-42","In QA"] {}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 7 @@@
+### step 6: ["snapshot","PROJ-42"] {}
+rc=0
+--- stdout
+# Ticket PROJ-42
+
+product words
+
+--- stderr
+
+@@@ 8 @@@
+### step 7: ["snapshot","PROJ-42","rest"] {}
+rc=0
+--- stdout
+# Ticket PROJ-42
+
+product words
+
+--- stderr
+
+@@@ 9 @@@
+### step 8: ["snapshot","FAIL-1"] {}
+rc=2
+--- stdout
+
+--- stderr
+
+@@@ 10 @@@
+### step 9: ["start","FAIL-1","x"] {}
+rc=2
+--- stdout
+
+--- stderr
+
+@@@ 11 @@@
+### step 10: ["check"] {}
+rc=0
+--- stdout
+stdin:typed in
+
+--- stderr
+
+@@@ 12 @@@
+### step 11: ["create","PROJ","New thing","--label","x"] {}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 13 @@@
+### step 12: ["update","https://x/browse/PROJ-42","--title","y"] {}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 14 @@@
+### step 13: ["update","CU-123","--title","y"] {}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 15 @@@
+### step 14: ["tasks","--mine"] {}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 16 @@@
+### step 15: ["tasks"] {}
+rc=0
+--- stdout
+
+--- stderr
+
+@@@ 17 @@@
+### step 16: ["lists"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: unknown command: lists — see gsdt-tracker --help
+
+@@@ 18 @@@
+### step 17: ["api","GET","/x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: unknown command: api — see gsdt-tracker --help
+
+@@@ 19 @@@
+### step 18: ["--tracker","custom","which"] {}
+rc=0
+--- stdout
+custom
+
+--- stderr
+
+@@@ 20 @@@
+### step 19: ["--tracker","custom","check"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = custom needs its script: tracker_command = <script> in .gsd.conf, or git config gsdt-tracker.command <script>
+
+@@@ 21 @@@
+### step 20: ["--tracker","CUSTOM","check"] {"GSD_TRACKER_STATUS_START":"x"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = custom needs its script: tracker_command = <script> in .gsd.conf, or git config gsdt-tracker.command <script>
+
+@@@ 22 @@@
+### step 21: ["config"] {}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=gsd.conf
+tracker_ok=yes
+profile=
+profile_from=
+command=<ROOT>/cust/scripts/tracker.sh
+command_from=gsd.conf
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 23 @@@
+### step 22: ["config"] {"GSD_TRACKER_PROFILE":"p1"}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=gsd.conf
+tracker_ok=yes
+profile=p1
+profile_from=env
+profile_ok=yes
+command=<ROOT>/cust/scripts/tracker.sh
+command_from=gsd.conf
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 24 @@@
+### step 23: ["start","STDIN","x"] {}
+rc=0
+--- stdout
+piped to script
+--- stderr
+
+@@@ 25 @@@
+curl.log:
+
+argv:
+
+tracker.log:
+start|start PROJ-42 claimed it|status=|profile=
+finish|finish PROJ-42 done it extra|status=Shipped|profile=work
+start|start PROJ-42 x|status=Legacy|profile=
+finish|finish PROJ-42 x|status=LegacyF|profile=
+comment|comment PROJ-42 a comment|status=|profile=
+status|status PROJ-42 In QA|status=|profile=
+snapshot|snapshot PROJ-42|status=|profile=
+snapshot|snapshot PROJ-42 rest|status=|profile=
+snapshot|snapshot FAIL-1|status=|profile=
+start|start FAIL-1 x|status=|profile=
+check|check|status=|profile=
+create|create PROJ New thing --label x|status=|profile=
+update|update PROJ-42 --title y|status=|profile=
+update|update CU-123 --title y|status=|profile=
+tasks|tasks --mine|status=|profile=
+tasks|tasks|status=|profile=
+start|start STDIN x|status=|profile=
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+

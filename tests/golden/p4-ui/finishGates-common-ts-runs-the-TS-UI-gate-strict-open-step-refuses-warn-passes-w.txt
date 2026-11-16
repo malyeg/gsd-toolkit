@@ -1,0 +1,13 @@
+@@@ 1 @@@
+# finishGates ui_gates="ui_gates = strict\n"
+ok=false
+stderr:
+✗ phase 5 has screens and its UI steps are open (ui_gates = strict): the rendered pages were never checked (no 05-UI-CHECK.md).
+  In the phase worktree: gsdt-ui check 5   (or GSD_SKIP_GUARD=1 if the user asked to skip it)
+
+@@@ 2 @@@
+# finishGates ui_gates=""
+ok=true
+stderr:
+⚠ phase 5 has screens and its UI steps are open: the rendered pages were never checked (no 05-UI-CHECK.md) — next: gsdt-ui check 5
+

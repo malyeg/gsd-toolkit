@@ -1,0 +1,871 @@
+@@@ 1 @@@
+step 1 (gsdt-init --help)
+rc=0
+--- stdout
+gsdt-init — set up GSD in a repo that doesn't have it yet
+
+Runs gsdt-bootstrap-repo (shared scripts/config/instructions plus the selected
+provider adapter), then opens the agent session that makes the plan:
+
+  /gsd-new-project    when the repo has no planning docs (fresh interview)
+  /gsd-ingest-docs    when ADRs/PRDs/SPECs are detected (bootstrap from them)
+
+The plan is a conversation with the agent (its questions are where the
+project context comes from), so gsdt-init opens that session for you and,
+when you close it, checks that .planning/ROADMAP.md was written. With no
+terminal (a script, an agent's shell) or --no-launch it prints the command.
+
+Safe to re-run: if the repo is already initialized (.planning/ROADMAP.md
+exists), the workflow files are still repaired/synced from the source, but the
+planning state is never touched — you're just pointed back to gsdt-start.
+
+USAGE
+  gsdt-init [options]          # run from INSIDE the target repo
+
+OPTIONS
+  --new            force /gsd-new-project (skip docs detection)
+  --ingest         force /gsd-ingest-docs
+  --src <path>     deprecated compatibility flag; bootstrap ignores it
+  --base <branch>  base branch override (passed to gsdt-bootstrap-repo)
+  --no-commit      don't commit the bootstrap files (default: commit)
+  --no-ui          the project has no screens (backend, CLI): ui_gates = off
+  --tracker <t>    where the tickets live: none, clickup or custom. Without it,
+                   gsdt-init asks (in a terminal) when .gsd.conf sets no tracker
+  --tracker-command <path>  with --tracker custom: the repo's tracker script
+  --providers <list> comma-separated integrations to install, in default order
+  --provider <p>   provider for the initialization session; when --providers
+                   is omitted, also selects the single integration to install
+  --provider-command <p=path> executable override for one provider; repeatable
+  --agent-command <path> executable override (add --no-launch to print)
+  --model <id>     session model override; 'default' uses the CLI's own default
+  --agent <value>  compatibility alias: provider or custom executable
+  --launch         open the planning session (the default, in a terminal);
+                   an explicit --launch fails (127) when the agent CLI is missing
+  --no-launch      print the 'cd … && <agent> …' command instead of opening it
+  -h, --help       show this help
+
+EXAMPLES
+  cd ~/projects/acme/webshop && gsdt-init
+      Bootstrap + commit, then open the planning session; when it closes,
+      gsdt-init says whether the ROADMAP is ready.
+
+  cd ~/projects/acme/webshop && gsdt-init --no-launch
+      Same, but print the session command to run later.
+
+  gsdt-init --ingest --agent codex
+      Force ingest mode and open the session with the codex CLI.
+
+  gsdt-init --providers claude,codex --provider codex --no-launch
+      Install both integrations and print the Codex planning command.
+
+  gsdt-init --providers claude,codex --provider-command codex=/opt/bin/codex
+      Install Claude and Codex integrations with an explicit Codex executable.
+
+  gsdt-init --base main --no-launch
+      Bootstrap against 'main', print the planning command to run later.
+
+AFTER INITIALIZATION
+  gsdt-start -n "<description>"   begin each feature (claim + worktree + session).
+                              The first claim also turns on GSD's TDD mode
+                              (workflow.tdd_mode) unless the project set it.
+  gsdt-finish                  land it (merge back, push, clean up)
+
+RELATED
+  gsdt-bootstrap-repo   just the file installation (what gsdt-init wraps)
+  gsdt-start, gsdt-finish
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 2 @@@
+step 2 (gsdt-init -h)
+rc=0
+--- stdout
+gsdt-init — set up GSD in a repo that doesn't have it yet
+
+Runs gsdt-bootstrap-repo (shared scripts/config/instructions plus the selected
+provider adapter), then opens the agent session that makes the plan:
+
+  /gsd-new-project    when the repo has no planning docs (fresh interview)
+  /gsd-ingest-docs    when ADRs/PRDs/SPECs are detected (bootstrap from them)
+
+The plan is a conversation with the agent (its questions are where the
+project context comes from), so gsdt-init opens that session for you and,
+when you close it, checks that .planning/ROADMAP.md was written. With no
+terminal (a script, an agent's shell) or --no-launch it prints the command.
+
+Safe to re-run: if the repo is already initialized (.planning/ROADMAP.md
+exists), the workflow files are still repaired/synced from the source, but the
+planning state is never touched — you're just pointed back to gsdt-start.
+
+USAGE
+  gsdt-init [options]          # run from INSIDE the target repo
+
+OPTIONS
+  --new            force /gsd-new-project (skip docs detection)
+  --ingest         force /gsd-ingest-docs
+  --src <path>     deprecated compatibility flag; bootstrap ignores it
+  --base <branch>  base branch override (passed to gsdt-bootstrap-repo)
+  --no-commit      don't commit the bootstrap files (default: commit)
+  --no-ui          the project has no screens (backend, CLI): ui_gates = off
+  --tracker <t>    where the tickets live: none, clickup or custom. Without it,
+                   gsdt-init asks (in a terminal) when .gsd.conf sets no tracker
+  --tracker-command <path>  with --tracker custom: the repo's tracker script
+  --providers <list> comma-separated integrations to install, in default order
+  --provider <p>   provider for the initialization session; when --providers
+                   is omitted, also selects the single integration to install
+  --provider-command <p=path> executable override for one provider; repeatable
+  --agent-command <path> executable override (add --no-launch to print)
+  --model <id>     session model override; 'default' uses the CLI's own default
+  --agent <value>  compatibility alias: provider or custom executable
+  --launch         open the planning session (the default, in a terminal);
+                   an explicit --launch fails (127) when the agent CLI is missing
+  --no-launch      print the 'cd … && <agent> …' command instead of opening it
+  -h, --help       show this help
+
+EXAMPLES
+  cd ~/projects/acme/webshop && gsdt-init
+      Bootstrap + commit, then open the planning session; when it closes,
+      gsdt-init says whether the ROADMAP is ready.
+
+  cd ~/projects/acme/webshop && gsdt-init --no-launch
+      Same, but print the session command to run later.
+
+  gsdt-init --ingest --agent codex
+      Force ingest mode and open the session with the codex CLI.
+
+  gsdt-init --providers claude,codex --provider codex --no-launch
+      Install both integrations and print the Codex planning command.
+
+  gsdt-init --providers claude,codex --provider-command codex=/opt/bin/codex
+      Install Claude and Codex integrations with an explicit Codex executable.
+
+  gsdt-init --base main --no-launch
+      Bootstrap against 'main', print the planning command to run later.
+
+AFTER INITIALIZATION
+  gsdt-start -n "<description>"   begin each feature (claim + worktree + session).
+                              The first claim also turns on GSD's TDD mode
+                              (workflow.tdd_mode) unless the project set it.
+  gsdt-finish                  land it (merge back, push, clean up)
+
+RELATED
+  gsdt-bootstrap-repo   just the file installation (what gsdt-init wraps)
+  gsdt-start, gsdt-finish
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 3 @@@
+step 3 (gsdt-init --bogus --help)
+rc=1
+--- stdout
+
+--- stderr
+✖ unknown arg: --bogus (see gsdt-init --help)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 4 @@@
+step 4 (gsdt-init --help --bogus)
+rc=0
+--- stdout
+gsdt-init — set up GSD in a repo that doesn't have it yet
+
+Runs gsdt-bootstrap-repo (shared scripts/config/instructions plus the selected
+provider adapter), then opens the agent session that makes the plan:
+
+  /gsd-new-project    when the repo has no planning docs (fresh interview)
+  /gsd-ingest-docs    when ADRs/PRDs/SPECs are detected (bootstrap from them)
+
+The plan is a conversation with the agent (its questions are where the
+project context comes from), so gsdt-init opens that session for you and,
+when you close it, checks that .planning/ROADMAP.md was written. With no
+terminal (a script, an agent's shell) or --no-launch it prints the command.
+
+Safe to re-run: if the repo is already initialized (.planning/ROADMAP.md
+exists), the workflow files are still repaired/synced from the source, but the
+planning state is never touched — you're just pointed back to gsdt-start.
+
+USAGE
+  gsdt-init [options]          # run from INSIDE the target repo
+
+OPTIONS
+  --new            force /gsd-new-project (skip docs detection)
+  --ingest         force /gsd-ingest-docs
+  --src <path>     deprecated compatibility flag; bootstrap ignores it
+  --base <branch>  base branch override (passed to gsdt-bootstrap-repo)
+  --no-commit      don't commit the bootstrap files (default: commit)
+  --no-ui          the project has no screens (backend, CLI): ui_gates = off
+  --tracker <t>    where the tickets live: none, clickup or custom. Without it,
+                   gsdt-init asks (in a terminal) when .gsd.conf sets no tracker
+  --tracker-command <path>  with --tracker custom: the repo's tracker script
+  --providers <list> comma-separated integrations to install, in default order
+  --provider <p>   provider for the initialization session; when --providers
+                   is omitted, also selects the single integration to install
+  --provider-command <p=path> executable override for one provider; repeatable
+  --agent-command <path> executable override (add --no-launch to print)
+  --model <id>     session model override; 'default' uses the CLI's own default
+  --agent <value>  compatibility alias: provider or custom executable
+  --launch         open the planning session (the default, in a terminal);
+                   an explicit --launch fails (127) when the agent CLI is missing
+  --no-launch      print the 'cd … && <agent> …' command instead of opening it
+  -h, --help       show this help
+
+EXAMPLES
+  cd ~/projects/acme/webshop && gsdt-init
+      Bootstrap + commit, then open the planning session; when it closes,
+      gsdt-init says whether the ROADMAP is ready.
+
+  cd ~/projects/acme/webshop && gsdt-init --no-launch
+      Same, but print the session command to run later.
+
+  gsdt-init --ingest --agent codex
+      Force ingest mode and open the session with the codex CLI.
+
+  gsdt-init --providers claude,codex --provider codex --no-launch
+      Install both integrations and print the Codex planning command.
+
+  gsdt-init --providers claude,codex --provider-command codex=/opt/bin/codex
+      Install Claude and Codex integrations with an explicit Codex executable.
+
+  gsdt-init --base main --no-launch
+      Bootstrap against 'main', print the planning command to run later.
+
+AFTER INITIALIZATION
+  gsdt-start -n "<description>"   begin each feature (claim + worktree + session).
+                              The first claim also turns on GSD's TDD mode
+                              (workflow.tdd_mode) unless the project set it.
+  gsdt-finish                  land it (merge back, push, clean up)
+
+RELATED
+  gsdt-bootstrap-repo   just the file installation (what gsdt-init wraps)
+  gsdt-start, gsdt-finish
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 5 @@@
+step 5 (gsdt-bootstrap-repo --help)
+rc=0
+--- stdout
+gsdt-bootstrap-repo — install GSD worktree integration into the current repo
+USAGE
+  gsdt-bootstrap-repo [--agent claude|codex]... [options]
+OPTIONS
+  --agent <provider>       provider to integrate; repeat for multiple providers
+  --agents <a,b,...>       comma-separated provider list
+  --agent-command <path>   executable override for the default provider
+  --provider-command <p=path> executable override for one provider; repeatable
+  --base <branch>          base branch (auto-detected by default)
+  --commit                 commit only the installed integration files
+  --no-ui                  no screens in this project: ui_gates = off
+  --tracker <t>            ticket tracker: none, clickup or custom (tracker = in .gsd.conf)
+  --tracker-command <path> with --tracker custom: the repo's tracker script
+  --src <path>             deprecated; ignored
+  -h, --help               show help
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 6 @@@
+step 6 (gsdt-bootstrap-repo -h)
+rc=0
+--- stdout
+gsdt-bootstrap-repo — install GSD worktree integration into the current repo
+USAGE
+  gsdt-bootstrap-repo [--agent claude|codex]... [options]
+OPTIONS
+  --agent <provider>       provider to integrate; repeat for multiple providers
+  --agents <a,b,...>       comma-separated provider list
+  --agent-command <path>   executable override for the default provider
+  --provider-command <p=path> executable override for one provider; repeatable
+  --base <branch>          base branch (auto-detected by default)
+  --commit                 commit only the installed integration files
+  --no-ui                  no screens in this project: ui_gates = off
+  --tracker <t>            ticket tracker: none, clickup or custom (tracker = in .gsd.conf)
+  --tracker-command <path> with --tracker custom: the repo's tracker script
+  --src <path>             deprecated; ignored
+  -h, --help               show help
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 7 @@@
+step 7 (gsdt-bootstrap-repo --bogus --help)
+rc=1
+--- stdout
+
+--- stderr
+✖ unknown arg: --bogus (see gsdt-bootstrap-repo --help)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 8 @@@
+step 8 (gsdt-init --help)
+rc=0
+--- stdout
+gsdt-init — set up GSD in a repo that doesn't have it yet
+
+Runs gsdt-bootstrap-repo (shared scripts/config/instructions plus the selected
+provider adapter), then opens the agent session that makes the plan:
+
+  /gsd-new-project    when the repo has no planning docs (fresh interview)
+  /gsd-ingest-docs    when ADRs/PRDs/SPECs are detected (bootstrap from them)
+
+The plan is a conversation with the agent (its questions are where the
+project context comes from), so gsdt-init opens that session for you and,
+when you close it, checks that .planning/ROADMAP.md was written. With no
+terminal (a script, an agent's shell) or --no-launch it prints the command.
+
+Safe to re-run: if the repo is already initialized (.planning/ROADMAP.md
+exists), the workflow files are still repaired/synced from the source, but the
+planning state is never touched — you're just pointed back to gsdt-start.
+
+USAGE
+  gsdt-init [options]          # run from INSIDE the target repo
+
+OPTIONS
+  --new            force /gsd-new-project (skip docs detection)
+  --ingest         force /gsd-ingest-docs
+  --src <path>     deprecated compatibility flag; bootstrap ignores it
+  --base <branch>  base branch override (passed to gsdt-bootstrap-repo)
+  --no-commit      don't commit the bootstrap files (default: commit)
+  --no-ui          the project has no screens (backend, CLI): ui_gates = off
+  --tracker <t>    where the tickets live: none, clickup or custom. Without it,
+                   gsdt-init asks (in a terminal) when .gsd.conf sets no tracker
+  --tracker-command <path>  with --tracker custom: the repo's tracker script
+  --providers <list> comma-separated integrations to install, in default order
+  --provider <p>   provider for the initialization session; when --providers
+                   is omitted, also selects the single integration to install
+  --provider-command <p=path> executable override for one provider; repeatable
+  --agent-command <path> executable override (add --no-launch to print)
+  --model <id>     session model override; 'default' uses the CLI's own default
+  --agent <value>  compatibility alias: provider or custom executable
+  --launch         open the planning session (the default, in a terminal);
+                   an explicit --launch fails (127) when the agent CLI is missing
+  --no-launch      print the 'cd … && <agent> …' command instead of opening it
+  -h, --help       show this help
+
+EXAMPLES
+  cd ~/projects/acme/webshop && gsdt-init
+      Bootstrap + commit, then open the planning session; when it closes,
+      gsdt-init says whether the ROADMAP is ready.
+
+  cd ~/projects/acme/webshop && gsdt-init --no-launch
+      Same, but print the session command to run later.
+
+  gsdt-init --ingest --agent codex
+      Force ingest mode and open the session with the codex CLI.
+
+  gsdt-init --providers claude,codex --provider codex --no-launch
+      Install both integrations and print the Codex planning command.
+
+  gsdt-init --providers claude,codex --provider-command codex=/opt/bin/codex
+      Install Claude and Codex integrations with an explicit Codex executable.
+
+  gsdt-init --base main --no-launch
+      Bootstrap against 'main', print the planning command to run later.
+
+AFTER INITIALIZATION
+  gsdt-start -n "<description>"   begin each feature (claim + worktree + session).
+                              The first claim also turns on GSD's TDD mode
+                              (workflow.tdd_mode) unless the project set it.
+  gsdt-finish                  land it (merge back, push, clean up)
+
+RELATED
+  gsdt-bootstrap-repo   just the file installation (what gsdt-init wraps)
+  gsdt-start, gsdt-finish
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+
+@@@ 9 @@@
+step 9 (gsdt-bootstrap-repo --help)
+rc=0
+--- stdout
+gsdt-bootstrap-repo — install GSD worktree integration into the current repo
+USAGE
+  gsdt-bootstrap-repo [--agent claude|codex]... [options]
+OPTIONS
+  --agent <provider>       provider to integrate; repeat for multiple providers
+  --agents <a,b,...>       comma-separated provider list
+  --agent-command <path>   executable override for the default provider
+  --provider-command <p=path> executable override for one provider; repeatable
+  --base <branch>          base branch (auto-detected by default)
+  --commit                 commit only the installed integration files
+  --no-ui                  no screens in this project: ui_gates = off
+  --tracker <t>            ticket tracker: none, clickup or custom (tracker = in .gsd.conf)
+  --tracker-command <path> with --tracker custom: the repo's tracker script
+  --src <path>             deprecated; ignored
+  -h, --help               show help
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+(none)
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+--- full tree
+── README.md [-]
+hello
+
+── post-merge hook [none]
+
+── git log
+init
+t
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+── git ls-files
+README.md
+
+── git config
+

@@ -1,0 +1,34 @@
+@@@ 1 @@@
+rc=0
+--stdout--
+
+gsdt-update — update gsd-toolkit to the latest GitHub release, and GSD
+itself (gsd-core) to its latest version.
+
+Usage:
+  gsdt-update                   install the latest release, if it is newer;
+                               then gsd-core for each installed agent
+  gsdt-update --check           print the installed and latest versions only
+  gsdt-update --version <X.Y.Z> install that release (also to go back)
+  gsdt-update --no-core         leave gsd-core as it is
+
+gsd-core is updated for each agent the install chose (claude, codex), with
+the full skill profile; an agent without it gets it.
+
+Commands and skills are replaced in place; the agents you installed for are
+kept (install manifest). The release you had before stays on disk, so
+going back is `gsdt-update --version <old>`.
+
+Run from a git checkout, it updates nothing: the checkout is pulled with
+git, and ./install.sh installs the release.
+
+Other commands (gsdt-start, gsdt-list) print one line when a newer release is
+out, at most one GitHub call a day; gsdt-doctor reports it too.
+Env: GSD_NO_UPDATE_CHECK=1 turns those checks off; GSD_UPDATE_REPO=owner/name;
+     GSD_NO_CORE=1 same as --no-core (tests).
+--stderr--
+--install.sh--
+--npm--
+--npx--
+--caches--
+|

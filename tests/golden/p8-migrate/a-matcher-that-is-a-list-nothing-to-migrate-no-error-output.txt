@@ -1,0 +1,34 @@
+@@@ 1 @@@
+rc=0
+--stdout--
+gsdt-migrate (dry run) — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"matcher":["a"],"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
+@@@ 2 @@@
+rc=0
+--stdout--
+gsdt-migrate — <S>/proj
+
+✔ nothing to migrate: this repo uses the gsdt-* names
+--files--
+.git/config: [core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+
+lock: false
+USER user-settings.json: 644 {"hooks":{"S":[{"matcher":["a"],"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}

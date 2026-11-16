@@ -1,0 +1,5 @@
+@@@ 1 @@@
+rc=0
+out="NOROW|3\nTICK|3|a non-phase line, \"stub Phase 3: x\"\n"
+err=""
+file="- [ ] stub Phase 3: x\r\n### Phase 3: Three\r\n| Phase | S |\r\n|---|---|\r\n| 3. T | x |\r\n"

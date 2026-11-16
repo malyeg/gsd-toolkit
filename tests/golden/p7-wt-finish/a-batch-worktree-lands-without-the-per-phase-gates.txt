@@ -1,0 +1,124 @@
+@@@ 1 @@@
+step 1 (gsdt-wt-finish batch-2026-11-09-fix)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'batch-2026-11-09-fix' into 'main'…
+Merge made by the 'ort' strategy.
+ b.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 b.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch batch-2026-11-09-fix (was ec19856).
+✅ 'batch-2026-11-09-fix' merged into 'main', pushed, and cleaned up.
+
+--- stderr
+
+--- files left behind
+── log
+Merge batch-2026-11-09-fix into main
+init
+fix: labels
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge batch-2026-11-09-fix into main
+init
+fix: labels
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 2 @@@
+step 1 (gsdt-wt-finish batch-2026-11-09-fix)
+rc=1
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ tests (false, in <T>/shop-worktrees/batch-2026-11-09-fix; before merge)…
+
+--- stderr
+✗ tests failed (before merge) — not pushing or removing the batch worktree. Any merge remains local.
+  (skip with 'test = none' in .gsd.conf, or provide scripts/gsdt-premerge-check.sh)
+
+--- files left behind
+── log
+fix: labels
+init
+
+── branches
+batch-2026-11-09-fix
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/batch-2026-11-09-fix
+branch refs/heads/batch-2026-11-09-fix
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt batch-2026-11-09-fix
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+b.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+

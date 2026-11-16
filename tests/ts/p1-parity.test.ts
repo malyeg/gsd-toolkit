@@ -1,20 +1,23 @@
-// P1 parity: src/common.ts and src/provider.ts against lib/common.sh and
-// lib/provider.sh, on the same inputs. Run: node --test tests/ts/
-// A failing case means the TS differs from bash — fix the TS (or, if bash is
-// wrong, keep parity and say so in docs/ts-port-progress.md).
+// P1: src/common.ts and src/provider.ts against saved goldens in tests/golden/p1-parity/.
+// Run: node --test tests/ts/p1-parity.test.ts
+// Regenerate with UPDATE_GOLDEN=1 (from the new code only); review a regenerated golden by diff.
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { chmodSync, existsSync, mkdirSync, readFileSync, readlinkSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, readFileSync, readlinkSync, realpathSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { test } from 'node:test';
+import { golden, test } from './golden.ts';
 import * as C from '../../src/common.ts';
 import * as P from '../../src/provider.ts';
 import { main as rulesMain, rulesFor } from '../../src/commands/rules.ts';
-import { PKG, bash, chomp, repo, sh, tmp, withEnv, write } from './helpers.ts';
+import { PKG, chomp, repo, sh, tmp, withEnv, write } from './helpers.ts';
 
-const same = (label: string, bashScript: string, args: string[], ts: string, opts: { raw?: boolean } = {}): void => {
-  const r = bash(bashScript, args);
-  assert.equal(opts.raw ? ts : chomp(ts), opts.raw ? r.out : chomp(r.out), label);
+// the temp dir spelled one way (macOS: /var/folders vs /private/var/folders), so goldenNorm sees it
+const fix = (t: string): string => t.split(realpathSync(tmpdir())).join(tmpdir());
+const gold = (text: string, old?: () => string): void => golden(fix(text), old && (() => fix(old())));
+const same = (label: string, ts: string, opts: { raw?: boolean } = {}): void => {
+  const v = (x: string): string => (opts.raw ? x : chomp(x));
+  gold(`# ${label}\n${v(ts)}`);
 };
 
 // ── conf, base, wtdir, flow, providers, main ────────────────────────────────
@@ -37,25 +40,25 @@ test('confGet / providers / base / wtdir / flowMode', () => {
   for (const conf of confs) {
     const r = repo(path.join(tmp(), 'my repo'), conf);
     for (const key of ['base', 'wtdir', 'flow', 'providers', 'provider', 'test', 'install', 'compact_at', 'nothere']) {
-      same(`confGet ${key} for ${JSON.stringify(conf)}`, 'gsd_conf_get "$1" "$2"', [r, key], C.confGet(r, key));
+      same(`confGet ${key} for ${JSON.stringify(conf)}`, C.confGet(r, key));
     }
-    same('base', 'gsd_base "$1"', [r], C.base(r));
-    same('flowMode', 'gsd_flow_mode "$1"', [r], C.flowMode(r));
-    same('confProviders', 'gsd_conf_providers "$1"', [r], C.confProviders(r));
-    same('wtdir', 'gsd_wtdir "$1"', [r], C.wtdir(r));
+    same('base', C.base(r));
+    same('flowMode', C.flowMode(r));
+    same('confProviders', C.confProviders(r));
+    same('wtdir', C.wtdir(r));
   }
   assert.equal(C.confGet('/nonexistent-dir', 'base'), '');
-  same('wtdir of a trailing slash', 'gsd_wtdir "$1"', ['/a/b/'], C.wtdir('/a/b/'));
+  same('wtdir of a trailing slash', C.wtdir('/a/b/'));
 });
 
 test('base: develop / main / current branch', () => {
   const r = repo(path.join(tmp(), 'b'));
   sh(r, 'git', ['branch', '-m', 'trunk']);
-  same('current branch', 'gsd_base "$1"', [r], C.base(r));
+  same('current branch', C.base(r));
   sh(r, 'git', ['branch', 'main']);
-  same('main', 'gsd_base "$1"', [r], C.base(r));
+  same('main', C.base(r));
   sh(r, 'git', ['branch', 'develop']);
-  same('develop', 'gsd_base "$1"', [r], C.base(r));
+  same('develop', C.base(r));
 });
 
 test('findMain from the main checkout, a worktree and outside git', () => {
@@ -63,9 +66,9 @@ test('findMain from the main checkout, a worktree and outside git', () => {
   const wt = path.join(path.dirname(r), 'wt dir');
   sh(r, 'git', ['worktree', 'add', '-q', wt, '-b', 'phase-1-a']);
   for (const p of [r, wt, path.join(r, '.git'), tmp(), '/nonexistent']) {
-    same(`main ${p}`, 'gsd_main "$1"', [p], C.findMain(p));
+    same(`main ${p}`, C.findMain(p));
   }
-  same('main of no arg', 'cd "$1" && gsd_main', [wt], withCwd(wt, () => C.findMain()));
+  same('main of no arg', withCwd(wt, () => C.findMain()));
 });
 
 function withCwd<T>(d: string, fn: () => T): T {
@@ -105,16 +108,12 @@ test('reviewsProblem', () => {
   for (const [name, body] of Object.entries(fixtures)) {
     const f = write(path.join(dir, `${name}-REVIEWS.md`), body);
     for (const prov of ['codex', 'claude', '', 'Codex', 'other']) {
-      const r = bash('gsd_reviews_problem "$1" "$2"; echo "rc=$?"', [f, prov]);
       const ts = C.reviewsProblem(f, prov);
-      const want = r.out.replace(/\nrc=\d+\n$|^rc=\d+\n$/, '');
-      const rc = /rc=(\d+)\n$/.exec(r.out)?.[1];
-      assert.equal(rc, ts === null ? '1' : '0', `${name}/${prov} status`);
-      assert.equal(ts ?? '', chomp(want), `${name}/${prov} text`);
+      gold(`# ${name}/${prov}\nrc=${ts === null ? 1 : 0}\n${ts ?? ''}`);
     }
   }
   assert.equal(C.reviewsProblem(path.join(dir, 'missing.md'), 'codex'), null);
-  assert.equal(bash('gsd_reviews_problem "$1" codex; echo $?', [path.join(dir, 'missing.md')]).out, '1\n');
+  gold('# missing file\n1');
 });
 
 test('workflowFlag and validationProblem', () => {
@@ -155,16 +154,14 @@ test('workflowFlag and validationProblem', () => {
       } catch { /* none */ }
     } else write(cf, cfg);
     for (const key of ['nyquist_validation', 'other']) {
-      same(`workflowFlag ${key} ${cfg}`, 'gsd_workflow_flag "$1" "$2"', [co, key], C.workflowFlag(co, key));
+      same(`workflowFlag ${key} ${cfg}`, C.workflowFlag(co, key));
     }
     for (const v of vals) {
       const f = path.join(pd, '03-VALIDATION.md');
       if (v === null) spawnSync('rm', ['-f', f]);
       else write(f, v);
-      const r = bash('gsd_validation_problem "$1" "$2" "$3"; echo "rc=$?"', [pd, '03', co]);
       const ts = C.validationProblem(pd, '03', co);
-      assert.equal(/rc=(\d+)\n$/.exec(r.out)?.[1], ts === null ? '1' : '0', `status ${cfg} ${JSON.stringify(v)}`);
-      assert.equal(ts ?? '', chomp(r.out.replace(/rc=\d+\n$/, '')), `text ${cfg} ${JSON.stringify(v)}`);
+      gold(`# validation ${cfg} ${JSON.stringify(v)}\nrc=${ts === null ? 1 : 0}\n${ts ?? ''}`);
     }
   }
 });
@@ -176,16 +173,10 @@ test('phaseDir', () => {
   for (const d of ['07-foo', '02.1-bar', '8-baz', '10-ten', '3.2-x']) mkdirSync(path.join(co, '.planning', 'phases', d), { recursive: true });
   const branches = ['phase-7-x', 'phase-07-x', 'phase-2.1-y', 'phase-8-z', 'phase-08-z', 'phase-9-q', 'phase-10-t', 'phase-3.2-a', 'phase-x-y', 'main', '', 'phase-7', 'phase-007-q'];
   for (const b of branches) {
-    const r = bash('gsd_phase_dir "$1" "$2"; echo "rc=$? PD=$GSD_PD P=$GSD_P N=$GSD_N"', [co, b]);
     const ts = C.phaseDir(co, b);
-    const m = /rc=(\d+) PD=(.*) P=(.*) N=(.*)\n$/.exec(r.out);
-    assert.ok(m, `parse ${b}`);
-    assert.equal(m[1], ts === null ? '1' : '0', `rc ${b}`);
-    if (ts) assert.deepEqual([m[2], m[3], m[4]], [ts.pd, ts.p, ts.n], `values ${b}`);
-    else assert.equal(m[2], '', `PD empty ${b}`);
+    gold(`# phaseDir ${JSON.stringify(b)}\n${ts ? `rc=0 PD=${ts.pd} P=${ts.p} N=${ts.n}` : 'rc=1'}`);
   }
-  const r = bash('gsd_phase_dir "$1" phase-7-x; echo $?', [path.join(co, 'nope')]);
-  assert.equal(r.out, '1\n');
+  gold('# phaseDir no checkout\nrc=1');
   assert.equal(C.phaseDir(path.join(co, 'nope'), 'phase-7-x'), null);
 });
 
@@ -195,11 +186,10 @@ test('phaseBranch / isPrHelper / originLacks', () => {
     sh(r, 'git', ['branch', b]);
   }
   for (const n of ['7', '8', '70', '7.1', '9', '']) {
-    same(`phaseBranch ${n}`, 'gsd_phase_branch "$1" "$2"', [r, n], C.phaseBranch(r, n));
+    same(`phaseBranch ${n}`, C.phaseBranch(r, n));
   }
   for (const b of ['phase-7-a-pr', 'phase-7-a', 'phase-7-b-pr', 'phase-8-improve-pr', 'phase-8-improve-pr-pr', 'x-pr', 'develop']) {
-    const bs = bash('gsd_is_pr_helper "$1" "$2"; echo $?', [r, b]).out.trim();
-    assert.equal(C.isPrHelper(r, b) ? '0' : '1', bs, `isPrHelper ${b}`);
+    gold(`# isPrHelper ${b}\n${C.isPrHelper(r, b) ? '0' : '1'}`);
   }
   // originLacks: an origin that answers (bare repo) with and without the branch, and a dead origin
   const bare = path.join(tmp(), 'origin.git');
@@ -207,10 +197,10 @@ test('phaseBranch / isPrHelper / originLacks', () => {
   sh(r, 'git', ['remote', 'add', 'origin', bare]);
   sh(r, 'git', ['push', '-q', 'origin', 'develop']);
   for (const b of ['develop', 'nope']) {
-    assert.equal(C.originLacks(r, b) ? '0' : '1', bash('gsd_origin_lacks "$1" "$2"; echo $?', [r, b]).out.trim(), `originLacks ${b}`);
+    gold(`# originLacks ${b}\n${C.originLacks(r, b) ? '0' : '1'}`);
   }
   sh(r, 'git', ['remote', 'set-url', 'origin', '/nonexistent/origin']);
-  assert.equal(C.originLacks(r, 'develop') ? '0' : '1', bash('gsd_origin_lacks "$1" develop; echo $?', [r]).out.trim(), 'dead origin');
+  gold(`# originLacks dead origin\n${C.originLacks(r, 'develop') ? '0' : '1'}`);
 });
 
 // ── finish gates ────────────────────────────────────────────────────────────
@@ -230,14 +220,11 @@ test('flowFinishGate / finishGates / gateTree', () => {
         if (!wtExists) sh(r, 'git', ['worktree', 'remove', '--force', wt]);
         const arg = wtExists ? wt : path.join(path.dirname(r), 'gone');
         withEnv({ GSD_SKIP_GUARD: skip }, () => {
-          const b1 = bash('gsd_flow_finish_gate "$1" "$2" "$3"; echo "rc=$?"', [r, 'phase-3-x', arg]);
+          const lbl = `${flow} wtExists=${wtExists} skip=${skip}`;
           const t1 = C.flowFinishGate(r, 'phase-3-x', arg);
-          assert.equal(t1.ok ? '0' : '1', /rc=(\d+)/.exec(b1.err + b1.out)?.[1], `flow gate rc ${flow} ${wtExists} ${skip}`);
-          assert.equal(t1.stderr, b1.err, 'flow gate stderr');
-          const b2 = bash('gsd_finish_gates "$1" "$2" "$3"; echo "rc=$?"', [r, 'phase-3-x', arg]);
+          gold(`# flowFinishGate ${lbl}\nrc=${t1.ok ? 0 : 1}\nstderr:\n${t1.stderr}`);
           const t2 = C.finishGates(r, 'phase-3-x', arg);
-          assert.equal(t2.ok ? '0' : '1', /rc=(\d+)/.exec(b2.out)?.[1], `finishGates rc ${flow} ${wtExists} ${skip}`);
-          assert.equal(t2.stderr, b2.err.replace(/rc=\d+\n$/, ''), 'finishGates stderr');
+          gold(`# finishGates ${lbl}\nrc=${t2.ok ? 0 : 1}\nstderr:\n${t2.stderr}`);
         });
       }
     }
@@ -265,19 +252,19 @@ test('cli / cliMissing', () => {
   const failing = write(path.join(d, 'failing'), '#!/bin/sh\nexit 3\n', 0o755);
   const notexec = write(path.join(d, 'notexec'), '#!/bin/sh\necho x\n', 0o644);
   for (const c of [good, spaced, other, failing, notexec, path.join(d, 'missing'), '']) {
-    withEnv({ GSD_CLI: c, CLAUDE_CONFIG_DIR: path.join(d, 'cc'), CODEX_HOME: path.join(d, 'cx') }, () => {
-      const r = bash('gsd_cli; echo "rc=$?"');
-      assert.equal(C.cli() ?? '', chomp(r.out.replace(/rc=\d+\n$/, '')), `cli ${c}`);
-      assert.equal(C.cli() === null ? '1' : '0', /rc=(\d+)/.exec(r.out)?.[1]);
+    // PATH and HOME pinned: a gsd_run of the machine's own must not be found
+    withEnv({ GSD_CLI: c, CLAUDE_CONFIG_DIR: path.join(d, 'cc'), CODEX_HOME: path.join(d, 'cx'), PATH: '/usr/bin:/bin', HOME: d }, () => {
+      const t = C.cli();
+      gold(`# cli ${c}\nrc=${t === null ? 1 : 0}\n${t ?? ''}`);
     });
   }
   mkdirSync(path.join(d, 'cc', 'gsd-core', 'bin'), { recursive: true });
   write(path.join(d, 'cc', 'gsd-core', 'bin', 'gsd_run'), '#!/bin/sh\necho \'{"packageName":"@opengsd/gsd-core"}\'\n', 0o755);
   withEnv({ GSD_CLI: undefined, CLAUDE_CONFIG_DIR: path.join(d, 'cc'), PATH: '/usr/bin:/bin' }, () => {
-    assert.equal(C.cli(), bash('gsd_cli').out.trim());
+    gold(`# cli from CLAUDE_CONFIG_DIR\n${C.cli()}`);
     assert.ok(C.cli()?.endsWith('cc/gsd-core/bin/gsd_run'));
   });
-  same('cliMissing', 'gsd_cli_missing', [], C.cliMissing());
+  same('cliMissing', C.cliMissing());
 });
 
 test('skillOwned / skillDiffers', () => {
@@ -303,9 +290,9 @@ test('skillOwned / skillDiffers', () => {
     path.join(root, 'absent'),
   ];
   for (const d of dests) {
-    assert.equal(C.skillOwned(d), bash('gsd_skill_owned "$1"; echo $?', [d]).out.trim() === '0', `owned ${path.basename(d)}`);
+    gold(`# owned ${path.basename(d)}\n${C.skillOwned(d)}`);
     for (const s of [src, `${src}/`]) {
-      assert.equal(C.skillDiffers(s, d), bash('gsd_skill_differs "$1" "$2"; echo $?', [s, d]).out.trim() === '0', `differs ${path.basename(d)}`);
+      gold(`# differs ${path.basename(d)}\n${C.skillDiffers(s, d)}`);
     }
   }
 });
@@ -336,18 +323,16 @@ test('baseref / baserefEnsure', () => {
       const cc = tmp();
       withEnv({ CLAUDE_CONFIG_DIR: cc }, () => {
         for (const mode of ['check', 'ensure'] as const) {
-          const x = chomp(bash('gsd_baseref "$1" "$2"', [mode, a]).out);
           const y = C.baseref(mode, b);
-          assert.equal(y, x, `baseref ${mode} ${s} ignored=${ignored}`);
-          const fa = existsSync(path.join(a, '.claude', 'settings.local.json')) ? readFileSync(path.join(a, '.claude', 'settings.local.json'), 'utf8') : null;
-          const fb = existsSync(path.join(b, '.claude', 'settings.local.json')) ? readFileSync(path.join(b, '.claude', 'settings.local.json'), 'utf8') : null;
-          assert.equal(fb, fa, `file after ${mode}`);
+          const rd = (x: string): string | null => (existsSync(path.join(x, '.claude', 'settings.local.json')) ? readFileSync(path.join(x, '.claude', 'settings.local.json'), 'utf8') : null);
+          const lbl = `# baseref ${mode} ${s} ignored=${ignored}`;
+          gold(`${lbl}\n${y}\nfile after: ${JSON.stringify(rd(b))}`);
         }
         const a2 = mkRepo();
         const b2 = mkRepo();
-        const x = chomp(bash('gsd_baseref_ensure "$1" lbl', [a2]).out);
-        assert.equal(C.baserefEnsure(b2, 'lbl'), x, 'baserefEnsure');
-        assert.equal(C.baserefEnsure(b2), chomp(bash('gsd_baseref_ensure "$1"', [b2]).out).replace(a2, b2), 'default label');
+        const lbl2 = `# baserefEnsure ${s} ignored=${ignored}`;
+        gold(`${lbl2} lbl\n${C.baserefEnsure(b2, 'lbl')}`);
+        gold(`${lbl2} default label\n${C.baserefEnsure(b2)}`);
       });
     }
   }
@@ -356,14 +341,14 @@ test('baseref / baserefEnsure', () => {
   write(path.join(t, '.claude', 'settings.local.json'), '{}');
   sh(t, 'git', ['add', '-f', '-A']);
   sh(t, 'git', ['-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '-m', 'x']);
-  assert.equal(C.baseref('ensure', t), chomp(bash('gsd_baseref ensure "$1"', [t]).out));
+  gold(`# baseref tracked\n${C.baseref('ensure', t)}`);
   assert.equal(C.baseref('ensure', t), 'tracked');
   // the user layer decides
   const u = repo(path.join(tmp(), 'ul'));
   const cc = tmp();
   write(path.join(cc, 'settings.json'), '{"worktree":{"baseRef":"main"}}');
   withEnv({ CLAUDE_CONFIG_DIR: cc }, () => {
-    assert.equal(C.baseref('check', u), chomp(bash('gsd_baseref check "$1"', [u]).out));
+    gold(`# baseref user layer\n${C.baseref('check', u)}`);
     assert.equal(C.baseref('check', u), 'other:main');
   });
 });
@@ -381,7 +366,7 @@ test('planningHook / planningStatus', () => {
     () => {},
     (r) => mkdirSync(path.join(r, '.husky'), { recursive: true }),
     (r) => sh(r, 'git', ['config', 'core.hooksPath', 'scripts/git-hooks']),
-    (r) => sh(r, 'git', ['config', 'core.hooksPath', '/tmp/outside-hooks']),
+    (r) => sh(r, 'git', ['config', 'core.hooksPath', path.join(tmp(), 'outside-hooks')]),
     (r) => write(path.join(r, '.gitattributes'), '.planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n'),
     (r) => write(path.join(r, '.gitattributes'), '.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning  \n'),
     (r) => write(path.join(r, '.gitattributes'), '.planning/ROADMAP.md merge=gsd-planning\n'),
@@ -394,12 +379,8 @@ test('planningHook / planningStatus', () => {
   for (const [i, v] of variants.entries()) {
     const r = repo(path.join(tmp(), 'pl'));
     v(r);
-    const b = bash(
-      'gsd_planning_status "$1"; gsd_planning_hook "$1"; echo "$GSD_PLANNING_MISSING|$GSD_ATTRS_STATE|$GSD_HOOK_PATH|$GSD_HOOK_LABEL|$GSD_HOOK_VERSIONED"',
-      [r],
-    );
     const s = C.planningStatus(r);
-    assert.equal(`${s.missing.join(' ')}|${s.attrsState}|${s.hook.path}|${s.hook.label}|${s.hook.versioned ? 1 : 0}`, chomp(b.out), `variant ${i}`);
+    gold(`# variant ${i}\n${s.missing.join(' ')}|${s.attrsState}|${s.hook.path}|${s.hook.label}|${s.hook.versioned ? 1 : 0}`);
   }
   // fresh vs set up
   const f = repo(path.join(tmp(), 'fresh'));
@@ -434,18 +415,16 @@ test('planningApply writes the same files and lines', () => {
         };
         const a = mk();
         const b = mk();
-        const bo = bash('gsd_planning_apply "$1"', [a], { PATH: `${stub}:${process.env.PATH}` });
         const lines = withEnv({ PATH: `${stub}:${process.env.PATH}` }, () => C.planningApply(b));
         const tag = `hook=${JSON.stringify(hv)} attr=${JSON.stringify(av)} husky=${husky}`;
-        assert.equal(lines.map((l) => `${l}\n`).join(''), bo.out, `lines ${tag}`);
         const rd = (r: string, rel: string): string | null => (existsSync(path.join(r, rel)) ? readFileSync(path.join(r, rel), 'latin1') : null);
-        for (const rel of ['.gitattributes', '.git/hooks/post-merge', '.husky/post-merge']) assert.equal(rd(b, rel), rd(a, rel), `${rel} ${tag}`);
-        for (const rel of ['.git/hooks/post-merge', '.husky/post-merge']) {
-          if (existsSync(path.join(a, rel))) assert.equal(statSync(path.join(b, rel)).mode & 0o777, statSync(path.join(a, rel)).mode & 0o777, `mode ${rel} ${tag}`);
-        }
-        for (const k of ['merge.gsd-planning.driver', 'merge.gsd-planning.name']) {
-          assert.equal(sh(b, 'git', ['config', '--get', k]), sh(a, 'git', ['config', '--get', k]), `${k} ${tag}`);
-        }
+        const snap = (r: string, out: string): string => [
+          `# planningApply ${tag}`,
+          `output:\n${out}`,
+          ...['.gitattributes', '.git/hooks/post-merge', '.husky/post-merge'].map((rel) => `${rel}: ${JSON.stringify(rd(r, rel))}${rel !== '.gitattributes' && existsSync(path.join(r, rel)) ? ` mode ${(statSync(path.join(r, rel)).mode & 0o777).toString(8)}` : ''}`),
+          ...['merge.gsd-planning.driver', 'merge.gsd-planning.name'].map((k) => `${k}: ${JSON.stringify(sh(r, 'git', ['config', '--get', k]))}`),
+        ].join('\n');
+        gold(snap(b, lines.map((l) => `${l}\n`).join('')));
         // (bash bugs, kept: `echo >>` glues its line onto a .gitattributes with no final newline; a TAB-separated STATE line is not recognised after the rename, so a third line is appended)
         if (av === null || (av.endsWith('\n') && !av.includes('\t'))) assert.deepEqual(C.planningStatus(b).missing, [], `all installed ${tag}`);
       }
@@ -455,9 +434,8 @@ test('planningApply writes the same files and lines', () => {
   const a = repo(path.join(tmp(), 'nodrv'));
   const b = repo(path.join(tmp(), 'nodrv'));
   const emptyBin = tmp();
-  const bo = bash('gsd_planning_apply "$1"', [a], { PATH: `${emptyBin}:/usr/bin:/bin` });
   const lines = withEnv({ PATH: `${emptyBin}:/usr/bin:/bin` }, () => C.planningApply(b));
-  assert.equal(lines.map((l) => `${l}\n`).join(''), bo.out);
+  gold(`# planningApply without gsdt-planning-merge on PATH\n${lines.map((l) => `${l}\n`).join('')}`);
   assert.ok(lines.some((l) => l.startsWith('⚠ could not register the merge driver')));
 });
 
@@ -467,10 +445,9 @@ test('registerMergeDriver', () => {
     const a = repo(path.join(tmp(), 'rm'));
     const b = repo(path.join(tmp(), 'rm'));
     const PATHV = withStub ? `${stub}:${process.env.PATH}` : `${tmp()}:/usr/bin:/bin`;
-    const rc = bash('gsd_register_merge_driver "$1"; echo $?', [a], { PATH: PATHV }).out.trim();
     const ok = withEnv({ PATH: PATHV }, () => C.registerMergeDriver(b));
-    assert.equal(ok ? '0' : '1', rc);
-    assert.equal(sh(b, 'git', ['config', '--get', 'merge.gsd-planning.driver']), sh(a, 'git', ['config', '--get', 'merge.gsd-planning.driver']));
+    const drv = (r: string): string => JSON.stringify(sh(r, 'git', ['config', '--get', 'merge.gsd-planning.driver']));
+    gold(`# registerMergeDriver stub=${withStub}\nrc=${ok ? 0 : 1}\ndriver=${drv(b)}`);
     withEnv({ PATH: PATHV }, () => assert.equal(C.registerMergeDriver(b), true)); // idempotent
   }
 });
@@ -493,8 +470,6 @@ test('migrateNeeded / migrateRefuse', () => {
   for (const [i, v] of variants.entries()) {
     const r = repo(path.join(tmp(), 'mg'));
     v(r);
-    assert.equal(C.migrateNeeded(r) ? '0' : '1', bash('gsd_migrate_needed "$1"; echo $?', [r]).out.trim(), `needed ${i}`);
-    const b = bash('( gsd_migrate_refuse "$1" ); echo "rc=$?"', [r]);
     let rc = 0;
     let msg = '';
     try {
@@ -504,15 +479,14 @@ test('migrateNeeded / migrateRefuse', () => {
       rc = e.code;
       msg = e.message;
     }
-    assert.equal(`rc=${rc}\n`, b.out, `refuse rc ${i}`);
-    assert.equal(msg, b.err, `refuse message ${i}`);
+    gold(`# migrate ${i}\nneeded=${C.migrateNeeded(r) ? '0' : '1'}\nrefuse rc=${rc}\nmessage:\n${msg}`);
   }
   C.migrateRefuse(''); // no-op
 });
 
 // ── the lock ────────────────────────────────────────────────────────────────
 
-test('lock: same on-disk format as bash (TS holds → bash sees it; stale reclaim both ways)', () => {
+test('lock: acquire in a child, stale reclaim, re-entrant', () => {
   const r = repo(path.join(tmp(), 'lk'));
   const lock = path.join(r, '.git', 'gsd-cmd.lock');
   // TS acquires in a child process (the exit hook must release it)
@@ -525,15 +499,12 @@ test('lock: same on-disk format as bash (TS holds → bash sees it; stale reclai
        import { existsSync, readFileSync } from 'node:fs';
        const ok = C.acquireLock(${JSON.stringify(r)});
        const pid = readFileSync(${JSON.stringify(path.join(lock, 'pid'))}, 'utf8');
-       // while held, bash cannot take it
-       const { spawnSync } = await import('node:child_process');
-       const b = spawnSync('bash', ['-c', '. "$GSD_PKG/lib/common.sh"; gsd__mkdir_excl "$1" && echo free || echo held', '_', ${JSON.stringify(lock)}], { encoding: 'utf8', env: { ...process.env, GSD_PKG: ${JSON.stringify(PKG)} } });
-       console.log(JSON.stringify({ ok, pidOk: pid === String(process.pid) + '\\n', bash: b.stdout.trim(), exists: existsSync(${JSON.stringify(lock)}) }));`,
+       console.log(JSON.stringify({ ok, pidOk: pid === String(process.pid) + '\\n', exists: existsSync(${JSON.stringify(lock)}) }));`,
     ],
     { encoding: 'utf8' },
   );
   assert.equal(child.status, 0, child.stderr);
-  assert.deepEqual(JSON.parse(child.stdout.trim().split('\n').pop() as string), { ok: true, pidOk: true, bash: 'held', exists: true });
+  assert.deepEqual(JSON.parse(child.stdout.trim().split('\n').pop() as string), { ok: true, pidOk: true, exists: true });
   assert.ok(!existsSync(lock), 'released at exit');
 
   // a lock left by a dead PID is reclaimed by TS
@@ -555,12 +526,6 @@ test('lock: same on-disk format as bash (TS holds → bash sees it; stale reclai
   C.releaseLock();
   assert.ok(!existsSync(lock));
 
-  // and a lock TS left (dead pid) is reclaimed by bash
-  mkdirSync(lock);
-  writeFileSync(path.join(lock, 'pid'), `${dead}\n`);
-  const b = bash('gsd_acquire_lock "$1"; echo "held=$(cat "$GSD_LOCKDIR/pid" | grep -c .)"', [r]);
-  assert.match(b.out, /reclaimed stale gsd lock/);
-  assert.ok(!existsSync(lock), 'bash released at exit');
   // re-entrant
   withEnvLockHeld(() => assert.equal(C.acquireLock(r), true));
   assert.ok(!existsSync(lock), 'GSD_LOCK_HELD=1 takes nothing');
@@ -596,10 +561,10 @@ test('testCmd / installCmd', () => {
   for (const [name, files, conf] of layouts) {
     const r = repo(path.join(tmp(), 'tc'), conf === '' ? undefined : conf);
     for (const [f, c] of Object.entries(files)) write(path.join(r, f), c);
-    same(`testCmd ${name}`, 'gsd_test_cmd "$1"', [r], C.testCmd(r));
-    same(`installCmd ${name}`, 'gsd_install_cmd "$1"', [r], C.installCmd(r));
+    same(`testCmd ${name}`, C.testCmd(r));
+    same(`installCmd ${name}`, C.installCmd(r));
     if (files['package.json']) {
-      assert.equal(C.npmHasTest(path.join(r, 'package.json')) ? '0' : '1', bash('gsd__npm_has_test "$1"; echo $?', [path.join(r, 'package.json')]).out.trim(), `npmHasTest ${name}`);
+      gold(`# npmHasTest ${name}\n${C.npmHasTest(path.join(r, 'package.json')) ? '0' : '1'}`);
     }
   }
   assert.equal(C.npmHasTest('/nonexistent/package.json'), false);
@@ -607,27 +572,26 @@ test('testCmd / installCmd', () => {
 
 // ── provider facts ──────────────────────────────────────────────────────────
 
+// a provider fact: its text (for the exit code facts: `value\nrc=N`)
+const fact = (label: string, ts: string): void => gold(`# ${label}\n${ts}`);
+const rcv = (v: string | null): string => (v === null ? 'rc=1\n' : `${v}\nrc=0\n`);
+
 test('provider known / gone / default command / instruction file / skill root / review flag / hooks', () => {
   const names = ['claude', 'codex', 'custom', 'gemini', 'nope', ''];
   for (const p of names) {
-    assert.equal(P.providerKnown(p) ? '0' : '1', bash('gsd_provider_known "$1"; echo $?', [p]).out.trim(), `known ${p}`);
-    assert.equal(P.providerGone(p) ? '0' : '1', bash('gsd_provider_gone "$1"; echo $?', [p]).out.trim(), `gone ${p}`);
-    const dc = bash('gsd_provider_default_command "$1"; echo "rc=$?"', [p]);
+    fact(`known ${p}`, `${P.providerKnown(p) ? '0' : '1'}\n`);
+    fact(`gone ${p}`, `${P.providerGone(p) ? '0' : '1'}\n`);
     const dflt = P.providerDefaultCommand(p);
-    assert.equal(dc.out, dflt === null ? 'rc=1\n' : `${dflt === '' ? '' : `${dflt}\n`}rc=0\n`, `default command ${p}`);
-    same(`instruction file ${p}`, 'gsd_provider_instruction_file "$1"', [p], P.providerInstructionFile(p));
-    same(`native hook ${p}`, 'gsd_provider_native_hook "$1"', [p], P.providerNativeHook(p));
-    const rf = bash('gsd_provider_review_flag "$1"; echo "rc=$?"', [p]);
-    assert.equal(P.providerReviewFlag(p) === null ? rf.out === 'rc=1\n' : rf.out === `${P.providerReviewFlag(p)}\nrc=0\n`, true, `review flag ${p}: ${rf.out}`);
-    const tip = bash('gsd_provider_ui_tip "$1"; echo "rc=$?"', [p]);
-    assert.equal(tip.out, P.providerUiTip(p) === null ? 'rc=1\n' : `${P.providerUiTip(p)}\nrc=0\n`, `ui tip ${p}`);
+    fact(`default command ${p}`, dflt === null ? 'rc=1\n' : `${dflt === '' ? '' : `${dflt}\n`}rc=0\n`);
+    same(`instruction file ${p}`, P.providerInstructionFile(p));
+    same(`native hook ${p}`, P.providerNativeHook(p));
+    fact(`review flag ${p}`, rcv(P.providerReviewFlag(p)));
+    fact(`ui tip ${p}`, rcv(P.providerUiTip(p)));
     for (const addon of ['impeccable', 'shadcn-mcp', 'other']) {
-      const a = bash('gsd_provider_ui_addon "$1" "$2"; echo "rc=$?"', [p, addon]);
-      assert.equal(a.out, P.providerUiAddon(p, addon) === null ? 'rc=1\n' : `${P.providerUiAddon(p, addon)}\nrc=0\n`, `addon ${p} ${addon}`);
+      fact(`addon ${p} ${addon}`, rcv(P.providerUiAddon(p, addon)));
     }
-    const hm = bash('gsd_provider_hook_metadata "$1"; echo "rc=$? $GSD_HOOK_SETTINGS|$GSD_HOOK_EVENT|$GSD_HOOK_MATCHER|$GSD_HOOK_COMMAND"', [p]);
     const m = P.providerHookMetadata(p);
-    assert.equal(hm.out, m === null ? 'rc=1 |||\n' : `rc=0 ${m.settings}|${m.event}|${m.matcher}|${m.command}\n`, `hook metadata ${p}`);
+    fact(`hook metadata ${p}`, m === null ? 'rc=1 |||\n' : `rc=0 ${m.settings}|${m.event}|${m.matcher}|${m.command}\n`);
   }
   // skill root / user hook file under env combinations
   const envs: Array<Record<string, string | undefined>> = [
@@ -640,17 +604,14 @@ test('provider known / gone / default command / instruction file / skill root / 
     { GSD_CLAUDE_SKILL_DIR: '' },
   ];
   for (const env of envs) {
-    withEnv(env, () => {
+    withEnv({ HOME: '/home/fake', ...env }, () => {
       for (const p of ['claude', 'codex', 'custom']) {
         for (const home of [undefined, '/h/ome']) {
           const args = home ? [p, home] : [p];
-          const b = bash(home ? 'gsd_provider_skill_root "$1" "$2"; echo "rc=$?"' : 'gsd_provider_skill_root "$1"; echo "rc=$?"', args);
           const t = P.providerSkillRoot(p, home);
-          assert.equal(b.out, t === null ? 'rc=1\n' : `${t}\nrc=0\n`, `skill root ${p} ${home} ${JSON.stringify(env)}`);
+          fact(`skill root ${p} ${home} ${JSON.stringify(env)}`, rcv(t));
         }
-        const u = bash('gsd_provider_user_hook_file "$1"; echo "rc=$?"', [p]);
-        const t = P.providerUserHookFile(p);
-        assert.equal(u.out, t === null ? 'rc=1\n' : `${t}\nrc=0\n`, `user hook file ${p} ${JSON.stringify(env)}`);
+        fact(`user hook file ${p} ${JSON.stringify(env)}`, rcv(P.providerUserHookFile(p)));
       }
     });
   }
@@ -676,10 +637,10 @@ test('providerHookState', () => {
     const r = repo(path.join(tmp(), 'hs'));
     if (f !== null) write(path.join(r, '.claude', 'settings.json'), f);
     for (const p of ['claude', 'codex', 'custom']) {
-      assert.equal(P.providerHookState(r, p), chomp(bash('gsd_provider_hook_state "$1" "$2"', [r, p]).out), `${p} ${f}`);
+      gold(`# hookState ${p} ${f}\n${P.providerHookState(r, p)}`);
     }
   }
-  // P13: without jq the TS check still works (the bash twin answers `unverified`, the TS never does)
+  // P13: without jq the TS check still works (the old bash answered `unverified`, the TS never does)
   const noJq = tmp();
   const r = repo(path.join(tmp(), 'hs2'));
   write(path.join(r, '.claude', 'settings.json'), settings(good));
@@ -687,7 +648,6 @@ test('providerHookState', () => {
     const w = spawnSync('sh', ['-c', `command -v ${x}`], { encoding: 'utf8' }).stdout.trim();
     if (w) symlinkSync(w, path.join(noJq, x));
   }
-  assert.equal(chomp(bash('gsd_provider_hook_state "$1" claude', [r], { PATH: noJq }).out), 'unverified');
   const t = withEnv({ PATH: noJq }, () => P.providerHookState(r, 'claude'));
   assert.equal(t, 'present');
 });
@@ -702,11 +662,10 @@ test('staleHooks / staleHooksNotice', () => {
   const r = repo(path.join(tmp(), 'sh'));
   withEnv({ GSD_CLAUDE_SETTINGS: settingsFile, GSD_CODEX_HOOKS: path.join(d, 'none.json'), GSD_UPDATE_NOTICE: 'always' }, () => {
     for (const arg of ['', r]) {
-      const b = bash(arg ? 'gsd_stale_hooks "$1"' : 'gsd_stale_hooks', arg ? [arg] : []);
-      assert.equal(P.staleHooks(arg), b.out, `staleHooks ${arg}`);
+      gold(`# staleHooks ${arg === '' ? '(no repo)' : 'repo'}\n${P.staleHooks(arg)}`);
     }
-    const n = bash('gsd_stale_hooks_notice 2>&1 >/dev/null').out;
-    assert.equal(P.staleHooksNotice().map((l) => `${l}\n`).join(''), n);
+    const n = P.staleHooksNotice().map((l) => `${l}\n`).join('');
+    gold(`# staleHooksNotice\n${n}`);
     assert.ok(n.includes('run a file that is gone'));
   });
   withEnv({ GSD_CLAUDE_SETTINGS: settingsFile, GSD_UPDATE_NOTICE: undefined }, () => {
@@ -737,15 +696,9 @@ test('ownedMarkersValid / ownedBlockGet', () => {
   const d = tmp();
   for (const [name, body] of Object.entries(MARK_FILES)) {
     const f = write(path.join(d, name), body);
-    // P12: a CRLF file reads as its LF version (the bash oracle chokes on the \r, on purpose no longer matched)
-    const o = name === 'crlf' ? write(path.join(d, `${name}-lf`), body.replace(/\r\n/g, '\n')) : f;
     for (const kind of ['provider', 'canonical']) {
-      assert.equal(
-        P.ownedMarkersValid(f, kind) ? '0' : '1',
-        bash('gsd_owned_markers_valid "$1" "$2"; echo $?', [o, kind]).out.trim(),
-        `valid ${name}/${kind}`,
-      );
-      assert.equal(P.ownedBlockGet(f, kind), bash('gsd_owned_block_get "$1" "$2"', [o, kind]).out, `block ${name}/${kind}`);
+      gold(`# valid ${name}/${kind}\n${P.ownedMarkersValid(f, kind) ? '0' : '1'}`);
+      gold(`# block ${name}/${kind}\n${JSON.stringify(P.ownedBlockGet(f, kind))}`);
     }
   }
   const missing = path.join(d, 'missing');
@@ -762,38 +715,31 @@ test('replaceOwnedBlock', () => {
       const crlfCase = name === 'crlf';
       const a = write(path.join(d, `a-${name}-${mode}`), crlfCase ? body.replace(/\r\n/g, '\n') : body, mode);
       const b = write(path.join(d, `b-${name}-${mode}`), body, mode);
-      const ra = bash('gsd_replace_owned_block "$1" provider "$2"; echo $?', [a, blockFile]).out.trim();
       const rb = P.replaceOwnedBlock(b, 'provider', blockFile);
-      assert.equal(rb ? '0' : '1', ra, `rc ${name}`);
-      const want = readFileSync(a, 'latin1');
-      assert.equal(readFileSync(b, 'latin1'), crlfCase ? want.replace(/\n/g, '\r\n') : want, `content ${name}`);
-      assert.equal(statSync(b).mode & 0o777, statSync(a).mode & 0o777, `mode ${name} ${mode.toString(8)}`);
+      const lbl = `# replaceOwnedBlock ${name} ${mode.toString(8)}`;
+      gold(`${lbl}\nrc=${rb ? 0 : 1}\ncontent=${JSON.stringify(readFileSync(b, 'latin1'))}\nmode=${(statSync(b).mode & 0o777).toString(8)}`);
     }
   }
-  // a file that does not exist: bash creates it empty with mode 0600 (kept for parity)
-  const a = path.join(d, 'new-a');
+  // a file that does not exist is created (mode 0600 as before)
   const b = path.join(d, 'new-b');
-  bash('gsd_replace_owned_block "$1" provider "$2"', [a, blockFile]);
   assert.equal(P.replaceOwnedBlock(b, 'provider', blockFile), true);
-  assert.equal(readFileSync(b, 'utf8'), readFileSync(a, 'utf8'));
-  assert.equal(statSync(b).mode & 0o777, statSync(a).mode & 0o777);
+  const nf = (f: string): string => `content=${JSON.stringify(readFileSync(f, 'utf8'))}\nmode=${(statSync(f).mode & 0o777).toString(8)}`;
+  gold(`# replaceOwnedBlock new file\n${nf(b)}`);
   // a symlinked file is written through
   const real1 = write(path.join(d, 'real1'), MARK_FILES.ok as string);
   const real2 = write(path.join(d, 'real2'), MARK_FILES.ok as string);
   symlinkSync(real1, path.join(d, 'l1'));
   symlinkSync(real2, path.join(d, 'l2'));
-  bash('gsd_replace_owned_block "$1" provider "$2"', [path.join(d, 'l1'), blockFile]);
   P.replaceOwnedBlock(path.join(d, 'l2'), 'provider', blockFile);
   assert.equal(readlinkSync(path.join(d, 'l2')), real2);
-  assert.equal(readFileSync(real2, 'utf8'), readFileSync(real1, 'utf8'));
+  gold(`# replaceOwnedBlock through a symlink\n${JSON.stringify(readFileSync(real2, 'utf8'))}`);
   // blocks produced by the real generators, appended to a file with and without a trailing newline
   const entry = write(path.join(d, 'entry'), P.providerEntryBlock('claude,codex'));
   for (const body of ['# Title\ntext', '# Title\ntext\n']) {
     const x = write(path.join(d, 'x'), body);
     const y = write(path.join(d, 'y'), body);
-    bash('gsd_replace_owned_block "$1" provider "$2"', [x, entry]);
     P.replaceOwnedBlock(y, 'provider', entry);
-    assert.equal(readFileSync(y, 'utf8'), readFileSync(x, 'utf8'));
+    gold(`# replaceOwnedBlock generated entry ${JSON.stringify(body)}\n${JSON.stringify(readFileSync(y, 'utf8'))}`);
   }
 });
 
@@ -823,38 +769,35 @@ test('instruction members / integrated / commandGuardsActive', () => {
   for (const v of ['ok', 'wrong-member', 'old-header', 'no-pointer', 'two-lines', 'bad-markers', 'noinstr', 'badcanon', 'nofile']) {
     const r = mkRepo(v);
     for (const p of ['claude', 'codex', 'custom', 'nope']) {
-      assert.equal(
-        P.providerInstructionIntegrated(r, p) ? '0' : '1',
-        bash('gsd_provider_instruction_integrated "$1" "$2"; echo $?', [r, p]).out.trim(),
-        `integrated ${v}/${p}`,
-      );
+      gold(`# integrated ${v}/${p}\n${P.providerInstructionIntegrated(r, p) ? '0' : '1'}`);
     }
     for (const f of ['CLAUDE.md', 'AGENTS.md']) {
       const file = path.join(r, f);
-      assert.equal(P.providerInstructionMembers(file).map((m) => `${m}\n`).join(''), bash('gsd_provider_instruction_members "$1"', [file]).out, `members ${v}/${f}`);
+      gold(`# members ${v}/${f}\n${P.providerInstructionMembers(file).map((m) => `${m}\n`).join('')}`);
     }
   }
   // commandGuardsActive
+  let guardStep = 0;
   const pkg = tmp();
   for (const [name, exec, body] of [
     ['gsdt-worktree-guard', true, 'x'],
     ['gsdt-start', true, 'gsdt-worktree-guard --command start\n'],
     ['gsdt-flow-next', true, 'x gsdt-worktree-guard foo --command bar\n'],
   ] as const) write(path.join(pkg, 'bin', name), body, exec ? 0o755 : 0o644);
-  assert.equal(P.commandGuardsActive(pkg) ? '0' : '1', bash('gsd_command_guards_active "$1"; echo $?', [pkg]).out.trim());
+  gold(`# commandGuardsActive step ${++guardStep}\n${P.commandGuardsActive(pkg) ? '0' : '1'}`);
   chmodSync(path.join(pkg, 'bin', 'gsdt-flow-next'), 0o644);
-  assert.equal(P.commandGuardsActive(pkg) ? '0' : '1', bash('gsd_command_guards_active "$1"; echo $?', [pkg]).out.trim());
+  gold(`# commandGuardsActive step ${++guardStep}\n${P.commandGuardsActive(pkg) ? '0' : '1'}`);
   chmodSync(path.join(pkg, 'bin', 'gsdt-flow-next'), 0o755);
   write(path.join(pkg, 'bin', 'gsdt-start'), 'no guard here\n', 0o755);
-  assert.equal(P.commandGuardsActive(pkg) ? '0' : '1', bash('gsd_command_guards_active "$1"; echo $?', [pkg]).out.trim());
-  assert.equal(P.commandGuardsActive(PKG) ? '0' : '1', bash('gsd_command_guards_active "$1"; echo $?', [PKG]).out.trim());
+  gold(`# commandGuardsActive step ${++guardStep}\n${P.commandGuardsActive(pkg) ? '0' : '1'}`);
+  gold(`# commandGuardsActive this package\n${P.commandGuardsActive(PKG) ? '0' : '1'}`);
 });
 
 // ── the generated text: byte for byte ───────────────────────────────────────
 
 test('rules text, repo values, canonical block, entry block', () => {
   for (const ui of ['on', 'off', '', 'x']) {
-    same(`rulesText ${ui}`, ui === '' ? 'gsd_rules_text' : 'gsd_rules_text "$1"', ui === '' ? [] : [ui], ui === '' ? P.rulesText() : P.rulesText(ui), { raw: true });
+    same(`rulesText ${ui}`, ui === '' ? P.rulesText() : P.rulesText(ui), { raw: true });
   }
   const vals: string[][] = [
     ['claude', 'claude', 'develop', 'r-worktrees'],
@@ -865,12 +808,11 @@ test('rules text, repo values, canonical block, entry block', () => {
     ['a`b', "c'd", '$x', '日本', 'warn', 'off'],
   ];
   for (const v of vals) {
-    const script = `gsd_repo_values ${v.map((_, i) => `"$${i + 1}"`).join(' ')}`;
-    same(`repoValues ${v}`, script, v, P.repoValues(v[0] as string, v[1] as string, v[2] as string, v[3] as string, v[4], v[5]), { raw: true });
-    same(`canonical ${v}`, 'gsd_canonical_block "$1" "$2" "$3" "$4"', v.slice(0, 4), P.canonicalBlock(v[0] as string, v[1] as string, v[2] as string, v[3] as string), { raw: true });
+    same(`repoValues ${v}`, P.repoValues(v[0] as string, v[1] as string, v[2] as string, v[3] as string, v[4], v[5]), { raw: true });
+    same(`canonical ${v}`, P.canonicalBlock(v[0] as string, v[1] as string, v[2] as string, v[3] as string), { raw: true });
   }
   for (const m of ['claude', 'codex', 'custom', 'claude,codex', 'codex,custom', 'custom,claude', 'claudex', '']) {
-    same(`entry ${m}`, 'gsd_provider_entry_block "$1"', [m], P.providerEntryBlock(m), { raw: true });
+    same(`entry ${m}`, P.providerEntryBlock(m), { raw: true });
   }
 });
 
@@ -880,15 +822,13 @@ const resultText = (r: C.Result<unknown>): string => (r.ok ? '' : r.message);
 
 test('providerListValidate / providerValidate', () => {
   for (const l of ['claude', 'claude,codex', 'codex,claude,custom', '', ',claude', 'claude,', 'claude,,codex', 'claude,claude', 'gemini', 'claude,gemini', 'nope', 'claude,nope', 'Claude']) {
-    const b = bash('gsd_provider_list_validate "$1"; echo "rc=$?"', [l]);
     const t = P.providerListValidate(l);
-    assert.equal(`${t ? `${t.message}\n` : ''}rc=${t ? t.code : 0}\n`, b.err + b.out, `list ${l}`);
+    gold(`# list ${l}\n${t ? `${t.message}\n` : ''}rc=${t ? t.code : 0}\n`);
   }
   for (const p of ['claude', 'codex', 'custom', 'gemini', 'nope', '']) {
     for (const c of ['', 'my-agent', 'bad cmd', 'tab\tcmd', '/p/a th']) {
-      const b = bash('gsd_provider_validate "$1" "$2"; echo "rc=$?"', [p, c]);
       const t = P.providerValidate(p, c);
-      assert.equal(`${t ? `${t.message}\n` : ''}rc=${t ? t.code : 0}\n`, b.err + b.out, `validate ${p}/${c}`);
+      gold(`# validate ${p}/${JSON.stringify(c)}\n${t ? `${t.message}\n` : ''}rc=${t ? t.code : 0}\n`);
     }
   }
 });
@@ -928,15 +868,9 @@ test('providerResolve', () => {
     const r = repo(path.join(tmp(), 'pr'), conf);
     for (const e of envs) {
       withEnv(e.env, () => {
-        const b = bash('gsd_provider_resolve "$1" "$2" "$3"; echo "rc=$?|$GSD_PROVIDER_RESOLVED|$GSD_AGENT_COMMAND_RESOLVED"', [r, e.p, e.c]);
         const t = P.providerResolve(r, e.p, e.c);
-        const want = t.ok ? `rc=0|${t.value.provider}|${t.value.command}\n` : `rc=${t.code}|`;
-        const tag = `${JSON.stringify(conf)} ${JSON.stringify(e)}`;
-        if (t.ok) assert.equal(b.out, want, tag);
-        else {
-          assert.ok(b.out.startsWith(want), `${tag}: ${b.out}`);
-          assert.equal(t.message === '' ? b.err : `${t.message}\n`, b.err, `${tag} message`);
-        }
+        const tag = `# resolve ${JSON.stringify(conf)} ${JSON.stringify(e)}`;
+        gold(t.ok ? `${tag}\nrc=0|${t.value.provider}|${t.value.command}` : `${tag}\nrc=${t.code}|\n${t.message}`);
       });
     }
   }
@@ -945,9 +879,8 @@ test('providerResolve', () => {
 test('modelValidate / modelResolve / startModeResolve / compactResolve', () => {
   for (const p of ['claude', 'codex', 'custom']) {
     for (const m of ['', 'default', 'opus', 'claude-sonnet-5', '-x', 'a b', 'a\tb', 'a\u0001b', 'x/y:z', 'é']) {
-      const b = bash('gsd_model_validate "$1" "$2"; echo "rc=$?"', [p, m]);
       const t = P.modelValidate(p, m);
-      assert.equal(`${t ? `${t.message}\n` : ''}rc=${t ? t.code : 0}\n`, b.err + b.out, `model ${p}/${JSON.stringify(m)}`);
+      gold(`# modelValidate ${p}/${JSON.stringify(m)}\n${t ? `${t.message}\n` : ''}rc=${t ? t.code : 0}\n`);
     }
   }
   const confs = ['', 'claude_model = opus\ncodex_model = gpt\n', 'claude_model = default\n', 'claude_model = bad model\n', 'custom_model = x\n', 'start_mode = discuss\n', 'start_mode = flow\n', 'start_mode = nope\n', 'compact_at = 200000\n', 'compact_at = default\n', 'compact_at = 99999\n', 'compact_at = 0300000\n', 'compact_at = 1000001\n', 'compact_at = abc\n', 'compact_at = 1000000\n', 'compact_at = 100000\n'];
@@ -959,22 +892,19 @@ test('modelValidate / modelResolve / startModeResolve / compactResolve', () => {
         const tag = `${JSON.stringify(conf)} ${JSON.stringify(env)}`;
         for (const p of ['claude', 'codex', 'custom']) {
           for (const cli of ['', 'haiku', 'default']) {
-            const b = bash('gsd_model_resolve "$1" "$2" "$3"; echo "rc=$?|$GSD_MODEL_RESOLVED"', [r, p, cli]);
             const t = P.modelResolve(r, p, cli);
-            assert.equal(b.out, t.ok ? `rc=0|${t.value}\n` : `rc=${t.code}|${b.out.split('|')[1]}`, `model ${p} ${cli} ${tag}`);
-            if (!t.ok) assert.equal(`${t.message}\n`, b.err);
+            const lbl = `# modelResolve ${p} ${cli} ${tag}`;
+            gold(t.ok ? `${lbl}\nrc=0|${t.value}` : `${lbl}\nrc=${t.code}\n${t.message}`);
           }
         }
         for (const cli of ['', 'discuss', 'flow', 'bad']) {
-          const b = bash('gsd_start_mode_resolve "$1" "$2"; echo "rc=$?|$GSD_START_MODE_RESOLVED"', [r, cli]);
           const t = P.startModeResolve(r, cli);
-          assert.equal(b.out, t.ok ? `rc=0|${t.value}\n` : `rc=${t.code}|${b.out.split('|')[1]}`, `start ${cli} ${tag}`);
-          if (!t.ok) assert.equal(`${t.message}\n`, b.err);
+          const lbl = `# startModeResolve ${cli} ${tag}`;
+          gold(t.ok ? `${lbl}\nrc=0|${t.value}` : `${lbl}\nrc=${t.code}\n${t.message}`);
         }
-        const b = bash('gsd_compact_resolve "$1"; echo "rc=$?|$GSD_COMPACT_RESOLVED"', [r]);
         const t = P.compactResolve(r);
-        assert.equal(b.out, t.ok ? `rc=0|${t.value}\n` : `rc=${t.code}|\n`, `compact ${tag}`);
-        if (!t.ok) assert.equal(`${t.message}\n`, b.err);
+        const lbl = `# compactResolve ${tag}`;
+        gold(t.ok ? `${lbl}\nrc=0|${t.value}` : `${lbl}\nrc=${t.code}\n${t.message}`);
         assert.equal(resultText(t) === '' || !t.ok, true);
       });
     }
@@ -1003,12 +933,10 @@ test('compactSettings', () => {
       const a = mk();
       const b = mk();
       withEnv({ CLAUDE_CODE_AUTO_COMPACT_WINDOW: envWin }, () => {
-        const bo = bash('gsd_compact_settings "$1" "$2" "$3"', [a.r, a.wt, tokens]);
         const t = P.compactSettings(b.r, b.wt, tokens);
-        const tag = `${JSON.stringify([conf, existing, tokens, envWin, ignored])}`;
-        assert.equal(t, bo.out.replaceAll(a.r, b.r), `output ${tag}`);
+        const tag = `# compactSettings ${JSON.stringify([conf, existing, tokens, envWin, ignored])}`;
         const f = (x: string): string | null => (existsSync(path.join(x, '.claude', 'settings.local.json')) ? readFileSync(path.join(x, '.claude', 'settings.local.json'), 'utf8') : null);
-        assert.equal(f(b.r), f(a.r), `file ${tag}`);
+        gold(`${tag}\noutput:\n${t}\nfile: ${JSON.stringify(f(b.r))}`);
       });
     }
   }
@@ -1020,30 +948,24 @@ test('providerPrompt', () => {
   for (const p of ['claude', 'codex', 'custom', 'nope']) {
     for (const kind of ['discuss', 'flow', 'batch', 'new', 'ingest', 'nope']) {
       for (const n of ['', '7', '2.1', "fix 'a' \"b\" $x `y` — é"]) {
-        same(`prompt ${p}/${kind}/${n}`, 'gsd_provider_prompt "$1" "$2" "$3"', [p, kind, n], P.providerPrompt(p, kind, n));
+        same(`prompt ${p}/${kind}/${n}`, P.providerPrompt(p, kind, n));
       }
     }
   }
 });
 
-const BASH3 = /version 3\./.test(spawnSync('bash', ['--version'], { encoding: 'utf8' }).stdout);
 const AWKWARD = ['', 'plain', 'with space', 'it\'s', 'quote " and $ safe', 'back\\slash', 'new\nline', 'tab\there', '日本語 é ü — dash', '#hash', 'a#b', '~tilde', 'a=b', '*?[]{}', '`$()&;|<>!^,', 'x\u0001y', '/tmp/a b/c', 'trailing\\', '  lead', 'emoji 🎉 ok', '-lead', '\u007fdel'];
 
 test('shellQuote / providerRender / providerArgv', () => {
   for (const s of AWKWARD) {
-    // bash >= 4.4 escapes a leading ~; 3.2 does not, and the new code always does
-    let b = bash('gsd_shell_quote "$1"', [s]).out;
-    if (BASH3) b = b.replace(/^~/, '\\~');
-    // bash 3.2 (macOS) escapes the bytes of characters beyond Latin-1 as octal; bash >= 4 keeps them
-    if (BASH3 && /[^\u0000-\u00ff]/.test(s)) {
-      assert.ok(!P.shellQuote(s).includes('\\3'), `quote keeps ${JSON.stringify(s)}`);
-      continue;
-    }
-    assert.equal(P.shellQuote(s), b, `quote ${JSON.stringify(s)}`);
+    const lbl = `# quote ${JSON.stringify(s)}`;
+    // characters beyond Latin-1 stay as they are (old bash 3.2 escaped their bytes as octal)
+    if (/[^\u0000-\u00ff]/.test(s)) assert.ok(!P.shellQuote(s).includes('\\3'), `quote keeps ${JSON.stringify(s)}`);
+    gold(`${lbl}\n${P.shellQuote(s)}`);
   }
   for (const cwd of ['/tmp/a b', '/x', 'rel dir/ü']) {
     for (const argv of [['fake', 'quote " and $ safe'], ['env', 'A=b', 'claude', '/gsdt-flow 7'], ['x']]) {
-      same(`render ${cwd} ${argv}`, 'gsd_provider_render "$@"', [cwd, ...argv], P.providerRender(cwd, ...argv));
+      same(`render ${cwd} ${argv}`, P.providerRender(cwd, ...argv));
     }
   }
   for (const p of ['claude', 'codex', 'custom']) {
@@ -1052,16 +974,9 @@ test('shellQuote / providerRender / providerArgv', () => {
         for (const envWin of [undefined, '123456']) {
           for (const prompt of AWKWARD) {
             withEnv({ CLAUDE_CODE_AUTO_COMPACT_WINDOW: envWin }, () => {
-              const b = bash('gsd_provider_argv "$1" "$2" "$3" "$4" "$5"; rc=$?; printf "%s\\n" "$rc"; printf "%s\\0" "${GSD_LAUNCH_ARGV[@]}"', [p, 'agent-cmd', prompt, model, compact]);
               const t = P.providerArgv(p, 'agent-cmd', prompt, model, compact);
-              const rc = b.out.split('\n')[0];
-              assert.equal(rc, t.ok ? '0' : String(t.code), `rc ${p} ${model} ${compact}`);
-              if (t.ok) {
-                const rest = b.out.slice(b.out.indexOf('\n') + 1);
-                assert.equal(rest, t.value.map((a) => `${a}\0`).join(''), `argv ${p}/${model}/${compact}/${envWin}/${JSON.stringify(prompt)}`);
-              } else {
-                assert.equal(`${t.message}\n`, b.err);
-              }
+              const lbl = `# argv ${p}/${JSON.stringify(model)}/${JSON.stringify(compact)}/${envWin}/${JSON.stringify(prompt)}`;
+              gold(t.ok ? `${lbl}\nrc=0\n${JSON.stringify(t.value)}` : `${lbl}\nrc=${t.code}\n${t.message}`);
             });
           }
         }

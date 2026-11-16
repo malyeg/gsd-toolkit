@@ -1,13 +1,12 @@
-// P6 parity (gsdt-start): the TypeScript command behind bin/gsdt-start against the
-// pre-P6 bash command (tests/fixtures/p6-old-bins/gsdt-start), each on its own
-// copy of the same fixture project. Compared: stdout, stderr, exit code of every
-// step, and the files/commits/branches/worktrees left behind.
+// gsdt-start: the TypeScript command behind bin/gsdt-start on its own copy of a fixture project. Every step's
+// stdout, stderr, exit code and the files/commits/branches/worktrees left behind are compared with
+// the saved goldens in tests/golden/p6-start/. Regenerate with UPDATE_GOLDEN=1 and review the diff.
 // Run: node --test tests/ts/p6-start.test.ts
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
+import { test } from './golden.ts';
 import {
   ROADMAP_RICH,
   cleanPath,

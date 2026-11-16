@@ -1,0 +1,29 @@
+@@@ 1 @@@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo mine"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo keep"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+--
+✂ claude user hook removed from <H>/.claude/settings.json

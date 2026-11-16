@@ -1,0 +1,74 @@
+@@@ 1 @@@
+only ours
+rc=0
+
+@@@ 2 @@@
+ours and the user's in one group
+rc=0
+.gemini/
+--
+.gemini/settings.json [644] "{\n  \"model\": \"m\",\n  \"hooks\": {\n    \"BeforeTool\": [\n      {\n        \"matcher\": \"x\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"echo hi\"\n          }\n        ]\n      }\n    ]\n  }\n}\n"
+@@@ 3 @@@
+old name
+rc=0
+
+@@@ 4 @@@
+two events
+rc=0
+.gemini/
+--
+.gemini/settings.json [644] "{\n  \"hooks\": {\n    \"B\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"echo\"\n          }\n        ]\n      }\n    ]\n  }\n}\n"
+@@@ 5 @@@
+not ours
+rc=1
+.gemini/
+--
+.gemini/settings.json [644] "{\"hooks\":{\"A\":[{\"hooks\":[{\"type\":\"command\",\"command\":\"echo hi\"}]}]}}"
+@@@ 6 @@@
+no hooks
+rc=1
+.gemini/
+--
+.gemini/settings.json [644] "{\"a\": 1}"
+@@@ 7 @@@
+hooks array
+rc=1
+.gemini/
+--
+.gemini/settings.json [644] "{\"hooks\": []}"
+@@@ 8 @@@
+groups not a list
+rc=0
+.gemini/
+--
+.gemini/settings.json [644] "{\n  \"hooks\": {\n    \"A\": \"x\"\n  }\n}\n"
+@@@ 9 @@@
+group without hooks list
+rc=0
+.gemini/
+--
+.gemini/settings.json [644] "{\n  \"hooks\": {\n    \"A\": [\n      {\n        \"matcher\": \"x\"\n      },\n      \"str\"\n    ]\n  }\n}\n"
+@@@ 10 @@@
+command not a string
+rc=0
+.gemini/
+--
+.gemini/settings.json [644] "{\n  \"hooks\": {\n    \"A\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": [\n              \"x\"\n            ]\n          },\n          {\n            \"type\": \"command\",\n            \"command\": null\n          },\n          \"junk\"\n        ]\n      }\n    ]\n  }\n}\n"
+@@@ 11 @@@
+invalid json
+rc=1
+.gemini/
+--
+.gemini/settings.json [644] "{\"hooks\": "
+@@@ 12 @@@
+numbers kept
+rc=0
+.gemini/
+--
+.gemini/settings.json [644] "{\n  \"n\": 1.0,\n  \"big\": 123456789012345678901234567890,\n  \"hooks\": {\n    \"A\": [\n      {\n        \"hooks\": [\n          {\n            \"command\": \"keep\"\n          }\n        ]\n      }\n    ]\n  }\n}\n"
+@@@ 13 @@@
+bad bytes
+rc=1
+.gemini/
+--
+.gemini/settings.json [644] "ÿ"

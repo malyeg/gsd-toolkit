@@ -1,0 +1,282 @@
+@@@ 1 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/1
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+main change
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+main change
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── tracker.log
+finish ABC-1 🔀 GSD phase 1: PR opened phase-1-catalog → main|status=
+
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog tk-ABC-1 --fill-verbose
+
+── merge driver
+
+@@@ 2 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/1
+• ticket ABC-1 not updated (non-fatal) — check: gsdt-tracker check
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+main change
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+main change
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── tracker.log
+finish ABC-1 🔀 GSD phase 1: PR opened phase-1-catalog → main|status=
+
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog tk-ABC-1 --fill-verbose
+
+── merge driver
+
+@@@ 3 @@@
+step 1 (gsdt-finish 1 --pr)
+rc=0
+--- stdout
+▶ pushing 'phase-1-catalog'…
+▶ opening PR phase-1-catalog → main…
+https://github.com/x/y/pull/1
+
+Worktree kept. After the PR merges:  gsdt-finish phase-1-catalog
+
+--- stderr
+
+--- files left behind
+── log
+main change
+feature
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+main change
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── tracker.log
+finish ABC-1 🔀 GSD phase 1: PR opened phase-1-catalog → main|status=
+
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog tk-ABC-1 --fill-verbose
+
+── merge driver
+
+@@@ 4 @@@
+step 2 (gsdt-finish 1)
+rc=0
+--- stdout
+▶ syncing local 'main' with origin…
+Already up to date.
+▶ merging 'phase-1-catalog' into 'main'…
+Merge made by the 'ort' strategy.
+ f.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 f.txt
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
+▶ pushing 'main'…
+▶ removing worktree + branch…
+Deleted branch phase-1-catalog (was baa2553).
+✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
+
+If your shell was inside the removed worktree:  cd <T>/shop
+
+--- stderr
+
+--- files left behind
+── log
+Merge phase-1-catalog into main
+feature
+main change
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog tk-ABC-1
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+Merge phase-1-catalog into main
+main change
+feature
+init
+
+── tracker.log
+finish ABC-1 🔀 GSD phase 1: PR opened phase-1-catalog → main|status=
+finish ABC-1 ✅ GSD phase 1 merged to main — commit b990d62 in shop. Ready for testing.|status=
+
+── gh.log
+gh pr create --repo <T>/shop.git --base main --head phase-1-catalog --title Phase 1: catalog tk-ABC-1 --fill-verbose
+
+── doctor.log
+--repo <T>/shop --quiet
+
+── merge driver
+gsdt-planning-merge %O %A %B %P
+

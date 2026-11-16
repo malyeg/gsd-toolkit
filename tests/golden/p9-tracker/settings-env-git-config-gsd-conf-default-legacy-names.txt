@@ -1,0 +1,529 @@
+@@@ 1 @@@
+### step 0: ["config"] {}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=git
+tracker_ok=yes
+profile=legacyprof
+profile_from=git
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-legacyprof.env
+token=missing
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["which"] {}
+rc=0
+--- stdout
+clickup
+
+--- stderr
+
+@@@ 3 @@@
+### step 2: ["config"] {"GSD_TRACKER":"CustoM","GSD_TRACKER_PROFILE":"ep","GSD_TRACKER_STATUS_START":"S1","GSD_TRACKER_STATUS_FINISH":"F1"}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=env
+tracker_ok=yes
+profile=ep
+profile_from=env
+profile_ok=yes
+command=
+command_from=
+status_start=S1
+status_finish=F1
+
+--- stderr
+
+@@@ 4 @@@
+### step 3: ["config"] {"GSD_CLICKUP_STATUS_START":"LS","GSD_CLICKUP_STATUS_FINISH":"LF"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=git
+tracker_ok=yes
+profile=legacyprof
+profile_from=git
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-legacyprof.env
+token=missing
+status_start=LS
+status_finish=LF
+
+--- stderr
+
+@@@ 5 @@@
+### step 4: ["config"] {"GSD_TRACKER":"clickup","GSD_CLICKUP_CONFIG":"/some/where.env"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=env
+tracker_ok=yes
+profile=legacyprof
+profile_from=git
+profile_ok=yes
+token_file=/some/where.env
+token=missing
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 6 @@@
+### step 5: ["config"] {"GSD_TRACKER":"clickup","CLICKUP_API_TOKEN":"x"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=env
+tracker_ok=yes
+profile=legacyprof
+profile_from=git
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-legacyprof.env
+token=env
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 7 @@@
+### step 6: ["config"] {"GSD_TRACKER":"bogus","GSD_TRACKER_PROFILE":"bad name"}
+rc=0
+--- stdout
+tracker=bogus
+tracker_from=env
+tracker_ok=no
+profile=bad name
+profile_from=env
+profile_ok=no
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 8 @@@
+### step 7: ["--tracker","NONE","which"] {"GSD_TRACKER":"clickup"}
+rc=0
+--- stdout
+none
+
+--- stderr
+
+@@@ 9 @@@
+### step 8: ["config"] {}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=git
+tracker_ok=yes
+profile=gitprof
+profile_from=git
+profile_ok=yes
+command=<ROOT>/gsd/scripts/x.sh
+command_from=git
+status_start=GitStart
+status_finish=
+
+--- stderr
+
+@@@ 10 @@@
+### step 9: ["which"] {}
+rc=0
+--- stdout
+custom
+
+--- stderr
+
+@@@ 11 @@@
+### step 10: ["config"] {"GSD_TRACKER":"CustoM","GSD_TRACKER_PROFILE":"ep","GSD_TRACKER_STATUS_START":"S1","GSD_TRACKER_STATUS_FINISH":"F1"}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=env
+tracker_ok=yes
+profile=ep
+profile_from=env
+profile_ok=yes
+command=<ROOT>/gsd/scripts/x.sh
+command_from=git
+status_start=S1
+status_finish=F1
+
+--- stderr
+
+@@@ 12 @@@
+### step 11: ["config"] {"GSD_CLICKUP_STATUS_START":"LS","GSD_CLICKUP_STATUS_FINISH":"LF"}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=git
+tracker_ok=yes
+profile=gitprof
+profile_from=git
+profile_ok=yes
+command=<ROOT>/gsd/scripts/x.sh
+command_from=git
+status_start=LS
+status_finish=LF
+
+--- stderr
+
+@@@ 13 @@@
+### step 12: ["config"] {"GSD_TRACKER":"clickup","GSD_CLICKUP_CONFIG":"/some/where.env"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=env
+tracker_ok=yes
+profile=gitprof
+profile_from=git
+profile_ok=yes
+token_file=/some/where.env
+token=missing
+status_start=GitStart
+status_finish=
+
+--- stderr
+
+@@@ 14 @@@
+### step 13: ["config"] {"GSD_TRACKER":"clickup","CLICKUP_API_TOKEN":"x"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=env
+tracker_ok=yes
+profile=gitprof
+profile_from=git
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-gitprof.env
+token=env
+status_start=GitStart
+status_finish=
+
+--- stderr
+
+@@@ 15 @@@
+### step 14: ["config"] {"GSD_TRACKER":"bogus","GSD_TRACKER_PROFILE":"bad name"}
+rc=0
+--- stdout
+tracker=bogus
+tracker_from=env
+tracker_ok=no
+profile=bad name
+profile_from=env
+profile_ok=no
+status_start=GitStart
+status_finish=
+
+--- stderr
+
+@@@ 16 @@@
+### step 15: ["--tracker","NONE","which"] {"GSD_TRACKER":"clickup"}
+rc=0
+--- stdout
+none
+
+--- stderr
+
+@@@ 17 @@@
+### step 16: ["config"] {}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=git
+tracker_ok=yes
+profile=confprof
+profile_from=gsd.conf
+profile_ok=yes
+command=<ROOT>/home/c.sh
+command_from=gsd.conf
+status_start=Conf Start
+status_finish=OldFin
+
+--- stderr
+
+@@@ 18 @@@
+### step 17: ["which"] {}
+rc=0
+--- stdout
+custom
+
+--- stderr
+
+@@@ 19 @@@
+### step 18: ["config"] {"GSD_TRACKER":"CustoM","GSD_TRACKER_PROFILE":"ep","GSD_TRACKER_STATUS_START":"S1","GSD_TRACKER_STATUS_FINISH":"F1"}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=env
+tracker_ok=yes
+profile=ep
+profile_from=env
+profile_ok=yes
+command=<ROOT>/home/c.sh
+command_from=gsd.conf
+status_start=S1
+status_finish=F1
+
+--- stderr
+
+@@@ 20 @@@
+### step 19: ["config"] {"GSD_CLICKUP_STATUS_START":"LS","GSD_CLICKUP_STATUS_FINISH":"LF"}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=git
+tracker_ok=yes
+profile=confprof
+profile_from=gsd.conf
+profile_ok=yes
+command=<ROOT>/home/c.sh
+command_from=gsd.conf
+status_start=LS
+status_finish=LF
+
+--- stderr
+
+@@@ 21 @@@
+### step 20: ["config"] {"GSD_TRACKER":"clickup","GSD_CLICKUP_CONFIG":"/some/where.env"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=env
+tracker_ok=yes
+profile=confprof
+profile_from=gsd.conf
+profile_ok=yes
+token_file=/some/where.env
+token=missing
+status_start=Conf Start
+status_finish=OldFin
+
+--- stderr
+
+@@@ 22 @@@
+### step 21: ["config"] {"GSD_TRACKER":"clickup","CLICKUP_API_TOKEN":"x"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=env
+tracker_ok=yes
+profile=confprof
+profile_from=gsd.conf
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-confprof.env
+token=env
+status_start=Conf Start
+status_finish=OldFin
+
+--- stderr
+
+@@@ 23 @@@
+### step 22: ["config"] {"GSD_TRACKER":"bogus","GSD_TRACKER_PROFILE":"bad name"}
+rc=0
+--- stdout
+tracker=bogus
+tracker_from=env
+tracker_ok=no
+profile=bad name
+profile_from=env
+profile_ok=no
+status_start=Conf Start
+status_finish=OldFin
+
+--- stderr
+
+@@@ 24 @@@
+### step 23: ["--tracker","NONE","which"] {"GSD_TRACKER":"clickup"}
+rc=0
+--- stdout
+none
+
+--- stderr
+
+@@@ 25 @@@
+### step 24: ["config"] {}
+rc=0
+--- stdout
+tracker=none
+tracker_from=git
+tracker_ok=yes
+profile=
+profile_from=
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 26 @@@
+### step 25: ["which"] {}
+rc=0
+--- stdout
+none
+
+--- stderr
+
+@@@ 27 @@@
+### step 26: ["config"] {"GSD_TRACKER":"CustoM","GSD_TRACKER_PROFILE":"ep","GSD_TRACKER_STATUS_START":"S1","GSD_TRACKER_STATUS_FINISH":"F1"}
+rc=0
+--- stdout
+tracker=custom
+tracker_from=env
+tracker_ok=yes
+profile=ep
+profile_from=env
+profile_ok=yes
+command=<ROOT>/cust/scripts/tracker.sh
+command_from=gsd.conf
+status_start=S1
+status_finish=F1
+
+--- stderr
+
+@@@ 28 @@@
+### step 27: ["config"] {"GSD_CLICKUP_STATUS_START":"LS","GSD_CLICKUP_STATUS_FINISH":"LF"}
+rc=0
+--- stdout
+tracker=none
+tracker_from=git
+tracker_ok=yes
+profile=
+profile_from=
+status_start=LS
+status_finish=LF
+
+--- stderr
+
+@@@ 29 @@@
+### step 28: ["config"] {"GSD_TRACKER":"clickup","GSD_CLICKUP_CONFIG":"/some/where.env"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=env
+tracker_ok=yes
+profile=
+profile_from=
+token_file=/some/where.env
+token=missing
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 30 @@@
+### step 29: ["config"] {"GSD_TRACKER":"clickup","CLICKUP_API_TOKEN":"x"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=env
+tracker_ok=yes
+profile=
+profile_from=
+token_file=<ROOT>/home/.config/gsd/clickup.env
+token=env
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 31 @@@
+### step 30: ["config"] {"GSD_TRACKER":"bogus","GSD_TRACKER_PROFILE":"bad name"}
+rc=0
+--- stdout
+tracker=bogus
+tracker_from=env
+tracker_ok=no
+profile=bad name
+profile_from=env
+profile_ok=no
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 32 @@@
+### step 31: ["--tracker","NONE","which"] {"GSD_TRACKER":"clickup"}
+rc=0
+--- stdout
+none
+
+--- stderr
+
+@@@ 33 @@@
+### step 32: ["config"] {}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=git
+tracker_ok=yes
+profile=legacyprof
+profile_from=git
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-legacyprof.env
+token=missing
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 34 @@@
+### step 33: ["--repo","cu","config"] {}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=default
+tracker_ok=yes
+profile=
+profile_from=
+token_file=<ROOT>/home/.config/gsd/clickup.env
+token=missing
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 35 @@@
+### step 34: ["--repo","../cu","config"] {"GSD_TRACKER":"clickup"}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=env
+tracker_ok=yes
+profile=confprof
+profile_from=gsd.conf
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-confprof.env
+token=missing
+status_start=Conf Start
+status_finish=OldFin
+
+--- stderr
+
+@@@ 36 @@@
+curl.log:
+
+argv:
+
+tracker.log:
+
+home:
+
+plain git config:
+gsdt-tracker.tracker=clickup
+gsdt-tracker.statusfinish=
+gsd-tracker.profile=legacyprof
+gsd git config:
+gsdt-tracker.tracker=Custom
+gsdt-tracker.profile=gitprof
+gsdt-tracker.command=scripts/x.sh
+gsdt-tracker.statusstart=GitStart
+cust git config:
+gsdt-tracker.tracker=none
+cu git config:
+gsd-tracker.tracker=custom
+gsd-tracker.statusfinish=OldFin

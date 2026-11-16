@@ -1,0 +1,291 @@
+@@@ 1 @@@
+### step 0: ["create","901","New thing"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp new1 created · https://app.clickup.com/t/new1
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["create","901","Néw \"thing\"\n2","--desc","body\n\n","--assign","me","--assign","42","--status","open","--priority","2","--tag","a","--tag","b c","--parent","CU-abc123"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp new1 created · https://app.clickup.com/t/new1
+
+--- stderr
+
+@@@ 3 @@@
+### step 2: ["create","901","T","--assign","sara@x.io"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp new1 created · https://app.clickup.com/t/new1
+
+--- stderr
+
+@@@ 4 @@@
+### step 3: ["create","901","T","--assign","SARA"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp new1 created · https://app.clickup.com/t/new1
+
+--- stderr
+
+@@@ 5 @@@
+### step 4: ["create","901","T","--assign","nobody"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no workspace member 'nobody' (see gsdt-tracker members)
+
+@@@ 6 @@@
+### step 5: ["create","901","T","--assign","bob"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","CLICKUP_TEAM_ID":"T1"}
+rc=0
+--- stdout
+✔ ClickUp new1 created · https://app.clickup.com/t/new1
+
+--- stderr
+
+@@@ 7 @@@
+### step 6: ["create","901","T","--desc","-"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp new1 created · https://app.clickup.com/t/new1
+
+--- stderr
+
+@@@ 8 @@@
+### step 7: ["create","901","T","--priority","5"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: priority is 1 (urgent), 2 (high), 3 (normal) or 4 (low), not '5'
+
+@@@ 9 @@@
+### step 8: ["create","901","T","--priority","12"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: priority is 1 (urgent), 2 (high), 3 (normal) or 4 (low), not '12'
+
+@@@ 10 @@@
+### step 9: ["create","901","T","--priority"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: --priority needs a value
+
+@@@ 11 @@@
+### step 10: ["create","901","T","--bogus","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: unknown option for create: --bogus
+
+@@@ 12 @@@
+### step 11: ["create","901","T","--parent","a b"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a b
+
+@@@ 13 @@@
+### step 12: ["create","abc","T"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a list id: abc (see gsdt-tracker lists)
+
+@@@ 14 @@@
+### step 13: ["create","999","T"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp null created · 
+
+--- stderr
+
+@@@ 15 @@@
+### step 14: ["update","abc123","--name","N"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp abc123 updated: name
+
+--- stderr
+
+@@@ 16 @@@
+### step 15: ["update","abc123","--name","N","--desc","D","--assign","me","--assign","sara","--unassign","42","--unassign","bob","--status","s","--priority","1","--parent","tk-p1"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp abc123 updated: assignees, description, name, parent, priority, status
+
+--- stderr
+
+@@@ 17 @@@
+### step 16: ["update","abc123","--desc","-"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp abc123 updated: description
+
+--- stderr
+
+@@@ 18 @@@
+### step 17: ["update","abc123","--priority","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: priority is 1 (urgent), 2 (high), 3 (normal) or 4 (low), not 'x'
+
+@@@ 19 @@@
+### step 18: ["update","abc123","--name"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: usage: gsdt-tracker update <id> [--name <n>] [--desc <md>|-] [--assign <who>]… [--unassign <who>]… [--status <s>] [--priority 1-4] [--parent <id>]
+
+@@@ 20 @@@
+### step 19: ["update","abc123","--bogus","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: unknown option for update: --bogus
+
+@@@ 21 @@@
+### step 20: ["update","abc123","--unassign","ghost"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no workspace member 'ghost' (see gsdt-tracker members)
+
+@@@ 22 @@@
+### step 21: ["update","failput1","--name","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=2
+--- stdout
+
+--- stderr
+gsdt-tracker: ClickUp API PUT /task/failput1 → HTTP 403: {"err":"nope"}
+
+@@@ 23 @@@
+### step 22: ["update","a b","--name","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a b
+
+@@@ 24 @@@
+### step 23: ["update","abc123","--status","x","--assign","me"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","MULTI_TEAM":"1"}
+rc=0
+--- stdout
+✔ ClickUp abc123 updated: assignees, status
+
+--- stderr
+
+@@@ 25 @@@
+### step 24: ["create","901","T","--assign","sara"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","MULTI_TEAM":"1"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: the token sees 2 workspaces — set CLICKUP_TEAM_ID in /dev/null to one of: T1 (Acme), T2 (Beta)
+gsdt-tracker: no workspace member 'sara' (see gsdt-tracker members)
+
+@@@ 26 @@@
+### step 25: ["create","901","T","--assign","sara"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","NO_TEAM":"1"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: the token sees no workspace
+gsdt-tracker: no workspace member 'sara' (see gsdt-tracker members)
+
+@@@ 27 @@@
+curl.log:
+POST /list/901/task {"name":"New thing"}
+GET /user 
+POST /list/901/task {"name":"Néw \"thing\"\n2","markdown_content":"body","assignees":[7,42],"status":"open","priority":2,"tags":["a","b c"],"parent":"abc123"}
+GET /team 
+GET /team 
+POST /list/901/task {"name":"T","assignees":[42]}
+GET /team 
+GET /team 
+POST /list/901/task {"name":"T","assignees":[42]}
+GET /team 
+GET /team 
+GET /team 
+POST /list/901/task {"name":"T","assignees":[43]}
+POST /list/901/task {"name":"T","markdown_content":"from stdin"}
+POST /list/999/task {"name":"T"}
+PUT /task/abc123 {"name":"N"}
+GET /user 
+GET /team 
+GET /team 
+GET /team 
+GET /team 
+PUT /task/abc123 {"name":"N","markdown_content":"D","assignees":{"add":[7,42],"rem":[42,43]},"status":"s","priority":1,"parent":"p1"}
+PUT /task/abc123 {"markdown_content":"stdin desc"}
+GET /team 
+GET /team 
+PUT /task/failput1 {"name":"x"}
+GET /user 
+PUT /task/abc123 {"status":"x","assignees":{"add":[7]}}
+GET /team 
+GET /team 
+GET /team 
+GET /team 
+
+argv:
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"name":"New thing"}-w\n%{http_code}https://api.clickup.com/api/v2/list/901/task
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"name":"Néw \"thing\"\n2","markdown_content":"body","assignees":[7,42],"status":"open","priority":2,"tags":["a","b c"],"parent":"abc123"}-w\n%{http_code}https://api.clickup.com/api/v2/list/901/task
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"name":"T","assignees":[42]}-w\n%{http_code}https://api.clickup.com/api/v2/list/901/task
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"name":"T","assignees":[42]}-w\n%{http_code}https://api.clickup.com/api/v2/list/901/task
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"name":"T","assignees":[43]}-w\n%{http_code}https://api.clickup.com/api/v2/list/901/task
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"name":"T","markdown_content":"from stdin"}-w\n%{http_code}https://api.clickup.com/api/v2/list/901/task
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"name":"T"}-w\n%{http_code}https://api.clickup.com/api/v2/list/999/task
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"name":"N"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"name":"N","markdown_content":"D","assignees":{"add":[7,42],"rem":[42,43]},"status":"s","priority":1,"parent":"p1"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"markdown_content":"stdin desc"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"name":"x"}-w\n%{http_code}https://api.clickup.com/api/v2/task/failput1
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/user
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status":"x","assignees":{"add":[7]}}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/team
+
+tracker.log:
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+

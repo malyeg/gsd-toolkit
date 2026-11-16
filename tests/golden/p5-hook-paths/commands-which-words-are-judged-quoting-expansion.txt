@@ -1,0 +1,400 @@
+@@@ 1 @@@
+# cmd "node /gone/gsd-guard.js"
+<TMP>/c0.json	user	gsd	1	PreToolUse	/gone/gsd-guard.js
+
+@@@ 2 @@@
+# cmd as project "node /gone/gsd-guard.js"
+<TMP>/c0.json	project	gsd	1	PreToolUse	/gone/gsd-guard.js
+
+@@@ 3 @@@
+# cmd "bash /gone/gsdt-rules --hook"
+<TMP>/c1.json	user	toolkit	1	PreToolUse	/gone/gsdt-rules
+
+@@@ 4 @@@
+# cmd as project "bash /gone/gsdt-rules --hook"
+<TMP>/c1.json	project	toolkit	1	PreToolUse	/gone/gsdt-rules
+
+@@@ 5 @@@
+# cmd "\"/gone dir/gsdt-worktree-guard\" --global"
+<TMP>/c2.json	user	toolkit	1	PreToolUse	/gone dir/gsdt-worktree-guard
+
+@@@ 6 @@@
+# cmd as project "\"/gone dir/gsdt-worktree-guard\" --global"
+<TMP>/c2.json	project	toolkit	1	PreToolUse	/gone dir/gsdt-worktree-guard
+
+@@@ 7 @@@
+# cmd "'/gone/gsd-x'"
+<TMP>/c3.json	user	gsd	1	PreToolUse	/gone/gsd-x
+
+@@@ 8 @@@
+# cmd as project "'/gone/gsd-x'"
+<TMP>/c3.json	project	gsd	1	PreToolUse	/gone/gsd-x
+
+@@@ 9 @@@
+# cmd "~/nope/gsd-hook.js"
+<TMP>/c4.json	user	gsd	1	PreToolUse	<TMP>/fakehome/nope/gsd-hook.js
+
+@@@ 10 @@@
+# cmd as project "~/nope/gsd-hook.js"
+<TMP>/c4.json	project	gsd	1	PreToolUse	<TMP>/fakehome/nope/gsd-hook.js
+
+@@@ 11 @@@
+# cmd "~ gsd-x"
+<TMP>/c5.json	user	gsd	1	PreToolUse	<TMP>/fakehome
+
+@@@ 12 @@@
+# cmd as project "~ gsd-x"
+<TMP>/c5.json	project	gsd	1	PreToolUse	<TMP>/fakehome
+
+@@@ 13 @@@
+# cmd "~user/gsd-x"
+
+@@@ 14 @@@
+# cmd as project "~user/gsd-x"
+
+@@@ 15 @@@
+# cmd "$HOME/nope/gsdt-x"
+<TMP>/c7.json	user	gsd	1	PreToolUse	<TMP>/fakehome/nope/gsdt-x
+
+@@@ 16 @@@
+# cmd as project "$HOME/nope/gsdt-x"
+<TMP>/c7.json	project	gsd	1	PreToolUse	<TMP>/fakehome/nope/gsdt-x
+
+@@@ 17 @@@
+# cmd "${HOME}/nope/gsd-x"
+<TMP>/c8.json	user	gsd	1	PreToolUse	<TMP>/fakehome/nope/gsd-x
+
+@@@ 18 @@@
+# cmd as project "${HOME}/nope/gsd-x"
+<TMP>/c8.json	project	gsd	1	PreToolUse	<TMP>/fakehome/nope/gsd-x
+
+@@@ 19 @@@
+# cmd "$HOMEX/nope/gsd-x"
+<TMP>/c9.json	user	gsd	1	PreToolUse	<TMP>/fakehomeX/nope/gsd-x
+
+@@@ 20 @@@
+# cmd as project "$HOMEX/nope/gsd-x"
+<TMP>/c9.json	project	gsd	1	PreToolUse	<TMP>/fakehomeX/nope/gsd-x
+
+@@@ 21 @@@
+# cmd "$FOO/gsd-x"
+
+@@@ 22 @@@
+# cmd as project "$FOO/gsd-x"
+
+@@@ 23 @@@
+# cmd "$CLAUDE_PROJECT_DIR/.claude/hooks/gsd-x.sh"
+
+@@@ 24 @@@
+# cmd as project "$CLAUDE_PROJECT_DIR/.claude/hooks/gsd-x.sh"
+<TMP>/c11.json	project	gsd	1	PreToolUse	<TMP>/proj/.claude/hooks/gsd-x.sh
+
+@@@ 25 @@@
+# cmd "${CLAUDE_PROJECT_DIR}/.claude/hooks/gsd-x.sh"
+
+@@@ 26 @@@
+# cmd as project "${CLAUDE_PROJECT_DIR}/.claude/hooks/gsd-x.sh"
+<TMP>/c12.json	project	gsd	1	PreToolUse	<TMP>/proj/.claude/hooks/gsd-x.sh
+
+@@@ 27 @@@
+# cmd "gsd-statusline"
+
+@@@ 28 @@@
+# cmd as project "gsd-statusline"
+
+@@@ 29 @@@
+# cmd "node ./rel/gsd-x.js"
+
+@@@ 30 @@@
+# cmd as project "node ./rel/gsd-x.js"
+
+@@@ 31 @@@
+# cmd "node /gone/other.js"
+
+@@@ 32 @@@
+# cmd as project "node /gone/other.js"
+
+@@@ 33 @@@
+# cmd "node \"/gone/gsd-x"
+
+@@@ 34 @@@
+# cmd as project "node \"/gone/gsd-x"
+
+@@@ 35 @@@
+# cmd "node /gone/gsd-x\\"
+
+@@@ 36 @@@
+# cmd as project "node /gone/gsd-x\\"
+
+@@@ 37 @@@
+# cmd "$(for n in /gone/node /gone/node2; do [ -x $n ] && echo $n; done) /gone/gsd-core/hooks/gsd-check.js /gone/other.js"
+<TMP>/c18.json	user	gsd	1	PreToolUse	/gone/gsd-core/hooks/gsd-check.js
+
+@@@ 38 @@@
+# cmd as project "$(for n in /gone/node /gone/node2; do [ -x $n ] && echo $n; done) /gone/gsd-core/hooks/gsd-check.js /gone/other.js"
+<TMP>/c18.json	project	gsd	1	PreToolUse	/gone/gsd-core/hooks/gsd-check.js
+
+@@@ 39 @@@
+# cmd "echo `which node` /gone/gsd-b.js /gone/c.js"
+<TMP>/c19.json	user	gsd	1	PreToolUse	/gone/gsd-b.js
+
+@@@ 40 @@@
+# cmd as project "echo `which node` /gone/gsd-b.js /gone/c.js"
+<TMP>/c19.json	project	gsd	1	PreToolUse	/gone/gsd-b.js
+
+@@@ 41 @@@
+# cmd "/gone/a\\ b/gsd-x"
+<TMP>/c20.json	user	gsd	1	PreToolUse	/gone/a b/gsd-x
+
+@@@ 42 @@@
+# cmd as project "/gone/a\\ b/gsd-x"
+<TMP>/c20.json	project	gsd	1	PreToolUse	/gone/a b/gsd-x
+
+@@@ 43 @@@
+# cmd "\"/gone/a\\\"b/gsd-x\""
+<TMP>/c21.json	user	gsd	1	PreToolUse	/gone/a"b/gsd-x
+
+@@@ 44 @@@
+# cmd as project "\"/gone/a\\\"b/gsd-x\""
+<TMP>/c21.json	project	gsd	1	PreToolUse	/gone/a"b/gsd-x
+
+@@@ 45 @@@
+# cmd "\"/gone/a\\qb/gsd-x\""
+<TMP>/c22.json	user	gsd	1	PreToolUse	/gone/a\qb/gsd-x
+
+@@@ 46 @@@
+# cmd as project "\"/gone/a\\qb/gsd-x\""
+<TMP>/c22.json	project	gsd	1	PreToolUse	/gone/a\qb/gsd-x
+
+@@@ 47 @@@
+# cmd "'/gone/a\\b/gsd-x'"
+<TMP>/c23.json	user	gsd	1	PreToolUse	/gone/a\b/gsd-x
+
+@@@ 48 @@@
+# cmd as project "'/gone/a\\b/gsd-x'"
+<TMP>/c23.json	project	gsd	1	PreToolUse	/gone/a\b/gsd-x
+
+@@@ 49 @@@
+# cmd "/gone/gsd-x /gone/gsd-x /gone/./gsd-x"
+<TMP>/c24.json	user	gsd	1	PreToolUse	/gone/gsd-x
+<TMP>/c24.json	user	gsd	1	PreToolUse	/gone/./gsd-x
+
+@@@ 50 @@@
+# cmd as project "/gone/gsd-x /gone/gsd-x /gone/./gsd-x"
+<TMP>/c24.json	project	gsd	1	PreToolUse	/gone/gsd-x
+<TMP>/c24.json	project	gsd	1	PreToolUse	/gone/./gsd-x
+
+@@@ 51 @@@
+# cmd "node '/gone/gsd-x\n' ok"
+<TMP>/c25.json	user	gsd	1	PreToolUse	/gone/gsd-x
+
+
+@@@ 52 @@@
+# cmd as project "node '/gone/gsd-x\n' ok"
+<TMP>/c25.json	project	gsd	1	PreToolUse	/gone/gsd-x
+
+
+@@@ 53 @@@
+# cmd "'' /gone/gsd-x"
+<TMP>/c26.json	user	gsd	1	PreToolUse	/gone/gsd-x
+
+@@@ 54 @@@
+# cmd as project "'' /gone/gsd-x"
+<TMP>/c26.json	project	gsd	1	PreToolUse	/gone/gsd-x
+
+@@@ 55 @@@
+# cmd "node <TMP>/real dir/gsd-real.js"
+<TMP>/c27.json	user	gsd	1	PreToolUse	<TMP>/real
+
+@@@ 56 @@@
+# cmd as project "node <TMP>/real dir/gsd-real.js"
+<TMP>/c27.json	project	gsd	1	PreToolUse	<TMP>/real
+
+@@@ 57 @@@
+# cmd "node <TMP>/real dir/gsd-real.js"
+<TMP>/c28.json	user	gsd	1	PreToolUse	<TMP>/real
+
+@@@ 58 @@@
+# cmd as project "node <TMP>/real dir/gsd-real.js"
+<TMP>/c28.json	project	gsd	1	PreToolUse	<TMP>/real
+
+@@@ 59 @@@
+# cmd "node \"<TMP>/real dir/gsd-real.js\" /gone/more/gsd-x"
+<TMP>/c29.json	user	gsd	1	PreToolUse	/gone/more/gsd-x
+
+@@@ 60 @@@
+# cmd as project "node \"<TMP>/real dir/gsd-real.js\" /gone/more/gsd-x"
+<TMP>/c29.json	project	gsd	1	PreToolUse	/gone/more/gsd-x
+
+@@@ 61 @@@
+# cmd "node <TMP>/broken-gsd-link"
+
+@@@ 62 @@@
+# cmd as project "node <TMP>/broken-gsd-link"
+
+@@@ 63 @@@
+# cmd "node <TMP>/e"
+
+@@@ 64 @@@
+# cmd as project "node <TMP>/e"
+
+@@@ 65 @@@
+# cmd "node /gone/gsd-x.js; node /gone/gsd-y.js"
+<TMP>/c32.json	user	gsd	1	PreToolUse	/gone/gsd-x.js;
+<TMP>/c32.json	user	gsd	1	PreToolUse	/gone/gsd-y.js
+
+@@@ 66 @@@
+# cmd as project "node /gone/gsd-x.js; node /gone/gsd-y.js"
+<TMP>/c32.json	project	gsd	1	PreToolUse	/gone/gsd-x.js;
+<TMP>/c32.json	project	gsd	1	PreToolUse	/gone/gsd-y.js
+
+@@@ 67 @@@
+# cmd "/gone/gsd-é/x gsd-y"
+<TMP>/c33.json	user	gsd	1	PreToolUse	/gone/gsd-é/x
+
+@@@ 68 @@@
+# cmd as project "/gone/gsd-é/x gsd-y"
+<TMP>/c33.json	project	gsd	1	PreToolUse	/gone/gsd-é/x
+
+@@@ 69 @@@
+# cmd "/gone/ünï/gsdt-rules"
+<TMP>/c34.json	user	toolkit	1	PreToolUse	/gone/ünï/gsdt-rules
+
+@@@ 70 @@@
+# cmd as project "/gone/ünï/gsdt-rules"
+<TMP>/c34.json	project	toolkit	1	PreToolUse	/gone/ünï/gsdt-rules
+
+@@@ 71 @@@
+# cmd "gsd-worktree-guard /gone/x"
+<TMP>/c35.json	user	toolkit	1	PreToolUse	/gone/x
+
+@@@ 72 @@@
+# cmd as project "gsd-worktree-guard /gone/x"
+<TMP>/c35.json	project	toolkit	1	PreToolUse	/gone/x
+
+@@@ 73 @@@
+# cmd "node /a/b/gsd-/x"
+
+@@@ 74 @@@
+# cmd as project "node /a/b/gsd-/x"
+
+@@@ 75 @@@
+# cmd "node /gone/gsd-x/"
+
+@@@ 76 @@@
+# cmd as project "node /gone/gsd-x/"
+
+@@@ 77 @@@
+# cmd "node /gone/GSD-x"
+
+@@@ 78 @@@
+# cmd as project "node /gone/GSD-x"
+
+@@@ 79 @@@
+# cmd "node /gone/gsdw-x"
+
+@@@ 80 @@@
+# cmd as project "node /gone/gsdw-x"
+
+@@@ 81 @@@
+# cmd "node /gone/gsdtt-x"
+
+@@@ 82 @@@
+# cmd as project "node /gone/gsdtt-x"
+
+@@@ 83 @@@
+# cmd "node /gone/gsd-"
+
+@@@ 84 @@@
+# cmd as project "node /gone/gsd-"
+
+@@@ 85 @@@
+# cmd "env X=1 /gone/gsd-x --opt=/gone/y"
+<TMP>/c42.json	user	gsd	1	PreToolUse	/gone/gsd-x
+
+@@@ 86 @@@
+# cmd as project "env X=1 /gone/gsd-x --opt=/gone/y"
+<TMP>/c42.json	project	gsd	1	PreToolUse	/gone/gsd-x
+
+@@@ 87 @@@
+# cmd ""
+
+@@@ 88 @@@
+# cmd as project ""
+
+@@@ 89 @@@
+# cmd " "
+
+@@@ 90 @@@
+# cmd as project " "
+
+@@@ 91 @@@
+# every command in one file
+<TMP>/all.json	user	gsd	1	PreToolUse	/gone/gsd-guard.js
+<TMP>/all.json	user	toolkit	2	PreToolUse	/gone/gsdt-rules
+<TMP>/all.json	user	toolkit	3	PreToolUse	/gone dir/gsdt-worktree-guard
+<TMP>/all.json	user	gsd	4	PreToolUse	/gone/gsd-x
+<TMP>/all.json	user	gsd	5	PreToolUse	<TMP>/fakehome/nope/gsd-hook.js
+<TMP>/all.json	user	gsd	6	PreToolUse	<TMP>/fakehome
+<TMP>/all.json	user	gsd	8	PreToolUse	<TMP>/fakehome/nope/gsdt-x
+<TMP>/all.json	user	gsd	9	PreToolUse	<TMP>/fakehome/nope/gsd-x
+<TMP>/all.json	user	gsd	10	PreToolUse	<TMP>/fakehomeX/nope/gsd-x
+<TMP>/all.json	user	gsd	19	PreToolUse	/gone/gsd-core/hooks/gsd-check.js
+<TMP>/all.json	user	gsd	20	PreToolUse	/gone/gsd-b.js
+<TMP>/all.json	user	gsd	21	PreToolUse	/gone/a b/gsd-x
+<TMP>/all.json	user	gsd	22	PreToolUse	/gone/a"b/gsd-x
+<TMP>/all.json	user	gsd	23	PreToolUse	/gone/a\qb/gsd-x
+<TMP>/all.json	user	gsd	24	PreToolUse	/gone/a\b/gsd-x
+<TMP>/all.json	user	gsd	25	PreToolUse	/gone/gsd-x
+<TMP>/all.json	user	gsd	25	PreToolUse	/gone/./gsd-x
+<TMP>/all.json	user	gsd	26	PreToolUse	/gone/gsd-x
+
+<TMP>/all.json	user	gsd	27	PreToolUse	/gone/gsd-x
+<TMP>/all.json	user	gsd	28	PreToolUse	<TMP>/real
+<TMP>/all.json	user	gsd	29	PreToolUse	<TMP>/real
+<TMP>/all.json	user	gsd	30	PreToolUse	/gone/more/gsd-x
+<TMP>/all.json	user	gsd	33	PreToolUse	/gone/gsd-x.js;
+<TMP>/all.json	user	gsd	33	PreToolUse	/gone/gsd-y.js
+<TMP>/all.json	user	gsd	34	PreToolUse	/gone/gsd-é/x
+<TMP>/all.json	user	toolkit	35	PreToolUse	/gone/ünï/gsdt-rules
+<TMP>/all.json	user	toolkit	36	PreToolUse	/gone/x
+<TMP>/all.json	user	gsd	43	PreToolUse	/gone/gsd-x
+<TMP>/all.json	user	gsd	46	SessionStart	/gone/gsd-guard.js
+<TMP>/all.json	user	toolkit	47	SessionStart	/gone/gsdt-rules
+<TMP>/all.json	user	toolkit	48	SessionStart	/gone dir/gsdt-worktree-guard
+<TMP>/all.json	user	gsd	49	SessionStart	/gone/gsd-x
+<TMP>/all.json	user	gsd	50	SessionStart	<TMP>/fakehome/nope/gsd-hook.js
+<TMP>/all.json	user	gsd	51	statusLine	/gone/gsd-guard.js
+
+@@@ 92 @@@
+# all files in one call
+<TMP>/c0.json	user	gsd	1	PreToolUse	/gone/gsd-guard.js
+<TMP>/c1.json	user	toolkit	1	PreToolUse	/gone/gsdt-rules
+<TMP>/c2.json	user	toolkit	1	PreToolUse	/gone dir/gsdt-worktree-guard
+<TMP>/c3.json	user	gsd	1	PreToolUse	/gone/gsd-x
+<TMP>/c4.json	user	gsd	1	PreToolUse	<TMP>/fakehome/nope/gsd-hook.js
+<TMP>/c5.json	user	gsd	1	PreToolUse	<TMP>/fakehome
+<TMP>/c7.json	user	gsd	1	PreToolUse	<TMP>/fakehome/nope/gsdt-x
+<TMP>/c8.json	user	gsd	1	PreToolUse	<TMP>/fakehome/nope/gsd-x
+<TMP>/c9.json	user	gsd	1	PreToolUse	<TMP>/fakehomeX/nope/gsd-x
+<TMP>/c18.json	user	gsd	1	PreToolUse	/gone/gsd-core/hooks/gsd-check.js
+<TMP>/c19.json	user	gsd	1	PreToolUse	/gone/gsd-b.js
+<TMP>/c20.json	user	gsd	1	PreToolUse	/gone/a b/gsd-x
+<TMP>/c21.json	user	gsd	1	PreToolUse	/gone/a"b/gsd-x
+<TMP>/c22.json	user	gsd	1	PreToolUse	/gone/a\qb/gsd-x
+<TMP>/c23.json	user	gsd	1	PreToolUse	/gone/a\b/gsd-x
+<TMP>/c24.json	user	gsd	1	PreToolUse	/gone/gsd-x
+<TMP>/c24.json	user	gsd	1	PreToolUse	/gone/./gsd-x
+<TMP>/c25.json	user	gsd	1	PreToolUse	/gone/gsd-x
+
+<TMP>/c26.json	user	gsd	1	PreToolUse	/gone/gsd-x
+<TMP>/c27.json	user	gsd	1	PreToolUse	<TMP>/real
+<TMP>/c28.json	user	gsd	1	PreToolUse	<TMP>/real
+<TMP>/c29.json	user	gsd	1	PreToolUse	/gone/more/gsd-x
+<TMP>/c32.json	user	gsd	1	PreToolUse	/gone/gsd-x.js;
+<TMP>/c32.json	user	gsd	1	PreToolUse	/gone/gsd-y.js
+<TMP>/c33.json	user	gsd	1	PreToolUse	/gone/gsd-é/x
+<TMP>/c34.json	user	toolkit	1	PreToolUse	/gone/ünï/gsdt-rules
+<TMP>/c35.json	user	toolkit	1	PreToolUse	/gone/x
+<TMP>/c42.json	user	gsd	1	PreToolUse	/gone/gsd-x
+

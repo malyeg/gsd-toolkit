@@ -1,0 +1,42 @@
+@@@ 1 @@@
+### step 0: ["config"] {}
+rc=0
+--- stdout
+tracker=clickup
+tracker_from=gsd.conf
+tracker_ok=yes
+profile=gp
+profile_from=git
+profile_ok=yes
+token_file=<ROOT>/home/.config/gsd/clickup-gp.env
+token=missing
+status_start=
+status_finish=
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["check"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no CLICKUP_API_TOKEN for profile 'gp' — run gsdt-tracker login gp, or put CLICKUP_API_TOKEN=pk_… in <ROOT>/home/.config/gsd/clickup-gp.env
+
+@@@ 3 @@@
+curl.log:
+
+argv:
+
+tracker.log:
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+gsdt-tracker.profile=gp

@@ -1,0 +1,300 @@
+@@@ 1 @@@
+args ["-h"]
+rc=0
+--- stdout
+gsdt-list — list GSD phases: number, description, plan progress, worktree
+
+USAGE
+  gsdt-list [--repo <path>] [--compact]
+
+  By default long PHASE/WORKTREE cells wrap across lines to fit the screen
+  (nothing truncated). Use --compact for the one-line-per-phase view.
+
+OPTIONS
+  --repo <path>   main checkout of the target repo
+                  (default: derived from the current directory)
+  --compact, -c   one line per phase, clipping each cell to fit (old default)
+  -h, --help      show this help
+
+COLUMNS
+  N         phase number — what gsdt-start -p <N> attaches to
+  PHASE     description from the '### Phase N:' heading in ROADMAP.md
+  PLANS     plans executed/total (a plan is done once it has a SUMMARY),
+            e.g. 5/6 · ✔ = all executed · — = none yet
+  STAGE     furthest lifecycle step reached, from the phase's artifact files:
+            spec → discuss → ui → plan → execute → done (all plans executed)
+  WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
+
+  Under the table: the batch-* branches of gsdt-batch runs not landed yet
+  (● = worktree attached). Land one with gsdt-finish <branch>.
+
+RELATED
+  gsdt-start -n "<desc>"     claim a NEW phase and open its session
+  gsdt-start -p <N>       attach to an existing phase (no duplicate claim)
+  gsdt-finish             finish the phase from inside its worktree
+--- stderr
+
+@@@ 2 @@@
+args ["--help"]
+rc=0
+--- stdout
+gsdt-list — list GSD phases: number, description, plan progress, worktree
+
+USAGE
+  gsdt-list [--repo <path>] [--compact]
+
+  By default long PHASE/WORKTREE cells wrap across lines to fit the screen
+  (nothing truncated). Use --compact for the one-line-per-phase view.
+
+OPTIONS
+  --repo <path>   main checkout of the target repo
+                  (default: derived from the current directory)
+  --compact, -c   one line per phase, clipping each cell to fit (old default)
+  -h, --help      show this help
+
+COLUMNS
+  N         phase number — what gsdt-start -p <N> attaches to
+  PHASE     description from the '### Phase N:' heading in ROADMAP.md
+  PLANS     plans executed/total (a plan is done once it has a SUMMARY),
+            e.g. 5/6 · ✔ = all executed · — = none yet
+  STAGE     furthest lifecycle step reached, from the phase's artifact files:
+            spec → discuss → ui → plan → execute → done (all plans executed)
+  WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
+
+  Under the table: the batch-* branches of gsdt-batch runs not landed yet
+  (● = worktree attached). Land one with gsdt-finish <branch>.
+
+RELATED
+  gsdt-start -n "<desc>"     claim a NEW phase and open its session
+  gsdt-start -p <N>       attach to an existing phase (no duplicate claim)
+  gsdt-finish             finish the phase from inside its worktree
+--- stderr
+
+@@@ 3 @@@
+args ["--help","--bogus"]
+rc=0
+--- stdout
+gsdt-list — list GSD phases: number, description, plan progress, worktree
+
+USAGE
+  gsdt-list [--repo <path>] [--compact]
+
+  By default long PHASE/WORKTREE cells wrap across lines to fit the screen
+  (nothing truncated). Use --compact for the one-line-per-phase view.
+
+OPTIONS
+  --repo <path>   main checkout of the target repo
+                  (default: derived from the current directory)
+  --compact, -c   one line per phase, clipping each cell to fit (old default)
+  -h, --help      show this help
+
+COLUMNS
+  N         phase number — what gsdt-start -p <N> attaches to
+  PHASE     description from the '### Phase N:' heading in ROADMAP.md
+  PLANS     plans executed/total (a plan is done once it has a SUMMARY),
+            e.g. 5/6 · ✔ = all executed · — = none yet
+  STAGE     furthest lifecycle step reached, from the phase's artifact files:
+            spec → discuss → ui → plan → execute → done (all plans executed)
+  WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
+
+  Under the table: the batch-* branches of gsdt-batch runs not landed yet
+  (● = worktree attached). Land one with gsdt-finish <branch>.
+
+RELATED
+  gsdt-start -n "<desc>"     claim a NEW phase and open its session
+  gsdt-start -p <N>       attach to an existing phase (no duplicate claim)
+  gsdt-finish             finish the phase from inside its worktree
+--- stderr
+
+@@@ 4 @@@
+args ["--bogus","--help"]
+rc=1
+--- stdout
+--- stderr
+✖ unknown argument: --bogus (see gsdt-list --help)
+
+@@@ 5 @@@
+args ["--compact","-h"]
+rc=0
+--- stdout
+gsdt-list — list GSD phases: number, description, plan progress, worktree
+
+USAGE
+  gsdt-list [--repo <path>] [--compact]
+
+  By default long PHASE/WORKTREE cells wrap across lines to fit the screen
+  (nothing truncated). Use --compact for the one-line-per-phase view.
+
+OPTIONS
+  --repo <path>   main checkout of the target repo
+                  (default: derived from the current directory)
+  --compact, -c   one line per phase, clipping each cell to fit (old default)
+  -h, --help      show this help
+
+COLUMNS
+  N         phase number — what gsdt-start -p <N> attaches to
+  PHASE     description from the '### Phase N:' heading in ROADMAP.md
+  PLANS     plans executed/total (a plan is done once it has a SUMMARY),
+            e.g. 5/6 · ✔ = all executed · — = none yet
+  STAGE     furthest lifecycle step reached, from the phase's artifact files:
+            spec → discuss → ui → plan → execute → done (all plans executed)
+  WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
+
+  Under the table: the batch-* branches of gsdt-batch runs not landed yet
+  (● = worktree attached). Land one with gsdt-finish <branch>.
+
+RELATED
+  gsdt-start -n "<desc>"     claim a NEW phase and open its session
+  gsdt-start -p <N>       attach to an existing phase (no duplicate claim)
+  gsdt-finish             finish the phase from inside its worktree
+--- stderr
+
+@@@ 6 @@@
+args ["--repo","<TMP>/repo","-h"]
+rc=0
+--- stdout
+gsdt-list — list GSD phases: number, description, plan progress, worktree
+
+USAGE
+  gsdt-list [--repo <path>] [--compact]
+
+  By default long PHASE/WORKTREE cells wrap across lines to fit the screen
+  (nothing truncated). Use --compact for the one-line-per-phase view.
+
+OPTIONS
+  --repo <path>   main checkout of the target repo
+                  (default: derived from the current directory)
+  --compact, -c   one line per phase, clipping each cell to fit (old default)
+  -h, --help      show this help
+
+COLUMNS
+  N         phase number — what gsdt-start -p <N> attaches to
+  PHASE     description from the '### Phase N:' heading in ROADMAP.md
+  PLANS     plans executed/total (a plan is done once it has a SUMMARY),
+            e.g. 5/6 · ✔ = all executed · — = none yet
+  STAGE     furthest lifecycle step reached, from the phase's artifact files:
+            spec → discuss → ui → plan → execute → done (all plans executed)
+  WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
+
+  Under the table: the batch-* branches of gsdt-batch runs not landed yet
+  (● = worktree attached). Land one with gsdt-finish <branch>.
+
+RELATED
+  gsdt-start -n "<desc>"     claim a NEW phase and open its session
+  gsdt-start -p <N>       attach to an existing phase (no duplicate claim)
+  gsdt-finish             finish the phase from inside its worktree
+--- stderr
+
+@@@ 7 @@@
+args ["--repo"]
+rc=1
+--- stdout
+--- stderr
+✖ --repo needs a value
+
+@@@ 8 @@@
+args ["--repo","<TMP>/repo","--repo"]
+rc=1
+--- stdout
+--- stderr
+✖ --repo needs a value
+
+@@@ 9 @@@
+args ["-x"]
+rc=1
+--- stdout
+--- stderr
+✖ unknown argument: -x (see gsdt-list --help)
+
+@@@ 10 @@@
+args ["extra"]
+rc=1
+--- stdout
+--- stderr
+✖ unknown argument: extra (see gsdt-list --help)
+
+@@@ 11 @@@
+args ["--repo","<TMP>/repo","extra"]
+rc=1
+--- stdout
+--- stderr
+✖ unknown argument: extra (see gsdt-list --help)
+
+@@@ 12 @@@
+args [""]
+rc=1
+--- stdout
+--- stderr
+✖ unknown argument:  (see gsdt-list --help)
+
+@@@ 13 @@@
+args ["--compact","--bogus"]
+rc=1
+--- stdout
+--- stderr
+✖ unknown argument: --bogus (see gsdt-list --help)
+
+@@@ 14 @@@
+args ["-c","-c"]
+rc=1
+--- stdout
+--- stderr
+✖ not inside a git repo — cd into the target repo or pass --repo <path>
+
+@@@ 15 @@@
+args ["--Compact"]
+rc=1
+--- stdout
+--- stderr
+✖ unknown argument: --Compact (see gsdt-list --help)
+
+@@@ 16 @@@
+--help text
+rc=0
+--- stdout
+gsdt-list — list GSD phases: number, description, plan progress, worktree
+
+USAGE
+  gsdt-list [--repo <path>] [--compact]
+
+  By default long PHASE/WORKTREE cells wrap across lines to fit the screen
+  (nothing truncated). Use --compact for the one-line-per-phase view.
+
+OPTIONS
+  --repo <path>   main checkout of the target repo
+                  (default: derived from the current directory)
+  --compact, -c   one line per phase, clipping each cell to fit (old default)
+  -h, --help      show this help
+
+COLUMNS
+  N         phase number — what gsdt-start -p <N> attaches to
+  PHASE     description from the '### Phase N:' heading in ROADMAP.md
+  PLANS     plans executed/total (a plan is done once it has a SUMMARY),
+            e.g. 5/6 · ✔ = all executed · — = none yet
+  STAGE     furthest lifecycle step reached, from the phase's artifact files:
+            spec → discuss → ui → plan → execute → done (all plans executed)
+  WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
+
+  Under the table: the batch-* branches of gsdt-batch runs not landed yet
+  (● = worktree attached). Land one with gsdt-finish <branch>.
+
+RELATED
+  gsdt-start -n "<desc>"     claim a NEW phase and open its session
+  gsdt-start -p <N>       attach to an existing phase (no duplicate claim)
+  gsdt-finish             finish the phase from inside its worktree
+--- stderr
+
+@@@ 17 @@@
+--repo needs a value
+rc=1
+--- stdout
+--- stderr
+✖ --repo needs a value
+
+@@@ 18 @@@
+unknown argument
+rc=1
+--- stdout
+--- stderr
+✖ unknown argument: --bogus (see gsdt-list --help)
+

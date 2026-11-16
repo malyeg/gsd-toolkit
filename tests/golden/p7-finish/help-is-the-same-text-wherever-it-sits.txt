@@ -1,0 +1,367 @@
+@@@ 1 @@@
+step 1 (gsdt-finish --help)
+rc=0
+--- stdout
+gsdt-finish — finish a GSD phase: merge back, push, clean up
+
+Merges the phase worktree's branch into the base branch, pushes, and removes
+the worktree + branch. Companion to gsdt-start; delegates the merge/cleanup to
+the repo's scripts/gsdt-finish-worktree-feature.sh.
+
+USAGE
+  gsdt-finish [<N> | phase-<N>-<slug> | batch-<date>-<slug>] [options]
+
+  With no argument, run it from INSIDE the phase (or batch) worktree — it is
+  inferred from the current branch.
+
+  A batch worktree (made by gsdt-batch) lands the same way as a phase: tests →
+  merge → .planning repair → push → remove worktree + branch. The per-phase
+  gates (UI steps, test audit) and the ticket update are skipped for it.
+
+OPTIONS
+  --repo <path>   any checkout of the target repo (default: derived from the
+                  current directory)
+  --pr            do NOT merge: push the phase branch and open a GitHub PR
+                  against the base branch (needs gh). Uses the *-pr branch
+                  from /gsd-pr-branch when one exists (planning commits
+                  stripped), else the phase branch itself. Worktree stays;
+                  run gsdt-finish again (without --pr) once the PR is merged.
+  --draft         with --pr: open it as a draft
+  -h, --help      show this help
+
+EXAMPLES
+  gsdt-finish
+      From inside ../<repo>-worktrees/phase-7-invoice-fix: merges phase 7,
+      pushes, removes the worktree and branch.
+
+  gsdt-finish 7
+      Same, from anywhere inside the repo or its worktrees.
+
+  gsdt-finish phase-7-invoice-fix
+      Same, naming the branch explicitly.
+
+  gsdt-finish batch-2026-11-09-fix-labels
+      Land a gsdt-batch run: merge its branch, push, remove its worktree.
+
+  gsdt-finish 7 --repo ~/projects/acme/webshop
+      Finish a phase of another repo without cd-ing into it first.
+
+BEHAVIOR
+  - If the main checkout was left on another branch, it is switched back to
+    the base branch automatically (only when it has no uncommitted changes).
+  - Safe to run from inside the worktree being removed; afterwards cd to the
+    main checkout (the command prints the path).
+  - Refuses if the worktree has uncommitted changes — commit them first.
+  - Validates the phase and combined base tree, including remote push retries.
+    Failed sync/validation prevents push and cleanup; any merge remains local.
+  - ROADMAP.md/STATE.md use the reconciling gsd-planning merge driver.
+  - Ticket: when the ROADMAP phase title (or the branch name) carries a
+    tk-<id> tag and .gsd.conf sets `tracker = clickup|custom`, the ticket is
+    moved to its testing/review status with a merge comment (best-effort, via
+    gsdt-tracker). --pr does the same when the PR opens.
+
+RELATED
+  gsdt-start             start a phase (claim + worktree + session) in one step
+  gsdt-init              set up GSD in a repo that doesn't have it yet
+  gsdt-bootstrap-repo    just the file installation (what gsdt-init wraps)
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-finish -h)
+rc=0
+--- stdout
+gsdt-finish — finish a GSD phase: merge back, push, clean up
+
+Merges the phase worktree's branch into the base branch, pushes, and removes
+the worktree + branch. Companion to gsdt-start; delegates the merge/cleanup to
+the repo's scripts/gsdt-finish-worktree-feature.sh.
+
+USAGE
+  gsdt-finish [<N> | phase-<N>-<slug> | batch-<date>-<slug>] [options]
+
+  With no argument, run it from INSIDE the phase (or batch) worktree — it is
+  inferred from the current branch.
+
+  A batch worktree (made by gsdt-batch) lands the same way as a phase: tests →
+  merge → .planning repair → push → remove worktree + branch. The per-phase
+  gates (UI steps, test audit) and the ticket update are skipped for it.
+
+OPTIONS
+  --repo <path>   any checkout of the target repo (default: derived from the
+                  current directory)
+  --pr            do NOT merge: push the phase branch and open a GitHub PR
+                  against the base branch (needs gh). Uses the *-pr branch
+                  from /gsd-pr-branch when one exists (planning commits
+                  stripped), else the phase branch itself. Worktree stays;
+                  run gsdt-finish again (without --pr) once the PR is merged.
+  --draft         with --pr: open it as a draft
+  -h, --help      show this help
+
+EXAMPLES
+  gsdt-finish
+      From inside ../<repo>-worktrees/phase-7-invoice-fix: merges phase 7,
+      pushes, removes the worktree and branch.
+
+  gsdt-finish 7
+      Same, from anywhere inside the repo or its worktrees.
+
+  gsdt-finish phase-7-invoice-fix
+      Same, naming the branch explicitly.
+
+  gsdt-finish batch-2026-11-09-fix-labels
+      Land a gsdt-batch run: merge its branch, push, remove its worktree.
+
+  gsdt-finish 7 --repo ~/projects/acme/webshop
+      Finish a phase of another repo without cd-ing into it first.
+
+BEHAVIOR
+  - If the main checkout was left on another branch, it is switched back to
+    the base branch automatically (only when it has no uncommitted changes).
+  - Safe to run from inside the worktree being removed; afterwards cd to the
+    main checkout (the command prints the path).
+  - Refuses if the worktree has uncommitted changes — commit them first.
+  - Validates the phase and combined base tree, including remote push retries.
+    Failed sync/validation prevents push and cleanup; any merge remains local.
+  - ROADMAP.md/STATE.md use the reconciling gsd-planning merge driver.
+  - Ticket: when the ROADMAP phase title (or the branch name) carries a
+    tk-<id> tag and .gsd.conf sets `tracker = clickup|custom`, the ticket is
+    moved to its testing/review status with a merge comment (best-effort, via
+    gsdt-tracker). --pr does the same when the PR opens.
+
+RELATED
+  gsdt-start             start a phase (claim + worktree + session) in one step
+  gsdt-init              set up GSD in a repo that doesn't have it yet
+  gsdt-bootstrap-repo    just the file installation (what gsdt-init wraps)
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 3 @@@
+step 3 (gsdt-finish 1 --pr --help)
+rc=0
+--- stdout
+gsdt-finish — finish a GSD phase: merge back, push, clean up
+
+Merges the phase worktree's branch into the base branch, pushes, and removes
+the worktree + branch. Companion to gsdt-start; delegates the merge/cleanup to
+the repo's scripts/gsdt-finish-worktree-feature.sh.
+
+USAGE
+  gsdt-finish [<N> | phase-<N>-<slug> | batch-<date>-<slug>] [options]
+
+  With no argument, run it from INSIDE the phase (or batch) worktree — it is
+  inferred from the current branch.
+
+  A batch worktree (made by gsdt-batch) lands the same way as a phase: tests →
+  merge → .planning repair → push → remove worktree + branch. The per-phase
+  gates (UI steps, test audit) and the ticket update are skipped for it.
+
+OPTIONS
+  --repo <path>   any checkout of the target repo (default: derived from the
+                  current directory)
+  --pr            do NOT merge: push the phase branch and open a GitHub PR
+                  against the base branch (needs gh). Uses the *-pr branch
+                  from /gsd-pr-branch when one exists (planning commits
+                  stripped), else the phase branch itself. Worktree stays;
+                  run gsdt-finish again (without --pr) once the PR is merged.
+  --draft         with --pr: open it as a draft
+  -h, --help      show this help
+
+EXAMPLES
+  gsdt-finish
+      From inside ../<repo>-worktrees/phase-7-invoice-fix: merges phase 7,
+      pushes, removes the worktree and branch.
+
+  gsdt-finish 7
+      Same, from anywhere inside the repo or its worktrees.
+
+  gsdt-finish phase-7-invoice-fix
+      Same, naming the branch explicitly.
+
+  gsdt-finish batch-2026-11-09-fix-labels
+      Land a gsdt-batch run: merge its branch, push, remove its worktree.
+
+  gsdt-finish 7 --repo ~/projects/acme/webshop
+      Finish a phase of another repo without cd-ing into it first.
+
+BEHAVIOR
+  - If the main checkout was left on another branch, it is switched back to
+    the base branch automatically (only when it has no uncommitted changes).
+  - Safe to run from inside the worktree being removed; afterwards cd to the
+    main checkout (the command prints the path).
+  - Refuses if the worktree has uncommitted changes — commit them first.
+  - Validates the phase and combined base tree, including remote push retries.
+    Failed sync/validation prevents push and cleanup; any merge remains local.
+  - ROADMAP.md/STATE.md use the reconciling gsd-planning merge driver.
+  - Ticket: when the ROADMAP phase title (or the branch name) carries a
+    tk-<id> tag and .gsd.conf sets `tracker = clickup|custom`, the ticket is
+    moved to its testing/review status with a merge comment (best-effort, via
+    gsdt-tracker). --pr does the same when the PR opens.
+
+RELATED
+  gsdt-start             start a phase (claim + worktree + session) in one step
+  gsdt-init              set up GSD in a repo that doesn't have it yet
+  gsdt-bootstrap-repo    just the file installation (what gsdt-init wraps)
+
+--- stderr
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 4 @@@
+step 4 (gsdt-finish --bogus --help)
+rc=1
+--- stdout
+
+--- stderr
+✖ unknown flag: --bogus (see gsdt-finish --help)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+

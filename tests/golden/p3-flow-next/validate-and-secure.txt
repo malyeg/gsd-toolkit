@@ -1,0 +1,180 @@
+@@@ 1 @@@
+no VALIDATION 
+rc=0
+out="step=validate\nrun=/gsd-validate-phase 7\nnote=no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\n"
+err=""
+@@@ 2 @@@
+no VALIDATION --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 3 @@@
+draft 
+rc=0
+out="step=validate\nrun=/gsd-validate-phase 7\nnote=07-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit): find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\n"
+err=""
+@@@ 4 @@@
+draft --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"07-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit): find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 5 @@@
+"false" 
+rc=0
+out="step=validate\nrun=/gsd-validate-phase 7\nnote=07-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit): find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\n"
+err=""
+@@@ 6 @@@
+"false" --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"07-VALIDATION.md is the plan's draft (nyquist_compliant: false, no audit): find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 7 @@@
+true 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 8 @@@
+true --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 9 @@@
+"true" 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 10 @@@
+"true" --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 11 @@@
+'true' 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 12 @@@
+'true' --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 13 @@@
+True 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 14 @@@
+True --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 15 @@@
+true # c 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 16 @@@
+true # c --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 17 @@@
+CRLF 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 18 @@@
+CRLF --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 19 @@@
+audit 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 20 @@@
+audit --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 21 @@@
+nyquist off 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 22 @@@
+nyquist off --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 23 @@@
+SECURITY missing 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n"
+err=""
+@@@ 24 @@@
+SECURITY missing --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 25 @@@
+SECURITY 2 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=2 open threat(s)\n"
+err=""
+@@@ 26 @@@
+SECURITY 2 --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"2 open threat(s)\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 27 @@@
+SECURITY 0 
+rc=0
+out="step=done\nrun=gsdt-finish\nstop=gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\n"
+err=""
+@@@ 28 @@@
+SECURITY 0 --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 29 @@@
+SECURITY no key 
+rc=0
+out="step=done\nrun=gsdt-finish\nstop=gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\n"
+err=""
+@@@ 30 @@@
+SECURITY no key --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 31 @@@
+SECURITY empty 
+rc=0
+out="step=done\nrun=gsdt-finish\nstop=gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\n"
+err=""
+@@@ 32 @@@
+SECURITY empty --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 33 @@@
+SECURITY 00 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=00 open threat(s)\n"
+err=""
+@@@ 34 @@@
+SECURITY 00 --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"00 open threat(s)\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
+@@@ 35 @@@
+SECURITY text 
+rc=0
+out="step=secure\nrun=/gsd-secure-phase 7\nnote=some\"x\"\\y open threat(s)\n"
+err=""
+@@@ 36 @@@
+SECURITY text --all --json
+rc=0
+out="{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"some\\\"x\\\"\\\\y open threat(s)\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""

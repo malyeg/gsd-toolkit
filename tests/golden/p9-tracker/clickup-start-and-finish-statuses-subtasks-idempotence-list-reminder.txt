@@ -1,0 +1,273 @@
+@@@ 1 @@@
+### step 0: ["start","abc123","starting"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp abc123 → status 'In-Progress'
+✔ ClickUp abc123 → comment posted
+✔ ClickUp sub1 (subtask) → status 'In-Progress'
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["finish","abc123","done with \"quotes\" é \\ and\nnewline\ttab \u0001  😀"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp abc123 → status 'In-Testing'
+✔ ClickUp abc123 → comment posted
+✔ ClickUp sub1 (subtask) → status 'In-Testing'
+✔ ClickUp sub4 (subtask) → status 'In-Testing'
+
+--- stderr
+
+@@@ 3 @@@
+### step 2: ["start","done123","again"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+• ClickUp done123 already 'In-Progress' — status and comment skipped (idempotent)
+
+--- stderr
+
+@@@ 4 @@@
+### step 3: ["finish","done123","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp done123 → status 'In-Testing'
+✔ ClickUp done123 → comment posted
+
+--- stderr
+
+@@@ 5 @@@
+### step 4: ["start","nolist1","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","GSD_CLICKUP_ENG_LIST":"L1"}
+rc=0
+--- stdout
+✔ ClickUp nolist1 → status 'in progress'
+✔ ClickUp nolist1 → comment posted
+• task lives in list 'Other' — move it to list L1 by hand (the API can't)
+
+--- stderr
+gsdt-tracker: ClickUp API GET /list/L9 → HTTP 404: {"err":"not found"}
+gsdt-tracker: cannot fetch list L9 statuses — trying "in progress" verbatim
+
+@@@ 6 @@@
+### step 5: ["start","abc123","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","GSD_CLICKUP_ENG_LIST":"L1"}
+rc=0
+--- stdout
+✔ ClickUp abc123 → status 'In-Progress'
+✔ ClickUp abc123 → comment posted
+✔ ClickUp sub1 (subtask) → status 'In-Progress'
+
+--- stderr
+
+@@@ 7 @@@
+### step 6: ["start","abc123","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","GSD_TRACKER_STATUS_START":"Doing"}
+rc=0
+--- stdout
+✔ ClickUp abc123 → status 'In-Progress'
+✔ ClickUp abc123 → comment posted
+✔ ClickUp sub1 (subtask) → status 'In-Progress'
+
+--- stderr
+
+@@@ 8 @@@
+### step 7: ["start","abc123","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","GSD_TRACKER_STATUS_START":"in-progress"}
+rc=0
+--- stdout
+✔ ClickUp abc123 → status 'In-Progress'
+✔ ClickUp abc123 → comment posted
+✔ ClickUp sub1 (subtask) → status 'In-Progress'
+
+--- stderr
+
+@@@ 9 @@@
+### step 8: ["finish","abc123","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","GSD_CLICKUP_STATUS_FINISH":"TO DO"}
+rc=0
+--- stdout
+• ClickUp abc123 already 'to do' — status and comment skipped (idempotent)
+✔ ClickUp sub4 (subtask) → status 'to do'
+
+--- stderr
+
+@@@ 10 @@@
+### step 9: ["start","missing9","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=2
+--- stdout
+
+--- stderr
+gsdt-tracker: ClickUp API GET /task/missing9?include_subtasks=true → HTTP 404: {"err":"not found"}
+
+@@@ 11 @@@
+### step 10: ["finish","CU-abc123","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp abc123 → status 'In-Testing'
+✔ ClickUp abc123 → comment posted
+✔ ClickUp sub1 (subtask) → status 'In-Testing'
+✔ ClickUp sub4 (subtask) → status 'In-Testing'
+
+--- stderr
+
+@@@ 12 @@@
+### step 11: ["start","https://app.clickup.com/t/abc123","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=0
+--- stdout
+✔ ClickUp abc123 → status 'In-Progress'
+✔ ClickUp abc123 → comment posted
+✔ ClickUp sub1 (subtask) → status 'In-Progress'
+
+--- stderr
+
+@@@ 13 @@@
+### step 12: ["start","abc123","x"] {"GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: no CLICKUP_API_TOKEN — run gsdt-tracker login, or put CLICKUP_API_TOKEN=pk_… in /dev/null
+
+@@@ 14 @@@
+### step 13: ["start","abc123","x"] {"CLICKUP_API_TOKEN":"pk_bad"}
+rc=2
+--- stdout
+
+--- stderr
+gsdt-tracker: ClickUp API GET /task/abc123?include_subtasks=true → HTTP 401: {"err":"Token invalid"}
+
+@@@ 15 @@@
+### step 14: ["start","abc123","x"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null","CURL_DEAD":"1"}
+rc=2
+--- stdout
+
+--- stderr
+gsdt-tracker: curl failed (network?)
+
+@@@ 16 @@@
+### step 15: ["start","abc123"] {"CLICKUP_API_TOKEN":"pk_test","GSD_CLICKUP_CONFIG":"/dev/null"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: usage: gsdt-tracker start <id> <text>
+
+@@@ 17 @@@
+curl.log:
+GET /task/abc123?include_subtasks=true 
+GET /list/L1 
+PUT /task/abc123 {"status": "In-Progress"}
+POST /task/abc123/comment {"comment_text": "starting"}
+PUT /task/sub1 {"status": "In-Progress"}
+GET /task/abc123?include_subtasks=true 
+GET /list/L1 
+PUT /task/abc123 {"status": "In-Testing"}
+POST /task/abc123/comment {"comment_text": "done with \"quotes\" \u00e9 \\ and\nnewline\ttab \u0001 \u007f \ud83d\ude00"}
+PUT /task/sub1 {"status": "In-Testing"}
+PUT /task/sub4 {"status": "In-Testing"}
+GET /task/done123?include_subtasks=true 
+GET /list/L1 
+GET /task/done123?include_subtasks=true 
+GET /list/L1 
+PUT /task/done123 {"status": "In-Testing"}
+POST /task/done123/comment {"comment_text": "x"}
+GET /task/nolist1?include_subtasks=true 
+GET /list/L9 
+PUT /task/nolist1 {"status": "in progress"}
+POST /task/nolist1/comment {"comment_text": "x"}
+GET /task/abc123?include_subtasks=true 
+GET /list/L1 
+PUT /task/abc123 {"status": "In-Progress"}
+POST /task/abc123/comment {"comment_text": "x"}
+PUT /task/sub1 {"status": "In-Progress"}
+GET /task/abc123?include_subtasks=true 
+GET /list/L1 
+PUT /task/abc123 {"status": "In-Progress"}
+POST /task/abc123/comment {"comment_text": "x"}
+PUT /task/sub1 {"status": "In-Progress"}
+GET /task/abc123?include_subtasks=true 
+GET /list/L1 
+PUT /task/abc123 {"status": "In-Progress"}
+POST /task/abc123/comment {"comment_text": "x"}
+PUT /task/sub1 {"status": "In-Progress"}
+GET /task/abc123?include_subtasks=true 
+GET /list/L1 
+PUT /task/sub4 {"status": "to do"}
+GET /task/missing9?include_subtasks=true 
+GET /task/abc123?include_subtasks=true 
+GET /list/L1 
+PUT /task/abc123 {"status": "In-Testing"}
+POST /task/abc123/comment {"comment_text": "x"}
+PUT /task/sub1 {"status": "In-Testing"}
+PUT /task/sub4 {"status": "In-Testing"}
+GET /task/abc123?include_subtasks=true 
+GET /list/L1 
+PUT /task/abc123 {"status": "In-Progress"}
+POST /task/abc123/comment {"comment_text": "x"}
+PUT /task/sub1 {"status": "In-Progress"}
+GET /task/abc123?include_subtasks=true 
+GET /task/abc123?include_subtasks=true 
+
+argv:
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "starting"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/sub1
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Testing"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "done with \"quotes\" \u00e9 \\ and\nnewline\ttab \u0001 \u007f \ud83d\ude00"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Testing"}-w\n%{http_code}https://api.clickup.com/api/v2/task/sub1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Testing"}-w\n%{http_code}https://api.clickup.com/api/v2/task/sub4
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/done123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L1
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/done123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Testing"}-w\n%{http_code}https://api.clickup.com/api/v2/task/done123
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "x"}-w\n%{http_code}https://api.clickup.com/api/v2/task/done123/comment
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/nolist1?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L9
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "in progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/nolist1
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "x"}-w\n%{http_code}https://api.clickup.com/api/v2/task/nolist1/comment
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "x"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/sub1
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "x"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/sub1
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "x"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/sub1
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "to do"}-w\n%{http_code}https://api.clickup.com/api/v2/task/sub4
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/missing9?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Testing"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "x"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Testing"}-w\n%{http_code}https://api.clickup.com/api/v2/task/sub1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Testing"}-w\n%{http_code}https://api.clickup.com/api/v2/task/sub4
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/list/L1
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123
+ARGV:-sSg--max-time15-XPOST-HAuthorization: pk_test-HContent-Type: application/json-d{"comment_text": "x"}-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123/comment
+ARGV:-sSg--max-time15-XPUT-HAuthorization: pk_test-HContent-Type: application/json-d{"status": "In-Progress"}-w\n%{http_code}https://api.clickup.com/api/v2/task/sub1
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_bad-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_subtasks=true
+ARGV:-sSg--max-time15-XGET-HAuthorization: pk_test-HContent-Type: application/json-w\n%{http_code}https://api.clickup.com/api/v2/task/abc123?include_subtasks=true
+
+tracker.log:
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+

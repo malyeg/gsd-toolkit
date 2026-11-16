@@ -1,44 +1,43 @@
-// P5 parity: src/hook-paths.ts (and staleHooks in src/provider.ts) against the
-// python oracle lib/gsd_hook_paths.py and bash gsd_stale_hooks, same inputs.
+// P5: src/hook-paths.ts (and staleHooks in src/provider.ts) against saved goldens in
+// tests/golden/p5-hook-paths/. Regenerate with UPDATE_GOLDEN=1 (from the new code only);
+// review a regenerated golden by diff.
 // Run: node --test tests/ts/p5-hook-paths.test.ts
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
-import { mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, realpathSync, symlinkSync, writeFileSync } from 'node:fs';
+import { homedir, tmpdir } from 'node:os';
 import path from 'node:path';
-import { test } from 'node:test';
+import { golden, test } from './golden.ts';
 import { hookPaths, shlexSplit } from '../../src/hook-paths.ts';
 import { staleHooks } from '../../src/provider.ts';
-import { PKG, bash, tmp, withEnv, write } from './helpers.ts';
+import { tmp, withEnv, write } from './helpers.ts';
 
-const PY = path.join(PKG, 'lib', 'gsd_hook_paths.py');
-const py = (argv: string[], env: Record<string, string | undefined> = {}): string => {
-  const e: NodeJS.ProcessEnv = { ...process.env };
-  for (const [k, v] of Object.entries(env)) {
-    if (v === undefined) delete e[k];
-    else e[k] = v;
-  }
-  const r = spawnSync('python3', [PY, ...argv], { encoding: 'utf8', env: e });
-  assert.equal(r.status, 0, r.stderr);
-  return r.stdout;
-};
+// A fixed fake HOME (a default HOME would leak the real user name into the goldens), and the
+// temp dir spelled one way (macOS: /var/folders vs /private/var/folders).
+const ACCOUNT_HOME = (() => {
+  delete process.env.HOME;
+  return homedir();
+})();
+process.env.HOME = `${tmp()}/fakehome`;
+// (HOME unset falls back to the account's home: that one is named <HOME>)
+const fix = (t: string): string => t.split(realpathSync(tmpdir())).join(tmpdir()).split(ACCOUNT_HOME).join('<HOME>');
 const same = (label: string, argv: string[], env: Record<string, string | undefined> = {}): string => {
-  const want = py(argv, env);
   const got = withEnv(env, () => hookPaths(argv));
-  assert.equal(got, want, label);
-  return want;
+  golden(fix(`# ${label}\n${got}`));
+  return got;
 };
 
 const hook = (command: string, event = 'PreToolUse'): string => JSON.stringify({ hooks: { [event]: [{ matcher: '', hooks: [{ type: 'command', command }] }] } });
 
-test('shlexSplit equals python shlex.split', () => {
+test('shlexSplit splits like a POSIX shell', () => {
   const inputs = [
     '', ' ', 'a b', "a 'b c' d", 'a "b c" d', 'a\\ b', '"a\\"b"', '"a\\qb"', "'a\\b'", "''", '""', "a''b", 'x"" y', '"unclosed', "'unclosed",
     'trailing\\', '"a\\', 'tab\tsep\nnl', 'a\\\\b', '"a\\\\b"', '\\\\', "a'b'c\"d\"e", '$(x y) `z`', 'é "ü ö"', "'a\nb'", '#not a comment', 'a b', 'a\fb',
   ];
+  const nw: string[] = [];
   for (const s of inputs) {
-    const r = spawnSync('python3', ['-c', 'import shlex,sys,json\ntry: print(json.dumps(shlex.split(sys.argv[1])))\nexcept ValueError: print("null")', s], { encoding: 'utf8' });
-    assert.deepEqual(shlexSplit(s), JSON.parse(r.stdout), JSON.stringify(s));
+    nw.push(`${JSON.stringify(s)} => ${JSON.stringify(shlexSplit(s))}`);
   }
+  golden(nw.join('\n'));
 });
 
 test('settings files: missing, bad JSON, wrong shape', () => {
@@ -156,7 +155,7 @@ test('HOME and --project handling', () => {
   same('file name with a colon (exists)', [`user:${d}/a:b.json`]);
 });
 
-test('staleHooks equals bash gsd_stale_hooks (user files, repo files, locations)', () => {
+test('staleHooks (user files, repo files, locations)', () => {
   const d = tmp();
   const r = path.join(d, 'repo');
   const stale = (name: string): string => hook(`node /gone/${name}/gsd-x.js`);
@@ -175,9 +174,8 @@ test('staleHooks equals bash gsd_stale_hooks (user files, repo files, locations)
   write(`${d}/home/.codex/hooks.json`, stale('home-codex'));
   for (const env of envs) {
     for (const repoArg of ['', r, `${d}/norepo`]) {
-      const want = bash('gsd_stale_hooks "$1"', [repoArg], Object.fromEntries(Object.entries(env).filter(([, v]) => v !== undefined)) as Record<string, string>).out;
       const got = withEnv({ GSD_CLAUDE_SETTINGS: undefined, GSD_CODEX_HOOKS: undefined, CLAUDE_CONFIG_DIR: undefined, CODEX_HOME: undefined, ...env }, () => staleHooks(repoArg));
-      assert.equal(got, want, `${JSON.stringify(env)} repo=${repoArg}`);
+      golden(fix(`# repo=${repoArg === r ? '<repo>' : repoArg === '' ? '' : '<norepo>'}\n${got}`));
       if (repoArg === r) assert.ok(got.includes('/gone/local/gsd-y'));
     }
   }

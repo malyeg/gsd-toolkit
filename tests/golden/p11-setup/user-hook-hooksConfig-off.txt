@@ -1,0 +1,4 @@
+@@@ 1 @@@
+{"hooksConfig": {"enabled": false}}
+--
+• hooks are turned off in <H>/.claude/settings.json; claude user hook not added

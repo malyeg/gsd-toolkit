@@ -1,0 +1,1925 @@
+@@@ 1 @@@
+step 1 (gsdt-start --bogus)
+rc=1
+--- stdout
+
+--- stderr
+✖ unknown flag: --bogus (see gsdt-start --help)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-start -p)
+rc=1
+--- stdout
+
+--- stderr
+✖ --phase needs a value
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 3 @@@
+step 3 (gsdt-start --repo)
+rc=1
+--- stdout
+
+--- stderr
+✖ --repo needs a value
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 4 @@@
+step 4 (gsdt-start --slug)
+rc=1
+--- stdout
+
+--- stderr
+✖ --slug needs a value
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 5 @@@
+step 5 (gsdt-start --ticket)
+rc=1
+--- stdout
+
+--- stderr
+✖ --ticket needs a ticket id
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 6 @@@
+step 6 (gsdt-start --cu)
+rc=1
+--- stdout
+
+--- stderr
+✖ --cu needs a value (ClickUp task id)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 7 @@@
+step 7 (gsdt-start --insert)
+rc=1
+--- stdout
+
+--- stderr
+✖ --insert needs a value
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 8 @@@
+step 8 (gsdt-start --after)
+rc=1
+--- stdout
+
+--- stderr
+✖ --after needs a value
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 9 @@@
+step 9 (gsdt-start --provider)
+rc=1
+--- stdout
+
+--- stderr
+✖ --provider needs claude, codex, or custom
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 10 @@@
+step 10 (gsdt-start --model)
+rc=1
+--- stdout
+
+--- stderr
+✖ --model needs a model ID or default
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 11 @@@
+step 11 (gsdt-start --model )
+rc=1
+--- stdout
+
+--- stderr
+✖ --model needs a model ID or default
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 12 @@@
+step 12 (gsdt-start --agent-command)
+rc=1
+--- stdout
+
+--- stderr
+✖ --agent-command needs one executable path/name
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 13 @@@
+step 13 (gsdt-start --agent)
+rc=1
+--- stdout
+
+--- stderr
+✖ --agent needs a provider or executable
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 14 @@@
+step 14 (gsdt-start )
+rc=1
+--- stdout
+
+--- stderr
+gsdt-start — start a GSD feature in ONE step
+
+Claims the next phase, publishes the claim, creates the phase worktree, and
+opens a provider-valid phase-flow session there (--no-launch prints it).
+Replaces the manual sequence:
+  /gsd-phase "<desc>" → git push → scripts/gsdt-new-worktree-feature.sh
+  → cd <worktree> → <agent> "/gsd-discuss-phase N"
+
+Provider identity and executable are configured separately. Print-only is the
+default and works even when the selected CLI is unavailable.
+
+USAGE
+  gsdt-start -n "<phase description>" [options]  claim a NEW phase
+  gsdt-start --insert <N> "<desc>" [options]     claim a FRACTIONAL phase after N
+  gsdt-start -p <N> [options]                    attach to an EXISTING phase
+
+Claiming a new phase is never the default: -n (or --insert) says so explicitly,
+so a bare description can't silently open a second phase for work the roadmap
+already tracks.
+
+OPTIONS
+  -n, --new       claim a NEW phase for the given description. Required for
+                  the claim path — without it (and without -p/--insert) a bare
+                  description is refused, listing the three choices.
+  -p, --phase <N> attach to already-claimed phase N: skip the claim/push,
+                  create (or reuse) its worktree, open the session there.
+                  Use after a failed run, or when the phase was claimed
+                  separately (/gsd-phase) — avoids duplicate ROADMAP entries.
+                  The description is taken from ROADMAP.md and may be omitted.
+  --insert <N>    claim a decimal phase inserted after phase N instead of the
+  --after <N>     next integer: 11 → 11.1, a second insert → 11.2, and so on
+                  (delegates to gsd-core's phase.insert). Needs a description;
+                  cannot be combined with -p. (alias: --after)
+  --ticket <id>   the ticket driving this phase: an issue/task in your
+                  tracker (accepts 869e33cv4, PROJ-42, tk-<id>, or its URL).
+                  The phase title and slug get the tag tk-<id> at the end.
+                  With `tracker = clickup|custom` in .gsd.conf the ticket is
+                  moved to "in progress" with a comment (best-effort, via
+                  gsdt-tracker); with the default `tracker = none` it is only
+                  tagged. A tag already in the description (… tk-<id>) is
+                  picked up the same way. --cu <id> is the old name.
+                  With a tracker set, a new claim (-n, --insert) needs one.
+  --no-ticket     claim without a ticket although a tracker is set
+                  (a chore no ticket covers)
+  --slug <slug>   worktree/branch slug → phase-<N>-<slug>
+                  (default: slugified phase description)
+  --repo <path>   main checkout of the target repo
+                  (default: derived from the current directory)
+  --provider <p>  claude, codex, or custom (config default otherwise)
+  --model <id>    session model override; 'default' uses the CLI's own default
+  --agent-command <path> executable override (add --no-launch to print)
+  --agent <value> compatibility alias: known provider or custom executable
+  --flow          start/resume the complete gsdt-flow workflow (the default).
+                  The flow reads existing phase artifacts and continues at
+                  the next step. Overrides start_mode = discuss.
+  --no-flow       start with discuss-phase only, for this run (for every run:
+                  start_mode = discuss in .gsd.conf).
+  --launch        open the session with the configured provider. The default:
+                  in a terminal the session opens in the worktree. With no
+                  terminal (a script, an agent's shell) the command is printed.
+  --no-launch     print the 'cd … && <agent> …' command instead of opening it
+  --no-push       skip pull/push (no-remote or offline workflows)
+  -h, --help      show this help
+
+EXAMPLES
+  gsdt-start -n "customer terms rework"
+      Claim the phase, push, create ../<repo>-worktrees/phase-<N>-customer-
+      terms-rework, and print the configured provider command.
+
+  gsdt-start --insert 11 "hotfix reset-email copy"
+      Claim phase 11.1 (the next free decimal after phase 11), push, create
+      ../<repo>-worktrees/phase-11.1-hotfix-reset-email-copy.
+
+  gsdt-start --after 11 "second hotfix"
+      Run after the previous example: phase 11.1 already exists, so this
+      claims phase 11.2 (the decimal auto-increments). --after == --insert.
+
+  gsdt-start --insert 11 "urgent db backfill" --slug db-backfill
+      Insert phase 11.x after phase 11 but force the branch/worktree slug →
+      phase-11.x-db-backfill (default would be slugified from the description).
+
+  gsdt-start -p 11.1
+      Re-attach to the already-inserted phase 11.1 (e.g. after a failed run):
+      no new claim, reuse/re-create its phase-11.1-* worktree. Idempotent.
+
+  gsdt-start -p 7
+      Phase 7 is already in ROADMAP.md: don't claim anything — create or
+      reuse its phase-7-* worktree and resume the flow at the first
+      unfinished step reported by gsdt-flow-next. Idempotent.
+
+  gsdt-start -p 7 --no-flow
+      Reuse phase 7's worktree and open discuss-phase only.
+
+  gsdt-start -n "fix invoice rounding" --slug invoice-fix
+      Same, but the branch/worktree is phase-<N>-invoice-fix.
+
+  gsdt-start -n "reporting exports"
+      Prepare everything and open the configured session in the worktree.
+
+  gsdt-start -n "reporting exports" --no-launch
+      Same, but print the command to run later instead.
+
+  gsdt-start -n "reporting exports" --agent codex
+      Compatibility form: select Codex and launch it.
+
+  gsdt-start -n "hotfix parsing" --repo ~/projects/acme/webshop
+      Start a phase in another repo without cd-ing into it first.
+
+PARALLEL SESSIONS
+  Safe to run from several terminals at once:
+  - a local lock (.git/gsd-cmd.lock) serializes gsd commands that touch the
+    same checkout on this machine (concurrent runs wait, max 300s; stale
+    locks left by crashed runs are reclaimed automatically);
+  - the claim is pulled first and pushed with rebase-and-retry; if another
+    session claimed the same phase number simultaneously, this one
+    automatically renumbers and continues.
+
+NOTES
+  - The claim is deterministic — gsd-core's query phase.add (next integer) or,
+    with --insert/--after, query phase.insert (next decimal after N),
+    the same CLIs the /gsd-phase skill uses; no LLM call is made.
+  - A claim is refused when the roadmap already has a phase with this exact
+    description, or (with --ticket) a phase already tagged with the same ticket
+    however it was worded — the error names the phase to attach to instead.
+  - --insert needs a description and cannot be combined with -p/--phase. The
+    anchor phase N must already exist in ROADMAP.md (else it errors, claiming
+    nothing). You don't pick the exact decimal — it auto-assigns the next free
+    N.x. Everything downstream (worktree, guard, discuss/plan/execute) accepts
+    decimal phase numbers.
+  - Requires a GSD-fitted repo (gsdt-bootstrap-repo) with initialized
+    .planning/ (/gsd-new-project or /gsd-ingest-docs).
+  - The main checkout must be on the base branch with no uncommitted
+    .planning/ changes.
+
+RELATED
+  gsdt-finish            finish the phase (merge back, push, clean up)
+  gsdt-init              set up GSD in a repo that doesn't have it yet
+  gsdt-bootstrap-repo    just the file installation (what gsdt-init wraps)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 15 @@@
+step 15 (gsdt-start -n)
+rc=1
+--- stdout
+
+--- stderr
+✖ -n/--new needs a phase description (e.g. gsdt-start -n "customer terms rework")
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 16 @@@
+step 16 (gsdt-start --insert 3)
+rc=1
+--- stdout
+
+--- stderr
+✖ --insert needs a phase description (e.g. gsdt-start --insert 11 "hotfix …")
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 17 @@@
+step 17 (gsdt-start --insert x desc)
+rc=1
+--- stdout
+
+--- stderr
+✖ --insert must be the phase number to insert after (e.g. 11), got: x
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 18 @@@
+step 18 (gsdt-start -p abc)
+rc=1
+--- stdout
+
+--- stderr
+✖ --phase must be a phase number (e.g. 7 or 7.1), got: abc
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 19 @@@
+step 19 (gsdt-start -p 7.)
+rc=1
+--- stdout
+
+--- stderr
+✖ --phase must be a phase number (e.g. 7 or 7.1), got: 7.
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 20 @@@
+step 20 (gsdt-start -n x -p 1)
+rc=1
+--- stdout
+
+--- stderr
+⚠ ignoring "x" — -p/--phase attaches to phase 1 as titled in ROADMAP.md
+✖ -n/--new and -p/--phase are mutually exclusive (-n claims a NEW phase; -p attaches to an existing one)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 21 @@@
+step 21 (gsdt-start --insert 1 x -p 1)
+rc=1
+--- stdout
+
+--- stderr
+⚠ ignoring "x" — -p/--phase attaches to phase 1 as titled in ROADMAP.md
+✖ --insert and -p/--phase are mutually exclusive (insert claims a NEW phase; -p attaches to an existing one)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 22 @@@
+step 22 (gsdt-start cart --no-launch)
+rc=1
+--- stdout
+
+--- stderr
+✖ refusing to guess whether this is a new phase — say which:
+  gsdt-start -n "cart"
+      claim a NEW phase
+  gsdt-start -p <N>
+      attach to the EXISTING phase N (check gsdt-list first)
+  gsdt-start --insert <N> "cart"
+      insert a decimal hotfix phase after phase N
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 23 @@@
+step 23 (gsdt-start two words --no-launch)
+rc=1
+--- stdout
+
+--- stderr
+✖ refusing to guess whether this is a new phase — say which:
+  gsdt-start -n "two words"
+      claim a NEW phase
+  gsdt-start -p <N>
+      attach to the EXISTING phase N (check gsdt-list first)
+  gsdt-start --insert <N> "two words"
+      insert a decimal hotfix phase after phase N
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 24 @@@
+step 24 (gsdt-start -p 9 --no-launch)
+rc=1
+--- stdout
+
+--- stderr
+✖ phase 9 not found in .planning/ROADMAP.md — omit -p/--phase to claim a new phase
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 25 @@@
+step 25 (gsdt-start -p 1 some words --no-launch)
+rc=0
+--- stdout
+▶ attaching to existing phase 1: catalog
+▶ creating worktree: <T>/shop-worktrees/phase-1-catalog   (branch 'phase-1-catalog' off main)
+HEAD is now at <sha> init
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-1-catalog/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
+
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+
+--- stderr
+⚠ ignoring "some words" — -p/--phase attaches to phase 1 as titled in ROADMAP.md
+Preparing worktree (new branch 'phase-1-catalog')
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-catalog/.gsd-install.status
+skipped
+
+── wt phase-1-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 26 @@@
+step 26 (gsdt-start -n catalog --no-launch)
+rc=1
+--- stdout
+▶ syncing 'main' with origin (picking up other sessions' claims)…
+
+--- stderr
+✖ phase 1 already has this exact description — attach to it instead: gsdt-start -p 1
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-catalog/.gsd-install.status
+skipped
+
+── wt phase-1-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 27 @@@
+step 27 (gsdt-start -n CATALOG --no-launch)
+rc=1
+--- stdout
+▶ syncing 'main' with origin (picking up other sessions' claims)…
+
+--- stderr
+✖ phase 1 already has this exact description — attach to it instead: gsdt-start -p 1
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-catalog/.gsd-install.status
+skipped
+
+── wt phase-1-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 28 @@@
+step 28 (gsdt-start -n x --provider gemini --no-launch)
+rc=64
+--- stdout
+
+--- stderr
+Gemini is no longer supported (gsd-core, the new GSD, dropped it) — use claude, codex, or custom
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-catalog/.gsd-install.status
+skipped
+
+── wt phase-1-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 29 @@@
+step 29 (gsdt-start -n x --provider nope --no-launch)
+rc=64
+--- stdout
+
+--- stderr
+unknown provider 'nope' (expected claude, codex, or custom)
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-catalog/.gsd-install.status
+skipped
+
+── wt phase-1-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 30 @@@
+step 30 (gsdt-start -n x --provider custom --no-launch)
+rc=64
+--- stdout
+
+--- stderr
+provider 'custom' requires an explicit agent command
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-catalog/.gsd-install.status
+skipped
+
+── wt phase-1-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 31 @@@
+step 31 (gsdt-start -n x --model a b --no-launch)
+rc=64
+--- stdout
+
+--- stderr
+model must be one model ID or alias, without whitespace or a leading '-'
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-catalog/.gsd-install.status
+skipped
+
+── wt phase-1-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 32 @@@
+step 32 (gsdt-start -n x --agent-command a b --no-launch)
+rc=64
+--- stdout
+
+--- stderr
+agent command must be one executable path/name, not a shell template
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-catalog/.gsd-install.status
+skipped
+
+── wt phase-1-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 33 @@@
+step 33 (gsdt-start -n x --ticket !! --no-launch)
+rc=1
+--- stdout
+
+--- stderr
+✖ --ticket doesn't look like a ticket id (letters/digits, '-' between): 
+
+--- files left behind
+── log
+init
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+── wt phase-1-catalog/.gsd-install.status
+skipped
+
+── wt phase-1-catalog/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+

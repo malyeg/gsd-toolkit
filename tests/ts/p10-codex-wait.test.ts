@@ -1,37 +1,29 @@
-// P10 parity (gsdt-codex-wait): the TypeScript command behind bin/gsdt-codex-wait against the
-// pre-P10 bash command (tests/fixtures/p10-old-bins/gsdt-codex-wait + gsd_codex_limit.py, the
-// oracle), each side on its own fixture dir (a CODEX_HOME, a fake clock file, a stub command), the
-// same steps on both. Compared: stdout, stderr, exit code, the clock after, the stub's run count.
-// Everything runs under a fake clock (GSD_CODEX_WAIT_CLOCK), in two zones (UTC, America/New_York),
-// since the parser reads local time. The parser is also compared message by message against the
-// python (`parse --base`, `when`, `scan`).
-// Known differences (new side only, see the last tests): "--help" drops the "69 = no Python"
-// words; a command that cannot start prints `gsdt-codex-wait: <cmd>: command not found` (bash
-// printed its own `line N:` text); no Python exit 69.
+// gsdt-codex-wait (src/codex-wait.ts, behind bin/gsdt-codex-wait) against saved goldens in
+// tests/golden/p10-codex-wait/. Each scenario runs on its own fixture dir (a CODEX_HOME, a fake
+// clock file, a stub command); golden = stdout, stderr, exit code, the clock after, the stub's run
+// count. Everything runs under a fake clock (GSD_CODEX_WAIT_CLOCK), in two zones (UTC,
+// America/New_York), since the parser reads local time. The parser is also pinned message by
+// message (`parse`, `when`, `scan`).
+// Behaviour the old bash command did differently (new side only, see the last tests): "--help"
+// has no "69 = no Python" words; a command that cannot start prints
+// `gsdt-codex-wait: <cmd>: command not found`; no Python exit 69.
 // Run: node --test tests/ts/p10-codex-wait.test.ts
+// Regenerate: UPDATE_GOLDEN=1 node --test tests/ts/p10-codex-wait.test.ts; review the diff of
+// tests/golden/p10-codex-wait/ by hand before committing.
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { chmodSync, cpSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, utimesSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, utimesSync, writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { test } from 'node:test';
+import { test, golden } from './golden.ts';
 import { parse, parseDuration, human, scan, when } from '../../src/codex-wait.ts';
 import { PKG } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p10-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
 
-const OLDPKG = path.join(W, 'oldpkg');
-mkdirSync(path.join(OLDPKG, 'bin'), { recursive: true });
-cpSync(path.join(PKG, 'lib'), path.join(OLDPKG, 'lib'), { recursive: true });
-const FIX = path.join(PKG, 'tests/fixtures/p10-old-bins');
-writeFileSync(path.join(OLDPKG, 'bin', 'gsdt-codex-wait'), readFileSync(path.join(FIX, 'gsdt-codex-wait')));
-chmodSync(path.join(OLDPKG, 'bin', 'gsdt-codex-wait'), 0o755);
-writeFileSync(path.join(OLDPKG, 'lib', 'gsd_codex_limit.py'), readFileSync(path.join(FIX, 'gsd_codex_limit.py')));
-const PYLIB = path.join(FIX, 'gsd_codex_limit.py');
-const BINS = { old: path.join(OLDPKG, 'bin', 'gsdt-codex-wait'), neu: path.join(PKG, 'bin', 'gsdt-codex-wait') };
-type Side = 'old' | 'neu';
-const SIDES: Side[] = ['old', 'neu'];
+const BINS = { neu: path.join(PKG, 'bin', 'gsdt-codex-wait') };
+type Side = 'neu';
 
 const T0 = 1760011200; // 2025-10-09 12:00:00 UTC
 const RSQ = '’';
@@ -80,11 +72,9 @@ function exec(side: Side, tz: string, s: Scn): Res {
   };
   const args = s.args.map((a) => a.split('$D').join(D));
   const r = spawnSync(BINS[side], args, { encoding: 'utf8', env, input: s.stdin ?? '' });
-  const norm = (t: string): string => t.split(D).join('<D>').split(OLDPKG).join('<PKG>').split(PKG).join('<PKG>');
-  // the one deliberate text change: --help no longer mentions Python (exit 69 is gone)
-  const fixHelp = (t: string): string => (side === 'old' ? t.replace('64 = bad usage; 69 = no Python 3.7+.', '64 = bad usage.') : t);
+  const norm = (t: string): string => t.split(D).join('<D>').split(PKG).join('<PKG>');
   return {
-    out: fixHelp(norm(r.stdout ?? '')),
+    out: norm(r.stdout ?? ''),
     err: norm(r.stderr ?? ''),
     rc: r.status ?? -1,
     clock: parseInt(readFileSync(clockF, 'utf8').trim(), 10),
@@ -92,13 +82,13 @@ function exec(side: Side, tz: string, s: Scn): Res {
   };
 }
 
+const resText = (r: Res): string => `rc=${r.rc} clock=${r.clock} runs=${r.runs}\n--- stdout\n${r.out}\n--- stderr\n${r.err}`;
 function parity(name: string, s: Scn, check?: (r: Res) => void): void {
   for (const tz of ZONES) {
     test(`${name} [${tz}]`, () => {
       seq++;
-      const o = exec('old', tz, s);
       const n = exec('neu', tz, s);
-      assert.deepEqual(n, o);
+      golden(resText(n));
       check?.(n);
     });
   }
@@ -140,11 +130,9 @@ parity('plain failure passes the code', { args: ['--', 'sh', '-c', 'echo nope >&
 parity('plain failure, no output', { args: ['--', 'sh', '-c', 'exit 7'] }, (r) => assert.equal(r.rc, 7));
 parity('limit text but exit 0 (a review quoting it)', { args: ['--', 'sh', '-c', 'echo "a review quoting: You have hit your usage limit"; exit 0'] });
 // bash adds its own "line N: PID Killed" job note on stderr (not reproducible): only the code is compared
-test('killed by a signal → 128+n (both; bash adds a job note on stderr, new side does not)', () => {
+test('killed by a signal → 128+n (new side only: the old bash added a job note on stderr)', () => {
   seq++;
-  const o = exec('old', 'UTC', { args: ['--', 'sh', '-c', 'kill -9 $$'] });
   const n = exec('neu', 'UTC', { args: ['--', 'sh', '-c', 'kill -9 $$'] });
-  assert.equal(o.rc, 137);
   assert.equal(n.rc, 137);
   assert.equal(n.err, '');
 });
@@ -229,7 +217,7 @@ parity('--message with a clock file that has no newline', { args: ['--wait-only'
 parity('long chain of options', { args: ['--max-wait', '2d', '--interval', '1h', '--margin', '1m', '--wait-only', '--message', MSG_FAR] });
 parity('--message exactly at deadline', { args: ['--wait-only', '--max-wait', '8h', '--margin', '0', '--message', MSG_FUT] });
 
-// ---- parser: TS against the python, over a table of messages
+// ---- parser: over a table of messages
 const MESSAGES = [
   MSG_FUT,
   MSG_PAST,
@@ -291,12 +279,8 @@ const MESSAGES = [
   `You${RSQ}ve hit your usage limit. ${'x'.repeat(5000)} try again at 4:00 PM`,
 ];
 const BASES = [T0, T0 + 3 * 3600 + 1234, 1767225540, 1774755000, 1793000000, 0, 86400 * 365];
-function py(args: string[], tz: string, input = ''): { out: string; rc: number } {
-  const r = spawnSync('python3', ['-I', PYLIB, ...args], { encoding: 'utf8', input, env: { PATH: process.env.PATH ?? '', TZ: tz } });
-  return { out: r.stdout ?? '', rc: r.status ?? -1 };
-}
 for (const tz of ZONES) {
-  test(`parser: every message × base matches python [${tz}]`, () => {
+  test(`parser: every message × base [${tz}]`, () => {
     // TS reads TZ from the process: run it in a child so the zone is fixed for that run
     const script = `
       import { parse } from ${JSON.stringify(path.join(PKG, 'src/codex-wait.ts'))};
@@ -307,28 +291,18 @@ for (const tz of ZONES) {
     const r = spawnSync(process.execPath, ['--input-type=module', '-e', script, JSON.stringify([MESSAGES, BASES])], { encoding: 'utf8', env: { PATH: process.env.PATH ?? '', TZ: tz } });
     assert.equal(r.status, 0, r.stderr);
     const got = JSON.parse(r.stdout) as number[][];
-    // one python run for the whole table: import the fixture as a module and call its parser
-    const driver = `
-import sys, json, importlib.util
-spec = importlib.util.spec_from_file_location("lim", sys.argv[1]); lim = importlib.util.module_from_spec(spec); spec.loader.exec_module(lim)
-msgs, bases = json.loads(sys.argv[2]); res = []
-for m in msgs:
-    for b in bases:
-        if not lim.LIMIT.search(m): res.append([2]); continue
-        e = lim.reset_from(m, b); res.append([1] if e is None else [0, e])
-print(json.dumps(res))`;
-    const p = spawnSync('python3', ['-I', '-c', driver, PYLIB, JSON.stringify([MESSAGES, BASES])], { encoding: 'utf8', env: { PATH: process.env.PATH ?? '', TZ: tz } });
-    assert.equal(p.status, 0, p.stderr);
-    const want = JSON.parse(p.stdout) as number[][];
+    const lines: string[] = [];
     let i = 0;
     for (const m of MESSAGES) {
       for (const b of BASES) {
-        assert.deepEqual(got[i], want[i], `${JSON.stringify(m.slice(0, 120))} base ${b}`);
+        const key = `${JSON.stringify(m.slice(0, 120))} base ${b}`;
+        lines.push(`${key} => ${JSON.stringify(got[i])}`);
         i++;
       }
     }
+    golden(lines.join('\n'));
   });
-  test(`when() matches python's strftime [${tz}]`, () => {
+  test(`when() formats the local time [${tz}]`, () => {
     const epochs = [0, T0, T0 + 3600 * 5, 1774755000, 1793000000, 1772000000, 1782000000, 1700000000];
     const script = `
       import { when } from ${JSON.stringify(path.join(PKG, 'src/codex-wait.ts'))};
@@ -336,11 +310,11 @@ print(json.dumps(res))`;
     const r = spawnSync(process.execPath, ['--input-type=module', '-e', script, JSON.stringify(epochs)], { encoding: 'utf8', env: { PATH: process.env.PATH ?? '', TZ: tz } });
     assert.equal(r.status, 0, r.stderr);
     const got = JSON.parse(r.stdout) as string[];
-    epochs.forEach((e, i) => assert.equal(got[i], py(['when', String(e)], tz).out.trimEnd(), `epoch ${e}`));
+    golden(epochs.map((e, i) => `${e} => ${got[i]}`).join('\n'));
   });
 }
 
-test('scan() matches python over a folder of logs', () => {
+test('scan() over a folder of logs', () => {
   const home = path.join(W, 'scanhome');
   const put = (name: string, body: string, mtime: number): void => {
     const f = path.join(home, 'sessions', name);
@@ -356,13 +330,12 @@ test('scan() matches python over a folder of logs', () => {
   put('2026/e.jsonl', '{"x":"usage limit but not the phrase"}\n', 1760009600);
   put('f.jsonl', `{"m":"hit  your\\nusage limit. try again at 5:00 PM"}\r\n`, 1760004000);
   const sinces = [0, 1759999999, 1760000000, 1760004001, 1760005000, 1760005001, 1760009999];
+  const gl: string[] = [];
   for (const since of sinces) {
-    const p = py(['scan', '--home', home, '--since', String(since)], 'UTC');
     const t = scan(home, since);
-    const got = t ? `${t.mtime}\t${t.message}` : null;
-    const want = p.rc === 0 ? p.out.replace(/\n$/, '') : null;
-    assert.equal(got, want, `since ${since}`);
+    gl.push(`since ${since} => ${JSON.stringify(t ? `${t.mtime}\t${t.message}` : null)}`);
   }
+  golden(gl.join('\n'));
   assert.equal(scan(path.join(W, 'nowhere'), 0), null);
 });
 
@@ -380,11 +353,11 @@ test('durations and human()', () => {
 });
 
 // ---- new side only
-test('--help is the old text minus the "69 = no Python 3.7+" words', () => {
-  const o = exec('old', 'UTC', { args: ['--help'] });
+test('--help has no "69 = no Python 3.7+" words (new side only)', () => {
   const n = exec('neu', 'UTC', { args: ['--help'] });
   assert.equal(n.rc, 0);
-  assert.equal(n.out, o.out.replace('64 = bad usage; 69 = no Python 3.7+.', '64 = bad usage.'));
+  assert.match(n.out, /64 = bad usage\.\n/);
+  assert.doesNotMatch(n.out, /Python/);
 });
 
 test('new side: a command that does not exist → 127 and a note (bash printed `line N:` text)', () => {

@@ -1,0 +1,267 @@
+@@@ 1 @@@
+no notice without a terminal
+rc=0
+--- stdout
+┌──────┬────────────────────────────────────────────────┬───────┬─────────┬──────────────┐
+│    N │ PHASE                                          │ PLANS │ STAGE   │ WORKTREE     │
+├──────┼────────────────────────────────────────────────┼───────┼─────────┼──────────────┤
+│    1 │ nothing yet                                    │     — │ —       │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    2 │ spec only                                      │     — │ spec    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    3 │ discussed                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    4 │ has screens                                    │     — │ ui      │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    5 │ half executed                                  │   1/2 │ execute │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    6 │ finished work                                  │     ✔ │ done    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
+│      │ description that must wrap across several      │       │         │              │
+│      │ lines                                          │       │         │              │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│   10 │ two digit                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│ 10.1 │ decimal hotfix                                 │   0/1 │ plan    │ —            │
+└──────┴────────────────────────────────────────────────┴───────┴─────────┴──────────────┘
+  new phase: gsdt-start -n "<desc>" · attach: gsdt-start -p <N> · ● worktree attached
+--- stderr
+
+@@@ 2 @@@
+stale hooks, one file
+rc=0
+--- stdout
+┌──────┬────────────────────────────────────────────────┬───────┬─────────┬──────────────┐
+│    N │ PHASE                                          │ PLANS │ STAGE   │ WORKTREE     │
+├──────┼────────────────────────────────────────────────┼───────┼─────────┼──────────────┤
+│    1 │ nothing yet                                    │     — │ —       │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    2 │ spec only                                      │     — │ spec    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    3 │ discussed                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    4 │ has screens                                    │     — │ ui      │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    5 │ half executed                                  │   1/2 │ execute │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    6 │ finished work                                  │     ✔ │ done    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
+│      │ description that must wrap across several      │       │         │              │
+│      │ lines                                          │       │         │              │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│   10 │ two digit                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│ 10.1 │ decimal hotfix                                 │   0/1 │ plan    │ —            │
+└──────┴────────────────────────────────────────────────┴───────┴─────────┴──────────────┘
+  new phase: gsdt-start -n "<desc>" · attach: gsdt-start -p <N> · ● worktree attached
+--- stderr
+⚠ 2 GSD hook(s) in <TMP>/claude.json run a file that is gone, so they fail silently — run gsdt-doctor
+
+@@@ 3 @@@
+stale hooks, two files
+rc=0
+--- stdout
+┌──────┬────────────────────────────────────────────────┬───────┬─────────┬──────────────┐
+│    N │ PHASE                                          │ PLANS │ STAGE   │ WORKTREE     │
+├──────┼────────────────────────────────────────────────┼───────┼─────────┼──────────────┤
+│    1 │ nothing yet                                    │     — │ —       │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    2 │ spec only                                      │     — │ spec    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    3 │ discussed                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    4 │ has screens                                    │     — │ ui      │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    5 │ half executed                                  │   1/2 │ execute │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    6 │ finished work                                  │     ✔ │ done    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
+│      │ description that must wrap across several      │       │         │              │
+│      │ lines                                          │       │         │              │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│   10 │ two digit                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│ 10.1 │ decimal hotfix                                 │   0/1 │ plan    │ —            │
+└──────┴────────────────────────────────────────────────┴───────┴─────────┴──────────────┘
+  new phase: gsdt-start -n "<desc>" · attach: gsdt-start -p <N> · ● worktree attached
+--- stderr
+
+⚠ 2 GSD hook(s) in <TMP>/claude.json run a file that is gone, so they fail silently — run gsdt-doctor
+⚠ 2 GSD hook(s) in <TMP>/codex.json run a file that is gone, so they fail silently — run gsdt-doctor
+@@@ 4 @@@
+stale hooks, repo hooks are not listed
+rc=0
+--- stdout
+┌──────┬────────────────────────────────────────────────┬───────┬─────────┬──────────────┐
+│    N │ PHASE                                          │ PLANS │ STAGE   │ WORKTREE     │
+├──────┼────────────────────────────────────────────────┼───────┼─────────┼──────────────┤
+│    1 │ nothing yet                                    │     — │ —       │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    2 │ spec only                                      │     — │ spec    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    3 │ discussed                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    4 │ has screens                                    │     — │ ui      │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    5 │ half executed                                  │   1/2 │ execute │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    6 │ finished work                                  │     ✔ │ done    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
+│      │ description that must wrap across several      │       │         │              │
+│      │ lines                                          │       │         │              │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│   10 │ two digit                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│ 10.1 │ decimal hotfix                                 │   0/1 │ plan    │ —            │
+└──────┴────────────────────────────────────────────────┴───────┴─────────┴──────────────┘
+  new phase: gsdt-start -n "<desc>" · attach: gsdt-start -p <N> · ● worktree attached
+--- stderr
+
+@@@ 5 @@@
+repo settings file is ignored by the notice
+rc=0
+--- stdout
+┌──────┬────────────────────────────────────────────────┬───────┬─────────┬──────────────┐
+│    N │ PHASE                                          │ PLANS │ STAGE   │ WORKTREE     │
+├──────┼────────────────────────────────────────────────┼───────┼─────────┼──────────────┤
+│    1 │ nothing yet                                    │     — │ —       │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    2 │ spec only                                      │     — │ spec    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    3 │ discussed                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    4 │ has screens                                    │     — │ ui      │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    5 │ half executed                                  │   1/2 │ execute │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    6 │ finished work                                  │     ✔ │ done    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
+│      │ description that must wrap across several      │       │         │              │
+│      │ lines                                          │       │         │              │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│   10 │ two digit                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│ 10.1 │ decimal hotfix                                 │   0/1 │ plan    │ —            │
+└──────┴────────────────────────────────────────────────┴───────┴─────────┴──────────────┘
+  new phase: gsdt-start -n "<desc>" · attach: gsdt-start -p <N> · ● worktree attached
+--- stderr
+
+@@@ 6 @@@
+error paths print the notice first
+rc=1
+--- stdout
+--- stderr
+✖ unknown argument: --bogus (see gsdt-list --help)
+
+@@@ 7 @@@
+help prints no notice
+rc=0
+--- stdout
+gsdt-list — list GSD phases: number, description, plan progress, worktree
+
+USAGE
+  gsdt-list [--repo <path>] [--compact]
+
+  By default long PHASE/WORKTREE cells wrap across lines to fit the screen
+  (nothing truncated). Use --compact for the one-line-per-phase view.
+
+OPTIONS
+  --repo <path>   main checkout of the target repo
+                  (default: derived from the current directory)
+  --compact, -c   one line per phase, clipping each cell to fit (old default)
+  -h, --help      show this help
+
+COLUMNS
+  N         phase number — what gsdt-start -p <N> attaches to
+  PHASE     description from the '### Phase N:' heading in ROADMAP.md
+  PLANS     plans executed/total (a plan is done once it has a SUMMARY),
+            e.g. 5/6 · ✔ = all executed · — = none yet
+  STAGE     furthest lifecycle step reached, from the phase's artifact files:
+            spec → discuss → ui → plan → execute → done (all plans executed)
+  WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
+
+  Under the table: the batch-* branches of gsdt-batch runs not landed yet
+  (● = worktree attached). Land one with gsdt-finish <branch>.
+
+RELATED
+  gsdt-start -n "<desc>"     claim a NEW phase and open its session
+  gsdt-start -p <N>       attach to an existing phase (no duplicate claim)
+  gsdt-finish             finish the phase from inside its worktree
+--- stderr
+
+@@@ 8 @@@
+a bad repo prints the notice, then dies
+rc=1
+--- stdout
+--- stderr
+⚠ 2 GSD hook(s) in <TMP>/claude.json run a file that is gone, so they fail silently — run gsdt-doctor
+✖ --repo is not a git checkout: <TMP>
+
+@@@ 9 @@@
+a newer release
+rc=0
+--- stdout
+┌──────┬────────────────────────────────────────────────┬───────┬─────────┬──────────────┐
+│    N │ PHASE                                          │ PLANS │ STAGE   │ WORKTREE     │
+├──────┼────────────────────────────────────────────────┼───────┼─────────┼──────────────┤
+│    1 │ nothing yet                                    │     — │ —       │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    2 │ spec only                                      │     — │ spec    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    3 │ discussed                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    4 │ has screens                                    │     — │ ui      │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    5 │ half executed                                  │   1/2 │ execute │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    6 │ finished work                                  │     ✔ │ done    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
+│      │ description that must wrap across several      │       │         │              │
+│      │ lines                                          │       │         │              │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│   10 │ two digit                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│ 10.1 │ decimal hotfix                                 │   0/1 │ plan    │ —            │
+└──────┴────────────────────────────────────────────────┴───────┴─────────┴──────────────┘
+  new phase: gsdt-start -n "<desc>" · attach: gsdt-start -p <N> · ● worktree attached
+--- stderr
+• gsd-toolkit 99.0.0 is out (you have 0.11.0) — update: <PKG>/install.sh
+• GSD 99.0.0 is out (you have <V>) — update: npx @opengsd/gsd-core@latest --claude --global --profile=full
+⚠ 2 GSD hook(s) in <TMP>/claude.json run a file that is gone, so they fail silently — run gsdt-doctor
+
+@@@ 10 @@@
+release check off
+rc=0
+--- stdout
+┌──────┬────────────────────────────────────────────────┬───────┬─────────┬──────────────┐
+│    N │ PHASE                                          │ PLANS │ STAGE   │ WORKTREE     │
+├──────┼────────────────────────────────────────────────┼───────┼─────────┼──────────────┤
+│    1 │ nothing yet                                    │     — │ —       │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    2 │ spec only                                      │     — │ spec    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    3 │ discussed                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    4 │ has screens                                    │     — │ ui      │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    5 │ half executed                                  │   1/2 │ execute │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    6 │ finished work                                  │     ✔ │ done    │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
+│      │ description that must wrap across several      │       │         │              │
+│      │ lines                                          │       │         │              │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│   10 │ two digit                                      │     — │ discuss │ —            │
+├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+│ 10.1 │ decimal hotfix                                 │   0/1 │ plan    │ —            │
+└──────┴────────────────────────────────────────────────┴───────┴─────────┴──────────────┘
+  new phase: gsdt-start -n "<desc>" · attach: gsdt-start -p <N> · ● worktree attached
+--- stderr
+

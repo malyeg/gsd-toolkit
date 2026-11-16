@@ -1,0 +1,27 @@
+@@@ 1 @@@
+# missing
+missing
+@@@ 2 @@@
+# ok
+ok
+@@@ 3 @@@
+# stale
+stale
+@@@ 4 @@@
+# approved, no capture → stale
+stale
+@@@ 5 @@@
+# waived
+waived
+@@@ 6 @@@
+# waived, no reason → missing
+missing
+@@@ 7 @@@
+# other status
+missing
+@@@ 8 @@@
+# no frontmatter
+missing
+@@@ 9 @@@
+# approved, no check
+stale

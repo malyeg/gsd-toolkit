@@ -1,0 +1,5 @@
+@@@ 1 @@@
+rc=0
+out=""
+err=""
+file="# Roadmap\r\n\r\n## Phases\r\n- [x] **Phase 1: First** - done\r\n- [ ] **Phase 2: Second** - next\r\n\r\n## Phase Details\r\n\r\n### Phase 1: First\r\n### Phase 2: Second\r\n\r\n## Progress\r\n\r\n| Phase | Milestone | Plans Complete | Status | Completed |\r\n|-------|-----------|----------------|--------|-----------|\r\n| 1. First | v1 | 1/1 | Complete | 2026-09-01 |\r\n| 2. Second | v1 | 0/2 | In progress | - |\r\n"

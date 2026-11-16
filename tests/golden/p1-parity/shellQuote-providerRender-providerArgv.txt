@@ -1,0 +1,5373 @@
+@@@ 1 @@@
+# quote ""
+''
+@@@ 2 @@@
+# quote "plain"
+plain
+@@@ 3 @@@
+# quote "with space"
+with\ space
+@@@ 4 @@@
+# quote "it's"
+it\'s
+@@@ 5 @@@
+# quote "quote \" and $ safe"
+quote\ \"\ and\ \$\ safe
+@@@ 6 @@@
+# quote "back\\slash"
+back\\slash
+@@@ 7 @@@
+# quote "new\nline"
+$'new\nline'
+@@@ 8 @@@
+# quote "tab\there"
+$'tab\there'
+@@@ 9 @@@
+# quote "日本語 é ü — dash"
+日本語\ é\ ü\ —\ dash
+@@@ 10 @@@
+# quote "#hash"
+\#hash
+@@@ 11 @@@
+# quote "a#b"
+a#b
+@@@ 12 @@@
+# quote "~tilde"
+\~tilde
+@@@ 13 @@@
+# quote "a=b"
+a=b
+@@@ 14 @@@
+# quote "*?[]{}"
+\*\?\[\]\{\}
+@@@ 15 @@@
+# quote "`$()&;|<>!^,"
+\`\$\(\)\&\;\|\<\>\!\^\,
+@@@ 16 @@@
+# quote "x\u0001y"
+$'x\001y'
+@@@ 17 @@@
+# quote "/tmp/a b/c"
+/tmp/a\ b/c
+@@@ 18 @@@
+# quote "trailing\\"
+trailing\\
+@@@ 19 @@@
+# quote "  lead"
+\ \ lead
+@@@ 20 @@@
+# quote "emoji 🎉 ok"
+emoji\ 🎉\ ok
+@@@ 21 @@@
+# quote "-lead"
+-lead
+@@@ 22 @@@
+# quote "del"
+$'\177del'
+@@@ 23 @@@
+# render /tmp/a b fake,quote " and $ safe
+cd /tmp/a\ b && fake quote\ \"\ and\ \$\ safe
+@@@ 24 @@@
+# render /tmp/a b env,A=b,claude,/gsdt-flow 7
+cd /tmp/a\ b && env A=b claude /gsdt-flow\ 7
+@@@ 25 @@@
+# render /tmp/a b x
+cd /tmp/a\ b && x
+@@@ 26 @@@
+# render /x fake,quote " and $ safe
+cd /x && fake quote\ \"\ and\ \$\ safe
+@@@ 27 @@@
+# render /x env,A=b,claude,/gsdt-flow 7
+cd /x && env A=b claude /gsdt-flow\ 7
+@@@ 28 @@@
+# render /x x
+cd /x && x
+@@@ 29 @@@
+# render rel dir/ü fake,quote " and $ safe
+cd rel\ dir/ü && fake quote\ \"\ and\ \$\ safe
+@@@ 30 @@@
+# render rel dir/ü env,A=b,claude,/gsdt-flow 7
+cd rel\ dir/ü && env A=b claude /gsdt-flow\ 7
+@@@ 31 @@@
+# render rel dir/ü x
+cd rel\ dir/ü && x
+@@@ 32 @@@
+# argv claude/""/""/undefined/""
+rc=0
+["agent-cmd",""]
+@@@ 33 @@@
+# argv claude/""/""/undefined/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 34 @@@
+# argv claude/""/""/undefined/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 35 @@@
+# argv claude/""/""/undefined/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 36 @@@
+# argv claude/""/""/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 37 @@@
+# argv claude/""/""/undefined/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 38 @@@
+# argv claude/""/""/undefined/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 39 @@@
+# argv claude/""/""/undefined/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 40 @@@
+# argv claude/""/""/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 41 @@@
+# argv claude/""/""/undefined/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 42 @@@
+# argv claude/""/""/undefined/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 43 @@@
+# argv claude/""/""/undefined/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 44 @@@
+# argv claude/""/""/undefined/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 45 @@@
+# argv claude/""/""/undefined/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 46 @@@
+# argv claude/""/""/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 47 @@@
+# argv claude/""/""/undefined/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 48 @@@
+# argv claude/""/""/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 49 @@@
+# argv claude/""/""/undefined/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 50 @@@
+# argv claude/""/""/undefined/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 51 @@@
+# argv claude/""/""/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 52 @@@
+# argv claude/""/""/undefined/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 53 @@@
+# argv claude/""/""/undefined/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 54 @@@
+# argv claude/""/""/123456/""
+rc=0
+["agent-cmd",""]
+@@@ 55 @@@
+# argv claude/""/""/123456/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 56 @@@
+# argv claude/""/""/123456/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 57 @@@
+# argv claude/""/""/123456/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 58 @@@
+# argv claude/""/""/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 59 @@@
+# argv claude/""/""/123456/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 60 @@@
+# argv claude/""/""/123456/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 61 @@@
+# argv claude/""/""/123456/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 62 @@@
+# argv claude/""/""/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 63 @@@
+# argv claude/""/""/123456/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 64 @@@
+# argv claude/""/""/123456/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 65 @@@
+# argv claude/""/""/123456/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 66 @@@
+# argv claude/""/""/123456/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 67 @@@
+# argv claude/""/""/123456/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 68 @@@
+# argv claude/""/""/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 69 @@@
+# argv claude/""/""/123456/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 70 @@@
+# argv claude/""/""/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 71 @@@
+# argv claude/""/""/123456/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 72 @@@
+# argv claude/""/""/123456/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 73 @@@
+# argv claude/""/""/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 74 @@@
+# argv claude/""/""/123456/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 75 @@@
+# argv claude/""/""/123456/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 76 @@@
+# argv claude/""/"300000"/undefined/""
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd",""]
+@@@ 77 @@@
+# argv claude/""/"300000"/undefined/"plain"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","plain"]
+@@@ 78 @@@
+# argv claude/""/"300000"/undefined/"with space"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","with space"]
+@@@ 79 @@@
+# argv claude/""/"300000"/undefined/"it's"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","it's"]
+@@@ 80 @@@
+# argv claude/""/"300000"/undefined/"quote \" and $ safe"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","quote \" and $ safe"]
+@@@ 81 @@@
+# argv claude/""/"300000"/undefined/"back\\slash"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","back\\slash"]
+@@@ 82 @@@
+# argv claude/""/"300000"/undefined/"new\nline"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","new\nline"]
+@@@ 83 @@@
+# argv claude/""/"300000"/undefined/"tab\there"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","tab\there"]
+@@@ 84 @@@
+# argv claude/""/"300000"/undefined/"日本語 é ü — dash"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","日本語 é ü — dash"]
+@@@ 85 @@@
+# argv claude/""/"300000"/undefined/"#hash"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","#hash"]
+@@@ 86 @@@
+# argv claude/""/"300000"/undefined/"a#b"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","a#b"]
+@@@ 87 @@@
+# argv claude/""/"300000"/undefined/"~tilde"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","~tilde"]
+@@@ 88 @@@
+# argv claude/""/"300000"/undefined/"a=b"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","a=b"]
+@@@ 89 @@@
+# argv claude/""/"300000"/undefined/"*?[]{}"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","*?[]{}"]
+@@@ 90 @@@
+# argv claude/""/"300000"/undefined/"`$()&;|<>!^,"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","`$()&;|<>!^,"]
+@@@ 91 @@@
+# argv claude/""/"300000"/undefined/"x\u0001y"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","x\u0001y"]
+@@@ 92 @@@
+# argv claude/""/"300000"/undefined/"/tmp/a b/c"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","/tmp/a b/c"]
+@@@ 93 @@@
+# argv claude/""/"300000"/undefined/"trailing\\"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","trailing\\"]
+@@@ 94 @@@
+# argv claude/""/"300000"/undefined/"  lead"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","  lead"]
+@@@ 95 @@@
+# argv claude/""/"300000"/undefined/"emoji 🎉 ok"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","emoji 🎉 ok"]
+@@@ 96 @@@
+# argv claude/""/"300000"/undefined/"-lead"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","-lead"]
+@@@ 97 @@@
+# argv claude/""/"300000"/undefined/"del"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","del"]
+@@@ 98 @@@
+# argv claude/""/"300000"/123456/""
+rc=0
+["agent-cmd",""]
+@@@ 99 @@@
+# argv claude/""/"300000"/123456/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 100 @@@
+# argv claude/""/"300000"/123456/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 101 @@@
+# argv claude/""/"300000"/123456/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 102 @@@
+# argv claude/""/"300000"/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 103 @@@
+# argv claude/""/"300000"/123456/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 104 @@@
+# argv claude/""/"300000"/123456/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 105 @@@
+# argv claude/""/"300000"/123456/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 106 @@@
+# argv claude/""/"300000"/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 107 @@@
+# argv claude/""/"300000"/123456/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 108 @@@
+# argv claude/""/"300000"/123456/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 109 @@@
+# argv claude/""/"300000"/123456/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 110 @@@
+# argv claude/""/"300000"/123456/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 111 @@@
+# argv claude/""/"300000"/123456/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 112 @@@
+# argv claude/""/"300000"/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 113 @@@
+# argv claude/""/"300000"/123456/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 114 @@@
+# argv claude/""/"300000"/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 115 @@@
+# argv claude/""/"300000"/123456/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 116 @@@
+# argv claude/""/"300000"/123456/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 117 @@@
+# argv claude/""/"300000"/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 118 @@@
+# argv claude/""/"300000"/123456/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 119 @@@
+# argv claude/""/"300000"/123456/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 120 @@@
+# argv claude/"default"/""/undefined/""
+rc=0
+["agent-cmd",""]
+@@@ 121 @@@
+# argv claude/"default"/""/undefined/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 122 @@@
+# argv claude/"default"/""/undefined/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 123 @@@
+# argv claude/"default"/""/undefined/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 124 @@@
+# argv claude/"default"/""/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 125 @@@
+# argv claude/"default"/""/undefined/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 126 @@@
+# argv claude/"default"/""/undefined/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 127 @@@
+# argv claude/"default"/""/undefined/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 128 @@@
+# argv claude/"default"/""/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 129 @@@
+# argv claude/"default"/""/undefined/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 130 @@@
+# argv claude/"default"/""/undefined/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 131 @@@
+# argv claude/"default"/""/undefined/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 132 @@@
+# argv claude/"default"/""/undefined/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 133 @@@
+# argv claude/"default"/""/undefined/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 134 @@@
+# argv claude/"default"/""/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 135 @@@
+# argv claude/"default"/""/undefined/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 136 @@@
+# argv claude/"default"/""/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 137 @@@
+# argv claude/"default"/""/undefined/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 138 @@@
+# argv claude/"default"/""/undefined/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 139 @@@
+# argv claude/"default"/""/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 140 @@@
+# argv claude/"default"/""/undefined/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 141 @@@
+# argv claude/"default"/""/undefined/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 142 @@@
+# argv claude/"default"/""/123456/""
+rc=0
+["agent-cmd",""]
+@@@ 143 @@@
+# argv claude/"default"/""/123456/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 144 @@@
+# argv claude/"default"/""/123456/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 145 @@@
+# argv claude/"default"/""/123456/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 146 @@@
+# argv claude/"default"/""/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 147 @@@
+# argv claude/"default"/""/123456/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 148 @@@
+# argv claude/"default"/""/123456/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 149 @@@
+# argv claude/"default"/""/123456/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 150 @@@
+# argv claude/"default"/""/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 151 @@@
+# argv claude/"default"/""/123456/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 152 @@@
+# argv claude/"default"/""/123456/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 153 @@@
+# argv claude/"default"/""/123456/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 154 @@@
+# argv claude/"default"/""/123456/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 155 @@@
+# argv claude/"default"/""/123456/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 156 @@@
+# argv claude/"default"/""/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 157 @@@
+# argv claude/"default"/""/123456/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 158 @@@
+# argv claude/"default"/""/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 159 @@@
+# argv claude/"default"/""/123456/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 160 @@@
+# argv claude/"default"/""/123456/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 161 @@@
+# argv claude/"default"/""/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 162 @@@
+# argv claude/"default"/""/123456/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 163 @@@
+# argv claude/"default"/""/123456/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 164 @@@
+# argv claude/"default"/"300000"/undefined/""
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd",""]
+@@@ 165 @@@
+# argv claude/"default"/"300000"/undefined/"plain"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","plain"]
+@@@ 166 @@@
+# argv claude/"default"/"300000"/undefined/"with space"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","with space"]
+@@@ 167 @@@
+# argv claude/"default"/"300000"/undefined/"it's"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","it's"]
+@@@ 168 @@@
+# argv claude/"default"/"300000"/undefined/"quote \" and $ safe"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","quote \" and $ safe"]
+@@@ 169 @@@
+# argv claude/"default"/"300000"/undefined/"back\\slash"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","back\\slash"]
+@@@ 170 @@@
+# argv claude/"default"/"300000"/undefined/"new\nline"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","new\nline"]
+@@@ 171 @@@
+# argv claude/"default"/"300000"/undefined/"tab\there"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","tab\there"]
+@@@ 172 @@@
+# argv claude/"default"/"300000"/undefined/"日本語 é ü — dash"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","日本語 é ü — dash"]
+@@@ 173 @@@
+# argv claude/"default"/"300000"/undefined/"#hash"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","#hash"]
+@@@ 174 @@@
+# argv claude/"default"/"300000"/undefined/"a#b"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","a#b"]
+@@@ 175 @@@
+# argv claude/"default"/"300000"/undefined/"~tilde"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","~tilde"]
+@@@ 176 @@@
+# argv claude/"default"/"300000"/undefined/"a=b"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","a=b"]
+@@@ 177 @@@
+# argv claude/"default"/"300000"/undefined/"*?[]{}"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","*?[]{}"]
+@@@ 178 @@@
+# argv claude/"default"/"300000"/undefined/"`$()&;|<>!^,"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","`$()&;|<>!^,"]
+@@@ 179 @@@
+# argv claude/"default"/"300000"/undefined/"x\u0001y"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","x\u0001y"]
+@@@ 180 @@@
+# argv claude/"default"/"300000"/undefined/"/tmp/a b/c"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","/tmp/a b/c"]
+@@@ 181 @@@
+# argv claude/"default"/"300000"/undefined/"trailing\\"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","trailing\\"]
+@@@ 182 @@@
+# argv claude/"default"/"300000"/undefined/"  lead"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","  lead"]
+@@@ 183 @@@
+# argv claude/"default"/"300000"/undefined/"emoji 🎉 ok"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","emoji 🎉 ok"]
+@@@ 184 @@@
+# argv claude/"default"/"300000"/undefined/"-lead"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","-lead"]
+@@@ 185 @@@
+# argv claude/"default"/"300000"/undefined/"del"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","del"]
+@@@ 186 @@@
+# argv claude/"default"/"300000"/123456/""
+rc=0
+["agent-cmd",""]
+@@@ 187 @@@
+# argv claude/"default"/"300000"/123456/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 188 @@@
+# argv claude/"default"/"300000"/123456/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 189 @@@
+# argv claude/"default"/"300000"/123456/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 190 @@@
+# argv claude/"default"/"300000"/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 191 @@@
+# argv claude/"default"/"300000"/123456/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 192 @@@
+# argv claude/"default"/"300000"/123456/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 193 @@@
+# argv claude/"default"/"300000"/123456/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 194 @@@
+# argv claude/"default"/"300000"/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 195 @@@
+# argv claude/"default"/"300000"/123456/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 196 @@@
+# argv claude/"default"/"300000"/123456/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 197 @@@
+# argv claude/"default"/"300000"/123456/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 198 @@@
+# argv claude/"default"/"300000"/123456/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 199 @@@
+# argv claude/"default"/"300000"/123456/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 200 @@@
+# argv claude/"default"/"300000"/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 201 @@@
+# argv claude/"default"/"300000"/123456/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 202 @@@
+# argv claude/"default"/"300000"/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 203 @@@
+# argv claude/"default"/"300000"/123456/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 204 @@@
+# argv claude/"default"/"300000"/123456/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 205 @@@
+# argv claude/"default"/"300000"/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 206 @@@
+# argv claude/"default"/"300000"/123456/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 207 @@@
+# argv claude/"default"/"300000"/123456/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 208 @@@
+# argv claude/"opus"/""/undefined/""
+rc=0
+["agent-cmd","--model","opus",""]
+@@@ 209 @@@
+# argv claude/"opus"/""/undefined/"plain"
+rc=0
+["agent-cmd","--model","opus","plain"]
+@@@ 210 @@@
+# argv claude/"opus"/""/undefined/"with space"
+rc=0
+["agent-cmd","--model","opus","with space"]
+@@@ 211 @@@
+# argv claude/"opus"/""/undefined/"it's"
+rc=0
+["agent-cmd","--model","opus","it's"]
+@@@ 212 @@@
+# argv claude/"opus"/""/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","--model","opus","quote \" and $ safe"]
+@@@ 213 @@@
+# argv claude/"opus"/""/undefined/"back\\slash"
+rc=0
+["agent-cmd","--model","opus","back\\slash"]
+@@@ 214 @@@
+# argv claude/"opus"/""/undefined/"new\nline"
+rc=0
+["agent-cmd","--model","opus","new\nline"]
+@@@ 215 @@@
+# argv claude/"opus"/""/undefined/"tab\there"
+rc=0
+["agent-cmd","--model","opus","tab\there"]
+@@@ 216 @@@
+# argv claude/"opus"/""/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","--model","opus","日本語 é ü — dash"]
+@@@ 217 @@@
+# argv claude/"opus"/""/undefined/"#hash"
+rc=0
+["agent-cmd","--model","opus","#hash"]
+@@@ 218 @@@
+# argv claude/"opus"/""/undefined/"a#b"
+rc=0
+["agent-cmd","--model","opus","a#b"]
+@@@ 219 @@@
+# argv claude/"opus"/""/undefined/"~tilde"
+rc=0
+["agent-cmd","--model","opus","~tilde"]
+@@@ 220 @@@
+# argv claude/"opus"/""/undefined/"a=b"
+rc=0
+["agent-cmd","--model","opus","a=b"]
+@@@ 221 @@@
+# argv claude/"opus"/""/undefined/"*?[]{}"
+rc=0
+["agent-cmd","--model","opus","*?[]{}"]
+@@@ 222 @@@
+# argv claude/"opus"/""/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","--model","opus","`$()&;|<>!^,"]
+@@@ 223 @@@
+# argv claude/"opus"/""/undefined/"x\u0001y"
+rc=0
+["agent-cmd","--model","opus","x\u0001y"]
+@@@ 224 @@@
+# argv claude/"opus"/""/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","--model","opus","/tmp/a b/c"]
+@@@ 225 @@@
+# argv claude/"opus"/""/undefined/"trailing\\"
+rc=0
+["agent-cmd","--model","opus","trailing\\"]
+@@@ 226 @@@
+# argv claude/"opus"/""/undefined/"  lead"
+rc=0
+["agent-cmd","--model","opus","  lead"]
+@@@ 227 @@@
+# argv claude/"opus"/""/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","--model","opus","emoji 🎉 ok"]
+@@@ 228 @@@
+# argv claude/"opus"/""/undefined/"-lead"
+rc=0
+["agent-cmd","--model","opus","-lead"]
+@@@ 229 @@@
+# argv claude/"opus"/""/undefined/"del"
+rc=0
+["agent-cmd","--model","opus","del"]
+@@@ 230 @@@
+# argv claude/"opus"/""/123456/""
+rc=0
+["agent-cmd","--model","opus",""]
+@@@ 231 @@@
+# argv claude/"opus"/""/123456/"plain"
+rc=0
+["agent-cmd","--model","opus","plain"]
+@@@ 232 @@@
+# argv claude/"opus"/""/123456/"with space"
+rc=0
+["agent-cmd","--model","opus","with space"]
+@@@ 233 @@@
+# argv claude/"opus"/""/123456/"it's"
+rc=0
+["agent-cmd","--model","opus","it's"]
+@@@ 234 @@@
+# argv claude/"opus"/""/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","--model","opus","quote \" and $ safe"]
+@@@ 235 @@@
+# argv claude/"opus"/""/123456/"back\\slash"
+rc=0
+["agent-cmd","--model","opus","back\\slash"]
+@@@ 236 @@@
+# argv claude/"opus"/""/123456/"new\nline"
+rc=0
+["agent-cmd","--model","opus","new\nline"]
+@@@ 237 @@@
+# argv claude/"opus"/""/123456/"tab\there"
+rc=0
+["agent-cmd","--model","opus","tab\there"]
+@@@ 238 @@@
+# argv claude/"opus"/""/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","--model","opus","日本語 é ü — dash"]
+@@@ 239 @@@
+# argv claude/"opus"/""/123456/"#hash"
+rc=0
+["agent-cmd","--model","opus","#hash"]
+@@@ 240 @@@
+# argv claude/"opus"/""/123456/"a#b"
+rc=0
+["agent-cmd","--model","opus","a#b"]
+@@@ 241 @@@
+# argv claude/"opus"/""/123456/"~tilde"
+rc=0
+["agent-cmd","--model","opus","~tilde"]
+@@@ 242 @@@
+# argv claude/"opus"/""/123456/"a=b"
+rc=0
+["agent-cmd","--model","opus","a=b"]
+@@@ 243 @@@
+# argv claude/"opus"/""/123456/"*?[]{}"
+rc=0
+["agent-cmd","--model","opus","*?[]{}"]
+@@@ 244 @@@
+# argv claude/"opus"/""/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","--model","opus","`$()&;|<>!^,"]
+@@@ 245 @@@
+# argv claude/"opus"/""/123456/"x\u0001y"
+rc=0
+["agent-cmd","--model","opus","x\u0001y"]
+@@@ 246 @@@
+# argv claude/"opus"/""/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","--model","opus","/tmp/a b/c"]
+@@@ 247 @@@
+# argv claude/"opus"/""/123456/"trailing\\"
+rc=0
+["agent-cmd","--model","opus","trailing\\"]
+@@@ 248 @@@
+# argv claude/"opus"/""/123456/"  lead"
+rc=0
+["agent-cmd","--model","opus","  lead"]
+@@@ 249 @@@
+# argv claude/"opus"/""/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","--model","opus","emoji 🎉 ok"]
+@@@ 250 @@@
+# argv claude/"opus"/""/123456/"-lead"
+rc=0
+["agent-cmd","--model","opus","-lead"]
+@@@ 251 @@@
+# argv claude/"opus"/""/123456/"del"
+rc=0
+["agent-cmd","--model","opus","del"]
+@@@ 252 @@@
+# argv claude/"opus"/"300000"/undefined/""
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus",""]
+@@@ 253 @@@
+# argv claude/"opus"/"300000"/undefined/"plain"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","plain"]
+@@@ 254 @@@
+# argv claude/"opus"/"300000"/undefined/"with space"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","with space"]
+@@@ 255 @@@
+# argv claude/"opus"/"300000"/undefined/"it's"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","it's"]
+@@@ 256 @@@
+# argv claude/"opus"/"300000"/undefined/"quote \" and $ safe"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","quote \" and $ safe"]
+@@@ 257 @@@
+# argv claude/"opus"/"300000"/undefined/"back\\slash"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","back\\slash"]
+@@@ 258 @@@
+# argv claude/"opus"/"300000"/undefined/"new\nline"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","new\nline"]
+@@@ 259 @@@
+# argv claude/"opus"/"300000"/undefined/"tab\there"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","tab\there"]
+@@@ 260 @@@
+# argv claude/"opus"/"300000"/undefined/"日本語 é ü — dash"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","日本語 é ü — dash"]
+@@@ 261 @@@
+# argv claude/"opus"/"300000"/undefined/"#hash"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","#hash"]
+@@@ 262 @@@
+# argv claude/"opus"/"300000"/undefined/"a#b"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","a#b"]
+@@@ 263 @@@
+# argv claude/"opus"/"300000"/undefined/"~tilde"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","~tilde"]
+@@@ 264 @@@
+# argv claude/"opus"/"300000"/undefined/"a=b"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","a=b"]
+@@@ 265 @@@
+# argv claude/"opus"/"300000"/undefined/"*?[]{}"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","*?[]{}"]
+@@@ 266 @@@
+# argv claude/"opus"/"300000"/undefined/"`$()&;|<>!^,"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","`$()&;|<>!^,"]
+@@@ 267 @@@
+# argv claude/"opus"/"300000"/undefined/"x\u0001y"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","x\u0001y"]
+@@@ 268 @@@
+# argv claude/"opus"/"300000"/undefined/"/tmp/a b/c"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","/tmp/a b/c"]
+@@@ 269 @@@
+# argv claude/"opus"/"300000"/undefined/"trailing\\"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","trailing\\"]
+@@@ 270 @@@
+# argv claude/"opus"/"300000"/undefined/"  lead"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","  lead"]
+@@@ 271 @@@
+# argv claude/"opus"/"300000"/undefined/"emoji 🎉 ok"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","emoji 🎉 ok"]
+@@@ 272 @@@
+# argv claude/"opus"/"300000"/undefined/"-lead"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","-lead"]
+@@@ 273 @@@
+# argv claude/"opus"/"300000"/undefined/"del"
+rc=0
+["env","CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000","agent-cmd","--model","opus","del"]
+@@@ 274 @@@
+# argv claude/"opus"/"300000"/123456/""
+rc=0
+["agent-cmd","--model","opus",""]
+@@@ 275 @@@
+# argv claude/"opus"/"300000"/123456/"plain"
+rc=0
+["agent-cmd","--model","opus","plain"]
+@@@ 276 @@@
+# argv claude/"opus"/"300000"/123456/"with space"
+rc=0
+["agent-cmd","--model","opus","with space"]
+@@@ 277 @@@
+# argv claude/"opus"/"300000"/123456/"it's"
+rc=0
+["agent-cmd","--model","opus","it's"]
+@@@ 278 @@@
+# argv claude/"opus"/"300000"/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","--model","opus","quote \" and $ safe"]
+@@@ 279 @@@
+# argv claude/"opus"/"300000"/123456/"back\\slash"
+rc=0
+["agent-cmd","--model","opus","back\\slash"]
+@@@ 280 @@@
+# argv claude/"opus"/"300000"/123456/"new\nline"
+rc=0
+["agent-cmd","--model","opus","new\nline"]
+@@@ 281 @@@
+# argv claude/"opus"/"300000"/123456/"tab\there"
+rc=0
+["agent-cmd","--model","opus","tab\there"]
+@@@ 282 @@@
+# argv claude/"opus"/"300000"/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","--model","opus","日本語 é ü — dash"]
+@@@ 283 @@@
+# argv claude/"opus"/"300000"/123456/"#hash"
+rc=0
+["agent-cmd","--model","opus","#hash"]
+@@@ 284 @@@
+# argv claude/"opus"/"300000"/123456/"a#b"
+rc=0
+["agent-cmd","--model","opus","a#b"]
+@@@ 285 @@@
+# argv claude/"opus"/"300000"/123456/"~tilde"
+rc=0
+["agent-cmd","--model","opus","~tilde"]
+@@@ 286 @@@
+# argv claude/"opus"/"300000"/123456/"a=b"
+rc=0
+["agent-cmd","--model","opus","a=b"]
+@@@ 287 @@@
+# argv claude/"opus"/"300000"/123456/"*?[]{}"
+rc=0
+["agent-cmd","--model","opus","*?[]{}"]
+@@@ 288 @@@
+# argv claude/"opus"/"300000"/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","--model","opus","`$()&;|<>!^,"]
+@@@ 289 @@@
+# argv claude/"opus"/"300000"/123456/"x\u0001y"
+rc=0
+["agent-cmd","--model","opus","x\u0001y"]
+@@@ 290 @@@
+# argv claude/"opus"/"300000"/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","--model","opus","/tmp/a b/c"]
+@@@ 291 @@@
+# argv claude/"opus"/"300000"/123456/"trailing\\"
+rc=0
+["agent-cmd","--model","opus","trailing\\"]
+@@@ 292 @@@
+# argv claude/"opus"/"300000"/123456/"  lead"
+rc=0
+["agent-cmd","--model","opus","  lead"]
+@@@ 293 @@@
+# argv claude/"opus"/"300000"/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","--model","opus","emoji 🎉 ok"]
+@@@ 294 @@@
+# argv claude/"opus"/"300000"/123456/"-lead"
+rc=0
+["agent-cmd","--model","opus","-lead"]
+@@@ 295 @@@
+# argv claude/"opus"/"300000"/123456/"del"
+rc=0
+["agent-cmd","--model","opus","del"]
+@@@ 296 @@@
+# argv claude/"bad model"/""/undefined/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 297 @@@
+# argv claude/"bad model"/""/undefined/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 298 @@@
+# argv claude/"bad model"/""/undefined/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 299 @@@
+# argv claude/"bad model"/""/undefined/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 300 @@@
+# argv claude/"bad model"/""/undefined/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 301 @@@
+# argv claude/"bad model"/""/undefined/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 302 @@@
+# argv claude/"bad model"/""/undefined/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 303 @@@
+# argv claude/"bad model"/""/undefined/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 304 @@@
+# argv claude/"bad model"/""/undefined/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 305 @@@
+# argv claude/"bad model"/""/undefined/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 306 @@@
+# argv claude/"bad model"/""/undefined/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 307 @@@
+# argv claude/"bad model"/""/undefined/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 308 @@@
+# argv claude/"bad model"/""/undefined/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 309 @@@
+# argv claude/"bad model"/""/undefined/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 310 @@@
+# argv claude/"bad model"/""/undefined/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 311 @@@
+# argv claude/"bad model"/""/undefined/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 312 @@@
+# argv claude/"bad model"/""/undefined/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 313 @@@
+# argv claude/"bad model"/""/undefined/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 314 @@@
+# argv claude/"bad model"/""/undefined/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 315 @@@
+# argv claude/"bad model"/""/undefined/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 316 @@@
+# argv claude/"bad model"/""/undefined/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 317 @@@
+# argv claude/"bad model"/""/undefined/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 318 @@@
+# argv claude/"bad model"/""/123456/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 319 @@@
+# argv claude/"bad model"/""/123456/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 320 @@@
+# argv claude/"bad model"/""/123456/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 321 @@@
+# argv claude/"bad model"/""/123456/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 322 @@@
+# argv claude/"bad model"/""/123456/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 323 @@@
+# argv claude/"bad model"/""/123456/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 324 @@@
+# argv claude/"bad model"/""/123456/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 325 @@@
+# argv claude/"bad model"/""/123456/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 326 @@@
+# argv claude/"bad model"/""/123456/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 327 @@@
+# argv claude/"bad model"/""/123456/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 328 @@@
+# argv claude/"bad model"/""/123456/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 329 @@@
+# argv claude/"bad model"/""/123456/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 330 @@@
+# argv claude/"bad model"/""/123456/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 331 @@@
+# argv claude/"bad model"/""/123456/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 332 @@@
+# argv claude/"bad model"/""/123456/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 333 @@@
+# argv claude/"bad model"/""/123456/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 334 @@@
+# argv claude/"bad model"/""/123456/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 335 @@@
+# argv claude/"bad model"/""/123456/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 336 @@@
+# argv claude/"bad model"/""/123456/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 337 @@@
+# argv claude/"bad model"/""/123456/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 338 @@@
+# argv claude/"bad model"/""/123456/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 339 @@@
+# argv claude/"bad model"/""/123456/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 340 @@@
+# argv claude/"bad model"/"300000"/undefined/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 341 @@@
+# argv claude/"bad model"/"300000"/undefined/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 342 @@@
+# argv claude/"bad model"/"300000"/undefined/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 343 @@@
+# argv claude/"bad model"/"300000"/undefined/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 344 @@@
+# argv claude/"bad model"/"300000"/undefined/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 345 @@@
+# argv claude/"bad model"/"300000"/undefined/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 346 @@@
+# argv claude/"bad model"/"300000"/undefined/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 347 @@@
+# argv claude/"bad model"/"300000"/undefined/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 348 @@@
+# argv claude/"bad model"/"300000"/undefined/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 349 @@@
+# argv claude/"bad model"/"300000"/undefined/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 350 @@@
+# argv claude/"bad model"/"300000"/undefined/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 351 @@@
+# argv claude/"bad model"/"300000"/undefined/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 352 @@@
+# argv claude/"bad model"/"300000"/undefined/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 353 @@@
+# argv claude/"bad model"/"300000"/undefined/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 354 @@@
+# argv claude/"bad model"/"300000"/undefined/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 355 @@@
+# argv claude/"bad model"/"300000"/undefined/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 356 @@@
+# argv claude/"bad model"/"300000"/undefined/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 357 @@@
+# argv claude/"bad model"/"300000"/undefined/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 358 @@@
+# argv claude/"bad model"/"300000"/undefined/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 359 @@@
+# argv claude/"bad model"/"300000"/undefined/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 360 @@@
+# argv claude/"bad model"/"300000"/undefined/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 361 @@@
+# argv claude/"bad model"/"300000"/undefined/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 362 @@@
+# argv claude/"bad model"/"300000"/123456/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 363 @@@
+# argv claude/"bad model"/"300000"/123456/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 364 @@@
+# argv claude/"bad model"/"300000"/123456/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 365 @@@
+# argv claude/"bad model"/"300000"/123456/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 366 @@@
+# argv claude/"bad model"/"300000"/123456/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 367 @@@
+# argv claude/"bad model"/"300000"/123456/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 368 @@@
+# argv claude/"bad model"/"300000"/123456/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 369 @@@
+# argv claude/"bad model"/"300000"/123456/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 370 @@@
+# argv claude/"bad model"/"300000"/123456/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 371 @@@
+# argv claude/"bad model"/"300000"/123456/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 372 @@@
+# argv claude/"bad model"/"300000"/123456/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 373 @@@
+# argv claude/"bad model"/"300000"/123456/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 374 @@@
+# argv claude/"bad model"/"300000"/123456/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 375 @@@
+# argv claude/"bad model"/"300000"/123456/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 376 @@@
+# argv claude/"bad model"/"300000"/123456/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 377 @@@
+# argv claude/"bad model"/"300000"/123456/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 378 @@@
+# argv claude/"bad model"/"300000"/123456/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 379 @@@
+# argv claude/"bad model"/"300000"/123456/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 380 @@@
+# argv claude/"bad model"/"300000"/123456/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 381 @@@
+# argv claude/"bad model"/"300000"/123456/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 382 @@@
+# argv claude/"bad model"/"300000"/123456/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 383 @@@
+# argv claude/"bad model"/"300000"/123456/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 384 @@@
+# argv claude/"-x"/""/undefined/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 385 @@@
+# argv claude/"-x"/""/undefined/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 386 @@@
+# argv claude/"-x"/""/undefined/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 387 @@@
+# argv claude/"-x"/""/undefined/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 388 @@@
+# argv claude/"-x"/""/undefined/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 389 @@@
+# argv claude/"-x"/""/undefined/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 390 @@@
+# argv claude/"-x"/""/undefined/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 391 @@@
+# argv claude/"-x"/""/undefined/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 392 @@@
+# argv claude/"-x"/""/undefined/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 393 @@@
+# argv claude/"-x"/""/undefined/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 394 @@@
+# argv claude/"-x"/""/undefined/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 395 @@@
+# argv claude/"-x"/""/undefined/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 396 @@@
+# argv claude/"-x"/""/undefined/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 397 @@@
+# argv claude/"-x"/""/undefined/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 398 @@@
+# argv claude/"-x"/""/undefined/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 399 @@@
+# argv claude/"-x"/""/undefined/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 400 @@@
+# argv claude/"-x"/""/undefined/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 401 @@@
+# argv claude/"-x"/""/undefined/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 402 @@@
+# argv claude/"-x"/""/undefined/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 403 @@@
+# argv claude/"-x"/""/undefined/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 404 @@@
+# argv claude/"-x"/""/undefined/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 405 @@@
+# argv claude/"-x"/""/undefined/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 406 @@@
+# argv claude/"-x"/""/123456/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 407 @@@
+# argv claude/"-x"/""/123456/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 408 @@@
+# argv claude/"-x"/""/123456/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 409 @@@
+# argv claude/"-x"/""/123456/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 410 @@@
+# argv claude/"-x"/""/123456/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 411 @@@
+# argv claude/"-x"/""/123456/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 412 @@@
+# argv claude/"-x"/""/123456/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 413 @@@
+# argv claude/"-x"/""/123456/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 414 @@@
+# argv claude/"-x"/""/123456/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 415 @@@
+# argv claude/"-x"/""/123456/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 416 @@@
+# argv claude/"-x"/""/123456/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 417 @@@
+# argv claude/"-x"/""/123456/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 418 @@@
+# argv claude/"-x"/""/123456/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 419 @@@
+# argv claude/"-x"/""/123456/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 420 @@@
+# argv claude/"-x"/""/123456/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 421 @@@
+# argv claude/"-x"/""/123456/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 422 @@@
+# argv claude/"-x"/""/123456/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 423 @@@
+# argv claude/"-x"/""/123456/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 424 @@@
+# argv claude/"-x"/""/123456/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 425 @@@
+# argv claude/"-x"/""/123456/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 426 @@@
+# argv claude/"-x"/""/123456/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 427 @@@
+# argv claude/"-x"/""/123456/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 428 @@@
+# argv claude/"-x"/"300000"/undefined/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 429 @@@
+# argv claude/"-x"/"300000"/undefined/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 430 @@@
+# argv claude/"-x"/"300000"/undefined/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 431 @@@
+# argv claude/"-x"/"300000"/undefined/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 432 @@@
+# argv claude/"-x"/"300000"/undefined/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 433 @@@
+# argv claude/"-x"/"300000"/undefined/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 434 @@@
+# argv claude/"-x"/"300000"/undefined/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 435 @@@
+# argv claude/"-x"/"300000"/undefined/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 436 @@@
+# argv claude/"-x"/"300000"/undefined/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 437 @@@
+# argv claude/"-x"/"300000"/undefined/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 438 @@@
+# argv claude/"-x"/"300000"/undefined/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 439 @@@
+# argv claude/"-x"/"300000"/undefined/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 440 @@@
+# argv claude/"-x"/"300000"/undefined/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 441 @@@
+# argv claude/"-x"/"300000"/undefined/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 442 @@@
+# argv claude/"-x"/"300000"/undefined/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 443 @@@
+# argv claude/"-x"/"300000"/undefined/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 444 @@@
+# argv claude/"-x"/"300000"/undefined/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 445 @@@
+# argv claude/"-x"/"300000"/undefined/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 446 @@@
+# argv claude/"-x"/"300000"/undefined/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 447 @@@
+# argv claude/"-x"/"300000"/undefined/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 448 @@@
+# argv claude/"-x"/"300000"/undefined/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 449 @@@
+# argv claude/"-x"/"300000"/undefined/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 450 @@@
+# argv claude/"-x"/"300000"/123456/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 451 @@@
+# argv claude/"-x"/"300000"/123456/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 452 @@@
+# argv claude/"-x"/"300000"/123456/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 453 @@@
+# argv claude/"-x"/"300000"/123456/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 454 @@@
+# argv claude/"-x"/"300000"/123456/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 455 @@@
+# argv claude/"-x"/"300000"/123456/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 456 @@@
+# argv claude/"-x"/"300000"/123456/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 457 @@@
+# argv claude/"-x"/"300000"/123456/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 458 @@@
+# argv claude/"-x"/"300000"/123456/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 459 @@@
+# argv claude/"-x"/"300000"/123456/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 460 @@@
+# argv claude/"-x"/"300000"/123456/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 461 @@@
+# argv claude/"-x"/"300000"/123456/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 462 @@@
+# argv claude/"-x"/"300000"/123456/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 463 @@@
+# argv claude/"-x"/"300000"/123456/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 464 @@@
+# argv claude/"-x"/"300000"/123456/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 465 @@@
+# argv claude/"-x"/"300000"/123456/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 466 @@@
+# argv claude/"-x"/"300000"/123456/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 467 @@@
+# argv claude/"-x"/"300000"/123456/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 468 @@@
+# argv claude/"-x"/"300000"/123456/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 469 @@@
+# argv claude/"-x"/"300000"/123456/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 470 @@@
+# argv claude/"-x"/"300000"/123456/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 471 @@@
+# argv claude/"-x"/"300000"/123456/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 472 @@@
+# argv codex/""/""/undefined/""
+rc=0
+["agent-cmd",""]
+@@@ 473 @@@
+# argv codex/""/""/undefined/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 474 @@@
+# argv codex/""/""/undefined/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 475 @@@
+# argv codex/""/""/undefined/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 476 @@@
+# argv codex/""/""/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 477 @@@
+# argv codex/""/""/undefined/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 478 @@@
+# argv codex/""/""/undefined/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 479 @@@
+# argv codex/""/""/undefined/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 480 @@@
+# argv codex/""/""/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 481 @@@
+# argv codex/""/""/undefined/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 482 @@@
+# argv codex/""/""/undefined/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 483 @@@
+# argv codex/""/""/undefined/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 484 @@@
+# argv codex/""/""/undefined/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 485 @@@
+# argv codex/""/""/undefined/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 486 @@@
+# argv codex/""/""/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 487 @@@
+# argv codex/""/""/undefined/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 488 @@@
+# argv codex/""/""/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 489 @@@
+# argv codex/""/""/undefined/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 490 @@@
+# argv codex/""/""/undefined/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 491 @@@
+# argv codex/""/""/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 492 @@@
+# argv codex/""/""/undefined/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 493 @@@
+# argv codex/""/""/undefined/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 494 @@@
+# argv codex/""/""/123456/""
+rc=0
+["agent-cmd",""]
+@@@ 495 @@@
+# argv codex/""/""/123456/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 496 @@@
+# argv codex/""/""/123456/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 497 @@@
+# argv codex/""/""/123456/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 498 @@@
+# argv codex/""/""/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 499 @@@
+# argv codex/""/""/123456/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 500 @@@
+# argv codex/""/""/123456/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 501 @@@
+# argv codex/""/""/123456/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 502 @@@
+# argv codex/""/""/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 503 @@@
+# argv codex/""/""/123456/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 504 @@@
+# argv codex/""/""/123456/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 505 @@@
+# argv codex/""/""/123456/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 506 @@@
+# argv codex/""/""/123456/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 507 @@@
+# argv codex/""/""/123456/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 508 @@@
+# argv codex/""/""/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 509 @@@
+# argv codex/""/""/123456/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 510 @@@
+# argv codex/""/""/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 511 @@@
+# argv codex/""/""/123456/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 512 @@@
+# argv codex/""/""/123456/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 513 @@@
+# argv codex/""/""/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 514 @@@
+# argv codex/""/""/123456/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 515 @@@
+# argv codex/""/""/123456/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 516 @@@
+# argv codex/""/"300000"/undefined/""
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000",""]
+@@@ 517 @@@
+# argv codex/""/"300000"/undefined/"plain"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","plain"]
+@@@ 518 @@@
+# argv codex/""/"300000"/undefined/"with space"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","with space"]
+@@@ 519 @@@
+# argv codex/""/"300000"/undefined/"it's"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","it's"]
+@@@ 520 @@@
+# argv codex/""/"300000"/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","quote \" and $ safe"]
+@@@ 521 @@@
+# argv codex/""/"300000"/undefined/"back\\slash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","back\\slash"]
+@@@ 522 @@@
+# argv codex/""/"300000"/undefined/"new\nline"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","new\nline"]
+@@@ 523 @@@
+# argv codex/""/"300000"/undefined/"tab\there"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","tab\there"]
+@@@ 524 @@@
+# argv codex/""/"300000"/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","日本語 é ü — dash"]
+@@@ 525 @@@
+# argv codex/""/"300000"/undefined/"#hash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","#hash"]
+@@@ 526 @@@
+# argv codex/""/"300000"/undefined/"a#b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","a#b"]
+@@@ 527 @@@
+# argv codex/""/"300000"/undefined/"~tilde"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","~tilde"]
+@@@ 528 @@@
+# argv codex/""/"300000"/undefined/"a=b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","a=b"]
+@@@ 529 @@@
+# argv codex/""/"300000"/undefined/"*?[]{}"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","*?[]{}"]
+@@@ 530 @@@
+# argv codex/""/"300000"/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","`$()&;|<>!^,"]
+@@@ 531 @@@
+# argv codex/""/"300000"/undefined/"x\u0001y"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","x\u0001y"]
+@@@ 532 @@@
+# argv codex/""/"300000"/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","/tmp/a b/c"]
+@@@ 533 @@@
+# argv codex/""/"300000"/undefined/"trailing\\"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","trailing\\"]
+@@@ 534 @@@
+# argv codex/""/"300000"/undefined/"  lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","  lead"]
+@@@ 535 @@@
+# argv codex/""/"300000"/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","emoji 🎉 ok"]
+@@@ 536 @@@
+# argv codex/""/"300000"/undefined/"-lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","-lead"]
+@@@ 537 @@@
+# argv codex/""/"300000"/undefined/"del"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","del"]
+@@@ 538 @@@
+# argv codex/""/"300000"/123456/""
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000",""]
+@@@ 539 @@@
+# argv codex/""/"300000"/123456/"plain"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","plain"]
+@@@ 540 @@@
+# argv codex/""/"300000"/123456/"with space"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","with space"]
+@@@ 541 @@@
+# argv codex/""/"300000"/123456/"it's"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","it's"]
+@@@ 542 @@@
+# argv codex/""/"300000"/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","quote \" and $ safe"]
+@@@ 543 @@@
+# argv codex/""/"300000"/123456/"back\\slash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","back\\slash"]
+@@@ 544 @@@
+# argv codex/""/"300000"/123456/"new\nline"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","new\nline"]
+@@@ 545 @@@
+# argv codex/""/"300000"/123456/"tab\there"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","tab\there"]
+@@@ 546 @@@
+# argv codex/""/"300000"/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","日本語 é ü — dash"]
+@@@ 547 @@@
+# argv codex/""/"300000"/123456/"#hash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","#hash"]
+@@@ 548 @@@
+# argv codex/""/"300000"/123456/"a#b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","a#b"]
+@@@ 549 @@@
+# argv codex/""/"300000"/123456/"~tilde"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","~tilde"]
+@@@ 550 @@@
+# argv codex/""/"300000"/123456/"a=b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","a=b"]
+@@@ 551 @@@
+# argv codex/""/"300000"/123456/"*?[]{}"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","*?[]{}"]
+@@@ 552 @@@
+# argv codex/""/"300000"/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","`$()&;|<>!^,"]
+@@@ 553 @@@
+# argv codex/""/"300000"/123456/"x\u0001y"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","x\u0001y"]
+@@@ 554 @@@
+# argv codex/""/"300000"/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","/tmp/a b/c"]
+@@@ 555 @@@
+# argv codex/""/"300000"/123456/"trailing\\"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","trailing\\"]
+@@@ 556 @@@
+# argv codex/""/"300000"/123456/"  lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","  lead"]
+@@@ 557 @@@
+# argv codex/""/"300000"/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","emoji 🎉 ok"]
+@@@ 558 @@@
+# argv codex/""/"300000"/123456/"-lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","-lead"]
+@@@ 559 @@@
+# argv codex/""/"300000"/123456/"del"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","del"]
+@@@ 560 @@@
+# argv codex/"default"/""/undefined/""
+rc=0
+["agent-cmd",""]
+@@@ 561 @@@
+# argv codex/"default"/""/undefined/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 562 @@@
+# argv codex/"default"/""/undefined/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 563 @@@
+# argv codex/"default"/""/undefined/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 564 @@@
+# argv codex/"default"/""/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 565 @@@
+# argv codex/"default"/""/undefined/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 566 @@@
+# argv codex/"default"/""/undefined/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 567 @@@
+# argv codex/"default"/""/undefined/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 568 @@@
+# argv codex/"default"/""/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 569 @@@
+# argv codex/"default"/""/undefined/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 570 @@@
+# argv codex/"default"/""/undefined/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 571 @@@
+# argv codex/"default"/""/undefined/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 572 @@@
+# argv codex/"default"/""/undefined/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 573 @@@
+# argv codex/"default"/""/undefined/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 574 @@@
+# argv codex/"default"/""/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 575 @@@
+# argv codex/"default"/""/undefined/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 576 @@@
+# argv codex/"default"/""/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 577 @@@
+# argv codex/"default"/""/undefined/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 578 @@@
+# argv codex/"default"/""/undefined/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 579 @@@
+# argv codex/"default"/""/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 580 @@@
+# argv codex/"default"/""/undefined/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 581 @@@
+# argv codex/"default"/""/undefined/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 582 @@@
+# argv codex/"default"/""/123456/""
+rc=0
+["agent-cmd",""]
+@@@ 583 @@@
+# argv codex/"default"/""/123456/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 584 @@@
+# argv codex/"default"/""/123456/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 585 @@@
+# argv codex/"default"/""/123456/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 586 @@@
+# argv codex/"default"/""/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 587 @@@
+# argv codex/"default"/""/123456/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 588 @@@
+# argv codex/"default"/""/123456/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 589 @@@
+# argv codex/"default"/""/123456/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 590 @@@
+# argv codex/"default"/""/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 591 @@@
+# argv codex/"default"/""/123456/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 592 @@@
+# argv codex/"default"/""/123456/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 593 @@@
+# argv codex/"default"/""/123456/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 594 @@@
+# argv codex/"default"/""/123456/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 595 @@@
+# argv codex/"default"/""/123456/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 596 @@@
+# argv codex/"default"/""/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 597 @@@
+# argv codex/"default"/""/123456/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 598 @@@
+# argv codex/"default"/""/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 599 @@@
+# argv codex/"default"/""/123456/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 600 @@@
+# argv codex/"default"/""/123456/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 601 @@@
+# argv codex/"default"/""/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 602 @@@
+# argv codex/"default"/""/123456/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 603 @@@
+# argv codex/"default"/""/123456/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 604 @@@
+# argv codex/"default"/"300000"/undefined/""
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000",""]
+@@@ 605 @@@
+# argv codex/"default"/"300000"/undefined/"plain"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","plain"]
+@@@ 606 @@@
+# argv codex/"default"/"300000"/undefined/"with space"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","with space"]
+@@@ 607 @@@
+# argv codex/"default"/"300000"/undefined/"it's"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","it's"]
+@@@ 608 @@@
+# argv codex/"default"/"300000"/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","quote \" and $ safe"]
+@@@ 609 @@@
+# argv codex/"default"/"300000"/undefined/"back\\slash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","back\\slash"]
+@@@ 610 @@@
+# argv codex/"default"/"300000"/undefined/"new\nline"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","new\nline"]
+@@@ 611 @@@
+# argv codex/"default"/"300000"/undefined/"tab\there"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","tab\there"]
+@@@ 612 @@@
+# argv codex/"default"/"300000"/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","日本語 é ü — dash"]
+@@@ 613 @@@
+# argv codex/"default"/"300000"/undefined/"#hash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","#hash"]
+@@@ 614 @@@
+# argv codex/"default"/"300000"/undefined/"a#b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","a#b"]
+@@@ 615 @@@
+# argv codex/"default"/"300000"/undefined/"~tilde"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","~tilde"]
+@@@ 616 @@@
+# argv codex/"default"/"300000"/undefined/"a=b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","a=b"]
+@@@ 617 @@@
+# argv codex/"default"/"300000"/undefined/"*?[]{}"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","*?[]{}"]
+@@@ 618 @@@
+# argv codex/"default"/"300000"/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","`$()&;|<>!^,"]
+@@@ 619 @@@
+# argv codex/"default"/"300000"/undefined/"x\u0001y"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","x\u0001y"]
+@@@ 620 @@@
+# argv codex/"default"/"300000"/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","/tmp/a b/c"]
+@@@ 621 @@@
+# argv codex/"default"/"300000"/undefined/"trailing\\"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","trailing\\"]
+@@@ 622 @@@
+# argv codex/"default"/"300000"/undefined/"  lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","  lead"]
+@@@ 623 @@@
+# argv codex/"default"/"300000"/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","emoji 🎉 ok"]
+@@@ 624 @@@
+# argv codex/"default"/"300000"/undefined/"-lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","-lead"]
+@@@ 625 @@@
+# argv codex/"default"/"300000"/undefined/"del"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","del"]
+@@@ 626 @@@
+# argv codex/"default"/"300000"/123456/""
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000",""]
+@@@ 627 @@@
+# argv codex/"default"/"300000"/123456/"plain"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","plain"]
+@@@ 628 @@@
+# argv codex/"default"/"300000"/123456/"with space"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","with space"]
+@@@ 629 @@@
+# argv codex/"default"/"300000"/123456/"it's"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","it's"]
+@@@ 630 @@@
+# argv codex/"default"/"300000"/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","quote \" and $ safe"]
+@@@ 631 @@@
+# argv codex/"default"/"300000"/123456/"back\\slash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","back\\slash"]
+@@@ 632 @@@
+# argv codex/"default"/"300000"/123456/"new\nline"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","new\nline"]
+@@@ 633 @@@
+# argv codex/"default"/"300000"/123456/"tab\there"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","tab\there"]
+@@@ 634 @@@
+# argv codex/"default"/"300000"/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","日本語 é ü — dash"]
+@@@ 635 @@@
+# argv codex/"default"/"300000"/123456/"#hash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","#hash"]
+@@@ 636 @@@
+# argv codex/"default"/"300000"/123456/"a#b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","a#b"]
+@@@ 637 @@@
+# argv codex/"default"/"300000"/123456/"~tilde"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","~tilde"]
+@@@ 638 @@@
+# argv codex/"default"/"300000"/123456/"a=b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","a=b"]
+@@@ 639 @@@
+# argv codex/"default"/"300000"/123456/"*?[]{}"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","*?[]{}"]
+@@@ 640 @@@
+# argv codex/"default"/"300000"/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","`$()&;|<>!^,"]
+@@@ 641 @@@
+# argv codex/"default"/"300000"/123456/"x\u0001y"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","x\u0001y"]
+@@@ 642 @@@
+# argv codex/"default"/"300000"/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","/tmp/a b/c"]
+@@@ 643 @@@
+# argv codex/"default"/"300000"/123456/"trailing\\"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","trailing\\"]
+@@@ 644 @@@
+# argv codex/"default"/"300000"/123456/"  lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","  lead"]
+@@@ 645 @@@
+# argv codex/"default"/"300000"/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","emoji 🎉 ok"]
+@@@ 646 @@@
+# argv codex/"default"/"300000"/123456/"-lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","-lead"]
+@@@ 647 @@@
+# argv codex/"default"/"300000"/123456/"del"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","del"]
+@@@ 648 @@@
+# argv codex/"opus"/""/undefined/""
+rc=0
+["agent-cmd","--model","opus",""]
+@@@ 649 @@@
+# argv codex/"opus"/""/undefined/"plain"
+rc=0
+["agent-cmd","--model","opus","plain"]
+@@@ 650 @@@
+# argv codex/"opus"/""/undefined/"with space"
+rc=0
+["agent-cmd","--model","opus","with space"]
+@@@ 651 @@@
+# argv codex/"opus"/""/undefined/"it's"
+rc=0
+["agent-cmd","--model","opus","it's"]
+@@@ 652 @@@
+# argv codex/"opus"/""/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","--model","opus","quote \" and $ safe"]
+@@@ 653 @@@
+# argv codex/"opus"/""/undefined/"back\\slash"
+rc=0
+["agent-cmd","--model","opus","back\\slash"]
+@@@ 654 @@@
+# argv codex/"opus"/""/undefined/"new\nline"
+rc=0
+["agent-cmd","--model","opus","new\nline"]
+@@@ 655 @@@
+# argv codex/"opus"/""/undefined/"tab\there"
+rc=0
+["agent-cmd","--model","opus","tab\there"]
+@@@ 656 @@@
+# argv codex/"opus"/""/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","--model","opus","日本語 é ü — dash"]
+@@@ 657 @@@
+# argv codex/"opus"/""/undefined/"#hash"
+rc=0
+["agent-cmd","--model","opus","#hash"]
+@@@ 658 @@@
+# argv codex/"opus"/""/undefined/"a#b"
+rc=0
+["agent-cmd","--model","opus","a#b"]
+@@@ 659 @@@
+# argv codex/"opus"/""/undefined/"~tilde"
+rc=0
+["agent-cmd","--model","opus","~tilde"]
+@@@ 660 @@@
+# argv codex/"opus"/""/undefined/"a=b"
+rc=0
+["agent-cmd","--model","opus","a=b"]
+@@@ 661 @@@
+# argv codex/"opus"/""/undefined/"*?[]{}"
+rc=0
+["agent-cmd","--model","opus","*?[]{}"]
+@@@ 662 @@@
+# argv codex/"opus"/""/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","--model","opus","`$()&;|<>!^,"]
+@@@ 663 @@@
+# argv codex/"opus"/""/undefined/"x\u0001y"
+rc=0
+["agent-cmd","--model","opus","x\u0001y"]
+@@@ 664 @@@
+# argv codex/"opus"/""/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","--model","opus","/tmp/a b/c"]
+@@@ 665 @@@
+# argv codex/"opus"/""/undefined/"trailing\\"
+rc=0
+["agent-cmd","--model","opus","trailing\\"]
+@@@ 666 @@@
+# argv codex/"opus"/""/undefined/"  lead"
+rc=0
+["agent-cmd","--model","opus","  lead"]
+@@@ 667 @@@
+# argv codex/"opus"/""/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","--model","opus","emoji 🎉 ok"]
+@@@ 668 @@@
+# argv codex/"opus"/""/undefined/"-lead"
+rc=0
+["agent-cmd","--model","opus","-lead"]
+@@@ 669 @@@
+# argv codex/"opus"/""/undefined/"del"
+rc=0
+["agent-cmd","--model","opus","del"]
+@@@ 670 @@@
+# argv codex/"opus"/""/123456/""
+rc=0
+["agent-cmd","--model","opus",""]
+@@@ 671 @@@
+# argv codex/"opus"/""/123456/"plain"
+rc=0
+["agent-cmd","--model","opus","plain"]
+@@@ 672 @@@
+# argv codex/"opus"/""/123456/"with space"
+rc=0
+["agent-cmd","--model","opus","with space"]
+@@@ 673 @@@
+# argv codex/"opus"/""/123456/"it's"
+rc=0
+["agent-cmd","--model","opus","it's"]
+@@@ 674 @@@
+# argv codex/"opus"/""/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","--model","opus","quote \" and $ safe"]
+@@@ 675 @@@
+# argv codex/"opus"/""/123456/"back\\slash"
+rc=0
+["agent-cmd","--model","opus","back\\slash"]
+@@@ 676 @@@
+# argv codex/"opus"/""/123456/"new\nline"
+rc=0
+["agent-cmd","--model","opus","new\nline"]
+@@@ 677 @@@
+# argv codex/"opus"/""/123456/"tab\there"
+rc=0
+["agent-cmd","--model","opus","tab\there"]
+@@@ 678 @@@
+# argv codex/"opus"/""/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","--model","opus","日本語 é ü — dash"]
+@@@ 679 @@@
+# argv codex/"opus"/""/123456/"#hash"
+rc=0
+["agent-cmd","--model","opus","#hash"]
+@@@ 680 @@@
+# argv codex/"opus"/""/123456/"a#b"
+rc=0
+["agent-cmd","--model","opus","a#b"]
+@@@ 681 @@@
+# argv codex/"opus"/""/123456/"~tilde"
+rc=0
+["agent-cmd","--model","opus","~tilde"]
+@@@ 682 @@@
+# argv codex/"opus"/""/123456/"a=b"
+rc=0
+["agent-cmd","--model","opus","a=b"]
+@@@ 683 @@@
+# argv codex/"opus"/""/123456/"*?[]{}"
+rc=0
+["agent-cmd","--model","opus","*?[]{}"]
+@@@ 684 @@@
+# argv codex/"opus"/""/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","--model","opus","`$()&;|<>!^,"]
+@@@ 685 @@@
+# argv codex/"opus"/""/123456/"x\u0001y"
+rc=0
+["agent-cmd","--model","opus","x\u0001y"]
+@@@ 686 @@@
+# argv codex/"opus"/""/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","--model","opus","/tmp/a b/c"]
+@@@ 687 @@@
+# argv codex/"opus"/""/123456/"trailing\\"
+rc=0
+["agent-cmd","--model","opus","trailing\\"]
+@@@ 688 @@@
+# argv codex/"opus"/""/123456/"  lead"
+rc=0
+["agent-cmd","--model","opus","  lead"]
+@@@ 689 @@@
+# argv codex/"opus"/""/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","--model","opus","emoji 🎉 ok"]
+@@@ 690 @@@
+# argv codex/"opus"/""/123456/"-lead"
+rc=0
+["agent-cmd","--model","opus","-lead"]
+@@@ 691 @@@
+# argv codex/"opus"/""/123456/"del"
+rc=0
+["agent-cmd","--model","opus","del"]
+@@@ 692 @@@
+# argv codex/"opus"/"300000"/undefined/""
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus",""]
+@@@ 693 @@@
+# argv codex/"opus"/"300000"/undefined/"plain"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","plain"]
+@@@ 694 @@@
+# argv codex/"opus"/"300000"/undefined/"with space"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","with space"]
+@@@ 695 @@@
+# argv codex/"opus"/"300000"/undefined/"it's"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","it's"]
+@@@ 696 @@@
+# argv codex/"opus"/"300000"/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","quote \" and $ safe"]
+@@@ 697 @@@
+# argv codex/"opus"/"300000"/undefined/"back\\slash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","back\\slash"]
+@@@ 698 @@@
+# argv codex/"opus"/"300000"/undefined/"new\nline"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","new\nline"]
+@@@ 699 @@@
+# argv codex/"opus"/"300000"/undefined/"tab\there"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","tab\there"]
+@@@ 700 @@@
+# argv codex/"opus"/"300000"/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","日本語 é ü — dash"]
+@@@ 701 @@@
+# argv codex/"opus"/"300000"/undefined/"#hash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","#hash"]
+@@@ 702 @@@
+# argv codex/"opus"/"300000"/undefined/"a#b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","a#b"]
+@@@ 703 @@@
+# argv codex/"opus"/"300000"/undefined/"~tilde"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","~tilde"]
+@@@ 704 @@@
+# argv codex/"opus"/"300000"/undefined/"a=b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","a=b"]
+@@@ 705 @@@
+# argv codex/"opus"/"300000"/undefined/"*?[]{}"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","*?[]{}"]
+@@@ 706 @@@
+# argv codex/"opus"/"300000"/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","`$()&;|<>!^,"]
+@@@ 707 @@@
+# argv codex/"opus"/"300000"/undefined/"x\u0001y"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","x\u0001y"]
+@@@ 708 @@@
+# argv codex/"opus"/"300000"/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","/tmp/a b/c"]
+@@@ 709 @@@
+# argv codex/"opus"/"300000"/undefined/"trailing\\"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","trailing\\"]
+@@@ 710 @@@
+# argv codex/"opus"/"300000"/undefined/"  lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","  lead"]
+@@@ 711 @@@
+# argv codex/"opus"/"300000"/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","emoji 🎉 ok"]
+@@@ 712 @@@
+# argv codex/"opus"/"300000"/undefined/"-lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","-lead"]
+@@@ 713 @@@
+# argv codex/"opus"/"300000"/undefined/"del"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","del"]
+@@@ 714 @@@
+# argv codex/"opus"/"300000"/123456/""
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus",""]
+@@@ 715 @@@
+# argv codex/"opus"/"300000"/123456/"plain"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","plain"]
+@@@ 716 @@@
+# argv codex/"opus"/"300000"/123456/"with space"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","with space"]
+@@@ 717 @@@
+# argv codex/"opus"/"300000"/123456/"it's"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","it's"]
+@@@ 718 @@@
+# argv codex/"opus"/"300000"/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","quote \" and $ safe"]
+@@@ 719 @@@
+# argv codex/"opus"/"300000"/123456/"back\\slash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","back\\slash"]
+@@@ 720 @@@
+# argv codex/"opus"/"300000"/123456/"new\nline"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","new\nline"]
+@@@ 721 @@@
+# argv codex/"opus"/"300000"/123456/"tab\there"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","tab\there"]
+@@@ 722 @@@
+# argv codex/"opus"/"300000"/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","日本語 é ü — dash"]
+@@@ 723 @@@
+# argv codex/"opus"/"300000"/123456/"#hash"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","#hash"]
+@@@ 724 @@@
+# argv codex/"opus"/"300000"/123456/"a#b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","a#b"]
+@@@ 725 @@@
+# argv codex/"opus"/"300000"/123456/"~tilde"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","~tilde"]
+@@@ 726 @@@
+# argv codex/"opus"/"300000"/123456/"a=b"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","a=b"]
+@@@ 727 @@@
+# argv codex/"opus"/"300000"/123456/"*?[]{}"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","*?[]{}"]
+@@@ 728 @@@
+# argv codex/"opus"/"300000"/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","`$()&;|<>!^,"]
+@@@ 729 @@@
+# argv codex/"opus"/"300000"/123456/"x\u0001y"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","x\u0001y"]
+@@@ 730 @@@
+# argv codex/"opus"/"300000"/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","/tmp/a b/c"]
+@@@ 731 @@@
+# argv codex/"opus"/"300000"/123456/"trailing\\"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","trailing\\"]
+@@@ 732 @@@
+# argv codex/"opus"/"300000"/123456/"  lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","  lead"]
+@@@ 733 @@@
+# argv codex/"opus"/"300000"/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","emoji 🎉 ok"]
+@@@ 734 @@@
+# argv codex/"opus"/"300000"/123456/"-lead"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","-lead"]
+@@@ 735 @@@
+# argv codex/"opus"/"300000"/123456/"del"
+rc=0
+["agent-cmd","-c","model_auto_compact_token_limit=300000","--model","opus","del"]
+@@@ 736 @@@
+# argv codex/"bad model"/""/undefined/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 737 @@@
+# argv codex/"bad model"/""/undefined/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 738 @@@
+# argv codex/"bad model"/""/undefined/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 739 @@@
+# argv codex/"bad model"/""/undefined/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 740 @@@
+# argv codex/"bad model"/""/undefined/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 741 @@@
+# argv codex/"bad model"/""/undefined/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 742 @@@
+# argv codex/"bad model"/""/undefined/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 743 @@@
+# argv codex/"bad model"/""/undefined/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 744 @@@
+# argv codex/"bad model"/""/undefined/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 745 @@@
+# argv codex/"bad model"/""/undefined/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 746 @@@
+# argv codex/"bad model"/""/undefined/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 747 @@@
+# argv codex/"bad model"/""/undefined/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 748 @@@
+# argv codex/"bad model"/""/undefined/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 749 @@@
+# argv codex/"bad model"/""/undefined/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 750 @@@
+# argv codex/"bad model"/""/undefined/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 751 @@@
+# argv codex/"bad model"/""/undefined/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 752 @@@
+# argv codex/"bad model"/""/undefined/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 753 @@@
+# argv codex/"bad model"/""/undefined/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 754 @@@
+# argv codex/"bad model"/""/undefined/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 755 @@@
+# argv codex/"bad model"/""/undefined/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 756 @@@
+# argv codex/"bad model"/""/undefined/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 757 @@@
+# argv codex/"bad model"/""/undefined/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 758 @@@
+# argv codex/"bad model"/""/123456/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 759 @@@
+# argv codex/"bad model"/""/123456/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 760 @@@
+# argv codex/"bad model"/""/123456/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 761 @@@
+# argv codex/"bad model"/""/123456/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 762 @@@
+# argv codex/"bad model"/""/123456/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 763 @@@
+# argv codex/"bad model"/""/123456/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 764 @@@
+# argv codex/"bad model"/""/123456/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 765 @@@
+# argv codex/"bad model"/""/123456/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 766 @@@
+# argv codex/"bad model"/""/123456/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 767 @@@
+# argv codex/"bad model"/""/123456/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 768 @@@
+# argv codex/"bad model"/""/123456/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 769 @@@
+# argv codex/"bad model"/""/123456/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 770 @@@
+# argv codex/"bad model"/""/123456/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 771 @@@
+# argv codex/"bad model"/""/123456/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 772 @@@
+# argv codex/"bad model"/""/123456/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 773 @@@
+# argv codex/"bad model"/""/123456/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 774 @@@
+# argv codex/"bad model"/""/123456/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 775 @@@
+# argv codex/"bad model"/""/123456/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 776 @@@
+# argv codex/"bad model"/""/123456/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 777 @@@
+# argv codex/"bad model"/""/123456/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 778 @@@
+# argv codex/"bad model"/""/123456/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 779 @@@
+# argv codex/"bad model"/""/123456/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 780 @@@
+# argv codex/"bad model"/"300000"/undefined/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 781 @@@
+# argv codex/"bad model"/"300000"/undefined/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 782 @@@
+# argv codex/"bad model"/"300000"/undefined/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 783 @@@
+# argv codex/"bad model"/"300000"/undefined/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 784 @@@
+# argv codex/"bad model"/"300000"/undefined/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 785 @@@
+# argv codex/"bad model"/"300000"/undefined/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 786 @@@
+# argv codex/"bad model"/"300000"/undefined/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 787 @@@
+# argv codex/"bad model"/"300000"/undefined/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 788 @@@
+# argv codex/"bad model"/"300000"/undefined/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 789 @@@
+# argv codex/"bad model"/"300000"/undefined/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 790 @@@
+# argv codex/"bad model"/"300000"/undefined/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 791 @@@
+# argv codex/"bad model"/"300000"/undefined/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 792 @@@
+# argv codex/"bad model"/"300000"/undefined/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 793 @@@
+# argv codex/"bad model"/"300000"/undefined/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 794 @@@
+# argv codex/"bad model"/"300000"/undefined/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 795 @@@
+# argv codex/"bad model"/"300000"/undefined/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 796 @@@
+# argv codex/"bad model"/"300000"/undefined/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 797 @@@
+# argv codex/"bad model"/"300000"/undefined/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 798 @@@
+# argv codex/"bad model"/"300000"/undefined/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 799 @@@
+# argv codex/"bad model"/"300000"/undefined/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 800 @@@
+# argv codex/"bad model"/"300000"/undefined/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 801 @@@
+# argv codex/"bad model"/"300000"/undefined/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 802 @@@
+# argv codex/"bad model"/"300000"/123456/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 803 @@@
+# argv codex/"bad model"/"300000"/123456/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 804 @@@
+# argv codex/"bad model"/"300000"/123456/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 805 @@@
+# argv codex/"bad model"/"300000"/123456/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 806 @@@
+# argv codex/"bad model"/"300000"/123456/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 807 @@@
+# argv codex/"bad model"/"300000"/123456/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 808 @@@
+# argv codex/"bad model"/"300000"/123456/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 809 @@@
+# argv codex/"bad model"/"300000"/123456/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 810 @@@
+# argv codex/"bad model"/"300000"/123456/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 811 @@@
+# argv codex/"bad model"/"300000"/123456/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 812 @@@
+# argv codex/"bad model"/"300000"/123456/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 813 @@@
+# argv codex/"bad model"/"300000"/123456/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 814 @@@
+# argv codex/"bad model"/"300000"/123456/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 815 @@@
+# argv codex/"bad model"/"300000"/123456/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 816 @@@
+# argv codex/"bad model"/"300000"/123456/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 817 @@@
+# argv codex/"bad model"/"300000"/123456/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 818 @@@
+# argv codex/"bad model"/"300000"/123456/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 819 @@@
+# argv codex/"bad model"/"300000"/123456/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 820 @@@
+# argv codex/"bad model"/"300000"/123456/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 821 @@@
+# argv codex/"bad model"/"300000"/123456/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 822 @@@
+# argv codex/"bad model"/"300000"/123456/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 823 @@@
+# argv codex/"bad model"/"300000"/123456/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 824 @@@
+# argv codex/"-x"/""/undefined/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 825 @@@
+# argv codex/"-x"/""/undefined/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 826 @@@
+# argv codex/"-x"/""/undefined/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 827 @@@
+# argv codex/"-x"/""/undefined/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 828 @@@
+# argv codex/"-x"/""/undefined/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 829 @@@
+# argv codex/"-x"/""/undefined/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 830 @@@
+# argv codex/"-x"/""/undefined/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 831 @@@
+# argv codex/"-x"/""/undefined/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 832 @@@
+# argv codex/"-x"/""/undefined/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 833 @@@
+# argv codex/"-x"/""/undefined/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 834 @@@
+# argv codex/"-x"/""/undefined/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 835 @@@
+# argv codex/"-x"/""/undefined/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 836 @@@
+# argv codex/"-x"/""/undefined/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 837 @@@
+# argv codex/"-x"/""/undefined/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 838 @@@
+# argv codex/"-x"/""/undefined/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 839 @@@
+# argv codex/"-x"/""/undefined/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 840 @@@
+# argv codex/"-x"/""/undefined/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 841 @@@
+# argv codex/"-x"/""/undefined/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 842 @@@
+# argv codex/"-x"/""/undefined/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 843 @@@
+# argv codex/"-x"/""/undefined/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 844 @@@
+# argv codex/"-x"/""/undefined/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 845 @@@
+# argv codex/"-x"/""/undefined/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 846 @@@
+# argv codex/"-x"/""/123456/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 847 @@@
+# argv codex/"-x"/""/123456/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 848 @@@
+# argv codex/"-x"/""/123456/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 849 @@@
+# argv codex/"-x"/""/123456/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 850 @@@
+# argv codex/"-x"/""/123456/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 851 @@@
+# argv codex/"-x"/""/123456/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 852 @@@
+# argv codex/"-x"/""/123456/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 853 @@@
+# argv codex/"-x"/""/123456/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 854 @@@
+# argv codex/"-x"/""/123456/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 855 @@@
+# argv codex/"-x"/""/123456/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 856 @@@
+# argv codex/"-x"/""/123456/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 857 @@@
+# argv codex/"-x"/""/123456/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 858 @@@
+# argv codex/"-x"/""/123456/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 859 @@@
+# argv codex/"-x"/""/123456/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 860 @@@
+# argv codex/"-x"/""/123456/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 861 @@@
+# argv codex/"-x"/""/123456/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 862 @@@
+# argv codex/"-x"/""/123456/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 863 @@@
+# argv codex/"-x"/""/123456/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 864 @@@
+# argv codex/"-x"/""/123456/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 865 @@@
+# argv codex/"-x"/""/123456/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 866 @@@
+# argv codex/"-x"/""/123456/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 867 @@@
+# argv codex/"-x"/""/123456/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 868 @@@
+# argv codex/"-x"/"300000"/undefined/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 869 @@@
+# argv codex/"-x"/"300000"/undefined/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 870 @@@
+# argv codex/"-x"/"300000"/undefined/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 871 @@@
+# argv codex/"-x"/"300000"/undefined/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 872 @@@
+# argv codex/"-x"/"300000"/undefined/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 873 @@@
+# argv codex/"-x"/"300000"/undefined/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 874 @@@
+# argv codex/"-x"/"300000"/undefined/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 875 @@@
+# argv codex/"-x"/"300000"/undefined/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 876 @@@
+# argv codex/"-x"/"300000"/undefined/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 877 @@@
+# argv codex/"-x"/"300000"/undefined/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 878 @@@
+# argv codex/"-x"/"300000"/undefined/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 879 @@@
+# argv codex/"-x"/"300000"/undefined/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 880 @@@
+# argv codex/"-x"/"300000"/undefined/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 881 @@@
+# argv codex/"-x"/"300000"/undefined/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 882 @@@
+# argv codex/"-x"/"300000"/undefined/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 883 @@@
+# argv codex/"-x"/"300000"/undefined/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 884 @@@
+# argv codex/"-x"/"300000"/undefined/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 885 @@@
+# argv codex/"-x"/"300000"/undefined/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 886 @@@
+# argv codex/"-x"/"300000"/undefined/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 887 @@@
+# argv codex/"-x"/"300000"/undefined/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 888 @@@
+# argv codex/"-x"/"300000"/undefined/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 889 @@@
+# argv codex/"-x"/"300000"/undefined/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 890 @@@
+# argv codex/"-x"/"300000"/123456/""
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 891 @@@
+# argv codex/"-x"/"300000"/123456/"plain"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 892 @@@
+# argv codex/"-x"/"300000"/123456/"with space"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 893 @@@
+# argv codex/"-x"/"300000"/123456/"it's"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 894 @@@
+# argv codex/"-x"/"300000"/123456/"quote \" and $ safe"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 895 @@@
+# argv codex/"-x"/"300000"/123456/"back\\slash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 896 @@@
+# argv codex/"-x"/"300000"/123456/"new\nline"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 897 @@@
+# argv codex/"-x"/"300000"/123456/"tab\there"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 898 @@@
+# argv codex/"-x"/"300000"/123456/"日本語 é ü — dash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 899 @@@
+# argv codex/"-x"/"300000"/123456/"#hash"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 900 @@@
+# argv codex/"-x"/"300000"/123456/"a#b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 901 @@@
+# argv codex/"-x"/"300000"/123456/"~tilde"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 902 @@@
+# argv codex/"-x"/"300000"/123456/"a=b"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 903 @@@
+# argv codex/"-x"/"300000"/123456/"*?[]{}"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 904 @@@
+# argv codex/"-x"/"300000"/123456/"`$()&;|<>!^,"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 905 @@@
+# argv codex/"-x"/"300000"/123456/"x\u0001y"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 906 @@@
+# argv codex/"-x"/"300000"/123456/"/tmp/a b/c"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 907 @@@
+# argv codex/"-x"/"300000"/123456/"trailing\\"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 908 @@@
+# argv codex/"-x"/"300000"/123456/"  lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 909 @@@
+# argv codex/"-x"/"300000"/123456/"emoji 🎉 ok"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 910 @@@
+# argv codex/"-x"/"300000"/123456/"-lead"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 911 @@@
+# argv codex/"-x"/"300000"/123456/"del"
+rc=64
+model must be one model ID or alias, without whitespace or a leading '-'
+@@@ 912 @@@
+# argv custom/""/""/undefined/""
+rc=0
+["agent-cmd",""]
+@@@ 913 @@@
+# argv custom/""/""/undefined/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 914 @@@
+# argv custom/""/""/undefined/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 915 @@@
+# argv custom/""/""/undefined/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 916 @@@
+# argv custom/""/""/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 917 @@@
+# argv custom/""/""/undefined/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 918 @@@
+# argv custom/""/""/undefined/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 919 @@@
+# argv custom/""/""/undefined/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 920 @@@
+# argv custom/""/""/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 921 @@@
+# argv custom/""/""/undefined/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 922 @@@
+# argv custom/""/""/undefined/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 923 @@@
+# argv custom/""/""/undefined/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 924 @@@
+# argv custom/""/""/undefined/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 925 @@@
+# argv custom/""/""/undefined/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 926 @@@
+# argv custom/""/""/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 927 @@@
+# argv custom/""/""/undefined/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 928 @@@
+# argv custom/""/""/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 929 @@@
+# argv custom/""/""/undefined/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 930 @@@
+# argv custom/""/""/undefined/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 931 @@@
+# argv custom/""/""/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 932 @@@
+# argv custom/""/""/undefined/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 933 @@@
+# argv custom/""/""/undefined/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 934 @@@
+# argv custom/""/""/123456/""
+rc=0
+["agent-cmd",""]
+@@@ 935 @@@
+# argv custom/""/""/123456/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 936 @@@
+# argv custom/""/""/123456/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 937 @@@
+# argv custom/""/""/123456/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 938 @@@
+# argv custom/""/""/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 939 @@@
+# argv custom/""/""/123456/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 940 @@@
+# argv custom/""/""/123456/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 941 @@@
+# argv custom/""/""/123456/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 942 @@@
+# argv custom/""/""/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 943 @@@
+# argv custom/""/""/123456/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 944 @@@
+# argv custom/""/""/123456/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 945 @@@
+# argv custom/""/""/123456/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 946 @@@
+# argv custom/""/""/123456/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 947 @@@
+# argv custom/""/""/123456/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 948 @@@
+# argv custom/""/""/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 949 @@@
+# argv custom/""/""/123456/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 950 @@@
+# argv custom/""/""/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 951 @@@
+# argv custom/""/""/123456/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 952 @@@
+# argv custom/""/""/123456/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 953 @@@
+# argv custom/""/""/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 954 @@@
+# argv custom/""/""/123456/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 955 @@@
+# argv custom/""/""/123456/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 956 @@@
+# argv custom/""/"300000"/undefined/""
+rc=0
+["agent-cmd",""]
+@@@ 957 @@@
+# argv custom/""/"300000"/undefined/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 958 @@@
+# argv custom/""/"300000"/undefined/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 959 @@@
+# argv custom/""/"300000"/undefined/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 960 @@@
+# argv custom/""/"300000"/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 961 @@@
+# argv custom/""/"300000"/undefined/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 962 @@@
+# argv custom/""/"300000"/undefined/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 963 @@@
+# argv custom/""/"300000"/undefined/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 964 @@@
+# argv custom/""/"300000"/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 965 @@@
+# argv custom/""/"300000"/undefined/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 966 @@@
+# argv custom/""/"300000"/undefined/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 967 @@@
+# argv custom/""/"300000"/undefined/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 968 @@@
+# argv custom/""/"300000"/undefined/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 969 @@@
+# argv custom/""/"300000"/undefined/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 970 @@@
+# argv custom/""/"300000"/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 971 @@@
+# argv custom/""/"300000"/undefined/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 972 @@@
+# argv custom/""/"300000"/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 973 @@@
+# argv custom/""/"300000"/undefined/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 974 @@@
+# argv custom/""/"300000"/undefined/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 975 @@@
+# argv custom/""/"300000"/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 976 @@@
+# argv custom/""/"300000"/undefined/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 977 @@@
+# argv custom/""/"300000"/undefined/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 978 @@@
+# argv custom/""/"300000"/123456/""
+rc=0
+["agent-cmd",""]
+@@@ 979 @@@
+# argv custom/""/"300000"/123456/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 980 @@@
+# argv custom/""/"300000"/123456/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 981 @@@
+# argv custom/""/"300000"/123456/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 982 @@@
+# argv custom/""/"300000"/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 983 @@@
+# argv custom/""/"300000"/123456/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 984 @@@
+# argv custom/""/"300000"/123456/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 985 @@@
+# argv custom/""/"300000"/123456/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 986 @@@
+# argv custom/""/"300000"/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 987 @@@
+# argv custom/""/"300000"/123456/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 988 @@@
+# argv custom/""/"300000"/123456/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 989 @@@
+# argv custom/""/"300000"/123456/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 990 @@@
+# argv custom/""/"300000"/123456/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 991 @@@
+# argv custom/""/"300000"/123456/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 992 @@@
+# argv custom/""/"300000"/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 993 @@@
+# argv custom/""/"300000"/123456/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 994 @@@
+# argv custom/""/"300000"/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 995 @@@
+# argv custom/""/"300000"/123456/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 996 @@@
+# argv custom/""/"300000"/123456/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 997 @@@
+# argv custom/""/"300000"/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 998 @@@
+# argv custom/""/"300000"/123456/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 999 @@@
+# argv custom/""/"300000"/123456/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 1000 @@@
+# argv custom/"default"/""/undefined/""
+rc=0
+["agent-cmd",""]
+@@@ 1001 @@@
+# argv custom/"default"/""/undefined/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 1002 @@@
+# argv custom/"default"/""/undefined/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 1003 @@@
+# argv custom/"default"/""/undefined/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 1004 @@@
+# argv custom/"default"/""/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 1005 @@@
+# argv custom/"default"/""/undefined/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 1006 @@@
+# argv custom/"default"/""/undefined/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 1007 @@@
+# argv custom/"default"/""/undefined/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 1008 @@@
+# argv custom/"default"/""/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 1009 @@@
+# argv custom/"default"/""/undefined/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 1010 @@@
+# argv custom/"default"/""/undefined/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 1011 @@@
+# argv custom/"default"/""/undefined/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 1012 @@@
+# argv custom/"default"/""/undefined/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 1013 @@@
+# argv custom/"default"/""/undefined/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 1014 @@@
+# argv custom/"default"/""/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 1015 @@@
+# argv custom/"default"/""/undefined/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 1016 @@@
+# argv custom/"default"/""/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 1017 @@@
+# argv custom/"default"/""/undefined/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 1018 @@@
+# argv custom/"default"/""/undefined/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 1019 @@@
+# argv custom/"default"/""/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 1020 @@@
+# argv custom/"default"/""/undefined/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 1021 @@@
+# argv custom/"default"/""/undefined/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 1022 @@@
+# argv custom/"default"/""/123456/""
+rc=0
+["agent-cmd",""]
+@@@ 1023 @@@
+# argv custom/"default"/""/123456/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 1024 @@@
+# argv custom/"default"/""/123456/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 1025 @@@
+# argv custom/"default"/""/123456/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 1026 @@@
+# argv custom/"default"/""/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 1027 @@@
+# argv custom/"default"/""/123456/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 1028 @@@
+# argv custom/"default"/""/123456/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 1029 @@@
+# argv custom/"default"/""/123456/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 1030 @@@
+# argv custom/"default"/""/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 1031 @@@
+# argv custom/"default"/""/123456/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 1032 @@@
+# argv custom/"default"/""/123456/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 1033 @@@
+# argv custom/"default"/""/123456/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 1034 @@@
+# argv custom/"default"/""/123456/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 1035 @@@
+# argv custom/"default"/""/123456/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 1036 @@@
+# argv custom/"default"/""/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 1037 @@@
+# argv custom/"default"/""/123456/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 1038 @@@
+# argv custom/"default"/""/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 1039 @@@
+# argv custom/"default"/""/123456/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 1040 @@@
+# argv custom/"default"/""/123456/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 1041 @@@
+# argv custom/"default"/""/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 1042 @@@
+# argv custom/"default"/""/123456/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 1043 @@@
+# argv custom/"default"/""/123456/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 1044 @@@
+# argv custom/"default"/"300000"/undefined/""
+rc=0
+["agent-cmd",""]
+@@@ 1045 @@@
+# argv custom/"default"/"300000"/undefined/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 1046 @@@
+# argv custom/"default"/"300000"/undefined/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 1047 @@@
+# argv custom/"default"/"300000"/undefined/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 1048 @@@
+# argv custom/"default"/"300000"/undefined/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 1049 @@@
+# argv custom/"default"/"300000"/undefined/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 1050 @@@
+# argv custom/"default"/"300000"/undefined/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 1051 @@@
+# argv custom/"default"/"300000"/undefined/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 1052 @@@
+# argv custom/"default"/"300000"/undefined/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 1053 @@@
+# argv custom/"default"/"300000"/undefined/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 1054 @@@
+# argv custom/"default"/"300000"/undefined/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 1055 @@@
+# argv custom/"default"/"300000"/undefined/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 1056 @@@
+# argv custom/"default"/"300000"/undefined/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 1057 @@@
+# argv custom/"default"/"300000"/undefined/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 1058 @@@
+# argv custom/"default"/"300000"/undefined/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 1059 @@@
+# argv custom/"default"/"300000"/undefined/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 1060 @@@
+# argv custom/"default"/"300000"/undefined/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 1061 @@@
+# argv custom/"default"/"300000"/undefined/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 1062 @@@
+# argv custom/"default"/"300000"/undefined/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 1063 @@@
+# argv custom/"default"/"300000"/undefined/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 1064 @@@
+# argv custom/"default"/"300000"/undefined/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 1065 @@@
+# argv custom/"default"/"300000"/undefined/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 1066 @@@
+# argv custom/"default"/"300000"/123456/""
+rc=0
+["agent-cmd",""]
+@@@ 1067 @@@
+# argv custom/"default"/"300000"/123456/"plain"
+rc=0
+["agent-cmd","plain"]
+@@@ 1068 @@@
+# argv custom/"default"/"300000"/123456/"with space"
+rc=0
+["agent-cmd","with space"]
+@@@ 1069 @@@
+# argv custom/"default"/"300000"/123456/"it's"
+rc=0
+["agent-cmd","it's"]
+@@@ 1070 @@@
+# argv custom/"default"/"300000"/123456/"quote \" and $ safe"
+rc=0
+["agent-cmd","quote \" and $ safe"]
+@@@ 1071 @@@
+# argv custom/"default"/"300000"/123456/"back\\slash"
+rc=0
+["agent-cmd","back\\slash"]
+@@@ 1072 @@@
+# argv custom/"default"/"300000"/123456/"new\nline"
+rc=0
+["agent-cmd","new\nline"]
+@@@ 1073 @@@
+# argv custom/"default"/"300000"/123456/"tab\there"
+rc=0
+["agent-cmd","tab\there"]
+@@@ 1074 @@@
+# argv custom/"default"/"300000"/123456/"日本語 é ü — dash"
+rc=0
+["agent-cmd","日本語 é ü — dash"]
+@@@ 1075 @@@
+# argv custom/"default"/"300000"/123456/"#hash"
+rc=0
+["agent-cmd","#hash"]
+@@@ 1076 @@@
+# argv custom/"default"/"300000"/123456/"a#b"
+rc=0
+["agent-cmd","a#b"]
+@@@ 1077 @@@
+# argv custom/"default"/"300000"/123456/"~tilde"
+rc=0
+["agent-cmd","~tilde"]
+@@@ 1078 @@@
+# argv custom/"default"/"300000"/123456/"a=b"
+rc=0
+["agent-cmd","a=b"]
+@@@ 1079 @@@
+# argv custom/"default"/"300000"/123456/"*?[]{}"
+rc=0
+["agent-cmd","*?[]{}"]
+@@@ 1080 @@@
+# argv custom/"default"/"300000"/123456/"`$()&;|<>!^,"
+rc=0
+["agent-cmd","`$()&;|<>!^,"]
+@@@ 1081 @@@
+# argv custom/"default"/"300000"/123456/"x\u0001y"
+rc=0
+["agent-cmd","x\u0001y"]
+@@@ 1082 @@@
+# argv custom/"default"/"300000"/123456/"/tmp/a b/c"
+rc=0
+["agent-cmd","/tmp/a b/c"]
+@@@ 1083 @@@
+# argv custom/"default"/"300000"/123456/"trailing\\"
+rc=0
+["agent-cmd","trailing\\"]
+@@@ 1084 @@@
+# argv custom/"default"/"300000"/123456/"  lead"
+rc=0
+["agent-cmd","  lead"]
+@@@ 1085 @@@
+# argv custom/"default"/"300000"/123456/"emoji 🎉 ok"
+rc=0
+["agent-cmd","emoji 🎉 ok"]
+@@@ 1086 @@@
+# argv custom/"default"/"300000"/123456/"-lead"
+rc=0
+["agent-cmd","-lead"]
+@@@ 1087 @@@
+# argv custom/"default"/"300000"/123456/"del"
+rc=0
+["agent-cmd","del"]
+@@@ 1088 @@@
+# argv custom/"opus"/""/undefined/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1089 @@@
+# argv custom/"opus"/""/undefined/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1090 @@@
+# argv custom/"opus"/""/undefined/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1091 @@@
+# argv custom/"opus"/""/undefined/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1092 @@@
+# argv custom/"opus"/""/undefined/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1093 @@@
+# argv custom/"opus"/""/undefined/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1094 @@@
+# argv custom/"opus"/""/undefined/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1095 @@@
+# argv custom/"opus"/""/undefined/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1096 @@@
+# argv custom/"opus"/""/undefined/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1097 @@@
+# argv custom/"opus"/""/undefined/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1098 @@@
+# argv custom/"opus"/""/undefined/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1099 @@@
+# argv custom/"opus"/""/undefined/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1100 @@@
+# argv custom/"opus"/""/undefined/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1101 @@@
+# argv custom/"opus"/""/undefined/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1102 @@@
+# argv custom/"opus"/""/undefined/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1103 @@@
+# argv custom/"opus"/""/undefined/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1104 @@@
+# argv custom/"opus"/""/undefined/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1105 @@@
+# argv custom/"opus"/""/undefined/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1106 @@@
+# argv custom/"opus"/""/undefined/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1107 @@@
+# argv custom/"opus"/""/undefined/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1108 @@@
+# argv custom/"opus"/""/undefined/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1109 @@@
+# argv custom/"opus"/""/undefined/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1110 @@@
+# argv custom/"opus"/""/123456/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1111 @@@
+# argv custom/"opus"/""/123456/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1112 @@@
+# argv custom/"opus"/""/123456/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1113 @@@
+# argv custom/"opus"/""/123456/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1114 @@@
+# argv custom/"opus"/""/123456/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1115 @@@
+# argv custom/"opus"/""/123456/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1116 @@@
+# argv custom/"opus"/""/123456/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1117 @@@
+# argv custom/"opus"/""/123456/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1118 @@@
+# argv custom/"opus"/""/123456/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1119 @@@
+# argv custom/"opus"/""/123456/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1120 @@@
+# argv custom/"opus"/""/123456/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1121 @@@
+# argv custom/"opus"/""/123456/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1122 @@@
+# argv custom/"opus"/""/123456/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1123 @@@
+# argv custom/"opus"/""/123456/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1124 @@@
+# argv custom/"opus"/""/123456/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1125 @@@
+# argv custom/"opus"/""/123456/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1126 @@@
+# argv custom/"opus"/""/123456/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1127 @@@
+# argv custom/"opus"/""/123456/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1128 @@@
+# argv custom/"opus"/""/123456/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1129 @@@
+# argv custom/"opus"/""/123456/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1130 @@@
+# argv custom/"opus"/""/123456/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1131 @@@
+# argv custom/"opus"/""/123456/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1132 @@@
+# argv custom/"opus"/"300000"/undefined/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1133 @@@
+# argv custom/"opus"/"300000"/undefined/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1134 @@@
+# argv custom/"opus"/"300000"/undefined/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1135 @@@
+# argv custom/"opus"/"300000"/undefined/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1136 @@@
+# argv custom/"opus"/"300000"/undefined/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1137 @@@
+# argv custom/"opus"/"300000"/undefined/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1138 @@@
+# argv custom/"opus"/"300000"/undefined/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1139 @@@
+# argv custom/"opus"/"300000"/undefined/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1140 @@@
+# argv custom/"opus"/"300000"/undefined/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1141 @@@
+# argv custom/"opus"/"300000"/undefined/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1142 @@@
+# argv custom/"opus"/"300000"/undefined/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1143 @@@
+# argv custom/"opus"/"300000"/undefined/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1144 @@@
+# argv custom/"opus"/"300000"/undefined/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1145 @@@
+# argv custom/"opus"/"300000"/undefined/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1146 @@@
+# argv custom/"opus"/"300000"/undefined/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1147 @@@
+# argv custom/"opus"/"300000"/undefined/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1148 @@@
+# argv custom/"opus"/"300000"/undefined/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1149 @@@
+# argv custom/"opus"/"300000"/undefined/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1150 @@@
+# argv custom/"opus"/"300000"/undefined/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1151 @@@
+# argv custom/"opus"/"300000"/undefined/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1152 @@@
+# argv custom/"opus"/"300000"/undefined/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1153 @@@
+# argv custom/"opus"/"300000"/undefined/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1154 @@@
+# argv custom/"opus"/"300000"/123456/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1155 @@@
+# argv custom/"opus"/"300000"/123456/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1156 @@@
+# argv custom/"opus"/"300000"/123456/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1157 @@@
+# argv custom/"opus"/"300000"/123456/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1158 @@@
+# argv custom/"opus"/"300000"/123456/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1159 @@@
+# argv custom/"opus"/"300000"/123456/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1160 @@@
+# argv custom/"opus"/"300000"/123456/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1161 @@@
+# argv custom/"opus"/"300000"/123456/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1162 @@@
+# argv custom/"opus"/"300000"/123456/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1163 @@@
+# argv custom/"opus"/"300000"/123456/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1164 @@@
+# argv custom/"opus"/"300000"/123456/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1165 @@@
+# argv custom/"opus"/"300000"/123456/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1166 @@@
+# argv custom/"opus"/"300000"/123456/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1167 @@@
+# argv custom/"opus"/"300000"/123456/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1168 @@@
+# argv custom/"opus"/"300000"/123456/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1169 @@@
+# argv custom/"opus"/"300000"/123456/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1170 @@@
+# argv custom/"opus"/"300000"/123456/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1171 @@@
+# argv custom/"opus"/"300000"/123456/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1172 @@@
+# argv custom/"opus"/"300000"/123456/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1173 @@@
+# argv custom/"opus"/"300000"/123456/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1174 @@@
+# argv custom/"opus"/"300000"/123456/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1175 @@@
+# argv custom/"opus"/"300000"/123456/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1176 @@@
+# argv custom/"bad model"/""/undefined/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1177 @@@
+# argv custom/"bad model"/""/undefined/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1178 @@@
+# argv custom/"bad model"/""/undefined/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1179 @@@
+# argv custom/"bad model"/""/undefined/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1180 @@@
+# argv custom/"bad model"/""/undefined/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1181 @@@
+# argv custom/"bad model"/""/undefined/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1182 @@@
+# argv custom/"bad model"/""/undefined/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1183 @@@
+# argv custom/"bad model"/""/undefined/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1184 @@@
+# argv custom/"bad model"/""/undefined/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1185 @@@
+# argv custom/"bad model"/""/undefined/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1186 @@@
+# argv custom/"bad model"/""/undefined/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1187 @@@
+# argv custom/"bad model"/""/undefined/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1188 @@@
+# argv custom/"bad model"/""/undefined/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1189 @@@
+# argv custom/"bad model"/""/undefined/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1190 @@@
+# argv custom/"bad model"/""/undefined/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1191 @@@
+# argv custom/"bad model"/""/undefined/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1192 @@@
+# argv custom/"bad model"/""/undefined/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1193 @@@
+# argv custom/"bad model"/""/undefined/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1194 @@@
+# argv custom/"bad model"/""/undefined/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1195 @@@
+# argv custom/"bad model"/""/undefined/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1196 @@@
+# argv custom/"bad model"/""/undefined/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1197 @@@
+# argv custom/"bad model"/""/undefined/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1198 @@@
+# argv custom/"bad model"/""/123456/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1199 @@@
+# argv custom/"bad model"/""/123456/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1200 @@@
+# argv custom/"bad model"/""/123456/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1201 @@@
+# argv custom/"bad model"/""/123456/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1202 @@@
+# argv custom/"bad model"/""/123456/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1203 @@@
+# argv custom/"bad model"/""/123456/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1204 @@@
+# argv custom/"bad model"/""/123456/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1205 @@@
+# argv custom/"bad model"/""/123456/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1206 @@@
+# argv custom/"bad model"/""/123456/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1207 @@@
+# argv custom/"bad model"/""/123456/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1208 @@@
+# argv custom/"bad model"/""/123456/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1209 @@@
+# argv custom/"bad model"/""/123456/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1210 @@@
+# argv custom/"bad model"/""/123456/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1211 @@@
+# argv custom/"bad model"/""/123456/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1212 @@@
+# argv custom/"bad model"/""/123456/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1213 @@@
+# argv custom/"bad model"/""/123456/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1214 @@@
+# argv custom/"bad model"/""/123456/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1215 @@@
+# argv custom/"bad model"/""/123456/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1216 @@@
+# argv custom/"bad model"/""/123456/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1217 @@@
+# argv custom/"bad model"/""/123456/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1218 @@@
+# argv custom/"bad model"/""/123456/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1219 @@@
+# argv custom/"bad model"/""/123456/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1220 @@@
+# argv custom/"bad model"/"300000"/undefined/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1221 @@@
+# argv custom/"bad model"/"300000"/undefined/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1222 @@@
+# argv custom/"bad model"/"300000"/undefined/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1223 @@@
+# argv custom/"bad model"/"300000"/undefined/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1224 @@@
+# argv custom/"bad model"/"300000"/undefined/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1225 @@@
+# argv custom/"bad model"/"300000"/undefined/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1226 @@@
+# argv custom/"bad model"/"300000"/undefined/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1227 @@@
+# argv custom/"bad model"/"300000"/undefined/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1228 @@@
+# argv custom/"bad model"/"300000"/undefined/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1229 @@@
+# argv custom/"bad model"/"300000"/undefined/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1230 @@@
+# argv custom/"bad model"/"300000"/undefined/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1231 @@@
+# argv custom/"bad model"/"300000"/undefined/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1232 @@@
+# argv custom/"bad model"/"300000"/undefined/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1233 @@@
+# argv custom/"bad model"/"300000"/undefined/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1234 @@@
+# argv custom/"bad model"/"300000"/undefined/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1235 @@@
+# argv custom/"bad model"/"300000"/undefined/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1236 @@@
+# argv custom/"bad model"/"300000"/undefined/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1237 @@@
+# argv custom/"bad model"/"300000"/undefined/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1238 @@@
+# argv custom/"bad model"/"300000"/undefined/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1239 @@@
+# argv custom/"bad model"/"300000"/undefined/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1240 @@@
+# argv custom/"bad model"/"300000"/undefined/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1241 @@@
+# argv custom/"bad model"/"300000"/undefined/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1242 @@@
+# argv custom/"bad model"/"300000"/123456/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1243 @@@
+# argv custom/"bad model"/"300000"/123456/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1244 @@@
+# argv custom/"bad model"/"300000"/123456/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1245 @@@
+# argv custom/"bad model"/"300000"/123456/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1246 @@@
+# argv custom/"bad model"/"300000"/123456/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1247 @@@
+# argv custom/"bad model"/"300000"/123456/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1248 @@@
+# argv custom/"bad model"/"300000"/123456/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1249 @@@
+# argv custom/"bad model"/"300000"/123456/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1250 @@@
+# argv custom/"bad model"/"300000"/123456/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1251 @@@
+# argv custom/"bad model"/"300000"/123456/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1252 @@@
+# argv custom/"bad model"/"300000"/123456/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1253 @@@
+# argv custom/"bad model"/"300000"/123456/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1254 @@@
+# argv custom/"bad model"/"300000"/123456/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1255 @@@
+# argv custom/"bad model"/"300000"/123456/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1256 @@@
+# argv custom/"bad model"/"300000"/123456/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1257 @@@
+# argv custom/"bad model"/"300000"/123456/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1258 @@@
+# argv custom/"bad model"/"300000"/123456/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1259 @@@
+# argv custom/"bad model"/"300000"/123456/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1260 @@@
+# argv custom/"bad model"/"300000"/123456/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1261 @@@
+# argv custom/"bad model"/"300000"/123456/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1262 @@@
+# argv custom/"bad model"/"300000"/123456/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1263 @@@
+# argv custom/"bad model"/"300000"/123456/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1264 @@@
+# argv custom/"-x"/""/undefined/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1265 @@@
+# argv custom/"-x"/""/undefined/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1266 @@@
+# argv custom/"-x"/""/undefined/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1267 @@@
+# argv custom/"-x"/""/undefined/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1268 @@@
+# argv custom/"-x"/""/undefined/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1269 @@@
+# argv custom/"-x"/""/undefined/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1270 @@@
+# argv custom/"-x"/""/undefined/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1271 @@@
+# argv custom/"-x"/""/undefined/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1272 @@@
+# argv custom/"-x"/""/undefined/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1273 @@@
+# argv custom/"-x"/""/undefined/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1274 @@@
+# argv custom/"-x"/""/undefined/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1275 @@@
+# argv custom/"-x"/""/undefined/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1276 @@@
+# argv custom/"-x"/""/undefined/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1277 @@@
+# argv custom/"-x"/""/undefined/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1278 @@@
+# argv custom/"-x"/""/undefined/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1279 @@@
+# argv custom/"-x"/""/undefined/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1280 @@@
+# argv custom/"-x"/""/undefined/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1281 @@@
+# argv custom/"-x"/""/undefined/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1282 @@@
+# argv custom/"-x"/""/undefined/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1283 @@@
+# argv custom/"-x"/""/undefined/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1284 @@@
+# argv custom/"-x"/""/undefined/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1285 @@@
+# argv custom/"-x"/""/undefined/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1286 @@@
+# argv custom/"-x"/""/123456/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1287 @@@
+# argv custom/"-x"/""/123456/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1288 @@@
+# argv custom/"-x"/""/123456/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1289 @@@
+# argv custom/"-x"/""/123456/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1290 @@@
+# argv custom/"-x"/""/123456/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1291 @@@
+# argv custom/"-x"/""/123456/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1292 @@@
+# argv custom/"-x"/""/123456/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1293 @@@
+# argv custom/"-x"/""/123456/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1294 @@@
+# argv custom/"-x"/""/123456/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1295 @@@
+# argv custom/"-x"/""/123456/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1296 @@@
+# argv custom/"-x"/""/123456/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1297 @@@
+# argv custom/"-x"/""/123456/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1298 @@@
+# argv custom/"-x"/""/123456/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1299 @@@
+# argv custom/"-x"/""/123456/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1300 @@@
+# argv custom/"-x"/""/123456/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1301 @@@
+# argv custom/"-x"/""/123456/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1302 @@@
+# argv custom/"-x"/""/123456/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1303 @@@
+# argv custom/"-x"/""/123456/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1304 @@@
+# argv custom/"-x"/""/123456/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1305 @@@
+# argv custom/"-x"/""/123456/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1306 @@@
+# argv custom/"-x"/""/123456/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1307 @@@
+# argv custom/"-x"/""/123456/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1308 @@@
+# argv custom/"-x"/"300000"/undefined/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1309 @@@
+# argv custom/"-x"/"300000"/undefined/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1310 @@@
+# argv custom/"-x"/"300000"/undefined/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1311 @@@
+# argv custom/"-x"/"300000"/undefined/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1312 @@@
+# argv custom/"-x"/"300000"/undefined/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1313 @@@
+# argv custom/"-x"/"300000"/undefined/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1314 @@@
+# argv custom/"-x"/"300000"/undefined/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1315 @@@
+# argv custom/"-x"/"300000"/undefined/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1316 @@@
+# argv custom/"-x"/"300000"/undefined/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1317 @@@
+# argv custom/"-x"/"300000"/undefined/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1318 @@@
+# argv custom/"-x"/"300000"/undefined/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1319 @@@
+# argv custom/"-x"/"300000"/undefined/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1320 @@@
+# argv custom/"-x"/"300000"/undefined/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1321 @@@
+# argv custom/"-x"/"300000"/undefined/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1322 @@@
+# argv custom/"-x"/"300000"/undefined/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1323 @@@
+# argv custom/"-x"/"300000"/undefined/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1324 @@@
+# argv custom/"-x"/"300000"/undefined/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1325 @@@
+# argv custom/"-x"/"300000"/undefined/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1326 @@@
+# argv custom/"-x"/"300000"/undefined/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1327 @@@
+# argv custom/"-x"/"300000"/undefined/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1328 @@@
+# argv custom/"-x"/"300000"/undefined/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1329 @@@
+# argv custom/"-x"/"300000"/undefined/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1330 @@@
+# argv custom/"-x"/"300000"/123456/""
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1331 @@@
+# argv custom/"-x"/"300000"/123456/"plain"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1332 @@@
+# argv custom/"-x"/"300000"/123456/"with space"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1333 @@@
+# argv custom/"-x"/"300000"/123456/"it's"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1334 @@@
+# argv custom/"-x"/"300000"/123456/"quote \" and $ safe"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1335 @@@
+# argv custom/"-x"/"300000"/123456/"back\\slash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1336 @@@
+# argv custom/"-x"/"300000"/123456/"new\nline"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1337 @@@
+# argv custom/"-x"/"300000"/123456/"tab\there"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1338 @@@
+# argv custom/"-x"/"300000"/123456/"日本語 é ü — dash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1339 @@@
+# argv custom/"-x"/"300000"/123456/"#hash"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1340 @@@
+# argv custom/"-x"/"300000"/123456/"a#b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1341 @@@
+# argv custom/"-x"/"300000"/123456/"~tilde"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1342 @@@
+# argv custom/"-x"/"300000"/123456/"a=b"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1343 @@@
+# argv custom/"-x"/"300000"/123456/"*?[]{}"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1344 @@@
+# argv custom/"-x"/"300000"/123456/"`$()&;|<>!^,"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1345 @@@
+# argv custom/"-x"/"300000"/123456/"x\u0001y"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1346 @@@
+# argv custom/"-x"/"300000"/123456/"/tmp/a b/c"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1347 @@@
+# argv custom/"-x"/"300000"/123456/"trailing\\"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1348 @@@
+# argv custom/"-x"/"300000"/123456/"  lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1349 @@@
+# argv custom/"-x"/"300000"/123456/"emoji 🎉 ok"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1350 @@@
+# argv custom/"-x"/"300000"/123456/"-lead"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default
+@@@ 1351 @@@
+# argv custom/"-x"/"300000"/123456/"del"
+rc=64
+custom provider has no model-flag adapter; configure its wrapper or use --model default

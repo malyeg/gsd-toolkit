@@ -1,0 +1,8 @@
+@@@ 1 @@@
+{
+  "k": 1,
+  "worktree": {
+    "baseRef": "head"
+  }
+}
+|true|true

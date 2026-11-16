@@ -1,0 +1,223 @@
+@@@ 1 @@@
+argv []
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: the following arguments are required: cmd\n"
+@@@ 2 @@@
+argv ["--help"]
+rc=0
+out="usage: gsd_planning [-h] {reconcile,repair} ...\n\ngsd_planning.py — reconcile GSD planning files after a union-style merge.\n`.planning/ROADMAP.md` and `.planning/STATE.md` carry a union merge strategy\nso parallel phase sessions can each append their own entries without\nconflicting. Union is right for append-only content and WRONG for every line\nthat is a single source of truth: when a phase branch flips a line that the\nbase branch also changed, union keeps BOTH sides and the file starts\ncontradicting itself. This module reconciles the both-sides result back to one\ncoherent file. reconcile Fix ONE file in place. Structural only — no counter\nis recomputed, because a merge driver runs mid-merge when the rest of the tree\nis not yet consistent. Conflicting counters resolve to the most-advanced\ncandidate; `repair` fixes them properly. repair Fix .planning/ROADMAP.md +\nSTATE.md AND recompute every derived counter from ground truth: phases from\nthe roadmap, plans and summaries from disk. Idempotent. With --check it writes\nnothing and exits 1 if either file needs repair. Two rules the reconciliation\nis built on, both learned from real corruption: * Keyed content (checklist\nentries, table rows, phase detail sections) keeps the position of the key's\nFIRST occurrence and the content of its BEST occurrence — \"[x]\" beats \"[ ]\", a\nreal status beats \"Not started\", and among equals the longer text wins because\nit carries the \"(completed <date>)\" suffix. Keeping the later line instead\nwould reorder phases out of sequence. * Single-value fields resolve to their\nLAST occurrence, because `git merge-file --union` emits ours-then-theirs\ninside a conflict hunk, so the last copy is the incoming branch's value. This\nis verified against real merges — see tests/fixtures. Deduplication of single-\nvalue fields is always SCOPED to the block that owns the field. STATE.md's \"##\nSession Continuity\" section is never touched: its `Last session:` / `Stopped\nat:` / `Resume file:` lines are one entry per past session and legitimately\nrepeat. A global \"keep the last occurrence\" pass would silently delete real\nhistory.\n\npositional arguments:\n  {reconcile,repair}\n    reconcile         structural pass over one file, in place\n    repair            reconcile + recompute counters\n\noptions:\n  -h, --help          show this help message and exit\n"
+err=""
+@@@ 3 @@@
+argv ["-h"]
+rc=0
+out="usage: gsd_planning [-h] {reconcile,repair} ...\n\ngsd_planning.py — reconcile GSD planning files after a union-style merge.\n`.planning/ROADMAP.md` and `.planning/STATE.md` carry a union merge strategy\nso parallel phase sessions can each append their own entries without\nconflicting. Union is right for append-only content and WRONG for every line\nthat is a single source of truth: when a phase branch flips a line that the\nbase branch also changed, union keeps BOTH sides and the file starts\ncontradicting itself. This module reconciles the both-sides result back to one\ncoherent file. reconcile Fix ONE file in place. Structural only — no counter\nis recomputed, because a merge driver runs mid-merge when the rest of the tree\nis not yet consistent. Conflicting counters resolve to the most-advanced\ncandidate; `repair` fixes them properly. repair Fix .planning/ROADMAP.md +\nSTATE.md AND recompute every derived counter from ground truth: phases from\nthe roadmap, plans and summaries from disk. Idempotent. With --check it writes\nnothing and exits 1 if either file needs repair. Two rules the reconciliation\nis built on, both learned from real corruption: * Keyed content (checklist\nentries, table rows, phase detail sections) keeps the position of the key's\nFIRST occurrence and the content of its BEST occurrence — \"[x]\" beats \"[ ]\", a\nreal status beats \"Not started\", and among equals the longer text wins because\nit carries the \"(completed <date>)\" suffix. Keeping the later line instead\nwould reorder phases out of sequence. * Single-value fields resolve to their\nLAST occurrence, because `git merge-file --union` emits ours-then-theirs\ninside a conflict hunk, so the last copy is the incoming branch's value. This\nis verified against real merges — see tests/fixtures. Deduplication of single-\nvalue fields is always SCOPED to the block that owns the field. STATE.md's \"##\nSession Continuity\" section is never touched: its `Last session:` / `Stopped\nat:` / `Resume file:` lines are one entry per past session and legitimately\nrepeat. A global \"keep the last occurrence\" pass would silently delete real\nhistory.\n\npositional arguments:\n  {reconcile,repair}\n    reconcile         structural pass over one file, in place\n    repair            reconcile + recompute counters\n\noptions:\n  -h, --help          show this help message and exit\n"
+err=""
+@@@ 4 @@@
+argv ["--h"]
+rc=0
+out="usage: gsd_planning [-h] {reconcile,repair} ...\n\ngsd_planning.py — reconcile GSD planning files after a union-style merge.\n`.planning/ROADMAP.md` and `.planning/STATE.md` carry a union merge strategy\nso parallel phase sessions can each append their own entries without\nconflicting. Union is right for append-only content and WRONG for every line\nthat is a single source of truth: when a phase branch flips a line that the\nbase branch also changed, union keeps BOTH sides and the file starts\ncontradicting itself. This module reconciles the both-sides result back to one\ncoherent file. reconcile Fix ONE file in place. Structural only — no counter\nis recomputed, because a merge driver runs mid-merge when the rest of the tree\nis not yet consistent. Conflicting counters resolve to the most-advanced\ncandidate; `repair` fixes them properly. repair Fix .planning/ROADMAP.md +\nSTATE.md AND recompute every derived counter from ground truth: phases from\nthe roadmap, plans and summaries from disk. Idempotent. With --check it writes\nnothing and exits 1 if either file needs repair. Two rules the reconciliation\nis built on, both learned from real corruption: * Keyed content (checklist\nentries, table rows, phase detail sections) keeps the position of the key's\nFIRST occurrence and the content of its BEST occurrence — \"[x]\" beats \"[ ]\", a\nreal status beats \"Not started\", and among equals the longer text wins because\nit carries the \"(completed <date>)\" suffix. Keeping the later line instead\nwould reorder phases out of sequence. * Single-value fields resolve to their\nLAST occurrence, because `git merge-file --union` emits ours-then-theirs\ninside a conflict hunk, so the last copy is the incoming branch's value. This\nis verified against real merges — see tests/fixtures. Deduplication of single-\nvalue fields is always SCOPED to the block that owns the field. STATE.md's \"##\nSession Continuity\" section is never touched: its `Last session:` / `Stopped\nat:` / `Resume file:` lines are one entry per past session and legitimately\nrepeat. A global \"keep the last occurrence\" pass would silently delete real\nhistory.\n\npositional arguments:\n  {reconcile,repair}\n    reconcile         structural pass over one file, in place\n    repair            reconcile + recompute counters\n\noptions:\n  -h, --help          show this help message and exit\n"
+err=""
+@@@ 5 @@@
+argv ["--he"]
+rc=0
+out="usage: gsd_planning [-h] {reconcile,repair} ...\n\ngsd_planning.py — reconcile GSD planning files after a union-style merge.\n`.planning/ROADMAP.md` and `.planning/STATE.md` carry a union merge strategy\nso parallel phase sessions can each append their own entries without\nconflicting. Union is right for append-only content and WRONG for every line\nthat is a single source of truth: when a phase branch flips a line that the\nbase branch also changed, union keeps BOTH sides and the file starts\ncontradicting itself. This module reconciles the both-sides result back to one\ncoherent file. reconcile Fix ONE file in place. Structural only — no counter\nis recomputed, because a merge driver runs mid-merge when the rest of the tree\nis not yet consistent. Conflicting counters resolve to the most-advanced\ncandidate; `repair` fixes them properly. repair Fix .planning/ROADMAP.md +\nSTATE.md AND recompute every derived counter from ground truth: phases from\nthe roadmap, plans and summaries from disk. Idempotent. With --check it writes\nnothing and exits 1 if either file needs repair. Two rules the reconciliation\nis built on, both learned from real corruption: * Keyed content (checklist\nentries, table rows, phase detail sections) keeps the position of the key's\nFIRST occurrence and the content of its BEST occurrence — \"[x]\" beats \"[ ]\", a\nreal status beats \"Not started\", and among equals the longer text wins because\nit carries the \"(completed <date>)\" suffix. Keeping the later line instead\nwould reorder phases out of sequence. * Single-value fields resolve to their\nLAST occurrence, because `git merge-file --union` emits ours-then-theirs\ninside a conflict hunk, so the last copy is the incoming branch's value. This\nis verified against real merges — see tests/fixtures. Deduplication of single-\nvalue fields is always SCOPED to the block that owns the field. STATE.md's \"##\nSession Continuity\" section is never touched: its `Last session:` / `Stopped\nat:` / `Resume file:` lines are one entry per past session and legitimately\nrepeat. A global \"keep the last occurrence\" pass would silently delete real\nhistory.\n\npositional arguments:\n  {reconcile,repair}\n    reconcile         structural pass over one file, in place\n    repair            reconcile + recompute counters\n\noptions:\n  -h, --help          show this help message and exit\n"
+err=""
+@@@ 6 @@@
+argv ["-hx"]
+rc=0
+out="usage: gsd_planning [-h] {reconcile,repair} ...\n\ngsd_planning.py — reconcile GSD planning files after a union-style merge.\n`.planning/ROADMAP.md` and `.planning/STATE.md` carry a union merge strategy\nso parallel phase sessions can each append their own entries without\nconflicting. Union is right for append-only content and WRONG for every line\nthat is a single source of truth: when a phase branch flips a line that the\nbase branch also changed, union keeps BOTH sides and the file starts\ncontradicting itself. This module reconciles the both-sides result back to one\ncoherent file. reconcile Fix ONE file in place. Structural only — no counter\nis recomputed, because a merge driver runs mid-merge when the rest of the tree\nis not yet consistent. Conflicting counters resolve to the most-advanced\ncandidate; `repair` fixes them properly. repair Fix .planning/ROADMAP.md +\nSTATE.md AND recompute every derived counter from ground truth: phases from\nthe roadmap, plans and summaries from disk. Idempotent. With --check it writes\nnothing and exits 1 if either file needs repair. Two rules the reconciliation\nis built on, both learned from real corruption: * Keyed content (checklist\nentries, table rows, phase detail sections) keeps the position of the key's\nFIRST occurrence and the content of its BEST occurrence — \"[x]\" beats \"[ ]\", a\nreal status beats \"Not started\", and among equals the longer text wins because\nit carries the \"(completed <date>)\" suffix. Keeping the later line instead\nwould reorder phases out of sequence. * Single-value fields resolve to their\nLAST occurrence, because `git merge-file --union` emits ours-then-theirs\ninside a conflict hunk, so the last copy is the incoming branch's value. This\nis verified against real merges — see tests/fixtures. Deduplication of single-\nvalue fields is always SCOPED to the block that owns the field. STATE.md's \"##\nSession Continuity\" section is never touched: its `Last session:` / `Stopped\nat:` / `Resume file:` lines are one entry per past session and legitimately\nrepeat. A global \"keep the last occurrence\" pass would silently delete real\nhistory.\n\npositional arguments:\n  {reconcile,repair}\n    reconcile         structural pass over one file, in place\n    repair            reconcile + recompute counters\n\noptions:\n  -h, --help          show this help message and exit\n"
+err=""
+@@@ 7 @@@
+argv ["--help=x"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: argument -h/--help: ignored explicit argument 'x'\n"
+@@@ 8 @@@
+argv ["bogus"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: argument cmd: invalid choice: 'bogus' (choose from 'reconcile', 'repair')\n"
+@@@ 9 @@@
+argv ["rep"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: argument cmd: invalid choice: 'rep', maybe you meant 'repair'? (choose from 'reconcile', 'repair')\n"
+@@@ 10 @@@
+argv ["recon"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: argument cmd: invalid choice: 'recon', maybe you meant 'reconcile'? (choose from 'reconcile', 'repair')\n"
+@@@ 11 @@@
+argv ["repair"]
+rc=2
+out=""
+err="usage: gsd_planning repair [-h] [--check] planning\ngsd_planning repair: error: the following arguments are required: planning\n"
+@@@ 12 @@@
+argv ["reconcile"]
+rc=2
+out=""
+err="usage: gsd_planning reconcile [-h] [--path PATH] file\ngsd_planning reconcile: error: the following arguments are required: file\n"
+@@@ 13 @@@
+argv ["reconcile","-h"]
+rc=0
+out="usage: gsd_planning reconcile [-h] [--path PATH] file\n\npositional arguments:\n  file\n\noptions:\n  -h, --help   show this help message and exit\n  --path PATH  the file's repo-relative path (git's %P)\n"
+err=""
+@@@ 14 @@@
+argv ["repair","--help"]
+rc=0
+out="usage: gsd_planning repair [-h] [--check] planning\n\npositional arguments:\n  planning    path to the .planning directory\n\noptions:\n  -h, --help  show this help message and exit\n  --check     report only; exit 1 if repair is needed\n"
+err=""
+@@@ 15 @@@
+argv ["repair","-h","x"]
+rc=0
+out="usage: gsd_planning repair [-h] [--check] planning\n\npositional arguments:\n  planning    path to the .planning directory\n\noptions:\n  -h, --help  show this help message and exit\n  --check     report only; exit 1 if repair is needed\n"
+err=""
+@@@ 16 @@@
+argv ["reconcile","f","--path"]
+rc=2
+out=""
+err="usage: gsd_planning reconcile [-h] [--path PATH] file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
+@@@ 17 @@@
+argv ["reconcile","--path"]
+rc=2
+out=""
+err="usage: gsd_planning reconcile [-h] [--path PATH] file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
+@@@ 18 @@@
+argv ["reconcile","--path","-x","f"]
+rc=2
+out=""
+err="usage: gsd_planning reconcile [-h] [--path PATH] file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
+@@@ 19 @@@
+argv ["reconcile","--path","--","f"]
+rc=2
+out=""
+err="usage: gsd_planning reconcile [-h] [--path PATH] file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
+@@@ 20 @@@
+argv ["reconcile","--path","-1","f"]
+rc=0
+out=""
+err=""
+@@@ 21 @@@
+argv ["reconcile","--path","a b","f"]
+rc=0
+out=""
+err=""
+@@@ 22 @@@
+argv ["repair","a","b"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: unrecognized arguments: b\n"
+@@@ 23 @@@
+argv ["repair","--bad","x"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: unrecognized arguments: --bad\n"
+@@@ 24 @@@
+argv ["repair","-c","d"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: unrecognized arguments: -c\n"
+@@@ 25 @@@
+argv ["repair","d","--check=1"]
+rc=2
+out=""
+err="usage: gsd_planning repair [-h] [--check] planning\ngsd_planning repair: error: argument --check: ignored explicit argument '1'\n"
+@@@ 26 @@@
+argv ["repair","d","--check="]
+rc=2
+out=""
+err="usage: gsd_planning repair [-h] [--check] planning\ngsd_planning repair: error: argument --check: ignored explicit argument ''\n"
+@@@ 27 @@@
+argv ["repair","d","--ch"]
+rc=2
+out=""
+err="✖ d/ROADMAP.md not found\n"
+@@@ 28 @@@
+argv ["repair","--che","d"]
+rc=2
+out=""
+err="✖ d/ROADMAP.md not found\n"
+@@@ 29 @@@
+argv ["reconcile","f","--pa","x"]
+rc=0
+out=""
+err=""
+@@@ 30 @@@
+argv ["reconcile","f","--path=x","extra"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: unrecognized arguments: extra\n"
+@@@ 31 @@@
+argv ["reconcile","--","f"]
+rc=0
+out=""
+err=""
+@@@ 32 @@@
+argv ["repair","--","--check"]
+rc=2
+out=""
+err="✖ --check/ROADMAP.md not found\n"
+@@@ 33 @@@
+argv ["repair","--","-d"]
+rc=2
+out=""
+err="✖ -d/ROADMAP.md not found\n"
+@@@ 34 @@@
+argv ["repair","-1"]
+rc=2
+out=""
+err="✖ -1/ROADMAP.md not found\n"
+@@@ 35 @@@
+argv ["repair","-1.5"]
+rc=2
+out=""
+err="✖ -1.5/ROADMAP.md not found\n"
+@@@ 36 @@@
+argv ["repair","-"]
+rc=2
+out=""
+err="✖ -/ROADMAP.md not found\n"
+@@@ 37 @@@
+argv ["repair","a b"]
+rc=2
+out=""
+err="✖ a b/ROADMAP.md not found\n"
+@@@ 38 @@@
+argv ["--bad","repair","d"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: unrecognized arguments: --bad\n"
+@@@ 39 @@@
+argv ["-x"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: the following arguments are required: cmd\n"
+@@@ 40 @@@
+argv ["--","repair","d"]
+rc=2
+out=""
+err="✖ d/ROADMAP.md not found\n"
+@@@ 41 @@@
+argv ["repair","--check","--check","nonexistent-dir"]
+rc=2
+out=""
+err="✖ nonexistent-dir/ROADMAP.md not found\n"
+@@@ 42 @@@
+argv ["reconcile","f","--path","x","--path","y"]
+rc=0
+out=""
+err=""
+@@@ 43 @@@
+argv ["reconcile","--path=ROADMAP.md","missing-file.md"]
+rc=1
+@@@ 44 @@@
+argv ["reconcile","a","--bogus","b"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: unrecognized arguments: --bogus b\n"
+@@@ 45 @@@
+argv ["repair","--unknown=1","nonexistent-dir"]
+rc=2
+out=""
+err="usage: gsd_planning [-h] {reconcile,repair} ...\ngsd_planning: error: unrecognized arguments: --unknown=1\n"

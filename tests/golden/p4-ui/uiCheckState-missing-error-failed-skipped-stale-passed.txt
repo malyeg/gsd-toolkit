@@ -1,0 +1,39 @@
+@@@ 1 @@@
+# missing
+missing
+@@@ 2 @@@
+# error
+error
+@@@ 3 @@@
+# no frontmatter
+error
+@@@ 4 @@@
+# skipped
+skipped
+@@@ 5 @@@
+# failed
+failed
+@@@ 6 @@@
+# passed, no code
+passed
+@@@ 7 @@@
+# stale (code hash only)
+stale
+@@@ 8 @@@
+# stale but nostale
+passed
+@@@ 9 @@@
+# passed, code hash only
+passed
+@@@ 10 @@@
+# passed, code+layout
+passed
+@@@ 11 @@@
+# layout edited → stale
+stale
+@@@ 12 @@@
+# code changed → stale
+stale
+@@@ 13 @@@
+# repo-less dir
+passed

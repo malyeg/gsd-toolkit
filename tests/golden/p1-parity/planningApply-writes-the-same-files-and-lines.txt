@@ -1,0 +1,626 @@
+@@@ 1 @@@
+# planningApply hook=null attr=null husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (created)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 2 @@@
+# planningApply hook=null attr=null husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (created)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 3 @@@
+# planningApply hook=null attr=".planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n" husky=false
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (created)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 4 @@@
+# planningApply hook=null attr=".planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n" husky=true
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (created)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 5 @@@
+# planningApply hook=null attr="*.png binary" husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (created)
+
+.gitattributes: "*.png binary.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 6 @@@
+# planningApply hook=null attr="*.png binary" husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (created)
+
+.gitattributes: "*.png binary.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 7 @@@
+# planningApply hook=null attr=".planning/ROADMAP.md merge=union   \n.planning/STATE.md\tmerge=union\n*.x y\n" husky=false
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (created)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md\tmerge=gsd-planning\n*.x y\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 8 @@@
+# planningApply hook=null attr=".planning/ROADMAP.md merge=union   \n.planning/STATE.md\tmerge=union\n*.x y\n" husky=true
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (created)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md\tmerge=gsd-planning\n*.x y\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 9 @@@
+# planningApply hook=null attr=".planning/ROADMAP.md merge=gsd-planning\n" husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (created)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 10 @@@
+# planningApply hook=null attr=".planning/ROADMAP.md merge=gsd-planning\n" husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (created)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 11 @@@
+# planningApply hook="#!/bin/sh\necho mine\n" attr=null husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\necho mine\n#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 12 @@@
+# planningApply hook="#!/bin/sh\necho mine\n" attr=null husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\necho mine\n#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 13 @@@
+# planningApply hook="#!/bin/sh\necho mine\n" attr=".planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n" husky=false
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\necho mine\n#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 14 @@@
+# planningApply hook="#!/bin/sh\necho mine\n" attr=".planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n" husky=true
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\necho mine\n#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 15 @@@
+# planningApply hook="#!/bin/sh\necho mine\n" attr="*.png binary" husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: "*.png binary.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\necho mine\n#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 16 @@@
+# planningApply hook="#!/bin/sh\necho mine\n" attr="*.png binary" husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: "*.png binary.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\necho mine\n#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 17 @@@
+# planningApply hook="#!/bin/sh\necho mine\n" attr=".planning/ROADMAP.md merge=union   \n.planning/STATE.md\tmerge=union\n*.x y\n" husky=false
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md\tmerge=gsd-planning\n*.x y\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\necho mine\n#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 18 @@@
+# planningApply hook="#!/bin/sh\necho mine\n" attr=".planning/ROADMAP.md merge=union   \n.planning/STATE.md\tmerge=union\n*.x y\n" husky=true
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md\tmerge=gsd-planning\n*.x y\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\necho mine\n#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 19 @@@
+# planningApply hook="#!/bin/sh\necho mine\n" attr=".planning/ROADMAP.md merge=gsd-planning\n" husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\necho mine\n#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 20 @@@
+# planningApply hook="#!/bin/sh\necho mine\n" attr=".planning/ROADMAP.md merge=gsd-planning\n" husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\necho mine\n#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 21 @@@
+# planningApply hook="#!/bin/sh\ncommand -v gsd-planning-repair >/dev/null 2>&1 || exit 0\ngsd-planning-repair || true\n# gsd-bootstrap-repo x\n" attr=null husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (renamed to gsdt-planning-repair)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\ngsdt-planning-repair || true\n# gsdt-bootstrap-repo x\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 22 @@@
+# planningApply hook="#!/bin/sh\ncommand -v gsd-planning-repair >/dev/null 2>&1 || exit 0\ngsd-planning-repair || true\n# gsd-bootstrap-repo x\n" attr=null husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (renamed to gsdt-planning-repair)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\ngsdt-planning-repair || true\n# gsdt-bootstrap-repo x\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 23 @@@
+# planningApply hook="#!/bin/sh\ncommand -v gsd-planning-repair >/dev/null 2>&1 || exit 0\ngsd-planning-repair || true\n# gsd-bootstrap-repo x\n" attr=".planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n" husky=false
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (renamed to gsdt-planning-repair)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\ngsdt-planning-repair || true\n# gsdt-bootstrap-repo x\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 24 @@@
+# planningApply hook="#!/bin/sh\ncommand -v gsd-planning-repair >/dev/null 2>&1 || exit 0\ngsd-planning-repair || true\n# gsd-bootstrap-repo x\n" attr=".planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n" husky=true
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (renamed to gsdt-planning-repair)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\ngsdt-planning-repair || true\n# gsdt-bootstrap-repo x\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 25 @@@
+# planningApply hook="#!/bin/sh\ncommand -v gsd-planning-repair >/dev/null 2>&1 || exit 0\ngsd-planning-repair || true\n# gsd-bootstrap-repo x\n" attr="*.png binary" husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (renamed to gsdt-planning-repair)
+
+.gitattributes: "*.png binary.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\ngsdt-planning-repair || true\n# gsdt-bootstrap-repo x\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 26 @@@
+# planningApply hook="#!/bin/sh\ncommand -v gsd-planning-repair >/dev/null 2>&1 || exit 0\ngsd-planning-repair || true\n# gsd-bootstrap-repo x\n" attr="*.png binary" husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (renamed to gsdt-planning-repair)
+
+.gitattributes: "*.png binary.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\ngsdt-planning-repair || true\n# gsdt-bootstrap-repo x\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 27 @@@
+# planningApply hook="#!/bin/sh\ncommand -v gsd-planning-repair >/dev/null 2>&1 || exit 0\ngsd-planning-repair || true\n# gsd-bootstrap-repo x\n" attr=".planning/ROADMAP.md merge=union   \n.planning/STATE.md\tmerge=union\n*.x y\n" husky=false
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (renamed to gsdt-planning-repair)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md\tmerge=gsd-planning\n*.x y\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\ngsdt-planning-repair || true\n# gsdt-bootstrap-repo x\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 28 @@@
+# planningApply hook="#!/bin/sh\ncommand -v gsd-planning-repair >/dev/null 2>&1 || exit 0\ngsd-planning-repair || true\n# gsd-bootstrap-repo x\n" attr=".planning/ROADMAP.md merge=union   \n.planning/STATE.md\tmerge=union\n*.x y\n" husky=true
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (renamed to gsdt-planning-repair)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md\tmerge=gsd-planning\n*.x y\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\ngsdt-planning-repair || true\n# gsdt-bootstrap-repo x\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 29 @@@
+# planningApply hook="#!/bin/sh\ncommand -v gsd-planning-repair >/dev/null 2>&1 || exit 0\ngsd-planning-repair || true\n# gsd-bootstrap-repo x\n" attr=".planning/ROADMAP.md merge=gsd-planning\n" husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (renamed to gsdt-planning-repair)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\ngsdt-planning-repair || true\n# gsdt-bootstrap-repo x\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 30 @@@
+# planningApply hook="#!/bin/sh\ncommand -v gsd-planning-repair >/dev/null 2>&1 || exit 0\ngsd-planning-repair || true\n# gsd-bootstrap-repo x\n" attr=".planning/ROADMAP.md merge=gsd-planning\n" husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (renamed to gsdt-planning-repair)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\ngsdt-planning-repair || true\n# gsdt-bootstrap-repo x\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 31 @@@
+# planningApply hook="#!/bin/sh\ngsdt-planning-repair\n" attr=null husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\ngsdt-planning-repair\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 32 @@@
+# planningApply hook="#!/bin/sh\ngsdt-planning-repair\n" attr=null husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\ngsdt-planning-repair\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 33 @@@
+# planningApply hook="#!/bin/sh\ngsdt-planning-repair\n" attr=".planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n" husky=false
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\ngsdt-planning-repair\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 34 @@@
+# planningApply hook="#!/bin/sh\ngsdt-planning-repair\n" attr=".planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n" husky=true
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\ngsdt-planning-repair\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 35 @@@
+# planningApply hook="#!/bin/sh\ngsdt-planning-repair\n" attr="*.png binary" husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: "*.png binary.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\ngsdt-planning-repair\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 36 @@@
+# planningApply hook="#!/bin/sh\ngsdt-planning-repair\n" attr="*.png binary" husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: "*.png binary.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\ngsdt-planning-repair\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 37 @@@
+# planningApply hook="#!/bin/sh\ngsdt-planning-repair\n" attr=".planning/ROADMAP.md merge=union   \n.planning/STATE.md\tmerge=union\n*.x y\n" husky=false
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md\tmerge=gsd-planning\n*.x y\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\ngsdt-planning-repair\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 38 @@@
+# planningApply hook="#!/bin/sh\ngsdt-planning-repair\n" attr=".planning/ROADMAP.md merge=union   \n.planning/STATE.md\tmerge=union\n*.x y\n" husky=true
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md\tmerge=gsd-planning\n*.x y\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\ngsdt-planning-repair\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 39 @@@
+# planningApply hook="#!/bin/sh\ngsdt-planning-repair\n" attr=".planning/ROADMAP.md merge=gsd-planning\n" husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\ngsdt-planning-repair\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 40 @@@
+# planningApply hook="#!/bin/sh\ngsdt-planning-repair\n" attr=".planning/ROADMAP.md merge=gsd-planning\n" husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\ngsdt-planning-repair\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 41 @@@
+# planningApply hook="#!/bin/sh\necho no trailing newline" attr=null husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\necho no trailing newline#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 42 @@@
+# planningApply hook="#!/bin/sh\necho no trailing newline" attr=null husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\necho no trailing newline#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 43 @@@
+# planningApply hook="#!/bin/sh\necho no trailing newline" attr=".planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n" husky=false
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\necho no trailing newline#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 44 @@@
+# planningApply hook="#!/bin/sh\necho no trailing newline" attr=".planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n" husky=true
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\necho no trailing newline#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 45 @@@
+# planningApply hook="#!/bin/sh\necho no trailing newline" attr="*.png binary" husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: "*.png binary.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\necho no trailing newline#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 46 @@@
+# planningApply hook="#!/bin/sh\necho no trailing newline" attr="*.png binary" husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: "*.png binary.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\necho no trailing newline#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 47 @@@
+# planningApply hook="#!/bin/sh\necho no trailing newline" attr=".planning/ROADMAP.md merge=union   \n.planning/STATE.md\tmerge=union\n*.x y\n" husky=false
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md\tmerge=gsd-planning\n*.x y\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\necho no trailing newline#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 48 @@@
+# planningApply hook="#!/bin/sh\necho no trailing newline" attr=".planning/ROADMAP.md merge=union   \n.planning/STATE.md\tmerge=union\n*.x y\n" husky=true
+output:
+✔ .gitattributes (migrated .planning merge=union → merge=gsd-planning)
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md\tmerge=gsd-planning\n*.x y\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\necho no trailing newline#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 49 @@@
+# planningApply hook="#!/bin/sh\necho no trailing newline" attr=".planning/ROADMAP.md merge=gsd-planning\n" husky=false
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .git/hooks/post-merge (not versioned) (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: "#!/bin/sh\necho no trailing newline#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+.husky/post-merge: null
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 50 @@@
+# planningApply hook="#!/bin/sh\necho no trailing newline" attr=".planning/ROADMAP.md merge=gsd-planning\n" husky=true
+output:
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+✔ merge driver registered (merge.gsd-planning → gsdt-planning-merge)
+✔ .husky/post-merge (existing hook repaired)
+
+.gitattributes: ".planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n"
+.git/hooks/post-merge: null
+.husky/post-merge: "#!/bin/sh\necho no trailing newline#!/usr/bin/env sh\n# Installed by gsdt-bootstrap-repo (gsd-toolkit).\n# .planning/ROADMAP.md and STATE.md merge with a union-then-reconcile driver.\n# A pull whose driver was missing, or a merge done by another tool, can still\n# leave both sides of a single-value line behind â reconcile them here.\ncommand -v gsdt-planning-repair >/dev/null 2>&1 || exit 0\n[ -d .planning ] || exit 0\ngsdt-planning-repair || true\n\n" mode 755
+merge.gsd-planning.driver: "gsdt-planning-merge %O %A %B %P\n"
+merge.gsd-planning.name: "GSD planning files: union, then reconcile single-value lines\n"
+@@@ 51 @@@
+# planningApply without gsdt-planning-merge on PATH
+✔ .gitattributes (merge=gsd-planning for .planning/ROADMAP.md + STATE.md)
+⚠ could not register the merge driver — gsdt-finish re-asserts it on every run
+✔ .git/hooks/post-merge (not versioned) (created)
+

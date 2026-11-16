@@ -1,12 +1,11 @@
-// Shared by the parity suites: run a bash function from lib/*.sh and compare
-// with its TypeScript port. Throwaway repos live under os.tmpdir().
+// Shared by the suites: a clean env (no host GSD_/CLAUDE_/CODEX_ settings), throwaway
+// repos under os.tmpdir().
 import { spawnSync } from 'node:child_process';
 import { chmodSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 export const PKG = path.resolve(import.meta.dirname, '..', '..');
-export type BashResult = { out: string; err: string; rc: number };
 
 // Keep the host's settings out of both sides.
 for (const k of Object.keys(process.env)) {
@@ -37,16 +36,6 @@ export const AWK_DIR: string | null = (() => {
   return dir;
 })();
 if (AWK_DIR) process.env.PATH = `${AWK_DIR}:${process.env.PATH}`;
-
-/** Run `script` in bash with common.sh, provider.sh and ui.sh sourced; args are $1… */
-export function bash(script: string, args: string[] = [], env: Record<string, string> = {}): BashResult {
-  const r = spawnSync(
-    'bash',
-    ['-c', `. "$GSD_PKG/lib/common.sh"; . "$GSD_PKG/lib/provider.sh"; . "$GSD_PKG/lib/ui.sh"; ${script}`, '_', ...args],
-    { encoding: 'utf8', env: { ...process.env, GSD_PKG: PKG, ...env } },
-  );
-  return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? 1 };
-}
 
 /** What `$( … )` would capture. */
 export const chomp = (s: string): string => s.replace(/\n+$/, '');

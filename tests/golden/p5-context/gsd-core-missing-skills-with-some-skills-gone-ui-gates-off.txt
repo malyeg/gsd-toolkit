@@ -1,0 +1,15 @@
+@@@ 1 @@@
+---
+gsd-new-project
+gsd-ingest-docs
+gsd-discuss-phase
+gsd-plan-phase
+gsd-review
+gsd-execute-phase
+gsd-code-review
+gsd-verify-work
+gsd-validate-phase
+gsd-secure-phase
+gsd-ui-phase
+gsd-ui-review
+

@@ -1,0 +1,42 @@
+@@@ 1 @@@
+# phaseDir "phase-7-x"
+rc=0 PD=<TMP>/.planning/phases/07-foo P=07 N=7
+@@@ 2 @@@
+# phaseDir "phase-07-x"
+rc=0 PD=<TMP>/.planning/phases/07-foo P=07 N=07
+@@@ 3 @@@
+# phaseDir "phase-2.1-y"
+rc=0 PD=<TMP>/.planning/phases/02.1-bar P=02.1 N=2.1
+@@@ 4 @@@
+# phaseDir "phase-8-z"
+rc=0 PD=<TMP>/.planning/phases/8-baz P=8 N=8
+@@@ 5 @@@
+# phaseDir "phase-08-z"
+rc=0 PD=<TMP>/.planning/phases/8-baz P=8 N=08
+@@@ 6 @@@
+# phaseDir "phase-9-q"
+rc=1
+@@@ 7 @@@
+# phaseDir "phase-10-t"
+rc=0 PD=<TMP>/.planning/phases/10-ten P=10 N=10
+@@@ 8 @@@
+# phaseDir "phase-3.2-a"
+rc=0 PD=<TMP>/.planning/phases/3.2-x P=3.2 N=3.2
+@@@ 9 @@@
+# phaseDir "phase-x-y"
+rc=1
+@@@ 10 @@@
+# phaseDir "main"
+rc=1
+@@@ 11 @@@
+# phaseDir ""
+rc=1
+@@@ 12 @@@
+# phaseDir "phase-7"
+rc=1
+@@@ 13 @@@
+# phaseDir "phase-007-q"
+rc=0 PD=<TMP>/.planning/phases/07-foo P=07 N=007
+@@@ 14 @@@
+# phaseDir no checkout
+rc=1

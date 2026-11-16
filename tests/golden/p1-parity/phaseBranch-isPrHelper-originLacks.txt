@@ -1,0 +1,48 @@
+@@@ 1 @@@
+# phaseBranch 7
+phase-7-a
+@@@ 2 @@@
+# phaseBranch 8
+phase-8-improve-pr
+@@@ 3 @@@
+# phaseBranch 70
+phase-70-z
+@@@ 4 @@@
+# phaseBranch 7.1
+phase-7.1-q
+@@@ 5 @@@
+# phaseBranch 9
+
+@@@ 6 @@@
+# phaseBranch 
+
+@@@ 7 @@@
+# isPrHelper phase-7-a-pr
+0
+@@@ 8 @@@
+# isPrHelper phase-7-a
+1
+@@@ 9 @@@
+# isPrHelper phase-7-b-pr
+1
+@@@ 10 @@@
+# isPrHelper phase-8-improve-pr
+1
+@@@ 11 @@@
+# isPrHelper phase-8-improve-pr-pr
+0
+@@@ 12 @@@
+# isPrHelper x-pr
+1
+@@@ 13 @@@
+# isPrHelper develop
+1
+@@@ 14 @@@
+# originLacks develop
+1
+@@@ 15 @@@
+# originLacks nope
+0
+@@@ 16 @@@
+# originLacks dead origin
+1

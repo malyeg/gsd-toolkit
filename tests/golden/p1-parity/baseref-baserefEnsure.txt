@@ -1,0 +1,230 @@
+@@@ 1 @@@
+# baseref check null ignored=true
+missing
+file after: null
+@@@ 2 @@@
+# baseref ensure null ignored=true
+set
+file after: "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 3 @@@
+# baserefEnsure null ignored=true lbl
+✔ lbl/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+@@@ 4 @@@
+# baserefEnsure null ignored=true default label
+
+@@@ 5 @@@
+# baseref check null ignored=false
+missing
+file after: null
+@@@ 6 @@@
+# baseref ensure null ignored=false
+set
+file after: "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 7 @@@
+# baserefEnsure null ignored=false lbl
+✔ lbl/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+@@@ 8 @@@
+# baserefEnsure null ignored=false default label
+
+@@@ 9 @@@
+# baseref check {} ignored=true
+missing
+file after: "{}"
+@@@ 10 @@@
+# baseref ensure {} ignored=true
+set
+file after: "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 11 @@@
+# baserefEnsure {} ignored=true lbl
+✔ lbl/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+@@@ 12 @@@
+# baserefEnsure {} ignored=true default label
+
+@@@ 13 @@@
+# baseref check {} ignored=false
+missing
+file after: "{}"
+@@@ 14 @@@
+# baseref ensure {} ignored=false
+set
+file after: "{\n  \"worktree\": {\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 15 @@@
+# baserefEnsure {} ignored=false lbl
+✔ lbl/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+@@@ 16 @@@
+# baserefEnsure {} ignored=false default label
+
+@@@ 17 @@@
+# baseref check {"worktree":{"baseRef":"head"}} ignored=true
+head
+file after: "{\"worktree\":{\"baseRef\":\"head\"}}"
+@@@ 18 @@@
+# baseref ensure {"worktree":{"baseRef":"head"}} ignored=true
+head
+file after: "{\"worktree\":{\"baseRef\":\"head\"}}"
+@@@ 19 @@@
+# baserefEnsure {"worktree":{"baseRef":"head"}} ignored=true lbl
+
+@@@ 20 @@@
+# baserefEnsure {"worktree":{"baseRef":"head"}} ignored=true default label
+
+@@@ 21 @@@
+# baseref check {"worktree":{"baseRef":"head"}} ignored=false
+head
+file after: "{\"worktree\":{\"baseRef\":\"head\"}}"
+@@@ 22 @@@
+# baseref ensure {"worktree":{"baseRef":"head"}} ignored=false
+head
+file after: "{\"worktree\":{\"baseRef\":\"head\"}}"
+@@@ 23 @@@
+# baserefEnsure {"worktree":{"baseRef":"head"}} ignored=false lbl
+
+@@@ 24 @@@
+# baserefEnsure {"worktree":{"baseRef":"head"}} ignored=false default label
+
+@@@ 25 @@@
+# baseref check {"worktree":{"baseRef":"origin"}} ignored=true
+other:origin
+file after: "{\"worktree\":{\"baseRef\":\"origin\"}}"
+@@@ 26 @@@
+# baseref ensure {"worktree":{"baseRef":"origin"}} ignored=true
+other:origin
+file after: "{\"worktree\":{\"baseRef\":\"origin\"}}"
+@@@ 27 @@@
+# baserefEnsure {"worktree":{"baseRef":"origin"}} ignored=true lbl
+• lbl/.claude/settings.local.json keeps worktree.baseRef = "origin" (yours; "head" lets a wave's plans run in parallel)
+@@@ 28 @@@
+# baserefEnsure {"worktree":{"baseRef":"origin"}} ignored=true default label
+• <TMP>/br/.claude/settings.local.json keeps worktree.baseRef = "origin" (yours; "head" lets a wave's plans run in parallel)
+@@@ 29 @@@
+# baseref check {"worktree":{"baseRef":"origin"}} ignored=false
+other:origin
+file after: "{\"worktree\":{\"baseRef\":\"origin\"}}"
+@@@ 30 @@@
+# baseref ensure {"worktree":{"baseRef":"origin"}} ignored=false
+other:origin
+file after: "{\"worktree\":{\"baseRef\":\"origin\"}}"
+@@@ 31 @@@
+# baserefEnsure {"worktree":{"baseRef":"origin"}} ignored=false lbl
+• lbl/.claude/settings.local.json keeps worktree.baseRef = "origin" (yours; "head" lets a wave's plans run in parallel)
+@@@ 32 @@@
+# baserefEnsure {"worktree":{"baseRef":"origin"}} ignored=false default label
+• <TMP>/br/.claude/settings.local.json keeps worktree.baseRef = "origin" (yours; "head" lets a wave's plans run in parallel)
+@@@ 33 @@@
+# baseref check {"worktree":"x"} ignored=true
+invalid
+file after: "{\"worktree\":\"x\"}"
+@@@ 34 @@@
+# baseref ensure {"worktree":"x"} ignored=true
+invalid
+file after: "{\"worktree\":\"x\"}"
+@@@ 35 @@@
+# baserefEnsure {"worktree":"x"} ignored=true lbl
+⚠ lbl/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 36 @@@
+# baserefEnsure {"worktree":"x"} ignored=true default label
+⚠ <TMP>/br/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 37 @@@
+# baseref check {"worktree":"x"} ignored=false
+invalid
+file after: "{\"worktree\":\"x\"}"
+@@@ 38 @@@
+# baseref ensure {"worktree":"x"} ignored=false
+invalid
+file after: "{\"worktree\":\"x\"}"
+@@@ 39 @@@
+# baserefEnsure {"worktree":"x"} ignored=false lbl
+⚠ lbl/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 40 @@@
+# baserefEnsure {"worktree":"x"} ignored=false default label
+⚠ <TMP>/br/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 41 @@@
+# baseref check not json ignored=true
+invalid
+file after: "not json"
+@@@ 42 @@@
+# baseref ensure not json ignored=true
+invalid
+file after: "not json"
+@@@ 43 @@@
+# baserefEnsure not json ignored=true lbl
+⚠ lbl/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 44 @@@
+# baserefEnsure not json ignored=true default label
+⚠ <TMP>/br/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 45 @@@
+# baseref check not json ignored=false
+invalid
+file after: "not json"
+@@@ 46 @@@
+# baseref ensure not json ignored=false
+invalid
+file after: "not json"
+@@@ 47 @@@
+# baserefEnsure not json ignored=false lbl
+⚠ lbl/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 48 @@@
+# baserefEnsure not json ignored=false default label
+⚠ <TMP>/br/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 49 @@@
+# baseref check [1] ignored=true
+invalid
+file after: "[1]"
+@@@ 50 @@@
+# baseref ensure [1] ignored=true
+invalid
+file after: "[1]"
+@@@ 51 @@@
+# baserefEnsure [1] ignored=true lbl
+⚠ lbl/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 52 @@@
+# baserefEnsure [1] ignored=true default label
+⚠ <TMP>/br/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 53 @@@
+# baseref check [1] ignored=false
+invalid
+file after: "[1]"
+@@@ 54 @@@
+# baseref ensure [1] ignored=false
+invalid
+file after: "[1]"
+@@@ 55 @@@
+# baserefEnsure [1] ignored=false lbl
+⚠ lbl/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 56 @@@
+# baserefEnsure [1] ignored=false default label
+⚠ <TMP>/br/.claude/settings.local.json is not plain JSON — not changed; add worktree.baseRef = "head" yourself so a wave's plans run in parallel
+@@@ 57 @@@
+# baseref check {"a":1,"worktree":{"other":true}} ignored=true
+missing
+file after: "{\"a\":1,\"worktree\":{\"other\":true}}"
+@@@ 58 @@@
+# baseref ensure {"a":1,"worktree":{"other":true}} ignored=true
+set
+file after: "{\n  \"a\": 1,\n  \"worktree\": {\n    \"other\": true,\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 59 @@@
+# baserefEnsure {"a":1,"worktree":{"other":true}} ignored=true lbl
+✔ lbl/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+@@@ 60 @@@
+# baserefEnsure {"a":1,"worktree":{"other":true}} ignored=true default label
+
+@@@ 61 @@@
+# baseref check {"a":1,"worktree":{"other":true}} ignored=false
+missing
+file after: "{\"a\":1,\"worktree\":{\"other\":true}}"
+@@@ 62 @@@
+# baseref ensure {"a":1,"worktree":{"other":true}} ignored=false
+set
+file after: "{\n  \"a\": 1,\n  \"worktree\": {\n    \"other\": true,\n    \"baseRef\": \"head\"\n  }\n}\n"
+@@@ 63 @@@
+# baserefEnsure {"a":1,"worktree":{"other":true}} ignored=false lbl
+✔ lbl/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+@@@ 64 @@@
+# baserefEnsure {"a":1,"worktree":{"other":true}} ignored=false default label
+
+@@@ 65 @@@
+# baseref tracked
+tracked
+@@@ 66 @@@
+# baseref user layer
+other:main

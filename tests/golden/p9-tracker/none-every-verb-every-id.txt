@@ -1,0 +1,1185 @@
+@@@ 1 @@@
+### step 0: ["start","abc123","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket abc123 not updated
+
+--- stderr
+
+@@@ 2 @@@
+### step 1: ["finish","abc123","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket abc123 not updated
+
+--- stderr
+
+@@@ 3 @@@
+### step 2: ["comment","abc123","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket abc123 not updated
+
+--- stderr
+
+@@@ 4 @@@
+### step 3: ["status","abc123","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket abc123 not updated
+
+--- stderr
+
+@@@ 5 @@@
+### step 4: ["snapshot","abc123"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 6 @@@
+### step 5: ["update","abc123","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 7 @@@
+### step 6: ["start","tk-PROJ-42","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket PROJ-42 not updated
+
+--- stderr
+
+@@@ 8 @@@
+### step 7: ["finish","tk-PROJ-42","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket PROJ-42 not updated
+
+--- stderr
+
+@@@ 9 @@@
+### step 8: ["comment","tk-PROJ-42","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket PROJ-42 not updated
+
+--- stderr
+
+@@@ 10 @@@
+### step 9: ["status","tk-PROJ-42","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket PROJ-42 not updated
+
+--- stderr
+
+@@@ 11 @@@
+### step 10: ["snapshot","tk-PROJ-42"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 12 @@@
+### step 11: ["update","tk-PROJ-42","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 13 @@@
+### step 12: ["start","TK-x","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket x not updated
+
+--- stderr
+
+@@@ 14 @@@
+### step 13: ["finish","TK-x","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket x not updated
+
+--- stderr
+
+@@@ 15 @@@
+### step 14: ["comment","TK-x","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket x not updated
+
+--- stderr
+
+@@@ 16 @@@
+### step 15: ["status","TK-x","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket x not updated
+
+--- stderr
+
+@@@ 17 @@@
+### step 16: ["snapshot","TK-x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 18 @@@
+### step 17: ["update","TK-x","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 19 @@@
+### step 18: ["start","cu_869e33cv4","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket 869e33cv4 not updated
+
+--- stderr
+
+@@@ 20 @@@
+### step 19: ["finish","cu_869e33cv4","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket 869e33cv4 not updated
+
+--- stderr
+
+@@@ 21 @@@
+### step 20: ["comment","cu_869e33cv4","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket 869e33cv4 not updated
+
+--- stderr
+
+@@@ 22 @@@
+### step 21: ["status","cu_869e33cv4","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket 869e33cv4 not updated
+
+--- stderr
+
+@@@ 23 @@@
+### step 22: ["snapshot","cu_869e33cv4"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 24 @@@
+### step 23: ["update","cu_869e33cv4","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 25 @@@
+### step 24: ["start","CU-12","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket CU-12 not updated
+
+--- stderr
+
+@@@ 26 @@@
+### step 25: ["finish","CU-12","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket CU-12 not updated
+
+--- stderr
+
+@@@ 27 @@@
+### step 26: ["comment","CU-12","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket CU-12 not updated
+
+--- stderr
+
+@@@ 28 @@@
+### step 27: ["status","CU-12","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket CU-12 not updated
+
+--- stderr
+
+@@@ 29 @@@
+### step 28: ["snapshot","CU-12"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 30 @@@
+### step 29: ["update","CU-12","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 31 @@@
+### step 30: ["start","CU-869e33cv4","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket CU-869e33cv4 not updated
+
+--- stderr
+
+@@@ 32 @@@
+### step 31: ["finish","CU-869e33cv4","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket CU-869e33cv4 not updated
+
+--- stderr
+
+@@@ 33 @@@
+### step 32: ["comment","CU-869e33cv4","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket CU-869e33cv4 not updated
+
+--- stderr
+
+@@@ 34 @@@
+### step 33: ["status","CU-869e33cv4","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket CU-869e33cv4 not updated
+
+--- stderr
+
+@@@ 35 @@@
+### step 34: ["snapshot","CU-869e33cv4"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 36 @@@
+### step 35: ["update","CU-869e33cv4","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 37 @@@
+### step 36: ["start","#42","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket 42 not updated
+
+--- stderr
+
+@@@ 38 @@@
+### step 37: ["finish","#42","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket 42 not updated
+
+--- stderr
+
+@@@ 39 @@@
+### step 38: ["comment","#42","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket 42 not updated
+
+--- stderr
+
+@@@ 40 @@@
+### step 39: ["status","#42","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket 42 not updated
+
+--- stderr
+
+@@@ 41 @@@
+### step 40: ["snapshot","#42"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 42 @@@
+### step 41: ["update","#42","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 43 @@@
+### step 42: ["start","https://app.clickup.com/t/869e33cv4","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket 869e33cv4 not updated
+
+--- stderr
+
+@@@ 44 @@@
+### step 43: ["finish","https://app.clickup.com/t/869e33cv4","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket 869e33cv4 not updated
+
+--- stderr
+
+@@@ 45 @@@
+### step 44: ["comment","https://app.clickup.com/t/869e33cv4","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket 869e33cv4 not updated
+
+--- stderr
+
+@@@ 46 @@@
+### step 45: ["status","https://app.clickup.com/t/869e33cv4","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket 869e33cv4 not updated
+
+--- stderr
+
+@@@ 47 @@@
+### step 46: ["snapshot","https://app.clickup.com/t/869e33cv4"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 48 @@@
+### step 47: ["update","https://app.clickup.com/t/869e33cv4","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 49 @@@
+### step 48: ["start","https://x.atlassian.net/browse/PROJ-42?focus=1","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket PROJ-42 not updated
+
+--- stderr
+
+@@@ 50 @@@
+### step 49: ["finish","https://x.atlassian.net/browse/PROJ-42?focus=1","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket PROJ-42 not updated
+
+--- stderr
+
+@@@ 51 @@@
+### step 50: ["comment","https://x.atlassian.net/browse/PROJ-42?focus=1","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket PROJ-42 not updated
+
+--- stderr
+
+@@@ 52 @@@
+### step 51: ["status","https://x.atlassian.net/browse/PROJ-42?focus=1","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket PROJ-42 not updated
+
+--- stderr
+
+@@@ 53 @@@
+### step 52: ["snapshot","https://x.atlassian.net/browse/PROJ-42?focus=1"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 54 @@@
+### step 53: ["update","https://x.atlassian.net/browse/PROJ-42?focus=1","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 55 @@@
+### step 54: ["start","https://x/y/#frag","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket y not updated
+
+--- stderr
+
+@@@ 56 @@@
+### step 55: ["finish","https://x/y/#frag","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket y not updated
+
+--- stderr
+
+@@@ 57 @@@
+### step 56: ["comment","https://x/y/#frag","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket y not updated
+
+--- stderr
+
+@@@ 58 @@@
+### step 57: ["status","https://x/y/#frag","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket y not updated
+
+--- stderr
+
+@@@ 59 @@@
+### step 58: ["snapshot","https://x/y/#frag"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 60 @@@
+### step 59: ["update","https://x/y/#frag","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 61 @@@
+### step 60: ["start","https://x/y/z/","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket z not updated
+
+--- stderr
+
+@@@ 62 @@@
+### step 61: ["finish","https://x/y/z/","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket z not updated
+
+--- stderr
+
+@@@ 63 @@@
+### step 62: ["comment","https://x/y/z/","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket z not updated
+
+--- stderr
+
+@@@ 64 @@@
+### step 63: ["status","https://x/y/z/","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket z not updated
+
+--- stderr
+
+@@@ 65 @@@
+### step 64: ["snapshot","https://x/y/z/"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 66 @@@
+### step 65: ["update","https://x/y/z/","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 67 @@@
+### step 66: ["start","a b","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a b
+
+@@@ 68 @@@
+### step 67: ["finish","a b","text"] {"GSD_TRACKER":"none"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a b
+
+@@@ 69 @@@
+### step 68: ["comment","a b","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a b
+
+@@@ 70 @@@
+### step 69: ["status","a b","done"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a b
+
+@@@ 71 @@@
+### step 70: ["snapshot","a b"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a b
+
+@@@ 72 @@@
+### step 71: ["update","a b","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a b
+
+@@@ 73 @@@
+### step 72: ["start","x;rm","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: x;rm
+
+@@@ 74 @@@
+### step 73: ["finish","x;rm","text"] {"GSD_TRACKER":"none"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: x;rm
+
+@@@ 75 @@@
+### step 74: ["comment","x;rm","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: x;rm
+
+@@@ 76 @@@
+### step 75: ["status","x;rm","done"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: x;rm
+
+@@@ 77 @@@
+### step 76: ["snapshot","x;rm"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: x;rm
+
+@@@ 78 @@@
+### step 77: ["update","x;rm","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: x;rm
+
+@@@ 79 @@@
+### step 78: ["start","","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: 
+
+@@@ 80 @@@
+### step 79: ["finish","","text"] {"GSD_TRACKER":"none"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: 
+
+@@@ 81 @@@
+### step 80: ["comment","","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: 
+
+@@@ 82 @@@
+### step 81: ["status","","done"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: 
+
+@@@ 83 @@@
+### step 82: ["snapshot",""] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: 
+
+@@@ 84 @@@
+### step 83: ["update","","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: 
+
+@@@ 85 @@@
+### step 84: ["start","a--b","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a--b
+
+@@@ 86 @@@
+### step 85: ["finish","a--b","text"] {"GSD_TRACKER":"none"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a--b
+
+@@@ 87 @@@
+### step 86: ["comment","a--b","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a--b
+
+@@@ 88 @@@
+### step 87: ["status","a--b","done"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a--b
+
+@@@ 89 @@@
+### step 88: ["snapshot","a--b"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a--b
+
+@@@ 90 @@@
+### step 89: ["update","a--b","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: a--b
+
+@@@ 91 @@@
+### step 90: ["start","-a","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: -a
+
+@@@ 92 @@@
+### step 91: ["finish","-a","text"] {"GSD_TRACKER":"none"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: -a
+
+@@@ 93 @@@
+### step 92: ["comment","-a","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: -a
+
+@@@ 94 @@@
+### step 93: ["status","-a","done"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: -a
+
+@@@ 95 @@@
+### step 94: ["snapshot","-a"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: -a
+
+@@@ 96 @@@
+### step 95: ["update","-a","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: -a
+
+@@@ 97 @@@
+### step 96: ["start","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx not updated
+
+--- stderr
+
+@@@ 98 @@@
+### step 97: ["finish","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx not updated
+
+--- stderr
+
+@@@ 99 @@@
+### step 98: ["comment","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx not updated
+
+--- stderr
+
+@@@ 100 @@@
+### step 99: ["status","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx not updated
+
+--- stderr
+
+@@@ 101 @@@
+### step 100: ["snapshot","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 102 @@@
+### step 101: ["update","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 103 @@@
+### step 102: ["start","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+@@@ 104 @@@
+### step 103: ["finish","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","text"] {"GSD_TRACKER":"none"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+@@@ 105 @@@
+### step 104: ["comment","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+@@@ 106 @@@
+### step 105: ["status","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","done"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+@@@ 107 @@@
+### step 106: ["snapshot","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+@@@ 108 @@@
+### step 107: ["update","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+@@@ 109 @@@
+### step 108: ["start","a\nb c","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket a
+b c not updated
+
+--- stderr
+
+@@@ 110 @@@
+### step 109: ["finish","a\nb c","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket a
+b c not updated
+
+--- stderr
+
+@@@ 111 @@@
+### step 110: ["comment","a\nb c","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket a
+b c not updated
+
+--- stderr
+
+@@@ 112 @@@
+### step 111: ["status","a\nb c","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket a
+b c not updated
+
+--- stderr
+
+@@@ 113 @@@
+### step 112: ["snapshot","a\nb c"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 114 @@@
+### step 113: ["update","a\nb c","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 115 @@@
+### step 114: ["start","ok\n../etc","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket ok
+../etc not updated
+
+--- stderr
+
+@@@ 116 @@@
+### step 115: ["finish","ok\n../etc","text"] {"GSD_TRACKER":"none"}
+rc=0
+--- stdout
+• tracker = none — ticket ok
+../etc not updated
+
+--- stderr
+
+@@@ 117 @@@
+### step 116: ["comment","ok\n../etc","text"] {}
+rc=0
+--- stdout
+• tracker = none — ticket ok
+../etc not updated
+
+--- stderr
+
+@@@ 118 @@@
+### step 117: ["status","ok\n../etc","done"] {}
+rc=0
+--- stdout
+• tracker = none — ticket ok
+../etc not updated
+
+--- stderr
+
+@@@ 119 @@@
+### step 118: ["snapshot","ok\n../etc"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 120 @@@
+### step 119: ["update","ok\n../etc","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 121 @@@
+### step 120: ["start","#","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: #
+
+@@@ 122 @@@
+### step 121: ["finish","#","text"] {"GSD_TRACKER":"none"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: #
+
+@@@ 123 @@@
+### step 122: ["comment","#","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: #
+
+@@@ 124 @@@
+### step 123: ["status","#","done"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: #
+
+@@@ 125 @@@
+### step 124: ["snapshot","#"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: #
+
+@@@ 126 @@@
+### step 125: ["update","#","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: #
+
+@@@ 127 @@@
+### step 126: ["start","tk-","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: tk-
+
+@@@ 128 @@@
+### step 127: ["finish","tk-","text"] {"GSD_TRACKER":"none"}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: tk-
+
+@@@ 129 @@@
+### step 128: ["comment","tk-","text"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: tk-
+
+@@@ 130 @@@
+### step 129: ["status","tk-","done"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: tk-
+
+@@@ 131 @@@
+### step 130: ["snapshot","tk-"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: tk-
+
+@@@ 132 @@@
+### step 131: ["update","tk-","--name","x"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: not a ticket id: tk-
+
+@@@ 133 @@@
+### step 132: ["start","abc"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: usage: gsdt-tracker start <id> <text>
+
+@@@ 134 @@@
+### step 133: ["start"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: usage: gsdt-tracker start <id> <text>
+
+@@@ 135 @@@
+### step 134: ["comment","a"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: usage: gsdt-tracker comment <id> <text>
+
+@@@ 136 @@@
+### step 135: ["snapshot"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: usage: gsdt-tracker snapshot <id>
+
+@@@ 137 @@@
+### step 136: ["update","a","b"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to update (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 138 @@@
+### step 137: ["update","a"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: usage: gsdt-tracker update <id> <option>…
+
+@@@ 139 @@@
+### step 138: ["create","L"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: usage: gsdt-tracker create <where> <title> [option…]
+
+@@@ 140 @@@
+### step 139: ["create","L","T"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to create (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 141 @@@
+### step 140: ["tasks"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to tasks (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 142 @@@
+### step 141: ["check"] {}
+rc=0
+--- stdout
+• tracker = none — no ticket updates (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+--- stderr
+
+@@@ 143 @@@
+### step 142: ["snapshot","abc","--out"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: --out needs a file
+
+@@@ 144 @@@
+### step 143: ["snapshot","abc","--out","x.md"] {}
+rc=1
+--- stdout
+
+--- stderr
+gsdt-tracker: tracker = none — no tracker connected, nothing to snapshot (set it: git config gsdt-tracker.tracker clickup|custom (this clone), or tracker = in .gsd.conf)
+
+@@@ 145 @@@
+### step 144: ["start","abc","text","extra","args"] {}
+rc=0
+--- stdout
+• tracker = none — ticket abc not updated
+
+--- stderr
+
+@@@ 146 @@@
+curl.log:
+
+argv:
+
+tracker.log:
+
+home:
+
+plain git config:
+
+gsd git config:
+
+cust git config:
+
+cu git config:
+

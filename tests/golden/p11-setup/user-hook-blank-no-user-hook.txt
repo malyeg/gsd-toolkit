@@ -1,0 +1,5 @@
+@@@ 1 @@@
+{}
+
+--
+✂ claude user hook removed from <H>/.claude/settings.json

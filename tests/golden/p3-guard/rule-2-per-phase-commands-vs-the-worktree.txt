@@ -1,0 +1,1485 @@
+@@@ 1 @@@
+branch phase-7-thing args ["7"]
+rc=0
+out=""
+err=""
+@@@ 2 @@@
+branch phase-7-thing args ["8"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 3 @@@
+branch phase-7-thing args ["07"]
+rc=0
+out=""
+err=""
+@@@ 4 @@@
+branch phase-7-thing args ["007"]
+rc=0
+out=""
+err=""
+@@@ 5 @@@
+branch phase-7-thing args ["2.1"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 6 @@@
+branch phase-7-thing args ["02.1"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 7 @@@
+branch phase-7-thing args ["2.10"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 2.10. Switch to the phase-2.10-* worktree.\n"
+@@@ 8 @@@
+branch phase-7-thing args ["0"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 0. Switch to the phase-0-* worktree.\n"
+@@@ 9 @@@
+branch phase-7-thing args [""]
+rc=0
+out=""
+err=""
+@@@ 10 @@@
+branch phase-7-thing args ["--phase=7"]
+rc=0
+out=""
+err=""
+@@@ 11 @@@
+branch phase-7-thing args ["--files src/v7/a.ts"]
+rc=0
+out=""
+err=""
+@@@ 12 @@@
+branch phase-7-thing args ["2 --files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 2. Switch to the phase-2-* worktree.\n"
+@@@ 13 @@@
+branch phase-7-thing args ["99999999999999999999"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 99999999999999999999. Switch to the phase-99999999999999999999-* worktree.\n"
+@@@ 14 @@@
+branch phase-7-thing args ["18446744073709551623"]
+rc=0
+out=""
+err=""
+@@@ 15 @@@
+branch phase-7-thing args ["--phase=--phase=7"]
+rc=0
+out=""
+err=""
+@@@ 16 @@@
+branch phase-7-thing args ["٧"]
+rc=0
+out=""
+err=""
+@@@ 17 @@@
+branch phase-07-thing args ["7"]
+rc=0
+out=""
+err=""
+@@@ 18 @@@
+branch phase-07-thing args ["8"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 19 @@@
+branch phase-07-thing args ["07"]
+rc=0
+out=""
+err=""
+@@@ 20 @@@
+branch phase-07-thing args ["007"]
+rc=0
+out=""
+err=""
+@@@ 21 @@@
+branch phase-07-thing args ["2.1"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-thing', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 22 @@@
+branch phase-07-thing args ["02.1"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-thing', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 23 @@@
+branch phase-07-thing args ["2.10"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-thing', but /gsd-plan-phase targets phase 2.10. Switch to the phase-2.10-* worktree.\n"
+@@@ 24 @@@
+branch phase-07-thing args ["0"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-thing', but /gsd-plan-phase targets phase 0. Switch to the phase-0-* worktree.\n"
+@@@ 25 @@@
+branch phase-07-thing args [""]
+rc=0
+out=""
+err=""
+@@@ 26 @@@
+branch phase-07-thing args ["--phase=7"]
+rc=0
+out=""
+err=""
+@@@ 27 @@@
+branch phase-07-thing args ["--files src/v7/a.ts"]
+rc=0
+out=""
+err=""
+@@@ 28 @@@
+branch phase-07-thing args ["2 --files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-thing', but /gsd-plan-phase targets phase 2. Switch to the phase-2-* worktree.\n"
+@@@ 29 @@@
+branch phase-07-thing args ["99999999999999999999"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-07-thing', but /gsd-plan-phase targets phase 99999999999999999999. Switch to the phase-99999999999999999999-* worktree.\n"
+@@@ 30 @@@
+branch phase-07-thing args ["18446744073709551623"]
+rc=0
+out=""
+err=""
+@@@ 31 @@@
+branch phase-07-thing args ["--phase=--phase=7"]
+rc=0
+out=""
+err=""
+@@@ 32 @@@
+branch phase-07-thing args ["٧"]
+rc=0
+out=""
+err=""
+@@@ 33 @@@
+branch phase-2.1-thing args ["7"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-thing', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 34 @@@
+branch phase-2.1-thing args ["8"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 35 @@@
+branch phase-2.1-thing args ["07"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-thing', but /gsd-plan-phase targets phase 07. Switch to the phase-07-* worktree.\n"
+@@@ 36 @@@
+branch phase-2.1-thing args ["007"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-thing', but /gsd-plan-phase targets phase 007. Switch to the phase-007-* worktree.\n"
+@@@ 37 @@@
+branch phase-2.1-thing args ["2.1"]
+rc=0
+out=""
+err=""
+@@@ 38 @@@
+branch phase-2.1-thing args ["02.1"]
+rc=0
+out=""
+err=""
+@@@ 39 @@@
+branch phase-2.1-thing args ["2.10"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-thing', but /gsd-plan-phase targets phase 2.10. Switch to the phase-2.10-* worktree.\n"
+@@@ 40 @@@
+branch phase-2.1-thing args ["0"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-thing', but /gsd-plan-phase targets phase 0. Switch to the phase-0-* worktree.\n"
+@@@ 41 @@@
+branch phase-2.1-thing args [""]
+rc=0
+out=""
+err=""
+@@@ 42 @@@
+branch phase-2.1-thing args ["--phase=7"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-thing', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 43 @@@
+branch phase-2.1-thing args ["--files src/v7/a.ts"]
+rc=0
+out=""
+err=""
+@@@ 44 @@@
+branch phase-2.1-thing args ["2 --files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-thing', but /gsd-plan-phase targets phase 2. Switch to the phase-2-* worktree.\n"
+@@@ 45 @@@
+branch phase-2.1-thing args ["99999999999999999999"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-thing', but /gsd-plan-phase targets phase 99999999999999999999. Switch to the phase-99999999999999999999-* worktree.\n"
+@@@ 46 @@@
+branch phase-2.1-thing args ["18446744073709551623"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-2.1-thing', but /gsd-plan-phase targets phase 18446744073709551623. Switch to the phase-18446744073709551623-* worktree.\n"
+@@@ 47 @@@
+branch phase-2.1-thing args ["--phase=--phase=7"]
+rc=0
+out=""
+err=""
+@@@ 48 @@@
+branch phase-2.1-thing args ["٧"]
+rc=0
+out=""
+err=""
+@@@ 49 @@@
+branch phase-02.1-thing args ["7"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-02.1-thing', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 50 @@@
+branch phase-02.1-thing args ["8"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-02.1-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 51 @@@
+branch phase-02.1-thing args ["07"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-02.1-thing', but /gsd-plan-phase targets phase 07. Switch to the phase-07-* worktree.\n"
+@@@ 52 @@@
+branch phase-02.1-thing args ["007"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-02.1-thing', but /gsd-plan-phase targets phase 007. Switch to the phase-007-* worktree.\n"
+@@@ 53 @@@
+branch phase-02.1-thing args ["2.1"]
+rc=0
+out=""
+err=""
+@@@ 54 @@@
+branch phase-02.1-thing args ["02.1"]
+rc=0
+out=""
+err=""
+@@@ 55 @@@
+branch phase-02.1-thing args ["2.10"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-02.1-thing', but /gsd-plan-phase targets phase 2.10. Switch to the phase-2.10-* worktree.\n"
+@@@ 56 @@@
+branch phase-02.1-thing args ["0"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-02.1-thing', but /gsd-plan-phase targets phase 0. Switch to the phase-0-* worktree.\n"
+@@@ 57 @@@
+branch phase-02.1-thing args [""]
+rc=0
+out=""
+err=""
+@@@ 58 @@@
+branch phase-02.1-thing args ["--phase=7"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-02.1-thing', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 59 @@@
+branch phase-02.1-thing args ["--files src/v7/a.ts"]
+rc=0
+out=""
+err=""
+@@@ 60 @@@
+branch phase-02.1-thing args ["2 --files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-02.1-thing', but /gsd-plan-phase targets phase 2. Switch to the phase-2-* worktree.\n"
+@@@ 61 @@@
+branch phase-02.1-thing args ["99999999999999999999"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-02.1-thing', but /gsd-plan-phase targets phase 99999999999999999999. Switch to the phase-99999999999999999999-* worktree.\n"
+@@@ 62 @@@
+branch phase-02.1-thing args ["18446744073709551623"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-02.1-thing', but /gsd-plan-phase targets phase 18446744073709551623. Switch to the phase-18446744073709551623-* worktree.\n"
+@@@ 63 @@@
+branch phase-02.1-thing args ["--phase=--phase=7"]
+rc=0
+out=""
+err=""
+@@@ 64 @@@
+branch phase-02.1-thing args ["٧"]
+rc=0
+out=""
+err=""
+@@@ 65 @@@
+branch phase-foo args ["7"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 66 @@@
+branch phase-foo args ["8"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 67 @@@
+branch phase-foo args ["07"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 07. Switch to the phase-07-* worktree.\n"
+@@@ 68 @@@
+branch phase-foo args ["007"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 007. Switch to the phase-007-* worktree.\n"
+@@@ 69 @@@
+branch phase-foo args ["2.1"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 70 @@@
+branch phase-foo args ["02.1"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 71 @@@
+branch phase-foo args ["2.10"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 2.10. Switch to the phase-2.10-* worktree.\n"
+@@@ 72 @@@
+branch phase-foo args ["0"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 0. Switch to the phase-0-* worktree.\n"
+@@@ 73 @@@
+branch phase-foo args [""]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 74 @@@
+branch phase-foo args ["--phase=7"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 75 @@@
+branch phase-foo args ["--files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 76 @@@
+branch phase-foo args ["2 --files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 2. Switch to the phase-2-* worktree.\n"
+@@@ 77 @@@
+branch phase-foo args ["99999999999999999999"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 99999999999999999999. Switch to the phase-99999999999999999999-* worktree.\n"
+@@@ 78 @@@
+branch phase-foo args ["18446744073709551623"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-foo', but /gsd-plan-phase targets phase 18446744073709551623. Switch to the phase-18446744073709551623-* worktree.\n"
+@@@ 79 @@@
+branch phase-foo args ["--phase=--phase=7"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 80 @@@
+branch phase-foo args ["٧"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 81 @@@
+branch phase-7.x args ["7"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 82 @@@
+branch phase-7.x args ["8"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 83 @@@
+branch phase-7.x args ["07"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 07. Switch to the phase-07-* worktree.\n"
+@@@ 84 @@@
+branch phase-7.x args ["007"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 007. Switch to the phase-007-* worktree.\n"
+@@@ 85 @@@
+branch phase-7.x args ["2.1"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 86 @@@
+branch phase-7.x args ["02.1"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 87 @@@
+branch phase-7.x args ["2.10"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 2.10. Switch to the phase-2.10-* worktree.\n"
+@@@ 88 @@@
+branch phase-7.x args ["0"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 0. Switch to the phase-0-* worktree.\n"
+@@@ 89 @@@
+branch phase-7.x args [""]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 90 @@@
+branch phase-7.x args ["--phase=7"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 91 @@@
+branch phase-7.x args ["--files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 92 @@@
+branch phase-7.x args ["2 --files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 2. Switch to the phase-2-* worktree.\n"
+@@@ 93 @@@
+branch phase-7.x args ["99999999999999999999"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 99999999999999999999. Switch to the phase-99999999999999999999-* worktree.\n"
+@@@ 94 @@@
+branch phase-7.x args ["18446744073709551623"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7.x', but /gsd-plan-phase targets phase 18446744073709551623. Switch to the phase-18446744073709551623-* worktree.\n"
+@@@ 95 @@@
+branch phase-7.x args ["--phase=--phase=7"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 96 @@@
+branch phase-7.x args ["٧"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 97 @@@
+branch feature/phase-7-x args ["7"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'feature/phase-7-x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 98 @@@
+branch feature/phase-7-x args ["8"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 8 but 'feature/phase-7-x' isn't a phase-8-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 99 @@@
+branch feature/phase-7-x args ["07"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 07 but 'feature/phase-7-x' isn't a phase-07-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 100 @@@
+branch feature/phase-7-x args ["007"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 007 but 'feature/phase-7-x' isn't a phase-007-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 101 @@@
+branch feature/phase-7-x args ["2.1"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 2.1 but 'feature/phase-7-x' isn't a phase-2.1-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 102 @@@
+branch feature/phase-7-x args ["02.1"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 02.1 but 'feature/phase-7-x' isn't a phase-02.1-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 103 @@@
+branch feature/phase-7-x args ["2.10"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 2.10 but 'feature/phase-7-x' isn't a phase-2.10-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 104 @@@
+branch feature/phase-7-x args ["0"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 0 but 'feature/phase-7-x' isn't a phase-0-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 105 @@@
+branch feature/phase-7-x args [""]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 106 @@@
+branch feature/phase-7-x args ["--phase=7"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'feature/phase-7-x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 107 @@@
+branch feature/phase-7-x args ["--files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 108 @@@
+branch feature/phase-7-x args ["2 --files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 2 but 'feature/phase-7-x' isn't a phase-2-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 109 @@@
+branch feature/phase-7-x args ["99999999999999999999"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 99999999999999999999 but 'feature/phase-7-x' isn't a phase-99999999999999999999-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 110 @@@
+branch feature/phase-7-x args ["18446744073709551623"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 18446744073709551623 but 'feature/phase-7-x' isn't a phase-18446744073709551623-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 111 @@@
+branch feature/phase-7-x args ["--phase=--phase=7"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 112 @@@
+branch feature/phase-7-x args ["٧"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 113 @@@
+branch main args ["7"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'main' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 114 @@@
+branch main args ["8"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 8 but 'main' isn't a phase-8-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 115 @@@
+branch main args ["07"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 07 but 'main' isn't a phase-07-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 116 @@@
+branch main args ["007"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 007 but 'main' isn't a phase-007-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 117 @@@
+branch main args ["2.1"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 2.1 but 'main' isn't a phase-2.1-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 118 @@@
+branch main args ["02.1"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 02.1 but 'main' isn't a phase-02.1-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 119 @@@
+branch main args ["2.10"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 2.10 but 'main' isn't a phase-2.10-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 120 @@@
+branch main args ["0"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 0 but 'main' isn't a phase-0-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 121 @@@
+branch main args [""]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 122 @@@
+branch main args ["--phase=7"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'main' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 123 @@@
+branch main args ["--files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 124 @@@
+branch main args ["2 --files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 2 but 'main' isn't a phase-2-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 125 @@@
+branch main args ["99999999999999999999"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 99999999999999999999 but 'main' isn't a phase-99999999999999999999-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 126 @@@
+branch main args ["18446744073709551623"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 18446744073709551623 but 'main' isn't a phase-18446744073709551623-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 127 @@@
+branch main args ["--phase=--phase=7"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 128 @@@
+branch main args ["٧"]
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase requires a phase number and matching phase worktree.\n"
+@@@ 129 @@@
+branch phase-99999999999999999999-x args ["7"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 130 @@@
+branch phase-99999999999999999999-x args ["8"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 131 @@@
+branch phase-99999999999999999999-x args ["07"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 07. Switch to the phase-07-* worktree.\n"
+@@@ 132 @@@
+branch phase-99999999999999999999-x args ["007"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 007. Switch to the phase-007-* worktree.\n"
+@@@ 133 @@@
+branch phase-99999999999999999999-x args ["2.1"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 2.1. Switch to the phase-2.1-* worktree.\n"
+@@@ 134 @@@
+branch phase-99999999999999999999-x args ["02.1"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 02.1. Switch to the phase-02.1-* worktree.\n"
+@@@ 135 @@@
+branch phase-99999999999999999999-x args ["2.10"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 2.10. Switch to the phase-2.10-* worktree.\n"
+@@@ 136 @@@
+branch phase-99999999999999999999-x args ["0"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 0. Switch to the phase-0-* worktree.\n"
+@@@ 137 @@@
+branch phase-99999999999999999999-x args [""]
+rc=0
+out=""
+err=""
+@@@ 138 @@@
+branch phase-99999999999999999999-x args ["--phase=7"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 139 @@@
+branch phase-99999999999999999999-x args ["--files src/v7/a.ts"]
+rc=0
+out=""
+err=""
+@@@ 140 @@@
+branch phase-99999999999999999999-x args ["2 --files src/v7/a.ts"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 2. Switch to the phase-2-* worktree.\n"
+@@@ 141 @@@
+branch phase-99999999999999999999-x args ["99999999999999999999"]
+rc=0
+out=""
+err=""
+@@@ 142 @@@
+branch phase-99999999999999999999-x args ["18446744073709551623"]
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-99999999999999999999-x', but /gsd-plan-phase targets phase 18446744073709551623. Switch to the phase-18446744073709551623-* worktree.\n"
+@@@ 143 @@@
+branch phase-99999999999999999999-x args ["--phase=--phase=7"]
+rc=0
+out=""
+err=""
+@@@ 144 @@@
+branch phase-99999999999999999999-x args ["٧"]
+rc=0
+out=""
+err=""
+@@@ 145 @@@
+gsd-flow in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 146 @@@
+gsd-flow in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 147 @@@
+gsd-flow in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 148 @@@
+gsd-flow on base
+rc=2
+out=""
+err="BLOCKED: /gsd-flow is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 149 @@@
+gsd-flow on other
+rc=2
+out=""
+err="BLOCKED: /gsd-flow targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 150 @@@
+gsd-flow on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-flow targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 151 @@@
+gsd-flow global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 152 @@@
+gsd-flow global bare
+rc=0
+out=""
+err=""
+@@@ 153 @@@
+gsd-review in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 154 @@@
+gsd-review in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-review targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 155 @@@
+gsd-review in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 156 @@@
+gsd-review on base
+rc=2
+out=""
+err="BLOCKED: /gsd-review is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 157 @@@
+gsd-review on other
+rc=2
+out=""
+err="BLOCKED: /gsd-review targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 158 @@@
+gsd-review on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-review targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 159 @@@
+gsd-review global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-review targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 160 @@@
+gsd-discuss-phase in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 161 @@@
+gsd-discuss-phase in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-discuss-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 162 @@@
+gsd-discuss-phase in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 163 @@@
+gsd-discuss-phase on base
+rc=2
+out=""
+err="BLOCKED: /gsd-discuss-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 164 @@@
+gsd-discuss-phase on other
+rc=2
+out=""
+err="BLOCKED: /gsd-discuss-phase targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 165 @@@
+gsd-discuss-phase on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-discuss-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 166 @@@
+gsd-discuss-phase global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-discuss-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 167 @@@
+gsd-plan-phase in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 168 @@@
+gsd-plan-phase in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 169 @@@
+gsd-plan-phase in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 170 @@@
+gsd-plan-phase on base
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 171 @@@
+gsd-plan-phase on other
+rc=2
+out=""
+err="BLOCKED: /gsd-plan-phase targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 172 @@@
+gsd-plan-phase on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-plan-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 173 @@@
+gsd-plan-phase global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 174 @@@
+gsd-plan-phase global bare
+rc=0
+out=""
+err=""
+@@@ 175 @@@
+gsd-execute-phase in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 176 @@@
+gsd-execute-phase in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 177 @@@
+gsd-execute-phase in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 178 @@@
+gsd-execute-phase on base
+rc=2
+out=""
+err="BLOCKED: /gsd-execute-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 179 @@@
+gsd-execute-phase on other
+rc=2
+out=""
+err="BLOCKED: /gsd-execute-phase targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 180 @@@
+gsd-execute-phase on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-execute-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 181 @@@
+gsd-execute-phase global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-execute-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 182 @@@
+gsd-ui-phase in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 183 @@@
+gsd-ui-phase in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-ui-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 184 @@@
+gsd-ui-phase in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 185 @@@
+gsd-ui-phase on base
+rc=2
+out=""
+err="BLOCKED: /gsd-ui-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 186 @@@
+gsd-ui-phase on other
+rc=2
+out=""
+err="BLOCKED: /gsd-ui-phase targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 187 @@@
+gsd-ui-phase on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-ui-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 188 @@@
+gsd-ui-phase global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-ui-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 189 @@@
+gsd-mvp-phase in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 190 @@@
+gsd-mvp-phase in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-mvp-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 191 @@@
+gsd-mvp-phase in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 192 @@@
+gsd-mvp-phase on base
+rc=2
+out=""
+err="BLOCKED: /gsd-mvp-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 193 @@@
+gsd-mvp-phase on other
+rc=2
+out=""
+err="BLOCKED: /gsd-mvp-phase targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 194 @@@
+gsd-mvp-phase on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-mvp-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 195 @@@
+gsd-mvp-phase global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-mvp-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 196 @@@
+gsd-mvp-phase global bare
+rc=0
+out=""
+err=""
+@@@ 197 @@@
+gsd-spec-phase in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 198 @@@
+gsd-spec-phase in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-spec-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 199 @@@
+gsd-spec-phase in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 200 @@@
+gsd-spec-phase on base
+rc=2
+out=""
+err="BLOCKED: /gsd-spec-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 201 @@@
+gsd-spec-phase on other
+rc=2
+out=""
+err="BLOCKED: /gsd-spec-phase targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 202 @@@
+gsd-spec-phase on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-spec-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 203 @@@
+gsd-spec-phase global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-spec-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 204 @@@
+gsd-ai-integration-phase in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 205 @@@
+gsd-ai-integration-phase in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-ai-integration-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 206 @@@
+gsd-ai-integration-phase in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 207 @@@
+gsd-ai-integration-phase on base
+rc=2
+out=""
+err="BLOCKED: /gsd-ai-integration-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 208 @@@
+gsd-ai-integration-phase on other
+rc=2
+out=""
+err="BLOCKED: /gsd-ai-integration-phase targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 209 @@@
+gsd-ai-integration-phase on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-ai-integration-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 210 @@@
+gsd-ai-integration-phase global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-ai-integration-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 211 @@@
+gsd-verify-work in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 212 @@@
+gsd-verify-work in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-verify-work targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 213 @@@
+gsd-verify-work in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 214 @@@
+gsd-verify-work on base
+rc=2
+out=""
+err="BLOCKED: /gsd-verify-work is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 215 @@@
+gsd-verify-work on other
+rc=2
+out=""
+err="BLOCKED: /gsd-verify-work targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 216 @@@
+gsd-verify-work on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-verify-work targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 217 @@@
+gsd-verify-work global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-verify-work targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 218 @@@
+gsd-verify-work global bare
+rc=0
+out=""
+err=""
+@@@ 219 @@@
+gsd-secure-phase in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 220 @@@
+gsd-secure-phase in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-secure-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 221 @@@
+gsd-secure-phase in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 222 @@@
+gsd-secure-phase on base
+rc=2
+out=""
+err="BLOCKED: /gsd-secure-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 223 @@@
+gsd-secure-phase on other
+rc=2
+out=""
+err="BLOCKED: /gsd-secure-phase targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 224 @@@
+gsd-secure-phase on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-secure-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 225 @@@
+gsd-secure-phase global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-secure-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 226 @@@
+gsd-validate-phase in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 227 @@@
+gsd-validate-phase in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-validate-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 228 @@@
+gsd-validate-phase in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 229 @@@
+gsd-validate-phase on base
+rc=2
+out=""
+err="BLOCKED: /gsd-validate-phase is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 230 @@@
+gsd-validate-phase on other
+rc=2
+out=""
+err="BLOCKED: /gsd-validate-phase targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 231 @@@
+gsd-validate-phase on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-validate-phase targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 232 @@@
+gsd-validate-phase global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-validate-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 233 @@@
+gsd-code-review in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 234 @@@
+gsd-code-review in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-code-review targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 235 @@@
+gsd-code-review in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 236 @@@
+gsd-code-review on base
+rc=2
+out=""
+err="BLOCKED: /gsd-code-review is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 237 @@@
+gsd-code-review on other
+rc=2
+out=""
+err="BLOCKED: /gsd-code-review targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 238 @@@
+gsd-code-review on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-code-review targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 239 @@@
+gsd-code-review global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-code-review targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 240 @@@
+gsd-code-review global bare
+rc=0
+out=""
+err=""
+@@@ 241 @@@
+gsd-add-tests in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 242 @@@
+gsd-add-tests in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-add-tests targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 243 @@@
+gsd-add-tests in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 244 @@@
+gsd-add-tests on base
+rc=2
+out=""
+err="BLOCKED: /gsd-add-tests is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 245 @@@
+gsd-add-tests on other
+rc=2
+out=""
+err="BLOCKED: /gsd-add-tests targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 246 @@@
+gsd-add-tests on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-add-tests targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 247 @@@
+gsd-add-tests global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-add-tests targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 248 @@@
+gsd-extract-learnings in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 249 @@@
+gsd-extract-learnings in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-extract-learnings targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 250 @@@
+gsd-extract-learnings in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 251 @@@
+gsd-extract-learnings on base
+rc=2
+out=""
+err="BLOCKED: /gsd-extract-learnings is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 252 @@@
+gsd-extract-learnings on other
+rc=2
+out=""
+err="BLOCKED: /gsd-extract-learnings targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 253 @@@
+gsd-extract-learnings on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-extract-learnings targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 254 @@@
+gsd-extract-learnings global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-extract-learnings targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 255 @@@
+gsd-ui-review in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 256 @@@
+gsd-ui-review in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-ui-review targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 257 @@@
+gsd-ui-review in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 258 @@@
+gsd-ui-review on base
+rc=2
+out=""
+err="BLOCKED: /gsd-ui-review is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 259 @@@
+gsd-ui-review on other
+rc=2
+out=""
+err="BLOCKED: /gsd-ui-review targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 260 @@@
+gsd-ui-review on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-ui-review targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 261 @@@
+gsd-ui-review global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-ui-review targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 262 @@@
+gsd-ui-review global bare
+rc=0
+out=""
+err=""
+@@@ 263 @@@
+gsd-eval-review in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 264 @@@
+gsd-eval-review in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-eval-review targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 265 @@@
+gsd-eval-review in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 266 @@@
+gsd-eval-review on base
+rc=2
+out=""
+err="BLOCKED: /gsd-eval-review is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+@@@ 267 @@@
+gsd-eval-review on other
+rc=2
+out=""
+err="BLOCKED: /gsd-eval-review targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+@@@ 268 @@@
+gsd-eval-review on bare
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-8-x', but /gsd-eval-review targets phase 7. Switch to the phase-7-* worktree.\n"
+@@@ 269 @@@
+gsd-eval-review global in phase-7 for 8
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-eval-review targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 270 @@@
+gsd-progress in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 271 @@@
+gsd-progress in phase-7 for 8
+rc=0
+out=""
+err=""
+@@@ 272 @@@
+gsd-progress in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 273 @@@
+gsd-progress on base
+rc=0
+out=""
+err=""
+@@@ 274 @@@
+gsd-progress on other
+rc=0
+out=""
+err=""
+@@@ 275 @@@
+gsd-progress on bare
+rc=0
+out=""
+err=""
+@@@ 276 @@@
+gsd-progress global in phase-7 for 8
+rc=0
+out=""
+err=""
+@@@ 277 @@@
+gsd-map-codebase in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 278 @@@
+gsd-map-codebase in phase-7 for 8
+rc=0
+out=""
+err=""
+@@@ 279 @@@
+gsd-map-codebase in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 280 @@@
+gsd-map-codebase on base
+rc=0
+out=""
+err=""
+@@@ 281 @@@
+gsd-map-codebase on other
+rc=0
+out=""
+err=""
+@@@ 282 @@@
+gsd-map-codebase on bare
+rc=0
+out=""
+err=""
+@@@ 283 @@@
+gsd-map-codebase global in phase-7 for 8
+rc=0
+out=""
+err=""
+@@@ 284 @@@
+review in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 285 @@@
+review in phase-7 for 8
+rc=0
+out=""
+err=""
+@@@ 286 @@@
+review in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 287 @@@
+review on base
+rc=0
+out=""
+err=""
+@@@ 288 @@@
+review on other
+rc=0
+out=""
+err=""
+@@@ 289 @@@
+review on bare
+rc=0
+out=""
+err=""
+@@@ 290 @@@
+review global in phase-7 for 8
+rc=0
+out=""
+err=""
+@@@ 291 @@@
+gsd- in phase-7 for 7
+rc=0
+out=""
+err=""
+@@@ 292 @@@
+gsd- in phase-7 for 8
+rc=0
+out=""
+err=""
+@@@ 293 @@@
+gsd- in phase-7 no N
+rc=0
+out=""
+err=""
+@@@ 294 @@@
+gsd- on base
+rc=0
+out=""
+err=""
+@@@ 295 @@@
+gsd- on other
+rc=0
+out=""
+err=""
+@@@ 296 @@@
+gsd- on bare
+rc=0
+out=""
+err=""
+@@@ 297 @@@
+gsd- global in phase-7 for 8
+rc=0
+out=""
+err=""

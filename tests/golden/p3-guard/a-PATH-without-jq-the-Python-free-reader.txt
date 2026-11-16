@@ -1,0 +1,178 @@
+@@@ 1 @@@
+nojq  skill wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 2 @@@
+nojq  skill matching
+rc=0
+out=""
+err=""
+@@@ 3 @@@
+nojq  upe
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 4 @@@
+nojq  gsd: ns
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 5 @@@
+nojq  plugin
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 6 @@@
+nojq  gsdt-flow
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 7 @@@
+nojq  gsdw-flow
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 8 @@@
+nojq  non-gsd
+rc=0
+out=""
+err=""
+@@@ 9 @@@
+nojq  cwd bare new-project
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 10 @@@
+nojq  cwd set-up new-project
+rc=0
+out=""
+err=""
+@@@ 11 @@@
+nojq  cwd phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 12 @@@
+nojq  bad json
+rc=2
+@@@ 13 @@@
+nojq  empty
+rc=2
+@@@ 14 @@@
+nojq  array
+rc=2
+@@@ 15 @@@
+nojq  string
+rc=2
+@@@ 16 @@@
+nojq  number command
+rc=2
+@@@ 17 @@@
+nojq  number args
+rc=2
+@@@ 18 @@@
+nojq  null tool_input
+rc=0
+@@@ 19 @@@
+nojq  empty object
+rc=0
+@@@ 20 @@@
+nojq  explicit command
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 21 @@@
+nojq  skip guard
+rc=0
+out=""
+err=""
+@@@ 22 @@@
+nojq --global skill wrong phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 23 @@@
+nojq --global skill matching
+rc=0
+out=""
+err=""
+@@@ 24 @@@
+nojq --global upe
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 25 @@@
+nojq --global gsd: ns
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 26 @@@
+nojq --global plugin
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 27 @@@
+nojq --global gsdt-flow
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 28 @@@
+nojq --global gsdw-flow
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 29 @@@
+nojq --global non-gsd
+rc=0
+out=""
+err=""
+@@@ 30 @@@
+nojq --global cwd bare new-project
+rc=2
+out=""
+err="BLOCKED: /gsd-new-project needs the gsd-toolkit setup first — this repo has no .gsd.conf.\nRun gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /gsd-new-project. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)\n"
+@@@ 31 @@@
+nojq --global cwd set-up new-project
+rc=0
+out=""
+err=""
+@@@ 32 @@@
+nojq --global cwd phase
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 33 @@@
+nojq --global bad json
+rc=0
+@@@ 34 @@@
+nojq --global empty
+rc=0
+@@@ 35 @@@
+nojq --global array
+rc=0
+@@@ 36 @@@
+nojq --global string
+rc=0
+@@@ 37 @@@
+nojq --global number command
+rc=0
+@@@ 38 @@@
+nojq --global number args
+rc=0
+@@@ 39 @@@
+nojq --global null tool_input
+rc=0
+@@@ 40 @@@
+nojq --global empty object
+rc=0
+@@@ 41 @@@
+nojq --global explicit command
+rc=2
+out=""
+err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Switch to the phase-8-* worktree.\n"
+@@@ 42 @@@
+nojq --global skip guard
+rc=0
+out=""
+err=""

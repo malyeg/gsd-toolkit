@@ -1,0 +1,223 @@
+@@@ 1 @@@
+# replaceOwnedBlock none 644
+rc=0
+content="hello\n\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=644
+@@@ 2 @@@
+# replaceOwnedBlock none 600
+rc=0
+content="hello\n\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=600
+@@@ 3 @@@
+# replaceOwnedBlock none 755
+rc=0
+content="hello\n\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=755
+@@@ 4 @@@
+# replaceOwnedBlock ok 644
+rc=0
+content="a\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\nb\n"
+mode=644
+@@@ 5 @@@
+# replaceOwnedBlock ok 600
+rc=0
+content="a\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\nb\n"
+mode=600
+@@@ 6 @@@
+# replaceOwnedBlock ok 755
+rc=0
+content="a\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\nb\n"
+mode=755
+@@@ 7 @@@
+# replaceOwnedBlock old 644
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=644
+@@@ 8 @@@
+# replaceOwnedBlock old 600
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=600
+@@@ 9 @@@
+# replaceOwnedBlock old 755
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=755
+@@@ 10 @@@
+# replaceOwnedBlock mixed 644
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=644
+@@@ 11 @@@
+# replaceOwnedBlock mixed 600
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=600
+@@@ 12 @@@
+# replaceOwnedBlock mixed 755
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=755
+@@@ 13 @@@
+# replaceOwnedBlock twoStarts 644
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=644
+@@@ 14 @@@
+# replaceOwnedBlock twoStarts 600
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=600
+@@@ 15 @@@
+# replaceOwnedBlock twoStarts 755
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=755
+@@@ 16 @@@
+# replaceOwnedBlock twoBlocks 644
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=644
+@@@ 17 @@@
+# replaceOwnedBlock twoBlocks 600
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=600
+@@@ 18 @@@
+# replaceOwnedBlock twoBlocks 755
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=755
+@@@ 19 @@@
+# replaceOwnedBlock noEnd 644
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nx\n"
+mode=644
+@@@ 20 @@@
+# replaceOwnedBlock noEnd 600
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nx\n"
+mode=600
+@@@ 21 @@@
+# replaceOwnedBlock noEnd 755
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nx\n"
+mode=755
+@@@ 22 @@@
+# replaceOwnedBlock endFirst 644
+rc=0
+content="<!-- gsd-toolkit:provider:end -->\n<!-- gsd-toolkit:provider:start -->\n"
+mode=644
+@@@ 23 @@@
+# replaceOwnedBlock endFirst 600
+rc=0
+content="<!-- gsd-toolkit:provider:end -->\n<!-- gsd-toolkit:provider:start -->\n"
+mode=600
+@@@ 24 @@@
+# replaceOwnedBlock endFirst 755
+rc=0
+content="<!-- gsd-toolkit:provider:end -->\n<!-- gsd-toolkit:provider:start -->\n"
+mode=755
+@@@ 25 @@@
+# replaceOwnedBlock indented 644
+rc=0
+content="  <!-- gsd-toolkit:provider:start -->\nx\n<!-- gsd-toolkit:provider:end -->\n\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=644
+@@@ 26 @@@
+# replaceOwnedBlock indented 600
+rc=0
+content="  <!-- gsd-toolkit:provider:start -->\nx\n<!-- gsd-toolkit:provider:end -->\n\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=600
+@@@ 27 @@@
+# replaceOwnedBlock indented 755
+rc=0
+content="  <!-- gsd-toolkit:provider:start -->\nx\n<!-- gsd-toolkit:provider:end -->\n\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=755
+@@@ 28 @@@
+# replaceOwnedBlock trailing 644
+rc=0
+content="<!-- gsd-toolkit:provider:start --> \nx\n<!-- gsd-toolkit:provider:end -->\n\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=644
+@@@ 29 @@@
+# replaceOwnedBlock trailing 600
+rc=0
+content="<!-- gsd-toolkit:provider:start --> \nx\n<!-- gsd-toolkit:provider:end -->\n\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=600
+@@@ 30 @@@
+# replaceOwnedBlock trailing 755
+rc=0
+content="<!-- gsd-toolkit:provider:start --> \nx\n<!-- gsd-toolkit:provider:end -->\n\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=755
+@@@ 31 @@@
+# replaceOwnedBlock crlf 644
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\r\nNEW\r\n<!-- gsd-toolkit:provider:end -->\r\n"
+mode=644
+@@@ 32 @@@
+# replaceOwnedBlock crlf 600
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\r\nNEW\r\n<!-- gsd-toolkit:provider:end -->\r\n"
+mode=600
+@@@ 33 @@@
+# replaceOwnedBlock crlf 755
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\r\nNEW\r\n<!-- gsd-toolkit:provider:end -->\r\n"
+mode=755
+@@@ 34 @@@
+# replaceOwnedBlock otherKind 644
+rc=0
+content="<!-- gsd-toolkit:canonical:start -->\nc\n<!-- gsd-toolkit:canonical:end -->\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=644
+@@@ 35 @@@
+# replaceOwnedBlock otherKind 600
+rc=0
+content="<!-- gsd-toolkit:canonical:start -->\nc\n<!-- gsd-toolkit:canonical:end -->\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=600
+@@@ 36 @@@
+# replaceOwnedBlock otherKind 755
+rc=0
+content="<!-- gsd-toolkit:canonical:start -->\nc\n<!-- gsd-toolkit:canonical:end -->\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=755
+@@@ 37 @@@
+# replaceOwnedBlock unicode 644
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=644
+@@@ 38 @@@
+# replaceOwnedBlock unicode 600
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=600
+@@@ 39 @@@
+# replaceOwnedBlock unicode 755
+rc=0
+content="<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=755
+@@@ 40 @@@
+# replaceOwnedBlock empty 644
+rc=0
+content="\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=644
+@@@ 41 @@@
+# replaceOwnedBlock empty 600
+rc=0
+content="\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=600
+@@@ 42 @@@
+# replaceOwnedBlock empty 755
+rc=0
+content="\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n"
+mode=755
+@@@ 43 @@@
+# replaceOwnedBlock new file
+content=""
+mode=600
+@@@ 44 @@@
+# replaceOwnedBlock through a symlink
+"a\n<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\nb\n"
+@@@ 45 @@@
+# replaceOwnedBlock generated entry "# Title\ntext"
+"# Title\ntext\n\n<!-- gsd-toolkit:provider:start -->\n## GSD worktrees (claude,codex adapter)\n\nRead and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).\nThe toolkit's rules are the output of `gsdt-rules`: a session-start hook loads\nthem (\"GSD toolkit rules\"); when they are not in your context, run `gsdt-rules`\nbefore any GSD or phase work and follow its output.\nUse the `gsdt-flow` skill when it is available; otherwise run\n`gsdt-flow-next <N>` and follow each printed action.\nFor toolkit command syntax and workflow order, this marked adapter and the\ncanonical document supersede older unmarked GSD text in this file. Continue to\nfollow repository-specific policy from that older text.\n<!-- gsd-toolkit:provider:end -->\n"
+@@@ 46 @@@
+# replaceOwnedBlock generated entry "# Title\ntext\n"
+"# Title\ntext\n\n<!-- gsd-toolkit:provider:start -->\n## GSD worktrees (claude,codex adapter)\n\nRead and follow `.gsd/INSTRUCTIONS.md` (this repo's settings and core rules).\nThe toolkit's rules are the output of `gsdt-rules`: a session-start hook loads\nthem (\"GSD toolkit rules\"); when they are not in your context, run `gsdt-rules`\nbefore any GSD or phase work and follow its output.\nUse the `gsdt-flow` skill when it is available; otherwise run\n`gsdt-flow-next <N>` and follow each printed action.\nFor toolkit command syntax and workflow order, this marked adapter and the\ncanonical document supersede older unmarked GSD text in this file. Continue to\nfollow repository-specific policy from that older text.\n<!-- gsd-toolkit:provider:end -->\n"

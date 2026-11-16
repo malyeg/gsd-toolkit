@@ -1,21 +1,19 @@
-// P2 parity (planning): src/planning.ts + src/commands/planning*.ts against
-// lib/gsd_planning.py (the oracle) and the pre-P2 bash bins
-// (tests/fixtures/p2-old-bins/). Same inputs side by side: stdout, stderr,
-// exit status and the resulting file bytes must match.
+// P2 (planning): src/planning.ts + src/commands/planning*.ts and the gsdt-planning-repair /
+// gsdt-planning-merge launchers against saved goldens in tests/golden/p2-planning/: stdout, stderr,
+// exit status and the resulting files (each shown as a JSON string, so CR/LF stay visible).
+// Regenerate with UPDATE_GOLDEN=1 and review the golden diff.
 // Run: node --test 'tests/ts/*.test.ts'
 import assert from 'node:assert/strict';
-import { eolOf } from '../../src/common.ts';
 import { spawnSync } from 'node:child_process';
-import { chmodSync, copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
-import { test } from 'node:test';
+import { golden, test } from './golden.ts';
 import { main as planningMain, parseArgs } from '../../src/commands/planning.ts';
 import { PKG, tmp, write } from './helpers.ts';
 
-const PY = path.join(PKG, 'lib', 'gsd_planning.py');
 const LAUNCH = path.join(PKG, 'src', 'launch.mjs');
 const FIX = path.join(PKG, 'tests', 'fixtures');
-const OLD_BINS = path.join(FIX, 'p2-old-bins');
 delete process.env.COLUMNS;
 // --commit makes its own commit: give git a name (a Linux runner has none and git cannot guess one)
 Object.assign(process.env, { GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@t', GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@t' });
@@ -25,7 +23,6 @@ const run = (cmd: string, args: string[], cwd?: string, env?: Record<string, str
   const r = spawnSync(cmd, args, { cwd, encoding: 'utf8', env: { ...process.env, ...env } });
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? 1 };
 };
-const py = (args: string[], cwd?: string): R => run('python3', ['-I', PY, ...args], cwd);
 const ts = (args: string[], cwd?: string): R => run('node', [LAUNCH, 'planning', ...args], cwd);
 
 /** every file under dir → bytes (base64), by relative path */
@@ -45,46 +42,30 @@ function snapshot(dir: string): Record<string, string> {
 }
 
 type Files = Record<string, string | Buffer>;
-/**
- * P12: python rewrites a CRLF file as LF (universal newlines); the port keeps the file's dominant
- * ending. So where the oracle changed a file whose input was dominantly CRLF, the port's file is
- * the oracle's with CRLF; a file the oracle left alone must stay byte-identical.
- */
-function crlfExpected(oracle: Record<string, string>, input: Files): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const [rel, b64] of Object.entries(oracle)) {
-    const orig = input[rel];
-    const origText = orig === undefined ? undefined : Buffer.from(orig as string).toString('latin1');
-    if (origText === undefined || Buffer.from(origText, 'latin1').toString('base64') === b64 || eolOf(origText) !== '\r\n') out[rel] = b64;
-    else out[rel] = Buffer.from(Buffer.from(b64, 'base64').toString('latin1').replace(/\n/g, '\r\n'), 'latin1').toString('base64');
-  }
-  return out;
-}
-/** two identical .planning trees (one per engine) */
-function twin(files: Files): [string, string] {
-  const base = tmp();
-  const dirs = [path.join(base, 'py'), path.join(base, 'ts')] as [string, string];
-  for (const d of dirs) for (const [rel, body] of Object.entries(files)) write(path.join(d, rel), body as string);
-  return dirs;
+/** a .planning tree for the engine */
+function tree(files: Files): string {
+  const d = path.join(tmp(), 'ts');
+  for (const [rel, body] of Object.entries(files)) write(path.join(d, rel), body as string);
+  return d;
 }
 
-/** engine `args` (a function of the tree root) on both twins; everything must match */
-function same(label: string, files: Files, args: (root: string) => string[], cwdOf: (root: string) => string = (r) => r): R {
-  const [a, b] = twin(files);
-  const ra = py(args(a), cwdOf(a));
+const showFiles = (snap: Record<string, string>): string => Object.entries(snap).map(([k, v]) => `${k}: ${JSON.stringify(Buffer.from(v, 'base64').toString('latin1'))}`).join('\n');
+const showR = (label: string, r: R, root: string, snap: Record<string, string>): string => {
+  const n = (x: string): string => x.split(root).join('<root>');
+  return `${label}\nrc=${r.rc}\nout=${JSON.stringify(n(r.out))}\nerr=${JSON.stringify(n(r.err))}\n${showFiles(snap)}`;
+};
+
+/** engine `args` (a function of the tree root) on a tree of `files` */
+function same(label: string, files: Files, args: (root: string) => string[], cwdOf: (root: string) => string = (r) => r, compact = false): R {
+  const b = tree(files);
   const rb = ts(args(b), cwdOf(b));
-  // paths in messages differ per twin
-  const norm = (r: R, root: string): R => ({ ...r, out: r.out.split(root).join('<root>'), err: r.err.split(root).join('<root>') });
-  if (ra.err.startsWith('Traceback')) {
-    // a Python traceback (missing/unreadable file): the TS gives a one-line error, same status
-    assert.equal(rb.rc, ra.rc, `${label}: rc`);
-    assert.equal(rb.out, ra.out, `${label}: stdout`);
-    assert.notEqual(rb.err, '', `${label}: says something`);
-  } else {
-    assert.deepEqual(norm(rb, b), norm(ra, a), `${label}: stdout/stderr/rc`);
-  }
-  assert.deepEqual(snapshot(b), crlfExpected(snapshot(a), files), `${label}: files`);
-  return ra;
+  // compact: the files as a sha1 each (the randomized cases would otherwise save ~14 MB of text)
+  const snap = snapshot(b);
+  const shown = compact
+    ? Object.fromEntries(Object.entries(snap).map(([k, v]) => [k, Buffer.from(`sha1:${createHash('sha1').update(Buffer.from(v, 'base64')).digest('hex')}`).toString('base64')]))
+    : snap;
+  golden(showR(label, rb, b, shown));
+  return rb;
 }
 
 const read = (f: string): string => readFileSync(f, 'utf8');
@@ -259,14 +240,14 @@ test('STATE.md: reconcile, repair and --check on crafted inputs', () => {
 
 test('STATE.md: Session Continuity stays byte-identical, repeated lines kept', () => {
   const files: Files = { '.planning/ROADMAP.md': ROADMAP, '.planning/STATE.md': STATE, ...PLAN_FILES };
-  const [, b] = twin(files);
+  const b = tree(files);
   assert.equal(ts(['repair', `${b}/.planning`]).rc, 0);
   const after = read(path.join(b, '.planning/STATE.md'));
   const tail = (s: string): string => s.slice(s.indexOf('## Session Continuity'));
   assert.equal(tail(after), tail(STATE));
 });
 
-test('percent rounding is half-to-even like Python round()', () => {
+test('percent rounding is half-to-even', () => {
   // 1 of 8 = 12.5 -> 12 ; 3 of 8 = 37.5 -> 38 ; bar: 12 -> round(1.2)=1, 25-> round(2.5)=2, 35 -> 4
   for (const [done, total] of [[1, 8], [3, 8], [5, 8], [7, 8], [1, 40], [7, 20], [1, 3], [2, 3], [0, 5], [5, 5], [1, 7]] as const) {
     let roadmap = '## Phases\n';
@@ -298,14 +279,12 @@ test('repair: missing files, directories and path spellings', () => {
   same('reconcile: --path to other kind', { 'x/f.md': '---\na: 1\na: 2\n---\n' }, (r) => ['reconcile', `${r}/x/f.md`, '--path', 'STATE.md']);
 });
 
-test('invalid UTF-8: both fail with status 1 (messages differ: no traceback here)', () => {
+test('invalid UTF-8: fails with status 1', () => {
   const bad = Buffer.concat([Buffer.from('- [ ] **Phase 1: a'), Buffer.from([0xff, 0xfe]), Buffer.from('**\n')]);
-  const [a, b] = twin({ '.planning/ROADMAP.md': bad, '.planning/STATE.md': STATE });
-  const ra = py(['repair', `${a}/.planning`]);
+  const b = tree({ '.planning/ROADMAP.md': bad, '.planning/STATE.md': STATE });
   const rb = ts(['repair', `${b}/.planning`]);
-  assert.equal(rb.rc, ra.rc);
-  assert.equal(rb.out, ra.out);
-  assert.deepEqual(snapshot(b), snapshot(a));
+  golden(showR('invalid utf8', rb, b, snapshot(b)));
+  assert.equal(rb.rc, 1);
 });
 
 // ── randomized damage ───────────────────────────────────────────────────────
@@ -376,16 +355,16 @@ test('randomized union damage: 80 mutated roadmap/state pairs', () => {
   for (let n = 0; n < 80; n++) {
     const [r0, s0] = bases[n % bases.length] as [string, string];
     const files: Files = { '.planning/ROADMAP.md': mutate(rand, r0, roadmapPool), '.planning/STATE.md': mutate(rand, s0, statePool), ...(n % 3 ? PLAN_FILES : {}) };
-    same(`random ${n} repair`, files, (r) => ['repair', `${r}/.planning`]);
-    same(`random ${n} check`, files, (r) => ['repair', '--check', `${r}/.planning`]);
-    same(`random ${n} reconcile state`, files, (r) => ['reconcile', `${r}/.planning/STATE.md`]);
-    same(`random ${n} reconcile roadmap`, files, (r) => ['reconcile', `${r}/.planning/ROADMAP.md`]);
+    same(`random ${n} repair`, files, (r) => ['repair', `${r}/.planning`], undefined, true);
+    same(`random ${n} check`, files, (r) => ['repair', '--check', `${r}/.planning`], undefined, true);
+    same(`random ${n} reconcile state`, files, (r) => ['reconcile', `${r}/.planning/STATE.md`], undefined, true);
+    same(`random ${n} reconcile roadmap`, files, (r) => ['reconcile', `${r}/.planning/ROADMAP.md`], undefined, true);
   }
 });
 
 test('repair is idempotent and --check agrees with a real repair', () => {
   for (const [, roadmap, state] of ROADMAP_FIX) {
-    const [, b] = twin({ '.planning/ROADMAP.md': roadmap, '.planning/STATE.md': state });
+    const b = tree({ '.planning/ROADMAP.md': roadmap, '.planning/STATE.md': state });
     const chk = ts(['repair', '--check', `${b}/.planning`]);
     const first = ts(['repair', `${b}/.planning`]);
     assert.equal(chk.rc, 1);
@@ -398,7 +377,7 @@ test('repair is idempotent and --check agrees with a real repair', () => {
 
 // ── command line ────────────────────────────────────────────────────────────
 
-test('engine CLI: argv, usage, --help and errors match argparse', () => {
+test('engine CLI: argv, usage, --help and errors', () => {
   const cases: string[][] = [
     [], ['--help'], ['-h'], ['--h'], ['--he'], ['-hx'], ['--help=x'], ['bogus'], ['rep'], ['recon'], ['repair'], ['reconcile'],
     ['reconcile', '-h'], ['repair', '--help'], ['repair', '-h', 'x'], ['reconcile', 'f', '--path'], ['reconcile', '--path'],
@@ -411,24 +390,16 @@ test('engine CLI: argv, usage, --help and errors match argparse', () => {
   ];
   const cwd = tmp();
   for (const c of cases) {
-    const a = py(c, cwd);
     const b = ts(c, cwd);
     if (c[0] === 'reconcile' && c.some((x) => x.startsWith('missing-file'))) {
-      assert.equal(b.rc, a.rc, `rc of ${JSON.stringify(c)}`); // python prints a traceback here
+      // only the status is kept (the message names the path)
+      golden(`argv ${JSON.stringify(c)}\nrc=${b.rc}`);
+      assert.notEqual(b.err, '');
       continue;
     }
-    // older argparse (3.12.3) reads a `--` before the command as the command; newer ones skip it, as the new side does
-    if (c[0] === '--' && a.err.includes("invalid choice: '--'")) continue;
-    // argparse's wording of a bad choice changes with the python version: 3.12.x
-    // quotes the choices or not, 3.15 adds "maybe you meant"; the new side
-    // prints 3.15's. Only those two parts are evened out.
-    assert.deepEqual({ ...b, err: argparseWording(b.err) }, { ...a, err: argparseWording(a.err) }, `argv ${JSON.stringify(c)}`);
+    golden(`argv ${JSON.stringify(c)}\nrc=${b.rc}\nout=${JSON.stringify(b.out)}\nerr=${JSON.stringify(b.err)}`);
   }
 });
-
-function argparseWording(s: string): string {
-  return s.replace(/, maybe you meant '[^']*'\?/g, '').replace(/\(choose from ([^)]*)\)/g, (_m, l: string) => `(choose from ${l.replace(/'/g, '')})`);
-}
 
 test('parseArgs / main are importable and do no work at import time', () => {
   assert.deepEqual(parseArgs(['repair', '--check', 'd']), { cmd: 'repair', planning: 'd', check: true });
@@ -436,21 +407,8 @@ test('parseArgs / main are importable and do no work at import time', () => {
   assert.equal(typeof planningMain, 'function');
 });
 
-// ── old bash bins vs the new launchers ──────────────────────────────────────
+// ── the bin launchers ───────────────────────────────────────────────────────
 
-/** a package dir with the OLD bins next to a copy of lib/ (they source lib/common.sh and run lib/gsd_planning.py) */
-function oldPackage(): string {
-  const d = path.join(tmp(), 'old-pkg');
-  mkdirSync(path.join(d, 'bin'), { recursive: true });
-  cpSync(path.join(PKG, 'lib'), path.join(d, 'lib'), { recursive: true });
-  for (const n of ['gsdt-planning-repair', 'gsdt-planning-merge']) {
-    copyFileSync(path.join(OLD_BINS, n), path.join(d, 'bin', n));
-    chmodSync(path.join(d, 'bin', n), 0o755);
-  }
-  return d;
-}
-const OLD = oldPackage();
-const oldBin = (n: string): string => path.join(OLD, 'bin', n);
 const newBin = (n: string): string => path.join(PKG, 'bin', n);
 
 function git(cwd: string, args: string[]): R {
@@ -466,69 +424,61 @@ function gitRepo(files: Files): string {
   return d;
 }
 
-/** old and new bin on identical repos; stdout/stderr/rc and files must match */
-function binSame(label: string, bin: string, files: Files, args: (repo: string) => string[], opts: { cwd?: (repo: string) => string; after?: (repo: string) => string } = {}): R {
-  const a = gitRepo(files);
-  const b = gitRepo(files);
-  const ra = run(oldBin(bin), args(a), opts.cwd ? opts.cwd(a) : a);
-  const rb = run(newBin(bin), args(b), opts.cwd ? opts.cwd(b) : b);
-  const norm = (r: R, repo: string): R => ({ ...r, out: r.out.split(repo).join('<repo>'), err: r.err.split(repo).join('<repo>') });
-  assert.deepEqual(norm(rb, b), norm(ra, a), `${label}: stdout/stderr/rc`);
-  assert.deepEqual(snapshot(b), snapshot(a), `${label}: files`);
-  if (opts.after) assert.equal(opts.after(b), opts.after(a), `${label}: after`);
-  return ra;
+/** a bin on a fresh repo: stdout/stderr/rc and files, as text */
+function binCase(label: string, bin: string, files: Files, args: (repo: string) => string[], opts: { cwd?: (repo: string) => string; after?: (repo: string) => string } = {}): R {
+  const repo = gitRepo(files);
+  const r = run(newBin(bin), args(repo), opts.cwd ? opts.cwd(repo) : repo);
+  const n = (x: string): string => x.split(repo).join('<repo>');
+  const after = opts.after ? `\nafter=${JSON.stringify(opts.after(repo))}` : '';
+  golden(`${label}\nrc=${r.rc}\nout=${JSON.stringify(n(r.out))}\nerr=${JSON.stringify(n(r.err))}\n${showFiles(snapshot(repo))}${after}`);
+  return r;
 }
 
 const dirty: Files = { '.planning/ROADMAP.md': roadmapCases['union damage'] as string, '.planning/STATE.md': STATE, ...PLAN_FILES };
 const headSubject = (repo: string): string => git(repo, ['log', '-1', '--format=%s%n%b']).out + git(repo, ['status', '--porcelain']).out + git(repo, ['show', '--stat', '--format=', 'HEAD']).out;
 
-test('gsdt-planning-repair: old bash vs launcher', () => {
+test('gsdt-planning-repair: launcher', () => {
   const repo = (r: string): string[] => ['--repo', r];
-  binSame('--help', 'gsdt-planning-repair', dirty, () => ['--help']);
-  binSame('-h wins over later junk', 'gsdt-planning-repair', dirty, () => ['-h', '--bogus']);
-  binSame('junk before -h', 'gsdt-planning-repair', dirty, () => ['--bogus', '-h']);
-  binSame('unknown arg', 'gsdt-planning-repair', dirty, () => ['--bogus']);
-  binSame('--repo without value', 'gsdt-planning-repair', dirty, () => ['--repo']);
-  binSame('check+commit', 'gsdt-planning-repair', dirty, () => ['--check', '--commit']);
-  binSame('-n check', 'gsdt-planning-repair', dirty, () => ['-n']);
-  binSame('no repo dir', 'gsdt-planning-repair', dirty, () => ['--repo', '/nonexistent-dir-xyz']);
-  binSame('check', 'gsdt-planning-repair', dirty, repo);
-  binSame('check from cwd', 'gsdt-planning-repair', dirty, () => ['--check']);
-  binSame('check from subdir', 'gsdt-planning-repair', { ...dirty, 'sub/x.txt': 'x' }, () => ['--check'], { cwd: (r) => path.join(r, 'sub') });
-  binSame('repair', 'gsdt-planning-repair', dirty, repo);
-  binSame('clean tree', 'gsdt-planning-repair', { '.planning/ROADMAP.md': ROADMAP, '.planning/STATE.md': STATE, ...PLAN_FILES }, repo);
-  binSame('no .planning', 'gsdt-planning-repair', { 'a.txt': 'x' }, repo);
-  binSame('no ROADMAP.md', 'gsdt-planning-repair', { '.planning/STATE.md': STATE }, repo);
-  binSame('--commit', 'gsdt-planning-repair', dirty, (r) => ['--commit', '--repo', r], { after: headSubject });
-  binSame('--commit clean', 'gsdt-planning-repair', { '.planning/ROADMAP.md': ROADMAP, '.planning/STATE.md': STATE, ...PLAN_FILES }, () => ['--commit'], { after: headSubject });
-  binSame('--commit, ROADMAP only', 'gsdt-planning-repair', { '.planning/ROADMAP.md': roadmapCases['union damage'] as string }, () => ['--commit'], { after: headSubject });
+  binCase('--help', 'gsdt-planning-repair', dirty, () => ['--help']);
+  binCase('-h wins over later junk', 'gsdt-planning-repair', dirty, () => ['-h', '--bogus']);
+  binCase('junk before -h', 'gsdt-planning-repair', dirty, () => ['--bogus', '-h']);
+  binCase('unknown arg', 'gsdt-planning-repair', dirty, () => ['--bogus']);
+  binCase('--repo without value', 'gsdt-planning-repair', dirty, () => ['--repo']);
+  binCase('check+commit', 'gsdt-planning-repair', dirty, () => ['--check', '--commit']);
+  binCase('-n check', 'gsdt-planning-repair', dirty, () => ['-n']);
+  binCase('no repo dir', 'gsdt-planning-repair', dirty, () => ['--repo', '/nonexistent-dir-xyz']);
+  binCase('check', 'gsdt-planning-repair', dirty, repo);
+  binCase('check from cwd', 'gsdt-planning-repair', dirty, () => ['--check']);
+  binCase('check from subdir', 'gsdt-planning-repair', { ...dirty, 'sub/x.txt': 'x' }, () => ['--check'], { cwd: (r) => path.join(r, 'sub') });
+  binCase('repair', 'gsdt-planning-repair', dirty, repo);
+  binCase('clean tree', 'gsdt-planning-repair', { '.planning/ROADMAP.md': ROADMAP, '.planning/STATE.md': STATE, ...PLAN_FILES }, repo);
+  binCase('no .planning', 'gsdt-planning-repair', { 'a.txt': 'x' }, repo);
+  binCase('no ROADMAP.md', 'gsdt-planning-repair', { '.planning/STATE.md': STATE }, repo);
+  binCase('--commit', 'gsdt-planning-repair', dirty, (r) => ['--commit', '--repo', r], { after: headSubject });
+  binCase('--commit clean', 'gsdt-planning-repair', { '.planning/ROADMAP.md': ROADMAP, '.planning/STATE.md': STATE, ...PLAN_FILES }, () => ['--commit'], { after: headSubject });
+  binCase('--commit, ROADMAP only', 'gsdt-planning-repair', { '.planning/ROADMAP.md': roadmapCases['union damage'] as string }, () => ['--commit'], { after: headSubject });
   for (const [name, roadmap, state] of ROADMAP_FIX) {
-    binSame(`${name}: repair --commit`, 'gsdt-planning-repair', { '.planning/ROADMAP.md': roadmap, '.planning/STATE.md': state }, () => ['--commit'], { after: headSubject });
-    binSame(`${name}: check`, 'gsdt-planning-repair', { '.planning/ROADMAP.md': roadmap, '.planning/STATE.md': state }, () => ['--check']);
+    binCase(`${name}: repair --commit`, 'gsdt-planning-repair', { '.planning/ROADMAP.md': roadmap, '.planning/STATE.md': state }, () => ['--commit'], { after: headSubject });
+    binCase(`${name}: check`, 'gsdt-planning-repair', { '.planning/ROADMAP.md': roadmap, '.planning/STATE.md': state }, () => ['--check']);
   }
 });
 
 test('gsdt-planning-repair --commit keeps other staged files out of the commit', () => {
   const files: Files = { ...dirty, 'other.txt': 'one\n' };
-  for (const bin of [oldBin, newBin]) {
-    const r = gitRepo(files);
-    write(path.join(r, 'other.txt'), 'two\n');
-    git(r, ['add', 'other.txt']);
-    assert.equal(run(bin('gsdt-planning-repair'), ['--commit'], r).rc, 0);
-    assert.equal(git(r, ['status', '--porcelain']).out, 'M  other.txt\n');
-  }
+  const r = gitRepo(files);
+  write(path.join(r, 'other.txt'), 'two\n');
+  git(r, ['add', 'other.txt']);
+  assert.equal(run(newBin('gsdt-planning-repair'), ['--commit'], r).rc, 0);
+  assert.equal(git(r, ['status', '--porcelain']).out, 'M  other.txt\n');
 });
 
 test('gsdt-planning-repair --commit: a failing commit ends with its status (set -e)', () => {
-  const results = [oldBin, newBin].map((bin) => {
-    const r = gitRepo(dirty);
-    mkdirSync(path.join(r, '.git', 'hooks'), { recursive: true });
-    write(path.join(r, '.git', 'hooks', 'pre-commit'), '#!/bin/sh\necho rejected >&2\nexit 7\n', 0o755);
-    const res = run(bin('gsdt-planning-repair'), ['--commit'], r);
-    return { ...res, out: res.out.split(r).join('<repo>'), err: res.err.split(r).join('<repo>') };
-  });
-  assert.deepEqual(results[1], results[0]);
-  assert.notEqual(results[0]?.rc, 0);
+  const r = gitRepo(dirty);
+  mkdirSync(path.join(r, '.git', 'hooks'), { recursive: true });
+  write(path.join(r, '.git', 'hooks', 'pre-commit'), '#!/bin/sh\necho rejected >&2\nexit 7\n', 0o755);
+  const res = run(newBin('gsdt-planning-repair'), ['--commit'], r);
+  golden(`rc=${res.rc}\nout=${JSON.stringify(res.out.split(r).join('<repo>'))}\nerr=${JSON.stringify(res.err.split(r).join('<repo>'))}`);
+  assert.notEqual(res.rc, 0);
 });
 
 /** the driver the way gsd_register_merge_driver registers it, then a real conflicting merge */
@@ -545,7 +495,7 @@ function mergeRepo(bin: string, ours: Files, theirs: Files, base: Files): { repo
   return { repo: d, res };
 }
 
-test('gsdt-planning-merge through a real git merge: old bash vs launcher', () => {
+test('gsdt-planning-merge through a real git merge: launcher', () => {
   const base: Files = { '.planning/ROADMAP.md': ROADMAP, '.planning/STATE.md': STATE };
   const variants: [string, Files, Files][] = [
     [
@@ -570,16 +520,14 @@ test('gsdt-planning-merge through a real git merge: old bash vs launcher', () =>
     ],
   ];
   for (const [name, ours, theirs] of variants) {
-    const a = mergeRepo(oldBin('gsdt-planning-merge'), ours, theirs, base);
-    const b = mergeRepo(newBin('gsdt-planning-merge'), ours, theirs, base);
     // the merge output names the driver's own stderr; compare it without the repo path
-    const norm = (r: R, repo: string): R => ({ ...r, out: r.out.split(repo).join('<repo>').replace(/\b[0-9a-f]{7,}\b/g, '<sha>'), err: r.err.split(repo).join('<repo>') });
-    assert.deepEqual(norm(b.res, b.repo), norm(a.res, a.repo), `${name}: git merge output`);
-    assert.deepEqual(snapshot(b.repo), snapshot(a.repo), `${name}: merged files`);
+    const m = mergeRepo(newBin('gsdt-planning-merge'), ours, theirs, base);
+    const n = (x: string): string => x.split(m.repo).join('<repo>');
+    golden(`${name}\nrc=${m.res.rc}\nout=${JSON.stringify(n(m.res.out).replace(/\b[0-9a-f]{7,}\b/g, '<sha>'))}\nerr=${JSON.stringify(n(m.res.err))}\n${showFiles(snapshot(m.repo))}`);
   }
 });
 
-test('gsdt-planning-merge called directly: old bash vs launcher', () => {
+test('gsdt-planning-merge called directly: launcher', () => {
   const trio = (): { dir: string; o: string; a: string; b: string } => {
     const dir = tmp();
     return {
@@ -589,29 +537,28 @@ test('gsdt-planning-merge called directly: old bash vs launcher', () => {
       b: write(path.join(dir, 'B'), '- [ ] **Phase 1: a**, b\n'),
     };
   };
-  const callBoth = (extra: (t: ReturnType<typeof trio>) => string[], label: string): void => {
-    const ta = trio();
+  const callDirect = (extra: (t: ReturnType<typeof trio>) => string[], label: string): void => {
     const tb = trio();
-    const ra = run(oldBin('gsdt-planning-merge'), extra(ta), ta.dir);
     const rb = run(newBin('gsdt-planning-merge'), extra(tb), tb.dir);
     // bash's own `${1:?}` error names the script path and line
-    // (a Python traceback on the old side, or the TS engine's one-line
-    // `gsd_planning: …` error on the new side, is followed by the same warning)
     const norm = (r: R, t: ReturnType<typeof trio>, bin: string): R => ({
       ...r,
-      err: r.err.split(t.dir).join('<d>').split(bin).join('<bin>').replace(/line \d+/, 'line N').replace(/^Traceback[\s\S]*?(?=⚠)/, '').replace(/^gsd_planning: [^\n]*\n(?=⚠)/, ''),
+      err: r.err.split(t.dir).join('<d>').split(bin).join('<bin>').replace(/line \d+/, 'line N'),
     });
-    assert.deepEqual(norm(rb, tb, newBin('gsdt-planning-merge')), norm(ra, ta, oldBin('gsdt-planning-merge')), label);
-    assert.deepEqual(snapshot(tb.dir), snapshot(ta.dir), `${label}: files`);
+    const show = (r: R, t: ReturnType<typeof trio>, bin: string): string => {
+      const n = norm(r, t, bin);
+      return `${label}\nrc=${n.rc}\nout=${JSON.stringify(n.out)}\nerr=${JSON.stringify(n.err)}\n${showFiles(snapshot(t.dir))}`;
+    };
+    golden(show(rb, tb, newBin('gsdt-planning-merge')));
   };
-  callBoth((t) => [t.o, t.a, t.b, 'a/b/ROADMAP.md'], 'ROADMAP path');
-  callBoth((t) => [t.o, t.a, t.b, 'a/b/STATE.md'], 'STATE path (not state-shaped)');
-  callBoth((t) => [t.o, t.a, t.b, 'a/b/NOTES.md'], 'other path');
-  callBoth((t) => [t.o, t.a, t.b], 'no path');
-  callBoth((t) => [t.o, t.a, t.b, ''], 'empty path');
-  callBoth((t) => [t.o, t.a], 'missing %B');
-  callBoth(() => [], 'no args');
-  callBoth((t) => [t.o, path.join(t.dir, 'nonexistent'), t.b, 'ROADMAP.md'], 'missing %A');
+  callDirect((t) => [t.o, t.a, t.b, 'a/b/ROADMAP.md'], 'ROADMAP path');
+  callDirect((t) => [t.o, t.a, t.b, 'a/b/STATE.md'], 'STATE path (not state-shaped)');
+  callDirect((t) => [t.o, t.a, t.b, 'a/b/NOTES.md'], 'other path');
+  callDirect((t) => [t.o, t.a, t.b], 'no path');
+  callDirect((t) => [t.o, t.a, t.b, ''], 'empty path');
+  callDirect((t) => [t.o, t.a], 'missing %B');
+  callDirect(() => [], 'no args');
+  callDirect((t) => [t.o, path.join(t.dir, 'nonexistent'), t.b, 'ROADMAP.md'], 'missing %A');
 });
 
 test('gsdt-planning-merge degrades safely without a usable node', () => {
@@ -620,7 +567,6 @@ test('gsdt-planning-merge degrades safely without a usable node', () => {
     const real = run('sh', ['-c', `command -v ${tool}`]).out.trim();
     symlinkSync(real, path.join(stubs, tool));
   }
-  const old = tmp();
   const nodeless = (): { dir: string; env: Record<string, string> } => ({ dir: tmp(), env: { PATH: stubs } });
   const old23 = tmp();
   write(path.join(old23, 'node'), '#!/bin/sh\n[ "$1" = "-e" ] && exit 1\necho v23\n', 0o755);
@@ -635,7 +581,6 @@ test('gsdt-planning-merge degrades safely without a usable node', () => {
     assert.match(r.err, /needs Node\.js >= 24/);
     assert.match(r.err, /gsdt-planning-repair/);
   }
-  void old;
 });
 
 test('launchers: no node means a clear message from repair', () => {
@@ -646,7 +591,6 @@ test('launchers: no node means a clear message from repair', () => {
   assert.match(r.err, /needs Node\.js >= 24/);
 });
 
-test('shipped docs and workflow still reference what exists', () => {
-  assert.ok(existsSync(PY), 'lib/gsd_planning.py stays as the oracle');
+test('the workflow still runs the node tests', () => {
   assert.match(read(path.join(PKG, '.github', 'workflows', 'tests.yml')), /node --test 'tests\/ts\/\*\.test\.ts'/);
 });

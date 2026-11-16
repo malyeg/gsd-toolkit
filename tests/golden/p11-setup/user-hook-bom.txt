@@ -1,0 +1,4 @@
+@@@ 1 @@@
+﻿{"a": 1}
+--
+⚠ <H>/.claude/settings.json is not valid JSON; left unchanged (no claude user hook)

@@ -1,0 +1,16 @@
+@@@ 1 @@@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": []
+      },
+      {
+        "matcher": "x"
+      }
+    ]
+  }
+}
+
+--
+✂ claude user hook removed from <H>/.claude/settings.json

@@ -1,0 +1,15 @@
+@@@ 1 @@@
+{
+  "a": 1.0,
+  "b": 100000.0,
+  "c": 12345678901234567890,
+  "d": 0,
+  "e": 0.1,
+  "f": [
+    1.5,
+    0.002
+  ]
+}
+
+--
+✂ claude user hook removed from <H>/.claude/settings.json

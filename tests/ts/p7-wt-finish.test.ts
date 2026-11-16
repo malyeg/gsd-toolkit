@@ -1,13 +1,12 @@
-// P7 parity (gsdt-wt-finish): the TypeScript command behind bin/gsdt-wt-finish against
-// the pre-P7 bash command (tests/fixtures/p7-old-bins/gsdt-wt-finish), each on its own
-// copy of the same fixture project. Compared: stdout, stderr, exit code of every step,
-// and the files/commits/branches/worktrees/origin left behind.
+// gsdt-wt-finish: the TypeScript command behind bin/gsdt-wt-finish on its own copy of a fixture project. Every step's
+// stdout, stderr, exit code and the files/commits/branches/worktrees left behind are compared with
+// the saved goldens in tests/golden/p7-wt-finish/. Regenerate with UPDATE_GOLDEN=1 and review the diff.
 // Run: node --test tests/ts/p7-wt-finish.test.ts
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
+import { test } from './golden.ts';
 import {
   E,
   RACE_CONF,
@@ -57,10 +56,6 @@ test('not inside a git repository (NOT parity: the bash exited 128 in silence â€
   const r = runStep(s, wf(['1'], { cwd: () => mkdtempSync(path.join(tmpdir(), 'gsd-p7-')) }));
   assert.equal(r.rc, 1);
   assert.equal(r.err, 'error: not inside a git repository\n');
-  const o = makeSide('old');
-  const ro = runStep(o, wf(['1'], { cwd: () => mkdtempSync(path.join(tmpdir(), 'gsd-p7-')) }));
-  assert.equal(ro.rc, 128);
-  assert.equal(ro.err, '');
 });
 
 test('uncommitted changes, main on another branch, an explicit base', () => {

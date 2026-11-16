@@ -1,0 +1,346 @@
+@@@ 1 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+
+--- stderr
+error: <T>/shop-worktrees/phase-1-catalog has uncommitted changes — commit them in the worktree first
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+dirty.txt
+f.txt
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-wt-finish phase-1-catalog)
+rc=1
+--- stdout
+
+--- stderr
+error: <T>/shop-worktrees/phase-1-catalog has uncommitted changes — commit them in the worktree first
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+dirty.txt
+f.txt
+── merge driver
+
+@@@ 3 @@@
+step 1 (gsdt-wt-finish 1)
+rc=1
+--- stdout
+
+--- stderr
+error: main checkout is on 'other', not 'main' (git -C "<T>/shop" checkout main), then re-run.
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+other
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/other
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+
+@@@ 4 @@@
+step 2 (gsdt-wt-finish 1 nobase)
+rc=1
+--- stdout
+
+--- stderr
+error: main checkout is on 'other', not 'nobase' (git -C "<T>/shop" checkout nobase), then re-run.
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+other
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/other
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+
+@@@ 5 @@@
+step 3 (gsdt-wt-finish 1 other)
+rc=1
+--- stdout
+▶ syncing local 'other' with origin…
+
+--- stderr
+fatal: couldn't find remote ref other
+error: origin has no 'other' branch — push it first (git -C "<T>/shop" push -u origin other), or set base = <branch> in .gsd.conf. The phase worktree is kept.
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+other
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/other
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+
+@@@ 6 @@@
+step 4 (gsdt-wt-finish 1 main)
+rc=1
+--- stdout
+
+--- stderr
+error: main checkout is on 'other', not 'main' (git -C "<T>/shop" checkout main), then re-run.
+
+--- files left behind
+── log
+init
+feature
+
+── branches
+main
+other
+phase-1-catalog
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/other
+
+worktree <T>/shop-worktrees/phase-1-catalog
+branch refs/heads/phase-1-catalog
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── wt phase-1-catalog
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+f.txt
+── merge driver
+gsdt-planning-merge %O %A %B %P
+

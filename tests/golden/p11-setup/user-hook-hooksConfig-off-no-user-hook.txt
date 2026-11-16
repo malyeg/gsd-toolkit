@@ -1,0 +1,9 @@
+@@@ 1 @@@
+{
+  "hooksConfig": {
+    "enabled": false
+  }
+}
+
+--
+✂ claude user hook removed from <H>/.claude/settings.json
