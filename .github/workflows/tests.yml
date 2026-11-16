@@ -53,6 +53,7 @@ jobs:
       matrix:
         os: ${{ fromJSON(needs.matrix.outputs.os) }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
     defaults:
       run:
         shell: bash
@@ -91,4 +92,4 @@ jobs:
           GSD_TEST_REQUIRE_BROWSER: 1   # a skip here would mean an untested checker
         run: |
           export GSD_PLAYWRIGHT_ROOT="$RUNNER_TEMP/pw"
-          node --test 'tests/node/*.test.ts' 'tests/ts/*.test.ts' 'tests/os/*.test.ts'
+          node --test --test-timeout=300000 'tests/node/*.test.ts' 'tests/ts/*.test.ts' 'tests/os/*.test.ts'
