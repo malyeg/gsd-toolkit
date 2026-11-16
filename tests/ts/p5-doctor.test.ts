@@ -233,7 +233,9 @@ async function check(sc: Sc): Promise<void> {
     return;
   }
   for (const argv of runs) {
-    const nn = await runBin(nw, sc, argv, sc.cwd ? sc.cwd(nw) : nw.W);
+    // The full report is --verbose now; the short default has its own scenarios (--quiet, --fix, doctor-output.test.ts).
+    const asIs = ['--quiet', '-q', '--json', '--help', '-h', '--fix'].some((a) => argv.includes(a));
+    const nn = await runBin(nw, sc, asIs ? argv : ['--verbose', ...argv], sc.cwd ? sc.cwd(nw) : nw.W);
     golden(runText(argv, nn, nw.W));
     if (sc.expect && sc.expect.test(nn.out + nn.err)) sawExpect = true;
   }

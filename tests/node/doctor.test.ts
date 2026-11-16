@@ -42,7 +42,7 @@ const baseEnv = (): Env => ({
 
 let OUT = '';
 const doc = (repoDir: string, env: Env = {}): void => {
-  OUT = gsdt('doctor', ['--repo', repoDir], { env: { ...baseEnv(), ...env } }).out;
+  OUT = gsdt('doctor', ['--verbose', '--repo', repoDir], { env: { ...baseEnv(), ...env } }).out;
 };
 const json = (repoDir: string, env: Env = {}): void => {
   OUT = gsdt('doctor', ['--json', '--repo', repoDir], { env: { ...baseEnv(), ...env } }).out;

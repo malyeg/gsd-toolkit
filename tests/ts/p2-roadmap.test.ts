@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { golden, test } from './golden.ts';
-import { roadmapAudit, roadmapRows } from '../../src/roadmap.ts';
+import { roadmapAudit, roadmapRows, unmarkedDone } from '../../src/roadmap.ts';
 import { PKG, tmp, write } from './helpers.ts';
 
 type Run = { out: Buffer; err: string; rc: number; file: Buffer | null };
@@ -316,4 +316,28 @@ test('rows: unreadable file exits 2 with the message', () => {
   assert.equal(t.status, 2);
   const show = (r: { stdout: string; stderr: string; status: number | null }): string => `rc=${r.status}\nout=${JSON.stringify(r.stdout)}\nerr=${JSON.stringify(r.stderr)}`;
   golden(show(t));
+});
+
+test('unmarkedDone (doctor T027): merged, every plan run, checklist row not ticked', () => {
+  const text = [
+    '- [x] **Phase 1: Ticked** - done',
+    '- [ ] **Phase 04: Landed** - all plans ran, merged',
+    '- [ ] **Phase 5: In flight** - all plans ran, branch still open',
+    '- [ ] **Phase 6: Half** - one plan left',
+    '- [ ] **Phase 7: No plans**',
+    '- [ ] **Phase 8: No folder**',
+    '- [ ] **Phase 4.1: Decimal** - not Phase 4',
+    '- [ ] **Phase 04: Landed** - a duplicate row',
+  ].join('\n');
+  const files: Record<string, string[]> = {
+    '01-ticked': ['01-01-PLAN.md', '01-01-SUMMARY.md'],
+    '04-landed': ['04-01-PLAN.md', '04-01-SUMMARY.md', '04-02-PLAN.md', '04-02-SUMMARY.md', '04-VERIFICATION.md'],
+    '05-flight': ['05-01-PLAN.md', '05-01-SUMMARY.md'],
+    '06-half': ['06-01-PLAN.md', '06-01-SUMMARY.md', '06-02-PLAN.md'],
+    '07-none': ['07-CONTEXT.md'],
+    '04.1-dec': ['04.1-01-PLAN.md'],
+  };
+  const got = unmarkedDone(text, Object.keys(files), (d) => files[d] ?? [], ['main', 'phase-5-in-flight', 'phase-6-half-pr', 'batch-2026-11-14-x']);
+  assert.deepEqual(got, ['04']);
+  assert.deepEqual(unmarkedDone(text, Object.keys(files), (d) => files[d] ?? [], ['main']), ['04', '5']);
 });

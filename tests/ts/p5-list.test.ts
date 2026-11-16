@@ -251,6 +251,27 @@ test('renderList: odd widths in-process (no repo needed)', () => {
   }
 });
 
+test('a phase ticked [x] in the checklist with no plan files is done', () => {
+  const text = [
+    '- [x] **Phase 0: Baseline** - built before GSD',
+    '- [X] **Phase 01: Gating** - done by hand',
+    '- [ ] **Phase 2: Tests** - not done',
+    '- [x] **Phase 10: Ten**',
+    '### Phase 0: Baseline',
+    '### Phase 1: Gating',
+    '### Phase 2: Tests',
+    '### Phase 3: Not in the checklist',
+    '### Phase 1.1: Hotfix',
+  ].join('\n');
+  const o = renderList({ roadmap: '/r', text, wt: new Map(), branches: [], batches: [], phasesRoot: '/nonexistent', termcols: 100, full: false });
+  const stage = (n: string): string | undefined => o.split('\n').find((l) => new RegExp(`^│ +${n.replace('.', '\\.')} │`).test(l))?.split('│')[4]?.trim();
+  assert.equal(stage('0'), 'done');
+  assert.equal(stage('1'), 'done', 'zero-padded checklist number matches');
+  assert.equal(stage('2'), '—');
+  assert.equal(stage('3'), '—');
+  assert.equal(stage('1.1'), '—', 'Phase 1 ticked does not tick 1.1');
+});
+
 test('symlinked launcher still finds the package', () => {
   const { R } = mainFixture();
   const bin = path.join(tmp(), 'bin');

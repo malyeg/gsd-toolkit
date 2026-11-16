@@ -147,7 +147,7 @@ test('a set-up repo, run from the npm install', { skip: SKIP }, () => {
   has('merged STATE: Session Continuity kept', st, 'Last session: x');
   has("merged STATE takes side's status", st, 'Status: executing');
   is('one Status line (reconciled, not a plain union)', countLines(st, /^Status:/), 1);
-  r = inst('gsdt-doctor', [], R, env);
+  r = inst('gsdt-doctor', ['--verbose'], R, env);
   hasnt('doctor: no module error', r.out, 'Cannot find module');
   hasnt('doctor: command guards found in the npm package (no T053)', r.out, 'T053');
   has('doctor: PATH commands resolve to the package', r.out, `PATH commands resolve to ${ipkg}`);

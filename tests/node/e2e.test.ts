@@ -263,13 +263,22 @@ test('end to end: the whole journey in a fake project', { skip: SKIP }, async (t
     const [a, b] = await Promise.all([cmdAsync('gsdt-finish', [CART_N], shop), cmdAsync('gsdt-finish', [LOGIN_N], laptop2)]);
     ok('cart finish succeeds', a.status === 0, a.out.split('\n').slice(-8).join('\n'));
     ok('login finish succeeds', b.status === 0, b.out.split('\n').slice(-8).join('\n'));
+    // cart landed with every plan run but no /gsd-verify-work, so nothing ticked its row (doctor T027)
+    ok('finish warns: cart merged but never marked complete',
+      a.out.includes('roadmap bookkeeping needs a hand') && a.out.includes(`Phase ${CART_N} is merged and every plan ran`), a.out.split('\n').slice(-8).join('\n'));
     ok('both changes on origin',
       git(S, ['--git-dir', origin, 'cat-file', '-e', 'main:cart.txt']).status === 0 && git(S, ['--git-dir', origin, 'cat-file', '-e', 'main:login.txt']).status === 0);
     ok('worktrees removed', !existsSync(WT_CART) && !existsSync(WT_LOGIN));
     git(shop, ['pull', '-q', '--ff-only']);
     const rr = cmd('gsdt-planning-repair', ['--check'], shop);
     ok('planning files coherent', rr.status === 0, rr.out);
+    const roadmapPath = path.join(shop, '.planning', 'ROADMAP.md');
+    writeFileSync(roadmapPath, readFileSync(roadmapPath, 'utf8').replace(new RegExp(`^- \\[ \\] \\*\\*Phase ${CART_N}:`, 'm'), `- [x] **Phase ${CART_N}:`));
+    git(shop, ['commit', '-qam', `docs: mark phase ${CART_N} complete`]);
+    // once ticked, T040 sees the flow steps this test skipped on purpose (it stopped at the verifier): the only finding
     const d1 = cmd('gsdt-doctor', ['--quiet'], shop);
-    ok('doctor after finishing', d1.status === 0, lines(d1.out).filter((l) => /✖|T0/.test(l)).join('\n'));
+    const bad = lines(d1.out).filter((l) => /✖/.test(l));
+    ok('doctor after finishing: only cart\'s flow debt',
+      bad.every((l) => new RegExp(`Phase ${CART_N} merged without:.*T040`).test(l)) && /T040/.test(d1.out), lines(d1.out).filter((l) => /✖|T0/.test(l)).join('\n'));
   });
 });

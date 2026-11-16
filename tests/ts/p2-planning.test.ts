@@ -10,6 +10,7 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { golden, test } from './golden.ts';
 import { main as planningMain, parseArgs } from '../../src/commands/planning.ts';
+import { reconcileRoadmap } from '../../src/planning.ts';
 import { PKG, tmp, write } from './helpers.ts';
 
 const LAUNCH = path.join(PKG, 'src', 'launch.mjs');
@@ -181,7 +182,8 @@ const roadmapCases: Record<string, string> = {
   'astral and cjk lengths': '- [ ] **Phase 1: 😀😀😀**\n- [ ] **Phase 1: ab**\n- [ ] **Phase 2: 日本語日本語**\n- [ ] **Phase 2: abcdefghijkl**\n',
   'exotic line breaks': '- [ ] **Phase 1: a** - [x] **Phase 1: b**\v- [ ] **Phase 2: c**\f## Progress\x1c| 1 a | 1/1 | Complete |\x85| 1 a | 0/1 | Not started |\n',
   'BOM and tabs': '﻿- [ ] **Phase 1: a**\n\t## Progress\n| 1\t. a | 1/1 | Complete |\n|\t1 a | 0/1 | x |\n',
-  'headings of every level': '## Progress\n| 1 a | 1/1 | Complete |\n#### Phase 1\n| 1 a | 0/1 | Complete |\n### Phase 1: z\n| 1 a | 0/1 | Complete |\n',
+  // rows below a ### heading inside ## Progress: no longer the oracle's answer (see the progress-rows test)
+  'headings of every level': '## Progress\n| 1 a | 1/1 | Complete |\n#### Phase 1\n| 1 a | 0/1 |\n### Phase 1: z\n| 1 a | 0/1 | Complete | x |\n# Next\n| 1 a | 0/1 | Complete |\n',
   'progress prefix words': '## Progressive\n| 1 a | 1/1 | Complete |\n| 1 a | 1/1 | Complete |\n',
   'no phases': '# Roadmap\n\nNothing yet.\n',
 };
@@ -592,5 +594,47 @@ test('launchers: no node means a clear message from repair', () => {
 });
 
 test('the workflow still runs the node tests', () => {
-  assert.match(read(path.join(PKG, '.github', 'workflows', 'tests.yml')), /node --test 'tests\/node\/\*\.test\.ts' 'tests\/ts\/\*\.test\.ts' 'tests\/os\/\*\.test\.ts'/);
+  assert.match(read(path.join(PKG, '.github', 'workflows', 'tests.yml')), /node --test (--test-timeout=\d+ )?'tests\/node\/\*\.test\.ts' 'tests\/ts\/\*\.test\.ts' 'tests\/os\/\*\.test\.ts'/);
+});
+
+// Not in the oracle: gsd-core's phase.add appends "### Phase N" after the Progress table, and a merge can then
+// leave a second row for an older phase below that heading (court-attack, phase 19). It is still the table's row.
+test('ROADMAP.md: a Progress row stranded below a ### Phase section is deduped (best content, first place)', () => {
+  const md = [
+    '## Phases',
+    '- [ ] **Phase 19: Pay**',
+    '- [ ] **Phase 20: SDK**',
+    '## Progress',
+    '',
+    '| Phase | Milestone | Plans Complete | Status | Completed |',
+    '|-------|-----------|----------------|--------|-----------|',
+    '| 18. Screens | M3 | 12/12 | Complete | 2026-10-23 |',
+    '| 19. Pay | M3 | 0/TBD | Not started | - |',
+    '| 20. SDK | - | 7/9 | In Progress | - |',
+    '',
+    '### Phase 20: SDK',
+    '',
+    '| 1 | a | b | c | d |',
+    '| 2 | short | table |',
+    '| 19. Pay | M3 | 18/18 | In Progress | - |',
+    '',
+    '---',
+    '',
+    '## Notes',
+    '| 19. Pay | M3 | 1/18 | Complete | - |',
+  ];
+  const [out, problems] = reconcileRoadmap([...md]);
+  assert.deepEqual(problems.map((p) => p[1]), ['ROADMAP.md: duplicate progress-table row for Phase 19']);
+  assert.equal(out[8], '| 19. Pay | M3 | 18/18 | In Progress | - |', 'kept in the table, best content (Milestone column skipped)');
+  assert.ok(!out.slice(10).includes('| 19. Pay | M3 | 18/18 | In Progress | - |'), 'stray copy gone');
+  assert.ok(out.includes('| 1 | a | b | c | d |'), 'a 5-column row keyed 1 is a different phase: kept');
+  assert.ok(out.includes('| 2 | short | table |'), 'other tables kept');
+  assert.equal(out[out.length - 1], '| 19. Pay | M3 | 1/18 | Complete | - |', 'past the next ## heading: untouched');
+});
+
+test('ROADMAP.md: rows past a ### heading in ## Progress, without the table width, are not table rows', () => {
+  const md = ['## Progress', '| 1 a | 1/1 | Complete |', '#### Phase 1', '| 1 a | 0/1 |', '### Phase 1: z', '| 1 a | 0/1 | Complete | x |', '| 1 a | 0/9 | Complete |', '# Next', '| 1 a | 0/1 | Complete |'];
+  const [out, problems] = reconcileRoadmap([...md]);
+  assert.deepEqual(problems.map((p) => p[1]), ['ROADMAP.md: duplicate progress-table row for Phase 1']);
+  assert.deepEqual(out, ['## Progress', '| 1 a | 1/1 | Complete |', '#### Phase 1', '| 1 a | 0/1 |', '### Phase 1: z', '| 1 a | 0/1 | Complete | x |', '# Next', '| 1 a | 0/1 | Complete |']);
 });

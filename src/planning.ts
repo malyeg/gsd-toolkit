@@ -164,12 +164,12 @@ export function phaseSortKey(key: string): [bigint, bigint] {
 /** dedupe_keyed */
 export function dedupeKeyed(
   lines: string[],
-  keyOf: (l: string) => string | null,
+  keyOf: (l: string, i: number) => string | null,
   rankOf: (l: string) => Rank,
 ): [string[], string[]] {
   const best = new Map<string, string>();
-  for (const line of lines) {
-    const key = keyOf(line);
+  for (const [i, line] of lines.entries()) {
+    const key = keyOf(line, i);
     if (key === null) continue;
     const cur = best.get(key);
     if (cur === undefined || cmpRank(rankOf(line), rankOf(cur)) > 0) best.set(key, line);
@@ -177,8 +177,8 @@ export function dedupeKeyed(
   const out: string[] = [];
   const seen = new Set<string>();
   const dropped: string[] = [];
-  for (const line of lines) {
-    const key = keyOf(line);
+  for (const [i, line] of lines.entries()) {
+    const key = keyOf(line, i);
     if (key === null) {
       out.push(line);
       continue;
@@ -275,10 +275,15 @@ function checklistRank(line: string): Rank {
   return [mark === 'x' ? 1n : 0n, BigInt(cpLen(line))];
 }
 
-function tableRowRank(line: string): Rank {
+/** Where the Plans and Status cells are: from the table's header row when it names them
+ * ("| Phase | Milestone | Plans Complete | Status | …" puts them at 2 and 3), else 1 and 2. */
+type ProgressCols = { plans: number; status: number };
+const DEFAULT_COLS: ProgressCols = { plans: 1, status: 2 };
+
+function tableRowRank(line: string, cols: ProgressCols = DEFAULT_COLS): Rank {
   const cells = cellsOf(line);
-  const plans = cells.length > 1 ? (cells[1] as string) : '';
-  const status = (cells.length > 2 ? (cells[2] as string) : '').toLowerCase();
+  const plans = cells.length > cols.plans ? (cells[cols.plans] as string) : '';
+  const status = (cells.length > cols.status ? (cells[cols.status] as string) : '').toLowerCase();
   let rank = status !== '' && status !== '-' ? 1 : 0;
   for (const [name, value] of STATUS_RANK) {
     if (status.startsWith(name)) {
@@ -287,6 +292,46 @@ function tableRowRank(line: string): Rank {
     }
   }
   return [BigInt(rank), leadDigits(plans), BigInt(cpLen(line))];
+}
+
+const TOP_HEADING = rx(`^#{1,2}${WS}`);
+
+/**
+ * The ## Progress table's rows, as indexes into `lines` (key per index), and where its Plans/Status cells are.
+ * Every keyed row up to the section's next heading counts (as before). gsd-core's phase.add appends a new
+ * phase's "### Phase N" section after the table, so a merge can leave a row below that heading: up to the
+ * next # or ## heading, a keyed row with the table's column count is the table's too.
+ */
+export function progressRows(lines: string[]): { keys: Map<number, string>; cols: ProgressCols; region: [number, number] } | null {
+  const section = sectionBounds(lines, PROGRESS_HEAD_RX);
+  if (section === null) return null;
+  const region = sectionBounds(lines, PROGRESS_HEAD_RX, TOP_HEADING) as [number, number];
+  const keys = new Map<number, string>();
+  let cols = DEFAULT_COLS;
+  let width = 0;
+  for (let i = section[0] + 1; i < section[1]; i++) {
+    const l = lines[i] as string;
+    const k = tableKey(l);
+    if (k !== null) {
+      keys.set(i, k);
+      if (width === 0) width = cellsOf(l).length;
+    } else if (width === 0 && /^\|/.test(pyStrip(l)) && !/^\|[\s|:-]*$/.test(pyStrip(l))) {
+      // the header row: names its columns
+      const cells = cellsOf(l).map((c) => c.toLowerCase());
+      const plans = cells.findIndex((c) => c.startsWith('plan'));
+      const status = cells.findIndex((c) => c.startsWith('status'));
+      if (plans > 0 && status > 0) cols = { plans, status };
+      width = cells.length;
+    }
+  }
+  if (width > 0) {
+    for (let i = section[1]; i < region[1]; i++) {
+      const l = lines[i] as string;
+      const k = tableKey(l);
+      if (k !== null && cellsOf(l).length === width) keys.set(i, k);
+    }
+  }
+  return { keys, cols, region };
 }
 
 /** dedupe_detail_sections */
@@ -347,8 +392,13 @@ export function reconcileRoadmap(lines: string[]): [string[], Problem[]] {
   [lines, dropped] = dedupeKeyed(lines, checklistKey, checklistRank);
   for (const key of dropped) problems.push([CORRUPT, `ROADMAP.md: duplicate checklist entry for Phase ${key}`]);
 
-  const progress = sectionBounds(lines, PROGRESS_HEAD_RX);
-  [lines, dropped] = applyToSection(lines, progress, (block) => dedupeKeyed(block, tableKey, tableRowRank));
+  const rows = progressRows(lines);
+  if (rows !== null) {
+    const start = rows.region[0];
+    [lines, dropped] = applyToSection(lines, rows.region, (block) =>
+      dedupeKeyed(block, (_l, i) => rows.keys.get(start + i) ?? null, (l) => tableRowRank(l, rows.cols)),
+    );
+  } else dropped = [];
   for (const key of dropped) problems.push([CORRUPT, `ROADMAP.md: duplicate progress-table row for Phase ${key}`]);
 
   [lines, dropped] = dedupeDetailSections(lines);
@@ -365,13 +415,9 @@ export function detectTableGaps(lines: string[]): Problem[] {
     const k = checklistKey(l);
     if (k !== null && !listed.includes(k)) listed.push(k);
   }
-  const progress = sectionBounds(lines, PROGRESS_HEAD_RX);
-  if (progress === null || listed.length === 0) return [];
-  const tabled = new Set<string>();
-  for (const l of lines.slice(progress[0], progress[1])) {
-    const k = tableKey(l);
-    if (k !== null) tabled.add(k);
-  }
+  const rows = progressRows(lines);
+  if (rows === null || listed.length === 0) return [];
+  const tabled = new Set<string>(rows.keys.values());
   const missing = listed.filter((k) => !tabled.has(k));
   missing.sort((a, b) => {
     const [a1, a2] = phaseSortKey(a);

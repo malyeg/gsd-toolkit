@@ -183,6 +183,8 @@ COLUMNS
             e.g. 5/6 · ✔ = all executed · — = none yet
   STAGE     furthest lifecycle step reached, from the phase's artifact files:
             spec → discuss → ui → plan → execute → done (all plans executed)
+            A phase with no plan files is done when ROADMAP ticks it
+            (- [x] **Phase N): work done outside GSD, like a baseline.
   WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
 
   Under the table: the batch-* branches of gsdt-batch runs not landed yet

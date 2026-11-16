@@ -34,6 +34,8 @@ COLUMNS
             e.g. 5/6 · ✔ = all executed · — = none yet
   STAGE     furthest lifecycle step reached, from the phase's artifact files:
             spec → discuss → ui → plan → execute → done (all plans executed)
+            A phase with no plan files is done when ROADMAP ticks it
+            (- [x] **Phase N): work done outside GSD, like a baseline.
   WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
 
   Under the table: the batch-* branches of gsdt-batch runs not landed yet
@@ -196,6 +198,12 @@ export function renderList(inp: ListInput): string {
     if (m) phases.push({ n: m[1] as string, title: m[2] as string, plans: '', stage: '', wt: '', wtmark: '' });
   }
   if (phases.length === 0) return `no phases found in ${show(inp.roadmap)}\n`;
+  // phases ticked "- [x] **Phase N" in the checklist: one done outside GSD has no plan files to count
+  const ticked = new Set<string>();
+  for (const line of inp.text.split('\n')) {
+    const m = /^- \[[xX]\] \*\*Phase ([0-9]+(?:\.[0-9]+)?)(?![0-9.])/.exec(line);
+    if (m) ticked.add(norm(m[1] as string));
+  }
 
   const cache = new Map<string, Map<string, string>>();
   for (const p of phases) {
@@ -208,7 +216,7 @@ export function renderList(inp: ListInput): string {
     p.plans = s.fp === 0 ? '—' : s.fs >= s.fp ? '✔' : `${s.fs}/${s.fp}`;
     // STAGE: furthest lifecycle step reached; 'done' once every plan is executed
     p.stage =
-      s.fp > 0 ? (s.fs >= s.fp ? 'done' : s.fs > 0 ? 'execute' : 'plan') : s.planning ? 'plan' : s.ui ? 'ui' : s.discuss ? 'discuss' : s.spec ? 'spec' : '—';
+      s.fp > 0 ? (s.fs >= s.fp ? 'done' : s.fs > 0 ? 'execute' : 'plan') : ticked.has(norm(p.n)) ? 'done' : s.planning ? 'plan' : s.ui ? 'ui' : s.discuss ? 'discuss' : s.spec ? 'spec' : '—';
     // keep the branch name and the ● attached-marker apart so clipping a long
     // branch never eats the marker (it lives at the end of the cell)
     p.wt = br !== undefined ? show(br) : '—';

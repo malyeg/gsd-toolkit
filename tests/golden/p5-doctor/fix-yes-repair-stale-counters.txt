@@ -4,49 +4,19 @@ rc=1
 --- stdout
 [1mgsdt-doctor[0m — repo
 <W>/repo
-
-[1mtoolkit[0m
-  [32m✔[0m PATH commands resolve to <W>/pkg
-  [32m✔[0m gsd-core  (<W>/stub/gsd_run)
-  [32m✔[0m no GSD hook runs a missing file
-
-[1mrepo setup[0m
-  [32m✔[0m session model: CLI default (model availability is checked by the provider CLI)
-  [32m✔[0m provider: claude (command: claude)
   [31m✖[0m provider executable 'claude' is unavailable (print-only still works) [2m→ install claude or set claude_command in .gsd.conf [T051][0m
-  [32m✔[0m CLAUDE.md points to canonical .gsd/INSTRUCTIONS.md
-  [32m✔[0m claude native guard hook present (defense in depth)
-  [32m✔[0m mandatory command-level guards are active
   [31m✖[0m configured provider claude executable 'claude' is unavailable [2m→ install it, set claude_command, or use print-only [T057][0m
   • claude skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent claude
   [31m✖[0m configured provider codex executable 'codex' is unavailable [2m→ install it, set codex_command, or use print-only [T057][0m
   • codex skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent codex
   [31m✖[0m no Claude SessionStart hook runs gsdt-rules in <W>/home/.claude/settings.json — sessions miss the toolkit rules [2m→ bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config [T062][0m
-  [32m✔[0m GSD instructions match this toolkit (0.11.0)
-  [32m✔[0m .gsd.conf (base develop, worktrees repo-worktrees)
-  [32m✔[0m uses the gsdt-* command names
-  [32m✔[0m shims present and current
-  [32m✔[0m .gitattributes: merge=gsd-planning on ROADMAP.md + STATE.md
-  [32m✔[0m merge driver registered in git config
-  [32m✔[0m post-merge hook reconciles .planning after a plain git pull
-
-[1mplanning state[0m
-  [32m✔[0m .planning is coherent
   • STATE.md: progress bar recomputed to 0% (was Progress: [█████░░░░░] 50%)
   [31m✖[0m Phase 1 has no checklist row — completing it ticks nothing, silently [2m→ edit .planning/ROADMAP.md [T022][0m
   [31m✖[0m Phase 1 is missing from the Progress table [2m→ edit .planning/ROADMAP.md [T023][0m
   [31m✖[0m Phase 2 has no checklist row — completing it ticks nothing, silently [2m→ edit .planning/ROADMAP.md [T022][0m
   [31m✖[0m Phase 2 is missing from the Progress table [2m→ edit .planning/ROADMAP.md [T023][0m
   • cross-references in a checklist row must read 'phase-13', never 'Phase 13'
-
-[1mcontext[0m
-  • claude: for CLAUDE.md, memory, MCP servers and plugins, run /doctor and /skill-doctor in a Claude session; /context shows the real numbers
-
-[1mworktrees[0m
-  [32m✔[0m worktree.baseRef = "head" (a wave's plans can run in parallel)
-  [32m✔[0m no stale worktree records
-  [32m✔[0m every phase and batch branch has its worktree
-  [32m✔[0m main checkout is on 'develop'
+  [32m✔[0m 20 checks passed (--verbose to list them)
 
 [1m--fix will run (in <W>/repo):[0m
   gsdt-planning-repair               (.planning/ROADMAP.md + STATE.md)
@@ -60,12 +30,16 @@ Checking again:
 <W>/repo
   [31m✖[0m provider executable 'claude' is unavailable (print-only still works) [2m→ install claude or set claude_command in .gsd.conf [T051][0m
   [31m✖[0m configured provider claude executable 'claude' is unavailable [2m→ install it, set claude_command, or use print-only [T057][0m
+  • claude skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent claude
   [31m✖[0m configured provider codex executable 'codex' is unavailable [2m→ install it, set codex_command, or use print-only [T057][0m
+  • codex skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent codex
   [31m✖[0m no Claude SessionStart hook runs gsdt-rules in <W>/home/.claude/settings.json — sessions miss the toolkit rules [2m→ bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config [T062][0m
   [31m✖[0m Phase 1 has no checklist row — completing it ticks nothing, silently [2m→ edit .planning/ROADMAP.md [T022][0m
   [31m✖[0m Phase 1 is missing from the Progress table [2m→ edit .planning/ROADMAP.md [T023][0m
   [31m✖[0m Phase 2 has no checklist row — completing it ticks nothing, silently [2m→ edit .planning/ROADMAP.md [T022][0m
   [31m✖[0m Phase 2 is missing from the Progress table [2m→ edit .planning/ROADMAP.md [T023][0m
+  • cross-references in a checklist row must read 'phase-13', never 'Phase 13'
+  [32m✔[0m 20 checks passed (--verbose to list them)
 
 [31m8 finding(s).[0m Run:
 

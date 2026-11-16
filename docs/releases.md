@@ -85,7 +85,7 @@ the update command is `npx @opengsd/gsd-core@latest --claude --global`).
 - `gsdt-start`, `gsdt-list` and `gsdt-init` print one line on stderr per newer
   version — only when you run them in a terminal, so JSON, pipes and agent
   output stay clean.
-- `gsdt-doctor` always shows them (`↑` lines, also with `--quiet`, and an
+- `gsdt-doctor` always shows them (`↑` lines, also in the default output, and an
   `updates` list in `--json`). They are not findings: the exit status is 0.
 - The latest versions are cached for a day in
   `${XDG_CACHE_HOME:-~/.cache}/gsd-toolkit/` (`latest-version`,
