@@ -28,7 +28,7 @@ function run(bin: string, args: string[], o: { cwd?: string; env?: Record<string
 }
 // machine- and run-specific text: the temp dir, and every date/time (the fixtures are made relative to now)
 const NORM = (t: string): string =>
-  subst(t.split(W.replace(/[^A-Za-z0-9]/g, '-')).join('<W-MANGLED>'), W, '<W>')
+  subst(t.split(W.replace(/[^A-Za-z0-9]/g, '-')).join('<W-MANGLED>').split(realpathSync.native(W).replace(/[^A-Za-z0-9]/g, '-')).join('<W-MANGLED>'), W, '<W>')
     .replace(/l{30,}/g, '<LONG>') // the long-name fixture: its truncation point depends on the length of W
     .replace(/\b\d{4}-\d\d-\d\d \d\d:\d\d\b/g, '<DT>')
     .replace(/→ \d\d:\d\d\b/g, '→ <TM>')

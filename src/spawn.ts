@@ -16,7 +16,7 @@ import type {
   SpawnSyncOptionsWithStringEncoding,
   SpawnSyncReturns,
 } from 'node:child_process';
-import { statSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 export const WIN = process.platform === 'win32';
@@ -101,6 +101,16 @@ export function planSpawn(cmd: string, args: string[], o: PlanEnv = {}): Plan {
   if (ext === '.cmd' || ext === '.bat') {
     const comspec = (o.env ?? process.env).ComSpec ?? (o.env ?? process.env).COMSPEC ?? 'cmd.exe';
     return { file: comspec, args: ['/d', '/s', '/c', cmdLine(r, args)], windowsVerbatimArguments: true };
+  }
+  // a script whose first line asks for node (`#!/usr/bin/env node`): node runs it, as a POSIX exec would
+  if (ext === '' || ext === '.js' || ext === '.mjs') {
+    let head = '';
+    try {
+      head = readFileSync(r, 'latin1').slice(0, 120).split('\n', 1)[0] ?? '';
+    } catch {
+      /* not readable: sh reports it */
+    }
+    if (/^#!\s*(?:\S*\/env\s+(?:-S\s+)?)?(?:\S*\/)?node(?:\s|$)/.test(head)) return { file: process.execPath, args: [shellPath(r, 'win32'), ...args] };
   }
   // extensionless, .sh, anything else: a shell script
   return { file: 'sh', args: [shellPath(r, 'win32'), ...args] };

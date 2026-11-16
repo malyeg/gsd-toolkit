@@ -7,7 +7,7 @@ import { chmodSync, existsSync, mkdirSync, readFileSync, readlinkSync, realpathS
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { golden, test } from './golden.ts';
+import { golden, goldenSkip, test } from './golden.ts';
 import * as C from '../../src/common.ts';
 import * as P from '../../src/provider.ts';
 import { main as rulesMain, rulesFor } from '../../src/commands/rules.ts';
@@ -408,6 +408,11 @@ test('planningApply writes the same files and lines', () => {
   for (const hv of hookV) {
     for (const av of attrV) {
       for (const husky of [false, true]) {
+        // our own hook written without the exec bit is repaired on POSIX; Windows has no exec bit to repair
+        if (process.platform === 'win32' && hv === hookV[3]) {
+          goldenSkip();
+          continue;
+        }
         const mk = (): string => {
           const r = repo(path.join(tmp(), 'ap'));
           if (husky) mkdirSync(path.join(r, '.husky'), { recursive: true });

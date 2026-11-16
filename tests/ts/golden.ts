@@ -45,6 +45,11 @@ function callerFile(): string {
 }
 
 const SKIP_FILES = new Map<string, string>();
+/** count a golden() call that this platform cannot make (the saved numbering stays in step) */
+export function goldenSkip(): void {
+  if (current) current.n++;
+}
+
 /** call at the top of a test file: on Windows every test in it is skipped, with this reason */
 export function skipFileOnWindows(reason: string): void {
   if (process.platform === 'win32') SKIP_FILES.set(callerFile(), reason);

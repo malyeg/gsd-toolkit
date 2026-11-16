@@ -15,7 +15,11 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, utimesSync, writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { test, golden } from './golden.ts';
+import { test, golden, skipFileOnWindows } from './golden.ts';
+
+// Node reads TZ on Windows only for a few names (America/New_York gives CUT), the stubs are bash scripts, and the
+// times in the goldens are POSIX zone names. tests/node/codex-wait.test.ts covers the command on Windows.
+skipFileOnWindows('TZ-dependent goldens and bash stubs; covered by tests/node/codex-wait.test.ts');
 import { parse, parseDuration, human, scan, when } from '../../src/codex-wait.ts';
 import { PKG, subst } from './helpers.ts';
 

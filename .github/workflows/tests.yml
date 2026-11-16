@@ -52,7 +52,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ${{ fromJSON(needs.matrix.outputs.os) }}
-        shard: [ts-a, ts-b, node-a, node-b, os]   # the file groups are in tests/shards.json
+        shard: [ts-a, ts-b, ts-c, ts-d, ts-e, node-a, node-b, os]   # the file groups are in tests/shards.json
     runs-on: ${{ matrix.os }}
     timeout-minutes: 40
     defaults:

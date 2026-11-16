@@ -133,7 +133,7 @@ function shimPackage(shim: string): string | null {
     return null;
   }
   if (/node_modules[\\/]gsd-toolkit[\\/]/.test(text)) return path.join(path.dirname(shim), 'node_modules', 'gsd-toolkit');
-  const m = /"([^"\r\n]*[\\/]src[\\/]launch\.mjs)"/.exec(text);
+  const m = /"([A-Za-z]:[^"\r\n$]*[\\/]src[\\/]launch\.mjs)"/.exec(text);
   return m ? path.dirname(path.dirname(m[1] as string)) : null;
 }
 

@@ -250,7 +250,7 @@ process.exit(['install', 'i'].includes(a[0]) ? Number(process.env.NPM_INSTALL_RC
   has('update --check: offers the update', o.out, 'update available');
   writeFileSync(npmLog, '');
   o = upd('99.0.0', ['--no-core']);
-  is(`update rc: ${o.out}`, o.status, 0);
+  is(`update rc: ${o.out}\ncurl log:\n${tryRead(curlLog)}`, o.status, 0);
   const nl = tryRead(npmLog);
   has('update ran npm install -g on the downloaded .tgz', nl, 'install -g --no-audit --no-fund');
   has("…the release's gsd-toolkit-99.0.0.tgz", nl, 'gsd-toolkit-99.0.0.tgz');
