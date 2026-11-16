@@ -35,7 +35,7 @@ export function trkConfGet(repo: string, key: string): string {
   const re = new RegExp(`^${SP}*${key}${SP}*=${SP}*`);
   let text: string;
   try {
-    text = readFileSync(f, 'utf8');
+    text = readFileSync(f, 'utf8').replace(/\r\n/g, '\n'); // CRLF checkout (Git for Windows)
   } catch {
     return '';
   }
@@ -141,6 +141,7 @@ export function trkClickupEnv(repo: string): string {
 export function trkHasToken(file: string): boolean {
   try {
     return readFileSync(file, 'utf8')
+      .replace(/\r\n/g, '\n')
       .split('\n')
       .some((l) => new RegExp(`^${SP}*(export${SP}+)?CLICKUP_API_TOKEN=.`).test(l));
   } catch {

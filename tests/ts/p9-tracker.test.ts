@@ -362,7 +362,7 @@ parity('clickup: the token file (plain assignments, export, quotes, other lines,
     writeFileSync(path.join(d, 'clickup-p1.env'), '# comment\nexport CLICKUP_API_TOKEN="pk_quoted"\nOTHER=1\n');
     writeFileSync(path.join(d, 'clickup-p2.env'), "CLICKUP_API_TOKEN='pk_single'\n");
     writeFileSync(path.join(d, 'clickup-p3.env'), 'CLICKUP_API_TOKEN=pk_trailing # note\n');
-    writeFileSync(path.join(d, 'clickup-p4.env'), '  CLICKUP_API_TOKEN=pk_indented\r\n');
+    writeFileSync(path.join(d, 'clickup-p4.env'), '  CLICKUP_API_TOKEN=pk_indented\n' /* P12: was CRLF; a CRLF token file is read as LF now (tests/ts/p12-crlf.test.ts) */);
     writeFileSync(path.join(d, 'clickup-p5.env'), 'NOPE=1\n');
     writeFileSync(path.join(d, 'clickup-p6.env'), 'CLICKUP_API_TOKEN=pk_team\nCLICKUP_TEAM_ID=T1\n');
     writeFileSync(path.join(d, 'clickup-p7.env'), 'CLICKUP_API_TOKEN=\n');

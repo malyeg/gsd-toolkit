@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # test-doctor.sh — the gsdt-doctor checks added in 0.2.3: missing tools (T005,
-# T006), stale skills (T007), .gsd.conf typos and bad values (T017, T018), a
+# no perl/python findings), stale skills (T007), .gsd.conf typos and bad values (T017, T018), a
 # missing base branch (T015), the pre-merge gate (T019), duplicate phase
 # headings (T025), failed worktree installs (T032), a ClickUp tracker with no
 # token (T073), worktree.baseRef (T034), and the reinstall command it names. Also install.sh
@@ -11,7 +11,7 @@ PKG=$(cd "$(dirname "$0")/.." && pwd)
 WORK=$(mktemp -d); WORK=$(cd "$WORK" && pwd -P); trap 'rm -rf "$WORK"' EXIT
 export HOME="$WORK/home"; mkdir -p "$HOME"
 export GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1
-export GSD_NO_CORE=1   # lib/install.sh must not run the real gsd-core installer (npx)
+export GSD_NO_CORE=1   # lib/install-copy.sh must not run the real gsd-core installer (npx)
 export GIT_AUTHOR_NAME=t GIT_AUTHOR_EMAIL=t@t GIT_COMMITTER_NAME=t GIT_COMMITTER_EMAIL=t@t
 export GSD_NO_UPDATE_CHECK=1 GSD_CLAUDE_SKILL_DIR="$WORK/skills" GSD_CLICKUP_CONFIG="$WORK/clickup.env"
 unset CLICKUP_API_TOKEN GSD_SKIP_GUARD GSD_CLI CLAUDE_CONFIG_DIR CODEX_HOME
@@ -64,7 +64,8 @@ R="$WORK/repo"; mkrepo "$R"
 section "missing tools"
 json "$R"
 hasnt "gsd-core's gsd_run on PATH → no T005" '"T005"' "$OUT"
-hasnt "perl on PATH → no T006" '"T006"' "$OUT"
+hasnt "no T006 (doctor no longer checks perl)" '"T006"' "$OUT"
+hasnt "no T003 (doctor no longer checks python)" '"T003"' "$OUT"
 farm "$WORK/nosdk" gsd_run gsd-sdk
 DPATH="$WORK/nosdk" json "$R"
 has "no GSD → T005" '"T005"' "$OUT"
@@ -169,7 +170,7 @@ json "$R"
 has "no gsd-core skills: no context entry" '"context":{"agents":\[\]' "$OUT"
 farm "$WORK/noperl" perl
 DPATH="$WORK/noperl" json "$R"
-has "no perl → T006" '"T006"' "$OUT"
+hasnt "no perl → no T006 finding (intended change: nothing needs perl)" '"T006"' "$OUT"
 DPATH="$WORK/noperl" doc "$R"
 has "no perl → the roadmap check still runs (it is TypeScript now): its T022 finding shows" 'Phase 1 has no checklist row' "$OUT"
 hasnt "…and is not skipped" 'roadmap row check skipped' "$OUT"
@@ -565,11 +566,11 @@ hasnt "…and stays quiet when piped" '⚠' "$OUT"
 rm -f "$GSD_CLAUDE_SETTINGS"
 unset GSD_CLAUDE_SETTINGS GSD_CODEX_HOOKS
 
-section "lib/install.sh --reuse-install-config keeps recorded agents"
+section "lib/install-copy.sh --reuse-install-config keeps recorded agents"
 export GSD_BIN_DIR="$WORK/ibin" GSD_CODEX_SKILL_DIR="$WORK/codex-skills"
 export GSD_CLAUDE_SKILL_DIR="$WORK/claude-skills"
-(cd "$PKG" && lib/install.sh --agent claude) > "$OUT" 2>&1 || bad "first install" "$(tail -5 "$OUT")"
-(cd "$PKG" && lib/install.sh --reuse-install-config --agent codex) > "$OUT" 2>&1 || bad "reuse install" "$(tail -5 "$OUT")"
+(cd "$PKG" && lib/install-copy.sh --agent claude) > "$OUT" 2>&1 || bad "first install" "$(tail -5 "$OUT")"
+(cd "$PKG" && lib/install-copy.sh --reuse-install-config --agent codex) > "$OUT" 2>&1 || bad "reuse install" "$(tail -5 "$OUT")"
 prov=$(awk -F'\t' '$1 == "providers" { print $2 }' "$GSD_BIN_DIR/.gsd-install-manifest")
 case ",$prov," in *,claude,*) ok "claude is kept" ;; *) bad "claude is kept" "providers: $prov" ;; esac
 case ",$prov," in *,codex,*) ok "codex is added" ;; *) bad "codex is added" "providers: $prov" ;; esac

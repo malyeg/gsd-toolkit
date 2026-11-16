@@ -6,7 +6,7 @@
 
 **Run GSD phases in parallel, each in its own git worktree, with any coding agent.**
 
-gsd-toolkit is a set of shell commands built around
+gsd-toolkit is a set of commands (TypeScript, on Node.js) built around
 [GSD](https://www.npmjs.com/package/@opengsd/gsd-core) (Get Shit Done), a
 planning workflow for AI coding agents. GSD plans and runs phases. The
 toolkit lets you run many phases at once without them stepping on each
@@ -79,6 +79,9 @@ gsdt-list                # what is in flight
 gsdt-doctor              # what is wrong, and how to fix it
 ```
 
+> **On 0.10.x (the bash version)?** Run `gsdt-update`: it moves you to the 1.0.0 npm package.
+> Your repos need no change. See [Moving from 0.10.x](#moving-from-010x).
+>
 > **Upgrading from 0.9 or older?** The commands are now `gsdt-*` (`gsd-start`
 > → `gsdt-start`, …); `gsd-*` is gsd-core's prefix. Run the old `gsd-update`
 > one last time, then in each repo `gsdt-migrate` (shows the changes),
@@ -90,13 +93,17 @@ in the worktree vs the main checkout, is in
 
 ## Requirements
 
-- macOS or Linux (on Windows, use [WSL2](#windows-wsl2))
-- Bash, Git, Perl, curl, Python 3.7+
-- Node.js (`npx`), to install gsd-core
+- macOS, Linux or Windows (no WSL needed; see [Windows](#windows))
+- Node.js 24 or newer (with `npm` and `npx`; gsd-core needs it too)
+- Git. On Windows, [Git for Windows](https://gitforwindows.org): its `sh`
+  runs the repo scripts and hooks.
 - At least one agent CLI: [Claude Code](https://claude.com/claude-code) or
   [Codex](https://github.com/openai/codex)
-- Optional: `jq` (native hooks, ClickUp), `gh` (`gsdt-finish --pr`),
+- Optional: `gh` (`gsdt-finish --pr`), `curl` (the ClickUp API with `tracker = clickup`,
+  and the release-line update check; Windows 10+ ships it),
   [Playwright](https://playwright.dev) (`gsdt-ui check`, for phases with screens)
+
+Python, Perl and `jq` are not used at runtime. `curl` is optional, as listed.
 
 ## Commands
 
@@ -109,7 +116,7 @@ in the worktree vs the main checkout, is in
 | `gsdt-list` | Shows every phase: number, plans done, stage, worktree. Read-only. |
 | `gsdt-finish` | Tests, merges into the base branch, pushes, then removes the worktree and branch. `--pr` opens a GitHub PR instead. |
 | `gsdt-doctor` | Checks the repo's setup and names the fix for each finding. `--json` for CI; `--fix` runs the safe fixes after asking. |
-| `gsdt-update` | Installs the latest release (checksum-verified) and the latest gsd-core. `--check` only compares. |
+| `gsdt-update` | Installs the latest toolkit from npm and the latest gsd-core. `--check` only compares. |
 
 **Occasional use**
 
@@ -123,7 +130,8 @@ in the worktree vs the main checkout, is in
 | `gsdt-bootstrap-repo` | Writes the repo files (config, shims, instruction blocks). Called by `gsdt-init`; safe to re-run. |
 | `gsdt-rules` | Prints the workflow rules of the installed release, which agents load at the start of a session. |
 | `gsdt-codex-wait` | Waits out a Codex usage limit, then runs the command again. |
-| `gsdt-migrate` | Moves a repo set up before 0.10.0 to the `gsdt-*` names. Dry run by default; `--apply` changes, `--check` for CI. |
+| `gsdt-setup` | Machine setup after `npm i -g`: skills and the Claude user hooks for each agent, and gsd-core where it is missing. Safe to re-run. |
+| `gsdt-migrate` | Moves a repo set up before 0.10.0 to the `gsdt-*` names. Dry run by default; `--apply` changes (and offers to commit), `--check` for CI. |
 
 **Called by other commands:** `gsdt-wt-new`, `gsdt-wt-finish`,
 `gsdt-worktree-guard`, `gsdt-flow-next`, `gsdt-planning-merge` (the git merge
@@ -131,7 +139,7 @@ driver) and `gsdt-derive-port` (per-worktree dev ports).
 
 ### Agent skills
 
-The installer also adds these skills to each agent, so you can ask in plain
+`gsdt-setup` also adds these skills to each agent, so you can ask in plain
 words instead of typing commands:
 
 | Skill | Use it to |
@@ -188,80 +196,118 @@ All logic lives in the installed toolkit. A repo carries only:
   repo, with no step there. Plus a short marked block in `CLAUDE.md` /
   `AGENTS.md` that points to both. Text outside the markers is never
   touched.
-- **`scripts/gsd-*.sh`**: small, frozen scripts that call the installed
+- **`scripts/gsdt-*.sh`**: small, frozen scripts that call the installed
   commands, so `package.json` scripts and hooks work on every checkout.
+  Git for Windows' `sh` runs them on Windows.
 - **`.gitattributes`** and a `post-merge` hook: the planning merge driver
   and repair.
 - **`scripts/gsdt-premerge-check.sh`** (optional, yours): extra checks before
-  each merge. Without it, `gsdt-finish` runs the project's tests.
+  each merge. Without it, `gsdt-finish` runs the project's tests. It needs
+  the exec bit on macOS/Linux; on Windows it runs through `sh` and needs none.
 
 ## Install
 
+The GitHub release is the one source. On macOS, Linux and Git Bash (Windows):
+
 ```sh
 curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash
-# skills for more than one agent:
-curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash -s -- --agent claude --agent codex
+curl -fsSL …/install.sh | bash -s -- --agent claude --agent codex   # skills for more than one agent
 ```
 
-Prefer to read it first?
+It needs bash, curl, Node.js 24+ and npm. It downloads the release's
+`gsd-toolkit-X.Y.Z.tgz` and `SHA256SUMS`, refuses a checksum mismatch, runs
+`npm install -g` on the package, then the new package's `gsdt-setup`. Options:
+`--version X.Y.Z`, `--agent <name>` (repeatable), `--all-agents`, `--no-core`,
+`--no-user-hook`. If npm's global bin folder is not on your `PATH`, it prints the
+line to add.
+
+Windows without bash: install the same release file with npm, then run setup:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh -o install.sh
-less install.sh
-bash install.sh
+npm i -g https://github.com/malyeg/gsd-toolkit/releases/download/vX.Y.Z/gsd-toolkit-X.Y.Z.tgz
+gsdt-setup
 ```
 
-The installer downloads the latest GitHub release, checks its SHA256,
-installs it to `~/.local/share/gsd-toolkit/releases/<version>/` and links
-the commands into `~/.local/bin`. It also installs gsd-core for each chosen
-agent that has none.
+(`npm i -g gsd-toolkit` from the npm registry only works once the package is
+published there; nothing here depends on it.) npm puts the `gsdt-*` commands on
+your `PATH` (and makes the Windows wrappers). `gsdt-setup` does the
+machine-level part, and is safe to re-run. There is no npm `postinstall` script:
+nothing runs until you run it.
 
-| Option | Effect |
+```sh
+gsdt-setup                                  # skills + Claude user hooks, gsd-core if missing
+gsdt-setup --agent claude --agent codex     # skills for more than one agent
+```
+
+| `gsdt-setup` option | Effect |
 |---|---|
-| `--agent <name>` | Install skills for this agent (repeatable). |
-| `--all-agents` | Install skills for every supported agent. |
-| `--version X.Y.Z` | Install a given release. |
+| `--agent <name>` | Set up this agent (repeatable). Default: the agents recorded by the last run, else `claude`. |
+| `--all-agents` | Set up every supported agent. |
 | `--no-core` | Do not install gsd-core. |
-| `--no-user-hook` | Leave out the two Claude user-level hooks (below). |
+| `--no-user-hook` | Leave out the two Claude user-level hooks (below), and remove ours. |
 
-For Claude, the installer adds two user-level hooks. One refuses
+For Claude, `gsdt-setup` adds two user-level hooks. One refuses
 `/gsd-new-project` and `/gsd-ingest-docs` in a repo that `gsdt-init` has not
 set up. The other loads the workflow rules (`gsdt-rules`) when a session
 starts in a set-up repo.
 
 ### Updates
 
-Commands tell you when a newer release is out (at most one GitHub call a
+Commands tell you when a newer version is out (at most one GitHub call a
 day; `GSD_NO_UPDATE_CHECK=1` turns it off).
 
 ```sh
 gsdt-update --check            # installed vs latest
 gsdt-update                    # the latest toolkit + gsd-core
-gsdt-update --version 0.8.3    # a given release; going back works too
+gsdt-update --version 1.0.0    # a given version; going back works too
 ```
 
-The previous release stays on disk. See [CHANGELOG.md](CHANGELOG.md) and
-[docs/releases.md](docs/releases.md).
+`gsdt-update` finds the latest release on GitHub, downloads its `.tgz` and
+`SHA256SUMS`, checks the checksum, runs `npm install -g` on the file, and then
+the new version's `gsdt-setup`, so skills and hooks always match. See
+[CHANGELOG.md](CHANGELOG.md) and [docs/releases.md](docs/releases.md).
 
-> **Coming from `gsd-worktrees`?** That is this project's old name
-> (`arconme/gsd-worktrees`). Run `gsdt-update` twice, then
-> `gsdt-init --no-launch` in each project. See
-> [Moving from gsd-worktrees](docs/releases.md#moving-from-gsd-worktrees).
+### Moving from 0.10.x
 
-### Windows (WSL2)
-
-The toolkit needs a Unix system. Plain Windows, PowerShell and Git Bash are
-not supported. Inside WSL2 it is just Linux, which CI tests on every push.
+0.10.x was installed with `install.sh` into `~/.local/bin`. From 1.0.0 the
+toolkit is an npm package. On the machine, just run the 0.10.x updater:
 
 ```sh
-wsl --install                     # PowerShell (admin), once; then reboot
-# in the Ubuntu terminal:
-sudo apt update && sudo apt install -y git curl perl python3 jq
-curl -fsSL https://raw.githubusercontent.com/malyeg/gsd-toolkit/main/install.sh | bash
+gsdt-update
 ```
 
-Keep projects on the Linux side (`~/projects`, not `/mnt/c/…`), and install
-your agents and Node.js inside WSL too.
+(or the curl line above). The 0.10.x updater downloads the 1.0.0 release, whose
+`lib/install.sh` hands over to the new `install.sh`; that installs the npm
+package and runs `gsdt-setup`. Nothing is removed until the npm package is
+installed, so a missing Node.js leaves the 0.10.x install as it was.
+`gsdt-setup` removes the old `~/.local/bin/gsdt-*` links and
+`~/.local/share/gsd-toolkit` (only what the old install made), rewrites the
+user hooks to the npm path, and re-installs the skills. Repos need no change
+when `gsdt-doctor` shows no T090. If it does, run `gsdt-migrate --apply`
+first, best on 0.10.x. Details: [docs/migration.md](docs/migration.md#100-npm-package-nodejs-24-windows).
+
+> **Coming from `gsd-worktrees`** (before 0.8.0)? 1.0.0 does not move that
+> install. Go through 0.10.x first, as in
+> [Moving from gsd-worktrees](docs/releases.md#moving-from-gsd-worktrees).
+
+### Windows
+
+Windows is supported without WSL. You need Node.js 24+ and
+[Git for Windows](https://gitforwindows.org). Run the commands in
+PowerShell, cmd or Git Bash.
+
+```sh
+git config --global core.longpaths true   # recommended: worktree paths get long
+npm i -g https://github.com/malyeg/gsd-toolkit/releases/download/vX.Y.Z/gsd-toolkit-X.Y.Z.tgz
+gsdt-setup
+```
+
+- Git for Windows' `sh` runs everything shell-shaped in a repo: the
+  `scripts/gsdt-*.sh` shims, the post-merge hook, the planning merge driver
+  and Claude Code's hooks.
+- The pre-merge script (`scripts/gsdt-premerge-check.sh`) runs through
+  `sh` and needs no exec bit.
+- Git stops at paths longer than 260 characters unless `core.longpaths` is on.
 
 ## How it stays safe
 
@@ -290,27 +336,33 @@ Architecture: [docs/architecture.md](docs/architecture.md).
 | [trackers.md](docs/trackers.md) | Tickets: ClickUp, custom trackers |
 | [planning-merge.md](docs/planning-merge.md) | How `.planning/` files merge |
 | [releases.md](docs/releases.md) | Releases, updates, moving from gsd-worktrees |
-| [copy-install.md](docs/copy-install.md) | What the installer copies, and where |
-| [migration.md](docs/migration.md) | Coming from the old `get-shit-done-cc` |
+| [migration.md](docs/migration.md) | Moving to 1.0.0, 0.10.0 and 0.5.0 |
+| [copy-install.md](docs/copy-install.md) | Retired: the 0.10.x installer |
 
 ## Development
 
 ```sh
 git clone git@github.com:malyeg/gsd-toolkit.git && cd gsd-toolkit
+npm ci                        # TypeScript and the Node types (dev only)
+npx tsc --noEmit              # type check
 tests/test-commands.sh        # each suite is standalone
 ```
 
-Edits in a checkout never reach your installed commands until a release.
-Try them as `./bin/gsd-…` or through the tests. Commands that call other
-toolkit commands find them on `PATH`, so put `<checkout>/bin` first on
-`PATH` to try those from a checkout.
+The commands are TypeScript. A checkout runs `src/*.ts` directly (Node 24
+strips the types); `node tools/build.mjs` compiles to `dist/`, which is
+what npm ships. The scripts in `bin/` are bash launchers for running from a
+checkout: put `<checkout>/bin` first on `PATH` to try your edits. Edits
+never reach an installed copy until a release. Commands that call other
+toolkit commands find them on `PATH`.
 
 The `gsdt-batch-sonnet` Claude Code mod (moves the main session to Sonnet
 while a batch runs) is not installed yet; try it with
 `claude --plugin-dir <checkout>/mods/gsdt-batch-sonnet`.
 
 The test suites, lint commands and release steps are listed in
-[CLAUDE.md](CLAUDE.md#commands). CI runs everything on Linux and macOS.
+[CLAUDE.md](CLAUDE.md#commands). CI runs the bash suites on Linux and macOS,
+and a cross-platform suite (`node --test tests/os/os.test.ts`, the real npm
+package) on Linux, macOS and Windows.
 
 ## License
 

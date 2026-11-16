@@ -18,7 +18,7 @@ answer is `gsdt-init`, not a manual setup.
 `.gsd.conf`.** Run `gsdt-init` in the terminal instead: it installs the
 toolkit's files first, then opens a session that runs the right one of the
 two. Run alone, they write the plan without that setup. Claude has a
-user-level hook (from `install.sh`) that blocks it; Codex has no hooks, so
+user-level hook (from `gsdt-setup`) that blocks it; Codex has no hooks, so
 there this rule is the only guard.
 
 **GSD skills that clash with worktrees.** In a GSD-fitted repo the guard

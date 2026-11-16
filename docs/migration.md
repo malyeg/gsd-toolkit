@@ -1,5 +1,69 @@
 # Migration guide
 
+## 1.0.0: npm package, Node.js 24, Windows
+
+1.0.0 is a rewrite in TypeScript. The commands, their flags, output and exit
+codes, `.gsd.conf`, the shims and the generated blocks stay the same. What
+changes is how it is installed and what it needs.
+
+**Needs:** Node.js 24 or newer, and Git (on Windows, Git for Windows). Python,
+Perl and `jq` are not used; `curl` is optional (ClickUp, the update check).
+
+**On each machine:**
+
+```sh
+gsdt-update        # the 0.10.x updater; or: curl -fsSL …/install.sh | bash
+```
+
+The 0.10.x updater downloads the 1.0.0 release and its `lib/install.sh` (the
+bridge) hands over to the new `install.sh`, which installs the npm package from
+the release and runs `gsdt-setup`. Nothing is removed before the package is
+installed: without Node.js 24 it stops and leaves the 0.10.x install as it was.
+`gsdt-setup`:
+
+`gsdt-setup`:
+
+- removes the old `~/.local/bin/gsdt-*` links and `~/.local/share/gsd-toolkit/`
+  (only what the 0.10.x install made);
+- rewrites the toolkit's Claude user hooks in `~/.claude/settings.json` to the
+  npm path, and does not duplicate them;
+- re-installs the skills for the agents it knows (the 0.10.x install manifest
+  is read for its agent list; custom skill folders are not carried over, so
+  pass `GSD_CLAUDE_SKILL_DIR` / `GSD_CODEX_SKILL_DIR` again if you set them);
+- installs gsd-core for an agent that has none.
+
+After that, `gsdt-update` updates from npm.
+
+**In each repo:** nothing, when `gsdt-doctor` shows no T090. If it does show
+T090 (the repo is from before 0.10.0), run `gsdt-migrate --apply` first. Do it
+on 0.10.x if you can: 1.0.0 no longer reads the machine-level old forms
+(the `gsd-worktrees` install paths and tarball name, the `gsdw-*` skills,
+the pre-0.10 command names on the machine). Config legacy still works:
+`provider`, `agent_command`, `--agent` and `GSD_AGENT`. The repo-level
+`gsd-worktrees:` markers are still read and rewritten by `gsdt-init`.
+
+**On Windows** there is no WSL step. Install Git for Windows and Node.js 24,
+run `git config --global core.longpaths true`, then the two commands above.
+If you used WSL2 for 0.10.x, the WSL install stays as it is; the Windows one
+is separate.
+
+### `gsdt-migrate --apply` now offers to commit
+
+In 1.0.0, `gsdt-migrate --apply` lists the repo files it changed and, in a
+terminal, asks `Commit these N files? [y/N]`. `--commit` answers yes without
+asking.
+
+- It commits only the files this run changed (steps 1 to 5 of the 0.10.0
+  list below), never anything else that is staged or modified.
+- It does not commit when one of those files already had uncommitted changes
+  before the migration, or when this checkout is not on the base branch. It
+  says why and prints the command to run by hand.
+- With no terminal and no `--commit` (a script, `gsdt-doctor --fix`), it does
+  not commit and prints the command.
+- Steps 6 and 7 (this clone's git config and hooks, your Claude user settings)
+  are never committed: they are not in the repo.
+- It never pushes and never checks out a branch.
+
 ## 0.10.0: commands renamed to gsdt-*
 
 Every toolkit command is now `gsdt-*`: `gsd-start` → `gsdt-start`,
@@ -16,9 +80,10 @@ installs.
 2. **In each repo's main checkout:**
    ```sh
    gsdt-migrate             # dry run: every change, nothing changed
-   gsdt-migrate --apply     # make them (never commits)
-   git add -A && git commit -m "Switch to gsdt-* toolkit commands"
+   gsdt-migrate --apply     # make them; in 1.0.0 it offers to commit (see above)
    ```
+   On 0.10.x, `--apply` never commits: run
+   `git add -A && git commit -m "Switch to gsdt-* toolkit commands"` yourself.
    Until then `gsdt-start`, `gsdt-finish`, `gsdt-flow-next` and `gsdt-init`
    stop with "run: gsdt-migrate --apply", and `gsdt-doctor` reports T090
    (`gsdt-doctor --fix` runs it for you).

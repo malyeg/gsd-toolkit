@@ -13,8 +13,10 @@ import {
   RULES_BASE,
   RULES_SCREENS,
 } from './rules-text.ts';
-import { claudeEnv } from './claude-settings.ts';
-import { chomp, commandOnPath, confGet, git, gsdPkg, isExec, isFile, run } from './common.ts';
+import { claudeEnv, parseJson } from './claude-settings.ts';
+import type { JVal } from './claude-settings.ts';
+import { WIN } from './spawn.ts';
+import { chomp, confGet, eolOf, git, gsdPkg, isExec, isFile, lf, toEol } from './common.ts';
 import type { Failure, Result } from './common.ts';
 import { hookPaths } from './hook-paths.ts';
 
@@ -125,42 +127,70 @@ export function providerHookMetadata(p: string): HookMetadata | null {
   return null;
 }
 
-/** gsd_provider_hook_state — present|absent|invalid|unverified|unsupported */
+/** jq's `.key` on a value: null for null or a missing key, an error for anything but an object */
+function jqIdx(v: JVal | undefined, key: string): JVal {
+  if (v === null || v === undefined) return null;
+  if (v instanceof Map) return v.get(key) ?? null;
+  throw new Error('cannot index');
+}
+/** jq's `a // b` */
+const jqAlt = (a: JVal | undefined, b: JVal): JVal => (a === undefined || a === null || a === false ? b : a);
+/** the elements `.[]` yields (an error for a scalar) */
+function jqEach(v: JVal): JVal[] {
+  if (Array.isArray(v)) return v;
+  if (v instanceof Map) return [...v.values()];
+  throw new Error('cannot iterate');
+}
+
+/** the file's JSON the way jq read it: undefined when it does not parse */
+export function readHookJson(file: string): JVal | undefined {
+  try {
+    return parseJson(readFileSync(file, 'utf8'));
+  } catch {
+    return undefined;
+  }
+}
+
+/** jq: `type == "object" and ((.hooks // {}) | type == "object") and ((.hooks[$e] // []) | type == "array")` */
+export function hookStructureOk(d: JVal, event: string): boolean {
+  if (!(d instanceof Map)) return false;
+  if (!(jqAlt(d.get('hooks'), new Map()) instanceof Map)) return false;
+  try {
+    return Array.isArray(jqAlt(jqIdx(d.get('hooks') ?? null, event), []));
+  } catch {
+    return false;
+  }
+}
+
+/** jq: `.disableAllHooks == true or .hooksConfig.enabled == false` (an error counts as no) */
+export function hooksDisabled(d: JVal): boolean {
+  try {
+    return jqIdx(d, 'disableAllHooks') === true || jqIdx(jqIdx(d, 'hooksConfig'), 'enabled') === false;
+  } catch {
+    return false;
+  }
+}
+
+/** gsd_provider_hook_state — present|absent|invalid|unsupported (never `unverified`: no jq is needed) */
 export function providerHookState(repo: string, provider: string): string {
   const meta = providerHookMetadata(provider);
   if (meta === null) return 'unsupported';
   const file = `${repo}/${meta.settings}`;
   if (!isFile(file)) return 'absent';
-  // The documented states include `unverified` (no jq), so the check stays jq's own.
-  if (commandOnPath('jq') === null) return 'unverified';
-  const valid = run('jq', [
-    '-e',
-    '--arg',
-    'e',
-    meta.event,
-    'type == "object" and ((.hooks // {}) | type == "object") and ((.hooks[$e] // []) | type == "array")',
-    file,
-  ]);
-  if (valid.status !== 0) return 'invalid';
-  const present = run('jq', [
-    '-e',
-    '--arg',
-    'e',
-    meta.event,
-    '--arg',
-    'm',
-    meta.matcher,
-    '--arg',
-    'c',
-    meta.command,
-    `
-    (.disableAllHooks != true) and (.hooksConfig.enabled != false) and
-    any((.hooks[$e] // [])[]; .matcher == $m and .disabled != true and
-      any((.hooks // [])[]; .type == "command" and .command == $c and .disabled != true))
-  `,
-    file,
-  ]);
-  return present.status === 0 ? 'present' : 'absent';
+  const d = readHookJson(file);
+  if (d === undefined || !hookStructureOk(d, meta.event)) return 'invalid';
+  try {
+    if (jqIdx(d, 'disableAllHooks') === true || jqIdx(jqIdx(d, 'hooksConfig'), 'enabled') === false) return 'absent';
+    for (const e of jqEach(jqAlt(jqIdx(jqIdx(d, 'hooks'), meta.event), []))) {
+      if (jqIdx(e, 'matcher') !== meta.matcher || jqIdx(e, 'disabled') === true) continue;
+      for (const h of jqEach(jqAlt(jqIdx(e, 'hooks'), []))) {
+        if (jqIdx(h, 'type') === 'command' && jqIdx(h, 'command') === meta.command && jqIdx(h, 'disabled') !== true) return 'present';
+      }
+    }
+  } catch {
+    /* jq errored: not present */
+  }
+  return 'absent';
 }
 
 /** gsd_provider_user_hook_file — the user-level file holding an agent's hooks (null = none) */
@@ -219,7 +249,7 @@ const lines = (t: string): string[] => {
 };
 const readBytes = (f: string): string | null => {
   try {
-    return readFileSync(f, 'latin1');
+    return lf(readFileSync(f, 'latin1')); // a CRLF checkout reads as the LF file would
   } catch {
     return null;
   }
@@ -336,7 +366,7 @@ export function providerEntryBlock(providers: string): string {
 export function replaceOwnedBlock(file: string, kind: string, blockFile: string): boolean {
   let block: string;
   try {
-    block = readFileSync(blockFile, 'latin1');
+    block = lf(readFileSync(blockFile, 'latin1'));
   } catch {
     return false;
   }
@@ -350,7 +380,10 @@ export function replaceOwnedBlock(file: string, kind: string, blockFile: string)
     missing = true;
   }
   const k = reEscape(kind);
-  const startRe = new RegExp(`(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:start -->(?![^\\n])`);
+  // a CRLF file keeps its endings: the markers may be followed by \r\n, the new block is written with the file's
+  // dominant ending, and nothing outside the block is touched
+  const eol = eolOf(content);
+  const startRe = new RegExp(`(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:start -->(?=\\r?\\n|$)`);
   let result: string;
   if (missing) {
     // perl -0777 -pe finds no file, so it prints nothing: bash creates an EMPTY file (mode 0600).
@@ -358,12 +391,12 @@ export function replaceOwnedBlock(file: string, kind: string, blockFile: string)
     result = '';
   } else if (startRe.test(content)) {
     const full = new RegExp(
-      `(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:start -->\\n[\\s\\S]*?(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:end -->(?:\\n|$)`,
+      `(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:start -->\\r?\\n[\\s\\S]*?(?<![^\\n])<!-- gsd-(?:toolkit|worktrees):${k}:end -->(?:\\r?\\n|$)`,
       'g',
     );
-    result = content.replace(full, () => block);
+    result = content.replace(full, () => toEol(block, eol));
   } else {
-    result = `${content}${content.length > 0 && !content.endsWith('\n') ? '\n' : ''}\n${block}`;
+    result = `${content}${content.length > 0 && !content.endsWith('\n') ? eol : ''}${eol}${toEol(block, eol)}`;
   }
   let isLink = false;
   try {
@@ -400,12 +433,17 @@ export function replaceOwnedBlock(file: string, kind: string, blockFile: string)
 
 /** gsd_command_guards_active — toolkit package; the native hook/shim is not required */
 export function commandGuardsActive(pkg: string): boolean {
-  if (!(isExec(`${pkg}/bin/gsdt-worktree-guard`) && isExec(`${pkg}/bin/gsdt-start`) && isExec(`${pkg}/bin/gsdt-flow-next`))) {
+  // Windows has no exec bit and an npm install may not carry bin/: the command's TypeScript or compiled file counts there
+  const runnable = (n: string, cmd: string): boolean =>
+    isExec(`${pkg}/bin/gsdt-${n}`) || (WIN && (isFile(`${pkg}/src/commands/${cmd}.ts`) || isFile(`${pkg}/dist/commands/${cmd}.js`)));
+  if (!(runnable('worktree-guard', 'worktree-guard') && runnable('start', 'start') && runnable('flow-next', 'flow-next'))) {
     return false;
   }
   const has = (f: string): boolean => (readBytes(f) ?? '').split('\n').some((l) => /gsdt-worktree-guard.*--command/.test(l));
   // P3b/P6: flow-next and start are TypeScript and run the guard in-process (guardArgv(['--command', …))
-  const inProcess = (f: string): boolean => (readBytes(`${pkg}/src/commands/${f}.ts`) ?? '').includes("guardArgv(['--command'");
+  // (dist/commands/<f>.js where the .ts files are not shipped: the npm package)
+  const inProcess = (f: string): boolean =>
+    [`${pkg}/src/commands/${f}.ts`, `${pkg}/dist/commands/${f}.js`].some((p) => (readBytes(p) ?? '').includes("guardArgv(['--command'"));
   return (has(`${pkg}/bin/gsdt-start`) || inProcess('start')) && (has(`${pkg}/bin/gsdt-flow-next`) || inProcess('flow-next'));
 }
 

@@ -1,27 +1,30 @@
 // gsdt-bootstrap-repo — install GSD worktree integration into the current repo (conf, shims,
 // instructions, hooks). Port of the bash bin/gsdt-bootstrap-repo (kept as the parity oracle in
 // tests/fixtures/p8-old-bins/). `gsdt-init` calls main() in-process. Still outside this file:
-// `bash -n` (the self-check), `git`, and `jq` (merging the native hook into Claude's settings,
-// as the bash did; without jq the hook is reported as absent and the file is left alone).
-import { spawnSync } from 'node:child_process';
+// `bash -n` (the self-check) and `git`. The native hook merge into Claude's settings is done
+// in-process (no jq), written with the python-exact JSON writer.
+import { SH } from '../spawn.ts';
 import { appendFileSync, copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { removeGuardHook } from '../claude-settings.ts';
+import { dumpJson, removeGuardHook } from '../claude-settings.ts';
+import type { JVal } from '../claude-settings.ts';
 import {
   base,
   baserefEnsure,
   chmodPlusX,
   chomp,
-  commandOnPath,
   confGet,
   git,
   GsdExit,
   gsdPkg,
   isDir,
+  eolOf,
   isFile,
+  lf,
   planningApply,
   planningHook,
+  toEol,
   wtdir,
 } from '../common.ts';
 import {
@@ -31,6 +34,8 @@ import {
   providerEntryBlock,
   providerHookMetadata,
   providerHookState,
+  readHookJson,
+  hooksDisabled,
   providerInstructionFile,
   providerListValidate,
   providerValidate,
@@ -104,12 +109,17 @@ export function main(argv: string[]): number {
 const SPC = '[ \\t\\n\\r\\f\\v]';
 const reEscape = (s: string): string => s.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
 const say = (s = ''): void => out(`${s}\n`);
-const readLatin1 = (f: string): string | null => {
+/** The text as the LF version of the file would read; `rawLatin1` keeps the bytes (for a rewrite in the file's own ending). */
+const rawLatin1 = (f: string): string | null => {
   try {
     return readFileSync(f, 'latin1');
   } catch {
     return null;
   }
+};
+const readLatin1 = (f: string): string | null => {
+  const t = rawLatin1(f);
+  return t === null ? null : lf(t);
 };
 /** perl's per-line view of a file: every line with its "\n" */
 const perlLines = (t: string): string[] => t.match(/[^\n]*\n|[^\n]+$/g) ?? [];
@@ -118,18 +128,20 @@ const keyRe = (k: string): RegExp => new RegExp(`^${SPC}*${reEscape(k)}${SPC}*=`
 // perl -pi: a line that starts with the key becomes `key = value`; no such line: one is appended
 export function setConfKey(conf: string, k: string, v: string): void {
   const re = new RegExp(`^${SPC}*${reEscape(k)}${SPC}*=[^\\n]*`);
-  const t = readLatin1(conf) ?? '';
-  writeFileSync(conf, perlLines(t).map((l) => l.replace(re, () => `${k} = ${v}`)).join(''), 'latin1');
+  // a CRLF .gsd.conf stays CRLF (its dominant ending), edited lines and the appended one included
+  const raw = rawLatin1(conf) ?? '';
+  const eol = eolOf(raw);
+  writeFileSync(conf, toEol(perlLines(lf(raw)).map((l) => l.replace(re, () => `${k} = ${v}`)).join(''), eol), 'latin1');
   const now = readLatin1(conf) ?? '';
   if (!now.split('\n').some((l) => keyRe(k).test(l))) {
     // (the bash glued the new line onto a last line that had no newline: `providers = claudetracker = x`)
-    appendFileSync(conf, `${now !== '' && !now.endsWith('\n') ? '\n' : ''}${k} = ${v}\n`);
+    appendFileSync(conf, toEol(`${now !== '' && !now.endsWith('\n') ? '\n' : ''}${k} = ${v}\n`, eol), 'latin1');
   }
 }
 // perl -ni: drop the lines that start with the key
 export function removeConfKey(conf: string, k: string): void {
-  const t = readLatin1(conf) ?? '';
-  writeFileSync(conf, perlLines(t).filter((l) => !keyRe(k).test(l)).join(''), 'latin1');
+  const raw = rawLatin1(conf) ?? '';
+  writeFileSync(conf, toEol(perlLines(lf(raw)).filter((l) => !keyRe(k).test(l)).join(''), eolOf(raw)), 'latin1');
 }
 
 /** a temp file holding `text` (utf-8), for replaceOwnedBlock */
@@ -376,8 +388,9 @@ function run(argv: string[]): number {
     const text = readLatin1(gi);
     if (text !== null && text.split('\n').includes(pat)) continue;
     // a .gitignore whose last line has no newline would glue our line onto it
-    if (text !== null && text.length > 0 && !text.endsWith('\n')) appendFileSync(gi, '\n');
-    appendFileSync(gi, `${pat}\n`);
+    const giEol = eolOf(rawLatin1(gi) ?? '');
+    if (text !== null && text.length > 0 && !text.endsWith('\n')) appendFileSync(gi, giEol);
+    appendFileSync(gi, `${pat}${giEol}`);
   }
   {
     const line = baserefEnsure(DEST, '.');
@@ -393,7 +406,7 @@ function run(argv: string[]): number {
     copyFileSync(CANON, bak);
     // Migrate the recognizable legacy generated span, retaining additions after it.
     const SOL = '(?<![^\\n])';
-    writeFileSync(CANON, canonText.replace(new RegExp(`${SOL}<!-- gsd-worktrees:canonical -->\\n[\\s\\S]*?${SOL}worktrees \`[^\\n]*\`\\.\\n?`), ''), 'latin1');
+    writeFileSync(CANON, toEol(canonText.replace(new RegExp(`${SOL}<!-- gsd-worktrees:canonical -->\\n[\\s\\S]*?${SOL}worktrees \`[^\\n]*\`\\.\\n?`), ''), eolOf(rawLatin1(CANON) ?? '')), 'latin1');
     say(`• legacy canonical content backed up to ${bak}`);
   }
   if (!existsSync(CANON)) writeFileSync(CANON, '');
@@ -408,7 +421,13 @@ function run(argv: string[]): number {
       say(`• ${shown} already registers the guard`);
       return;
     }
-    if (commandOnPath('jq') === null || spawnSync('jq', ['empty', settings], { stdio: 'ignore' }).status !== 0) {
+    // (jq reads an empty file as no value at all: valid, but not a hook structure)
+    if (/^[ \t\n\r]*$/.test(readFileSync(settings, 'latin1'))) {
+      say(`⚠ incompatible hook structure in ${settings}; preserved unchanged`);
+      return;
+    }
+    const doc = readHookJson(settings);
+    if (doc === undefined) {
       say(`⚠ ${shown} is not mergeable JSON; preserved unchanged (native hook absent)`);
       return;
     }
@@ -417,17 +436,21 @@ function run(argv: string[]): number {
       return;
     }
     // Do not override an explicit user decision to disable native hooks.
-    if (spawnSync('jq', ['-e', '.disableAllHooks == true or .hooksConfig.enabled == false', settings], { stdio: 'ignore' }).status === 0) {
+    if (hooksDisabled(doc)) {
       say(`⚠ native hooks disabled in ${settings}; preserved unchanged`);
       return;
     }
-    const r = spawnSync(
-      'jq',
-      ['--arg', 'e', event, '--arg', 'm', matcher, '--arg', 'c', command, '.hooks //= {} | .hooks[$e] = ((.hooks[$e] // []) + [{matcher:$m,hooks:[{type:"command",command:$c}]}])', settings],
-      { stdio: ['ignore', 'pipe', 'inherit'], maxBuffer: 64 * 1024 * 1024 },
-    );
-    if (r.status !== 0) die(`could not merge native hook into ${settings} (original preserved)`);
-    writeFileSync(settings, r.stdout);
+    // jq: .hooks //= {} | .hooks[$e] = ((.hooks[$e] // []) + [{matcher, hooks:[{type, command}]}])
+    const root = doc as Map<string, JVal>;
+    let hooks = root.get('hooks') ?? null;
+    if (hooks === null || hooks === false) root.set('hooks', (hooks = new Map<string, JVal>()));
+    const hm = hooks as Map<string, JVal>;
+    const cur = hm.get(event);
+    const list: JVal[] = Array.isArray(cur) ? cur : [];
+    list.push(new Map<string, JVal>([['matcher', matcher], ['hooks', [new Map<string, JVal>([['type', 'command'], ['command', command]])]]]));
+    hm.set(event, list);
+    // the python-exact writer (jq's own indent-2 layout, numbers kept as written)
+    writeFileSync(settings, `${dumpJson(root)}\n`);
     say(`✔ ${shown} (${provider} native guard hook)`);
   };
 
@@ -453,8 +476,8 @@ function run(argv: string[]): number {
     const s = `${DEST}/.gemini/settings.json`;
     if (!isLink(f) && ownedBlockGet(f, 'provider') !== '' && ownedMarkersValid(f, 'provider')) {
       replaceBlock(f, 'provider', '');
-      const t = readLatin1(f) ?? '';
-      writeFileSync(f, t.replace(/\n+$/, '\n'), 'latin1');
+      const rawG = rawLatin1(f) ?? '';
+      writeFileSync(f, toEol(lf(rawG).replace(/\n+$/, '\n'), eolOf(rawG)), 'latin1');
       if (!/[^ \t\n\r\f\v]/.test(readLatin1(f) ?? '')) {
         unlinkSync(f);
         say('✔ GEMINI.md removed (only the gsd-toolkit block was in it; Gemini is no longer supported)');
@@ -476,7 +499,7 @@ function run(argv: string[]): number {
   if (GEMINI_DROPPED) say('✔ .gsd.conf: gemini removed from providers (Gemini is no longer supported)');
 
   for (const f of [...gsdtScripts(DEST), `${DEST}/scripts/hooks/gsdt-worktree-guard.sh`]) {
-    const rc = inherit('bash', ['-n', f]);
+    const rc = inherit(SH, ['-n', f]);
     if (rc !== 0) throw new Stop(rc);
   }
   say('✔ self-check (shims parse)');

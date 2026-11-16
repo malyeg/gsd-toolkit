@@ -18,7 +18,8 @@ import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { base, commandOnPath, confGet, findMain, git, isDir, isExec, isFile, phaseDir, run } from './common.ts';
+import { WIN } from './spawn.ts';
+import { base, commandOnPath, confGet, findMain, git, isDir, isExec, isFile, lf, phaseDir, run } from './common.ts';
 
 export const UI_STUB = '<!-- gsd:design-stub';
 /** GSD_UI_WIDTHS (read by bin/gsdt-ui) */
@@ -42,7 +43,7 @@ const TRAIL_SP = new RegExp(`${SP}+$`);
 
 function readText(p: string): string | null {
   try {
-    return readFileSync(p, 'utf8');
+    return lf(readFileSync(p, 'utf8'));
   } catch {
     return null;
   }
@@ -284,8 +285,8 @@ export function uiCodeState(checkout: string, env0?: NodeJS.ProcessEnv): string 
   if (objR.status !== 0) return '';
   let idx = idxR.stdout.replace(/\n+$/, '');
   let objs = objR.stdout.replace(/\n+$/, '');
-  if (!idx.startsWith('/')) idx = `${top}/${idx}`;
-  if (!objs.startsWith('/')) objs = `${top}/${objs}`;
+  if (!(idx.startsWith('/') || (WIN && /^[A-Za-z]:/.test(idx)))) idx = `${top}/${idx}`;
+  if (!(objs.startsWith('/') || (WIN && /^[A-Za-z]:/.test(objs)))) objs = `${top}/${objs}`;
   let tmp: string;
   try {
     tmp = mkdtempSync(path.join(tmpdir(), 'gsd-ui-'));

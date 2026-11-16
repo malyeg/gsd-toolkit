@@ -27,7 +27,7 @@ The tag is read back from the ROADMAP title (exact case), then the branch name
 ## Commands
 
 `gsdt-tracker` is the one layer sessions and scripts call; each tracker is a
-connector under it (`lib/tracker/<name>.sh`). Shared verbs, the same for
+connector under it (`src/tracker/<name>.ts`). Shared verbs, the same for
 every tracker:
 
 | Verb | Does |
@@ -105,7 +105,7 @@ With `tracker = none` the `ticket` flow step is skipped.
 ## ClickUp
 
 Token, first match wins: `$CLICKUP_API_TOKEN`, or `CLICKUP_API_TOKEN=pk_…` in
-the token file. Check it: `gsdt-tracker check`. Needs `jq`.
+the token file. Check it: `gsdt-tracker check`. The API is called with `curl` (it ships with Windows 10 and later); `jq` is not needed.
 
 The token file is `~/.config/gsd/clickup.env`, shared by every project. To use
 a different ClickUp user in one repo (other workspace, split rate limits), run
@@ -200,6 +200,8 @@ Exit 0 on success. Any other exit is reported as "tracker call failed".
 A call that runs longer than 60 seconds (`GSD_TRACKER_TIMEOUT` to change it)
 is stopped, so a script stuck on the network never hangs `gsdt-start` or
 `gsdt-finish`.
+On Windows the script runs through Git for Windows' `sh`, so it needs no exec bit and the `#!/usr/bin/env bash` line is not used.
+
 Example for GitHub issues:
 
 ```sh
@@ -227,7 +229,7 @@ Still read, never written:
 |---|---|---|
 | T070 | ROADMAP has `cu_` tags but `tracker = none` | add `tracker = clickup` |
 | T071 | unknown tracker value | use none, clickup, or custom (doctor names where it is set) |
-| T072 | `tracker = custom` without an executable script | set it, `chmod +x` |
+| T072 | `tracker = custom` without an executable script | set it, `chmod +x` (a Windows check is looser: no exec bit there) |
 | T018 | the profile is not a name | fix it where it is set |
 | T073 | `tracker = clickup` but no token on this machine | `gsdt-tracker login` |
 | T040 | (with `flow = strict`) a merged phase has no ticket snapshot | the `gsdt-tracker snapshot` command it prints |

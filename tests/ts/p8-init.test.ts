@@ -10,7 +10,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { cleanPath, git, norm, runStep, scenario, sh, write, makeSide, type Project, type Side, type Step } from './p6-helpers.ts';
+import { cleanPath, git, norm, runStep, lenient, scenario, sh, write, makeSide, type Project, type Side, type Step } from './p6-helpers.ts';
 
 const only = process.env.P8_ONLY ? new RegExp(process.env.P8_ONLY) : null;
 const t = (name: string, fn: () => void): void => void test(name, { skip: only !== null && !only.test(name) }, fn);
@@ -61,6 +61,16 @@ function tree(s: Side): string {
   return parts.join('\n');
 }
 const sc = (project: Project | ((k: 'old' | 'new') => Project), prep: ((s: Side) => void) | null, steps: Step[]): void => scenario(project, prep, steps, tree);
+
+/** P12: the port reads and keeps CRLF text; the old bash choked on it. NEW gets the CRLF file, OLD its LF version, compared without \r. */
+const scCrlf = (files: (crlf: boolean) => Project, steps: Step[]): void => {
+  lenient.cr = true;
+  try {
+    scenario((k) => files(k === 'new'), null, steps, tree);
+  } finally {
+    lenient.cr = false;
+  }
+};
 
 const commit = (s: Side, msg = 'x'): void => {
   sh(s.R, 'git', ['add', '-A']);
@@ -304,7 +314,7 @@ t('instruction files: text outside the markers stays, bad markers are refused', 
   sc(both({ 'CLAUDE.md': '## GSD planning system\n\nuse scripts/hooks/gsd-worktree-guard.sh\n' }), null, [init(NL, { rc: 0, out: /preserved unmarked legacy GSD instructions in CLAUDE\.md/ }), init(NL, { rc: 0, not: /preserved unmarked/ })]);
   sc(both({ 'CLAUDE.md': '## GSD planning system\nno hook name here\n' }), null, [init(NL, { rc: 0, not: /preserved unmarked/ })]);
   // CRLF text, a file that is a link
-  sc(both({ 'CLAUDE.md': 'a\r\nb\r\n' }), null, [init(NL, { rc: 0 })]);
+  scCrlf((c) => both({ 'CLAUDE.md': c ? 'a\r\nb\r\n' : 'a\nb\n' }), [init(NL, { rc: 0 })]);
   sc(both({ 'CLAUDE.md': 'é ünï\n' }), null, [init(NL, { rc: 0 })]);
   sc(both({ 'REAL.md': 'real\n' }), (s) => symlinkSync('REAL.md', path.join(s.R, 'AGENTS.md')), [init(['--provider', 'codex', ...NL], { rc: 0 })]);
 });
@@ -314,7 +324,7 @@ t('.gitignore', () => {
   sc(withFiles({ '.gitignore': 'node_modules' }), null, [init(NL, { rc: 0 })]);
   sc(withFiles({ '.gitignore': '.gsd-install.log\n.claude/settings.local.json\n' }), null, [init(NL, { rc: 0 })]);
   sc(withFiles({ '.gitignore': '' }), null, [init(NL, { rc: 0 })]);
-  sc(withFiles({ '.gitignore': '.gsd-install.status\r\n' }), null, [init(NL, { rc: 0 })]);
+  scCrlf((c) => withFiles({ '.gitignore': c ? '.gsd-install.status\r\n' : '.gsd-install.status\n' }), [init(NL, { rc: 0 })]);
 });
 
 // ── .gsd.conf ───────────────────────────────────────────────────────────────
@@ -326,7 +336,7 @@ t('.gsd.conf: created, or updated with the other keys kept', () => {
   sc(conf('provider = codex\nagent_command = /opt/x/codex\n'), null, [init(NL, { rc: 0 }), init(NL, { rc: 0 })]);
   sc(conf('providers = claude,codex\nclaude_command = /a\n  codex_command   =   /b  # c\n'), null, [init(['--provider-command', 'claude=/new/claude', ...NL], { rc: 0 })]);
   sc(conf('providers = claude\nui_gates = strict\n'), null, [init(['--no-ui', ...NL], { rc: 0 })]);
-  sc(conf('  providers   =   claude,codex  \r\ntracker = none\r\n'), null, [init(['--providers', 'claude', ...NL], { rc: 0 })]);
+  scCrlf((c) => conf(c ? '  providers   =   claude,codex  \r\ntracker = none\r\n' : '  providers   =   claude,codex  \ntracker = none\n'), [init(['--providers', 'claude', ...NL], { rc: 0 })]);
   sc(conf('providers = claude\n'), null, [init(['--tracker', 'custom', '--tracker-command', 'scripts/t.sh', ...NL], { rc: 0 }), init(['--tracker', 'none', ...NL], { rc: 0 })]);
   sc(conf('providers = claude\ntracker = custom\ntracker_command = scripts/mine.sh\n'), null, [init(['--tracker', 'custom', ...NL], { rc: 0 })]);
   sc(conf('base = develop\nproviders = claude\n'), (s) => void sh(s.R, 'git', ['branch', 'develop']), [init(['--base', 'develop', ...NL], { rc: 0 }), init(['--base', 'main', ...NL], { rc: 0 })]);
@@ -401,11 +411,14 @@ t('.claude/settings.json: the native guard hook', () => {
   sc(S('[]'), null, [init(NL, { rc: 0 })]);
   sc(S(''), null, [init(NL, { rc: 0 })]);
   sc(S({ hooks: { PreToolUse: [{ ...HOOK, disabled: true }] } }), null, [init(NL, { rc: 0 })]);
-  sc(S({ n: 1.0, big: 123456789012345678901234567890, s: 'é' }), null, [init(NL, { rc: 0 })]);
+  // (a raw file: JSON.stringify would write 1.0 as 1 and the big number as 1.23e+29, which jq and the python-exact writer print differently)
+  sc(S('{\n  "n": 1.0,\n  "big": 123456789012345678901234567890,\n  "s": "é"\n}\n'), null, [init(NL, { rc: 0 })]);
   sc(FRESH, null, [init(['--provider', 'codex', ...NL], { rc: 0, out: /codex native guard hook: unsupported/ })]);
   sc(FRESH, null, [init(['--providers', 'codex,claude', ...NL], { rc: 0 })]);
-  // no jq: the hook is left absent, the same words
-  sc(S({ model: 'x' }), null, [init(NL, { rc: 0, env: (s: Side) => ({ PATH: `${s.pkg}/bin${D}${nojqPath()}` }) })]);
+  // P13: the new side merges the hook with no jq on PATH; the old bin (jq present) is the oracle
+  sc(S('{\n  "model": "x",\n  "n": 1.0,\n  "big": 123456789012345678901234567890\n}\n'), null, [
+    init(NL, { rc: 0, out: /native guard hook/, env: (s: Side) => (s.kind === 'new' ? { PATH: `${s.pkg}/bin${D}${nojqPath()}` } : {}) }),
+  ]);
 });
 
 let noJq: string | null = null;

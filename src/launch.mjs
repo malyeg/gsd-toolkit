@@ -1,11 +1,16 @@
-// Dev/test launcher (strangler phase): bin/gsdt-<name> runs
+// The one launcher. bin/gsdt-<name> (bash) and the npm entries
+// (dist/bin/gsdt-<name>.js, made by tools/build.mjs) both run
 //   node src/launch.mjs <name> [args…]
 // It checks the Node version first (an older Node would die on the type
 // syntax with a confusing error), then imports src/commands/<name>.ts — Node
-// ≥ 24 strips the types — and exits with what its main() returns.
-// P11 replaces this with package.json "bin" entries over dist/.
+// ≥ 24 strips the types — or, where the .ts files are not shipped (the npm
+// package: Node will not strip types under node_modules), the compiled
+// dist/commands/<name>.js. It exits with what main() returns.
+import { existsSync } from 'node:fs';
 const [major] = process.versions.node.split('.').map(Number);
 const [name, ...args] = process.argv.slice(2);
+// The guard's only escape hatch, before anything can fail.
+if (name === 'worktree-guard' && process.env.GSD_SKIP_GUARD === '1') process.exit(0);
 // `gsdt-rules --hook` runs as a Claude SessionStart hook: whatever goes wrong it
 // must say nothing and exit 0 (the bash version could not fail either).
 const quiet = name === 'rules' && args.includes('--hook');
@@ -29,7 +34,8 @@ if (!name || !/^[a-z][a-z0-9-]*$/.test(name)) {
   process.exit(2);
 }
 try {
-  const mod = await import(new URL(`./commands/${name}.ts`, import.meta.url).href);
+  const ts = new URL(`./commands/${name}.ts`, import.meta.url);
+  const mod = await import((existsSync(ts) ? ts : new URL(`../dist/commands/${name}.js`, import.meta.url)).href);
   process.exitCode = await mod.main(args);
 } catch (e) {
   if (guarding) guardFail(String(e instanceof Error ? e.message : e).split('\n')[0]);

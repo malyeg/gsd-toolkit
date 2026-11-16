@@ -8,7 +8,7 @@
 // its output is captured and printed once it is done), gsdt-planning-repair,
 // gsdt-flow-next and gsdt-tracker (children). The ROADMAP rows and STATE.md note
 // are edited in-process (no perl).
-import { spawnSync } from 'node:child_process';
+import { selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
 import { existsSync, readFileSync, readdirSync, rmdirSync, appendFileSync, writeFileSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import path from 'node:path';
@@ -20,16 +20,17 @@ import {
   cli,
   cliMissing,
   commandOnPath,
+  eolOf,
   findMain,
   git,
   GsdExit,
   gsdPkg,
   isDir,
   isFile,
+  lf,
   migrateRefuse,
   originLacks,
   phaseBranch,
-  python,
   releaseLock,
   workflowFlag,
 } from '../common.ts';
@@ -48,8 +49,8 @@ import {
   startModeResolve,
 } from '../provider.ts';
 import { roadmapRows } from '../roadmap.ts';
-import { err, inherit, out, runSession } from '../stdio.ts';
-import { updateNotice } from '../update-check.ts';
+import { err, inherit, inheritSelf, out, runSession } from '../stdio.ts';
+import { updateNotice } from '../version.ts';
 import { grepq, phaseHeadingRe, worktreeOf } from './wt-new.ts';
 
 const HELP = `gsdt-start — start a GSD feature in ONE step
@@ -496,13 +497,12 @@ function run(argv: string[]): number | Promise<number> {
     if (r.stderr !== '') err(r.stderr);
     if (r.rc !== 0) err(`⚠ could not add the ROADMAP rows for phase ${N} — gsdt-doctor will list them (T022/T023)\n`);
     // Recompute STATE.md's progress counters (total_phases, …) in the claim commit itself. Best effort.
-    inherit(`${PKG}/bin/gsdt-planning-repair`, ['--repo', MAIN], { stdio: ['inherit', 'ignore', 'ignore'] });
+    inheritSelf('planning-repair', ['--repo', MAIN], { stdio: ['inherit', 'ignore', 'ignore'] });
   };
 
   const tddDefault = (): void => {
     // TDD is the toolkit's default — turn GSD's tdd_mode on in the claim commit. Only an UNSET key is filled.
     if (!isFile(`${MAIN}/.planning/config.json`)) return;
-    if (python() === null) return; // (the bash could not tell unset from false without it)
     if (workflowFlag(MAIN, 'tdd_mode') !== '') return;
     const rc = inherit(GSD_RUN, ['query', 'config-set', 'workflow.tdd_mode', 'true', '--project-dir', MAIN], { stdio: ['inherit', 'ignore', 'ignore'] });
     if (rc === 0) out('▶ TDD mode on for this project (workflow.tdd_mode; turn it off with /gsd-settings)\n');
@@ -514,13 +514,15 @@ function run(argv: string[]): number | Promise<number> {
     const state = `${MAIN}/.planning/STATE.md`;
     if (!isFile(state)) return;
     // The perl worked on bytes: keep them (latin1 in, latin1 out).
-    const raw = readFileSync(state, 'latin1');
+    const rawFile = readFileSync(state, 'latin1');
+    const eol = eolOf(rawFile); // a CRLF STATE.md stays CRLF
+    const raw = lf(rawFile);
     if (raw.split('\n').some((l) => l.includes('### Roadmap Evolution'))) {
       const note = Buffer.from(text, 'utf8').toString('latin1');
       const next = raw.replace(/(### Roadmap Evolution\n\n(?:- [^\n]*\n)*)/, (m) => `${m}- ${note}\n`);
-      if (next !== raw) writeFileSync(state, Buffer.from(next, 'latin1'));
+      if (next !== raw) writeFileSync(state, Buffer.from(eol === '\r\n' ? next.replace(/\n/g, '\r\n') : next, 'latin1'));
     } else {
-      appendFileSync(state, `\n### Roadmap Evolution\n\n- ${text}\n`);
+      appendFileSync(state, `\n### Roadmap Evolution\n\n- ${text}\n`.replace(/\n/g, eol));
     }
   };
 
@@ -601,7 +603,7 @@ function run(argv: string[]): number | Promise<number> {
     }
   };
 
-  const headings = (): string[] => readFileSync(ROADMAP, 'utf8').split('\n').filter((l) => HEADING_RE.test(l));
+  const headings = (): string[] => lf(readFileSync(ROADMAP, 'utf8')).split('\n').filter((l) => HEADING_RE.test(l));
 
   if (ATTACH !== '') {
     // ── attach mode: the phase is already claimed — just verify it exists ────
@@ -613,7 +615,7 @@ function run(argv: string[]): number | Promise<number> {
     }
     N = ATTACH;
     const re = phaseHeadingRe(N);
-    const line = re === null ? undefined : readFileSync(ROADMAP, 'utf8').split('\n').find((l) => re.test(l));
+    const line = re === null ? undefined : lf(readFileSync(ROADMAP, 'utf8')).split('\n').find((l) => re.test(l));
     TITLE = line === undefined || re === null ? '' : line.replace(new RegExp(`${re.source}${SP}*`), '');
     if (TITLE === '') die(`phase ${N} not found in .planning/ROADMAP.md — omit -p/--phase to claim a new phase`);
     out(`▶ attaching to existing phase ${N}: ${TITLE}\n`);
@@ -698,7 +700,7 @@ function run(argv: string[]): number | Promise<number> {
   // Always pin the worktree to the exact phase we claimed/attached — never let wt-new re-detect it from HEAD.
   const wtArgs = ['--phase', N];
   if (SLUG !== '') wtArgs.push(SLUG);
-  const wt = spawnSync(`${PKG}/bin/gsdt-wt-new`, wtArgs, {
+  const wt = spawnSync(...selfArgv('wt-new', wtArgs, PKG), {
     cwd: MAIN,
     env: { ...process.env, GSD_LOCK_HELD: '1', GSD_WT_NEW_SUPPRESS_NEXT: '1' },
     encoding: 'utf8',
@@ -738,7 +740,7 @@ function run(argv: string[]): number | Promise<number> {
       dirs = [];
     }
     if (dirs.length > 0) {
-      const rc = inherit(`${PKG}/bin/gsdt-flow-next`, [N, '--repo', DEST], { stdio: ['inherit', 'ignore', 'inherit'] });
+      const rc = inheritSelf('flow-next', [N, '--repo', DEST], { stdio: ['inherit', 'ignore', 'inherit'] });
       if (rc !== 0) return rc;
     }
   }
@@ -763,7 +765,7 @@ function run(argv: string[]): number | Promise<number> {
         out(`• tracker = none — phase tagged tk-${TICKET_ID} only (set tracker = clickup|custom in .gsd.conf to update the ticket)\n`);
       }
     } else {
-      const rc = inherit(`${PKG}/bin/gsdt-tracker`, [
+      const rc = inheritSelf('tracker', [
         '--repo',
         MAIN,
         'start',

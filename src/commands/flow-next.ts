@@ -15,7 +15,7 @@
 //    sorts by the locale's collation (same order for the usual 07-01-PLAN.md names).
 import { readdirSync, readFileSync, realpathSync } from 'node:fs';
 import { ticketExtract, trackerWhich } from '../ticket.ts';
-import { chomp, confGet, findMain, git, GsdExit, isDir, isFile, migrateRefuse, reviewsProblem, validationProblem, workflowFlag } from '../common.ts';
+import { chomp, confGet, findMain, git, GsdExit, isDir, isFile, lf, migrateRefuse, reviewsProblem, validationProblem, workflowFlag } from '../common.ts';
 import { guardArgv } from '../guard.ts';
 import { GSD_GEMINI_GONE, providerGone, providerKnown, providerReviewFlag } from '../provider.ts';
 import { uiCheckState, uiDesignState, uiExempt, uiGate, uiGates, uiLayoutState } from '../ui.ts';
@@ -119,7 +119,7 @@ function fileLines(text: string): string[] {
 
 function readText(file: string): string | null {
   try {
-    return readFileSync(file, 'utf8');
+    return lf(readFileSync(file, 'utf8'));
   } catch {
     return null;
   }

@@ -7,11 +7,11 @@
 // the roadmap decoded as UTF-8. Branch names and paths came into the Perl
 // through %ENV, undecoded, so a non-ASCII branch name was printed as latin1
 // mojibake; `bytes()` keeps that (never reached by ASCII names).
-import { spawnSync } from 'node:child_process';
+import { WIN, spawnSyncX as spawnSync } from '../spawn.ts';
 import { readFileSync, readdirSync } from 'node:fs';
-import { git, isDir, isFile } from '../common.ts';
+import { git, isDir, isFile, lf } from '../common.ts';
 import { staleHooksNotice } from '../provider.ts';
-import { updateNotice } from '../update-check.ts';
+import { updateNotice } from '../version.ts';
 
 const HELP = `gsdt-list — list GSD phases: number, description, plan progress, worktree
 
@@ -346,14 +346,16 @@ export function main(argv: string[]): number {
     }
     // COLUMNS first: without a terminal (pipes, CI) tput cannot know the width.
     let cols = process.env.COLUMNS ?? '';
-    if (cols === '') {
+    if (cols === '' && WIN) {
+      cols = String(process.stdout.columns || 120); // no tput on Windows
+    } else if (cols === '') {
       const t = spawnSync('tput', ['cols'], { encoding: 'utf8', stdio: ['inherit', 'pipe', 'ignore'] });
       cols = t.error || t.status !== 0 ? '120' : t.stdout.replace(/\n+$/, '');
     }
 
     let text: string;
     try {
-      text = readFileSync(roadmap, 'utf8');
+      text = lf(readFileSync(roadmap, 'utf8'));
     } catch (e) {
       err(`cannot read ${roadmap}\n`);
       return (e as NodeJS.ErrnoException).code === 'EACCES' ? 13 : 255;

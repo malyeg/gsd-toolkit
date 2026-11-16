@@ -11,7 +11,7 @@
 // GSD_TRACKER_STATUS holds the configured status name for start/finish (else empty);
 // GSD_TRACKER_PROFILE holds the profile (or is empty). A call that runs past
 // GSD_TRACKER_TIMEOUT (60s) is stopped: TERM, one second later KILL, exit 2.
-import { spawn } from 'node:child_process';
+import { spawnX as spawn } from './winexec.ts';
 import { accessSync, constants } from 'node:fs';
 import { trkCommand, trkGet } from './config.ts';
 import { die, err, io } from './io.ts';

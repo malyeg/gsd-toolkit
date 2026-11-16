@@ -4,6 +4,7 @@
 // exit status and the resulting file bytes must match.
 // Run: node --test 'tests/ts/*.test.ts'
 import assert from 'node:assert/strict';
+import { eolOf } from '../../src/common.ts';
 import { spawnSync } from 'node:child_process';
 import { chmodSync, copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -44,6 +45,21 @@ function snapshot(dir: string): Record<string, string> {
 }
 
 type Files = Record<string, string | Buffer>;
+/**
+ * P12: python rewrites a CRLF file as LF (universal newlines); the port keeps the file's dominant
+ * ending. So where the oracle changed a file whose input was dominantly CRLF, the port's file is
+ * the oracle's with CRLF; a file the oracle left alone must stay byte-identical.
+ */
+function crlfExpected(oracle: Record<string, string>, input: Files): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [rel, b64] of Object.entries(oracle)) {
+    const orig = input[rel];
+    const origText = orig === undefined ? undefined : Buffer.from(orig as string).toString('latin1');
+    if (origText === undefined || Buffer.from(origText, 'latin1').toString('base64') === b64 || eolOf(origText) !== '\r\n') out[rel] = b64;
+    else out[rel] = Buffer.from(Buffer.from(b64, 'base64').toString('latin1').replace(/\n/g, '\r\n'), 'latin1').toString('base64');
+  }
+  return out;
+}
 /** two identical .planning trees (one per engine) */
 function twin(files: Files): [string, string] {
   const base = tmp();
@@ -67,7 +83,7 @@ function same(label: string, files: Files, args: (root: string) => string[], cwd
   } else {
     assert.deepEqual(norm(rb, b), norm(ra, a), `${label}: stdout/stderr/rc`);
   }
-  assert.deepEqual(snapshot(b), snapshot(a), `${label}: files`);
+  assert.deepEqual(snapshot(b), crlfExpected(snapshot(a), files), `${label}: files`);
   return ra;
 }
 

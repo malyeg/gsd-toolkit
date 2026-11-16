@@ -1,7 +1,7 @@
 // src/stdio.ts — unbuffered stdout/stderr writes, so our own lines and a child's
 // (git, an installer) come out in the order a shell script would print them.
 // process.stdout.write may be async for pipes; fd writes are not.
-import { spawn, spawnSync } from 'node:child_process';
+import { selfArgv, spawnSyncX as spawnSync, spawnX as spawn } from './spawn.ts';
 import { writeSync } from 'node:fs';
 
 function writeAll(fd: number, s: string): void {
@@ -77,4 +77,10 @@ export function runSession(cmd: string, args: string[], cwd: string): Promise<nu
     child.on('error', () => finish(127));
     child.on('exit', (code, signal) => finish(code ?? 128 + (signal ? signalNumber(signal) : 0)));
   });
+}
+
+/** Run one of our own commands (`node launch.mjs <name> …`) with `inherit`'s stdio rules. */
+export function inheritSelf(name: string, args: string[], opts: Parameters<typeof inherit>[2] = {}): number {
+  const [cmd, a] = selfArgv(name, args);
+  return inherit(cmd, a, opts);
 }

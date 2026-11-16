@@ -4,7 +4,7 @@
 // tests/fixtures/p10-old-bins/). wt-new runs as a child with its stdout sent to
 // stderr, like the bash `( … ) >&2`; the session is a child too (Node has no exec),
 // started in the worktree with the terminal passed through.
-import { spawnSync } from 'node:child_process';
+import { WIN, normalizePath, selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
 import { realpathSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import path from 'node:path';
@@ -216,10 +216,10 @@ function run(argv: string[]): number | Promise<number> {
   // --file: the session runs in the worktree, so the path is made absolute, and
   // a file git tracks on the base branch is read from the worktree's own copy.
   if (FILE_AT >= 0) {
-    let abs = FILE.startsWith('/') ? FILE : `${process.cwd()}/${FILE}`;
+    let abs = FILE.startsWith('/') || (WIN && path.isAbsolute(FILE)) ? FILE : `${process.cwd()}/${FILE}`;
     if (!isFile(abs)) die(`--file: no such file: ${FILE}`);
-    abs = `${realpathSync(path.dirname(abs))}/${path.basename(abs)}`;
-    const mainp = realpathSync(MAIN);
+    abs = normalizePath(`${realpathSync(path.dirname(abs))}/${path.basename(abs)}`);
+    const mainp = normalizePath(realpathSync(MAIN));
     if (abs.startsWith(`${mainp}/`)) {
       const rel = abs.slice(mainp.length + 1);
       if (git(MAIN, ['cat-file', '-e', `${BASE}:${rel}`]).status === 0) abs = `${DEST}/${rel}`;
@@ -278,7 +278,7 @@ function run(argv: string[]): number | Promise<number> {
   }
   if (MAKE) {
     // `( cd "$MAIN" && … gsdt-wt-new --batch "$BR" ) >&2`: its stdout goes to stderr
-    const r = spawnSync(`${gsdPkg()}/bin/gsdt-wt-new`, ['--batch', BR], {
+    const r = spawnSync(...selfArgv('wt-new', ['--batch', BR]), {
       cwd: MAIN,
       env: { ...process.env, GSD_WT_NEW_SUPPRESS_NEXT: '1' },
       stdio: ['inherit', 2, 'inherit'],

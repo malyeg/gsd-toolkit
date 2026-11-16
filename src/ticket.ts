@@ -11,6 +11,7 @@
 //    (ticketNorm) first. An id that is not a valid regex counts as "not tagged"
 //    (grep exits 2 on a bad pattern; the callers test only for success).
 import { execFileSync } from 'node:child_process';
+import { selfArgv } from './spawn.ts';
 import path from 'node:path';
 
 const PKG = path.resolve(import.meta.dirname, '..');
@@ -19,7 +20,7 @@ const PKG = path.resolve(import.meta.dirname, '..');
 export function trackerWhich(repo: string, env: NodeJS.ProcessEnv = process.env): string {
   let conf: string;
   try {
-    conf = execFileSync(path.join(PKG, 'bin', 'gsdt-tracker'), ['--repo', repo, 'config'], {
+    conf = execFileSync(...selfArgv('tracker', ['--repo', repo, 'config'], PKG), {
       env: { ...env, GSD_PKG: PKG },
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],

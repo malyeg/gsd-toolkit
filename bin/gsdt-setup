@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#
+# gsdt-setup — machine-level setup for the npm install (npm i -g gsd-toolkit):
+# copy the skills into each agent's skill dir, register the Claude user hooks,
+# install gsd-core where an agent has none.
+#
+# Usage:
+#   gsdt-setup [--agent claude|codex]... [--all-agents] [--no-user-hook] [--no-core]
+#
+# What the options mean: gsdt-setup --help.
+set -euo pipefail
+
+# Ported to TypeScript (src/commands/setup.ts, which holds the --help text);
+# this launcher only finds the package.
+SELF=$0
+while [ -L "$SELF" ]; do t=$(readlink "$SELF"); case "$t" in /*) SELF=$t ;; *) SELF="$(dirname "$SELF")/$t" ;; esac; done
+if ! command -v node >/dev/null 2>&1; then
+  echo "gsdt-setup: needs Node.js >= 24 (node not found on PATH)" >&2
+  exit 1
+fi
+exec node "$(cd "$(dirname "$SELF")/.." && pwd)/src/launch.mjs" setup "$@"

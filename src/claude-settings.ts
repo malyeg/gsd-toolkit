@@ -208,10 +208,10 @@ export function dumpJson(v: JVal, sort = false): string {
 
 /** python str.strip() whitespace */
 const PY_SPACE_CHARS = '\\t\\n\\v\\f\\r\\x1c-\\x1f \\x85\\xa0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000';
-const PY_SPACE = new RegExp(`^[${PY_SPACE_CHARS}]+|[${PY_SPACE_CHARS}]+$`, 'g');
+export const PY_SPACE = new RegExp(`^[${PY_SPACE_CHARS}]+|[${PY_SPACE_CHARS}]+$`, 'g');
 
 /** read a file as strict UTF-8 text (a BOM stays, invalid bytes throw) */
-function readStrict(file: string): string {
+export function readStrict(file: string): string {
   return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(readFileSync(file));
 }
 

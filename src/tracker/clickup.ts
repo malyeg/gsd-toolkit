@@ -9,7 +9,7 @@
 // are read and applied to the environment — nothing else in it is run.
 // The API is reached by running `curl` from PATH (tests stub it); the JSON work jq and Python
 // did in bash is done natively (see json.ts).
-import { spawnSync } from 'node:child_process';
+import { spawnSyncX as spawnSync } from './winexec.ts';
 import { chmodSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import { profileFromRepo, trkClickupEnv, trkConfGet, trkGet, trkGitGet, trkHasToken, trkProfileOk } from './config.ts';
@@ -37,7 +37,7 @@ export function initClickup(repo: string): void {
 /** Plain `KEY=value` assignments of a shell file (what sourcing it would set), in order. */
 export function parseEnvFile(text: string): Array<[string, string]> {
   const res: Array<[string, string]> = [];
-  for (const line of text.split('\n')) {
+  for (const line of text.replace(/\r\n/g, '\n').split('\n')) {
     const m = new RegExp(`^${SP}*(?:export${SP}+)?([A-Za-z_][A-Za-z0-9_]*)=([^\n]*)$`).exec(line);
     if (!m) continue;
     const rest = m[2]!;
@@ -634,7 +634,7 @@ async function clickupLogin(a: string[]): Promise<number> {
     mkdirSync(dir, { recursive: true, mode: 0o700 });
     let keep = '';
     if (existsFile(file)) {
-      const lines = readFileSync(file, 'utf8').split('\n');
+      const lines = readFileSync(file, 'utf8').replace(/\r\n/g, '\n').split('\n');
       if (lines[lines.length - 1] === '') lines.pop();
       keep = lines.filter((l) => !new RegExp(`^${SP}*(export${SP}+)?CLICKUP_API_TOKEN=`).test(l)).map((l) => `${l}\n`).join('');
     }

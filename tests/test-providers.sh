@@ -4,7 +4,7 @@ set -uo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd); PKG=$(cd "$HERE/.." && pwd)
 WORK=$(mktemp -d); trap 'rm -rf "$WORK"' EXIT
 PASS=0; FAIL=0
-export GSD_NO_CORE=1   # lib/install.sh must not run the real gsd-core installer (npx)
+export GSD_NO_CORE=1   # lib/install-copy.sh must not run the real gsd-core installer (npx)
 ok(){ PASS=$((PASS+1)); printf '  ✔ %s\n' "$1"; }
 bad(){ FAIL=$((FAIL+1)); printf '  ✘ %s\n' "$1"; }
 assert(){ if eval "$2"; then ok "$1"; else bad "$1"; fi; }
@@ -272,19 +272,19 @@ R=$WORK/gitignore-nl; repo "$R"; printf 'node_modules' > "$R/.gitignore"
 (cd "$R" && gsdt-bootstrap-repo --agent codex) >/dev/null 2>&1
 assert 'a .gitignore with no final newline keeps its last line' 'grep -qx node_modules "$R/.gitignore" && grep -qx .gsd-install.status "$R/.gitignore"'
 mkdir -p "$WORK/skills/claude/gsdt-flow"; echo mine > "$WORK/skills/claude/gsdt-flow/user.txt"
-GSD_BIN_DIR=$WORK/bin GSD_CLAUDE_SKILL_DIR=$WORK/skills/claude GSD_CODEX_SKILL_DIR=$WORK/skills/codex "$PKG/lib/install.sh" --all-agents >/dev/null
+GSD_BIN_DIR=$WORK/bin GSD_CLAUDE_SKILL_DIR=$WORK/skills/claude GSD_CODEX_SKILL_DIR=$WORK/skills/codex "$PKG/lib/install-copy.sh" --all-agents >/dev/null
 for p in claude codex; do assert "$p skills installed" "[ -e '$WORK/skills/$p/gsdt-flow/SKILL.md' ]"; done
 assert 'real skill directory preserved as backup' "[ -f '$WORK/skills/claude/gsdt-flow.bak/user.txt' ]"
-GSD_BIN_DIR=$WORK/bin GSD_CLAUDE_SKILL_DIR=$WORK/skills/claude "$PKG/lib/install.sh" --agent claude >/dev/null
+GSD_BIN_DIR=$WORK/bin GSD_CLAUDE_SKILL_DIR=$WORK/skills/claude "$PKG/lib/install-copy.sh" --agent claude >/dev/null
 assert 'repeated skill install stays usable' "[ -e '$WORK/skills/claude/gsdt-flow/SKILL.md' ]"
 mkdir -p "$WORK/skills-link/codex"; ln -s /tmp/unrelated-skill "$WORK/skills-link/codex/gsdt-flow"
-GSD_BIN_DIR=$WORK/bin2 GSD_CODEX_SKILL_DIR=$WORK/skills-link/codex "$PKG/lib/install.sh" --agent codex >/dev/null
+GSD_BIN_DIR=$WORK/bin2 GSD_CODEX_SKILL_DIR=$WORK/skills-link/codex "$PKG/lib/install-copy.sh" --agent codex >/dev/null
 assert 'unrelated existing symlink preserved as backup' "[ -L '$WORK/skills-link/codex/gsdt-flow.bak' ]"
 
 echo 'install.sh user-level hook (/gsd-new-project only after gsdt-init)'
 UH=$WORK/uh; mkdir -p "$UH/claude"
 printf '{"model":"opus","hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[{"type":"command","command":"echo mine"}]}]}}\n' > "$UH/claude/settings.json"
-uinstall() { GSD_BIN_DIR=$UH/bin GSD_CLAUDE_SKILL_DIR=$UH/claude/skills GSD_CODEX_SKILL_DIR=$UH/codex/skills "$PKG/lib/install.sh" "$@" >/dev/null; }
+uinstall() { GSD_BIN_DIR=$UH/bin GSD_CLAUDE_SKILL_DIR=$UH/claude/skills GSD_CODEX_SKILL_DIR=$UH/codex/skills "$PKG/lib/install-copy.sh" "$@" >/dev/null; }
 ours() { jq '[.hooks[]?[]?.hooks[]? | select(.command | test("gsdt-worktree-guard.*--global"))] | length' "$1"; }
 uinstall --all-agents
 assert 'claude settings get the Skill + UserPromptExpansion hooks' '[ "$(ours "$UH/claude/settings.json")" = 2 ]'
@@ -319,18 +319,18 @@ assert '…and the opt-out is remembered' 'grep -q "^user_hook	off" "$UH/bin/.gs
 uinstall --reuse-install-config
 assert 'a later reinstall keeps it off' '[ "$(ours "$UH/claude/settings.json")" = 0 ]'
 printf '{"disableAllHooks":true}\n' > "$UH/claude/settings.json"
-GSD_BIN_DIR=$UH/bin2 GSD_CLAUDE_SKILL_DIR=$UH/claude/skills "$PKG/lib/install.sh" --agent claude >/dev/null
+GSD_BIN_DIR=$UH/bin2 GSD_CLAUDE_SKILL_DIR=$UH/claude/skills "$PKG/lib/install-copy.sh" --agent claude >/dev/null
 assert 'hooks turned off by the user → left unchanged' '[ "$(cat "$UH/claude/settings.json")" = "{\"disableAllHooks\":true}" ]'
 printf '{}\n' > "$UH/real-settings.json"; chmod 600 "$UH/real-settings.json"
 rm -f "$UH/claude/settings.json"; ln -s "$UH/real-settings.json" "$UH/claude/settings.json"
-GSD_BIN_DIR=$UH/bin2 GSD_CLAUDE_SKILL_DIR=$UH/claude/skills "$PKG/lib/install.sh" --agent claude >/dev/null
+GSD_BIN_DIR=$UH/bin2 GSD_CLAUDE_SKILL_DIR=$UH/claude/skills "$PKG/lib/install-copy.sh" --agent claude >/dev/null
 assert 'a symlinked settings.json stays a link…' '[ -L "$UH/claude/settings.json" ]'
 assert '…and the hook is written to its target' '[ "$(ours "$UH/real-settings.json")" = 2 ]'
 assert '…the gsdt-rules hook too' '[ "$(rules_hooks "$UH/real-settings.json")" = 1 ]'
 assert '…keeping its 0600 mode' '[ "$(ls -l "$UH/real-settings.json" | cut -c1-10)" = "-rw-------" ]'
 rm -f "$UH/claude/settings.json"
 printf 'not json' > "$UH/claude/settings.json"
-GSD_BIN_DIR=$UH/bin2 GSD_CLAUDE_SKILL_DIR=$UH/claude/skills "$PKG/lib/install.sh" --agent claude >/dev/null
+GSD_BIN_DIR=$UH/bin2 GSD_CLAUDE_SKILL_DIR=$UH/claude/skills "$PKG/lib/install-copy.sh" --agent claude >/dev/null
 assert 'broken settings JSON → left unchanged' '[ "$(cat "$UH/claude/settings.json")" = "not json" ]'
 
 
@@ -415,7 +415,7 @@ printf 'x\n<!-- gsd-worktrees-skill 0.4.12 -->\n' > "$GI/gemini/skills/gsdw-flow
 ln -s "$PKG/skills/gsdt-tracker" "$GI/gemini/skills/gsdw-tracker"
 printf '{"hooks":{"BeforeTool":[{"matcher":"activate_skill","hooks":[{"type":"command","command":"[ ! -x x ] || exec x/gsdt-worktree-guard --global"}]},{"matcher":"x","hooks":[{"type":"command","command":"echo mine"}]}]}}\n' > "$GI/gemini/settings.json"
 printf 'providers\tclaude,gemini\nclaude_skills\t%s\ngemini_skills\t%s\n' "$GI/claude/skills" "$GI/gemini/skills" > "$GI/bin/.gsd-install-manifest"
-GSD_BIN_DIR=$GI/bin GSD_CLAUDE_SKILL_DIR=$GI/claude/skills "$PKG/lib/install.sh" --reuse-install-config > "$WORK/gi.out" 2>&1; rc=$?
+GSD_BIN_DIR=$GI/bin GSD_CLAUDE_SKILL_DIR=$GI/claude/skills "$PKG/lib/install-copy.sh" --reuse-install-config > "$WORK/gi.out" 2>&1; rc=$?
 assert 'reinstall over an old gemini install works' '[ "$rc" -eq 0 ] && grep -q "^providers	claude$" "$GI/bin/.gsd-install-manifest"'
 assert '…our gemini skills are removed, the user'"'"'s stays' '[ ! -e "$GI/gemini/skills/gsdw-flow" ] && [ ! -L "$GI/gemini/skills/gsdw-tracker" ] && [ -f "$GI/gemini/skills/mine/SKILL.md" ]'
 assert '…our gemini user hook is removed, the user'"'"'s stays' '! grep -q gsdt-worktree-guard "$GI/gemini/settings.json" && grep -q "echo mine" "$GI/gemini/settings.json"'

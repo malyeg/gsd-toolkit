@@ -257,7 +257,7 @@ test('flowFinishGate / finishGates / gateTree', () => {
 
 // ── gsd_cli, python, skills ─────────────────────────────────────────────────
 
-test('cli / cliMissing / python', () => {
+test('cli / cliMissing', () => {
   const d = tmp();
   const good = write(path.join(d, 'good'), '#!/bin/sh\necho \'{"packageName":"@opengsd/gsd-core"}\'\n', 0o755);
   const spaced = write(path.join(d, 'spaced'), '#!/bin/sh\necho \'{"packageName": "@opengsd/gsd-core"}\'\n', 0o755);
@@ -278,8 +278,6 @@ test('cli / cliMissing / python', () => {
     assert.ok(C.cli()?.endsWith('cc/gsd-core/bin/gsd_run'));
   });
   same('cliMissing', 'gsd_cli_missing', [], C.cliMissing());
-  withEnv({ GSD_PYTHON: undefined }, () => assert.equal(C.python(), bash('gsd_python').out.trim()));
-  withEnv({ GSD_PYTHON: 'my-python' }, () => assert.equal(C.python(), 'my-python'));
 });
 
 test('skillOwned / skillDiffers', () => {
@@ -681,7 +679,7 @@ test('providerHookState', () => {
       assert.equal(P.providerHookState(r, p), chomp(bash('gsd_provider_hook_state "$1" "$2"', [r, p]).out), `${p} ${f}`);
     }
   }
-  // without jq
+  // P13: without jq the TS check still works (the bash twin answers `unverified`, the TS never does)
   const noJq = tmp();
   const r = repo(path.join(tmp(), 'hs2'));
   write(path.join(r, '.claude', 'settings.json'), settings(good));
@@ -689,10 +687,9 @@ test('providerHookState', () => {
     const w = spawnSync('sh', ['-c', `command -v ${x}`], { encoding: 'utf8' }).stdout.trim();
     if (w) symlinkSync(w, path.join(noJq, x));
   }
-  const b = bash('gsd_provider_hook_state "$1" claude', [r], { PATH: noJq });
+  assert.equal(chomp(bash('gsd_provider_hook_state "$1" claude', [r], { PATH: noJq }).out), 'unverified');
   const t = withEnv({ PATH: noJq }, () => P.providerHookState(r, 'claude'));
-  assert.equal(t, chomp(b.out));
-  assert.equal(t, 'unverified');
+  assert.equal(t, 'present');
 });
 
 test('staleHooks / staleHooksNotice', () => {
@@ -740,13 +737,15 @@ test('ownedMarkersValid / ownedBlockGet', () => {
   const d = tmp();
   for (const [name, body] of Object.entries(MARK_FILES)) {
     const f = write(path.join(d, name), body);
+    // P12: a CRLF file reads as its LF version (the bash oracle chokes on the \r, on purpose no longer matched)
+    const o = name === 'crlf' ? write(path.join(d, `${name}-lf`), body.replace(/\r\n/g, '\n')) : f;
     for (const kind of ['provider', 'canonical']) {
       assert.equal(
         P.ownedMarkersValid(f, kind) ? '0' : '1',
-        bash('gsd_owned_markers_valid "$1" "$2"; echo $?', [f, kind]).out.trim(),
+        bash('gsd_owned_markers_valid "$1" "$2"; echo $?', [o, kind]).out.trim(),
         `valid ${name}/${kind}`,
       );
-      assert.equal(P.ownedBlockGet(f, kind), bash('gsd_owned_block_get "$1" "$2"', [f, kind]).out, `block ${name}/${kind}`);
+      assert.equal(P.ownedBlockGet(f, kind), bash('gsd_owned_block_get "$1" "$2"', [o, kind]).out, `block ${name}/${kind}`);
     }
   }
   const missing = path.join(d, 'missing');
@@ -759,12 +758,15 @@ test('replaceOwnedBlock', () => {
   const blockFile = write(path.join(d, 'block'), '<!-- gsd-toolkit:provider:start -->\nNEW\n<!-- gsd-toolkit:provider:end -->\n');
   for (const [name, body] of Object.entries(MARK_FILES)) {
     for (const mode of [0o644, 0o600, 0o755]) {
-      const a = write(path.join(d, `a-${name}-${mode}`), body, mode);
+      // P12: CRLF file = the oracle runs on its LF version; ours must give the same file, in CRLF
+      const crlfCase = name === 'crlf';
+      const a = write(path.join(d, `a-${name}-${mode}`), crlfCase ? body.replace(/\r\n/g, '\n') : body, mode);
       const b = write(path.join(d, `b-${name}-${mode}`), body, mode);
       const ra = bash('gsd_replace_owned_block "$1" provider "$2"; echo $?', [a, blockFile]).out.trim();
       const rb = P.replaceOwnedBlock(b, 'provider', blockFile);
       assert.equal(rb ? '0' : '1', ra, `rc ${name}`);
-      assert.equal(readFileSync(b, 'latin1'), readFileSync(a, 'latin1'), `content ${name}`);
+      const want = readFileSync(a, 'latin1');
+      assert.equal(readFileSync(b, 'latin1'), crlfCase ? want.replace(/\n/g, '\r\n') : want, `content ${name}`);
       assert.equal(statSync(b).mode & 0o777, statSync(a).mode & 0o777, `mode ${name} ${mode.toString(8)}`);
     }
   }
