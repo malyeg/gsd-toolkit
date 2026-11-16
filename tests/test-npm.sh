@@ -108,7 +108,7 @@ st=$(cat "$R/.planning/STATE.md")
 has "merged STATE: Session Continuity kept" "$st" "Last session: x"
 has "merged STATE takes side's status" "$st" "Status: executing"
 is "one Status line (reconciled, not a plain union)" "$(grep -c '^Status:' "$R/.planning/STATE.md")" "1"
-o=$(cd "$R" && gsdt-doctor 2>&1)
+o=$(cd "$R" && gsdt-doctor --verbose 2>&1)
 hasnt "doctor: no module error" "$o" "Cannot find module"
 hasnt "doctor: command guards found in the npm package (no T053)" "$o" "T053"
 has "doctor: PATH commands resolve to the package" "$o" "PATH commands resolve to $IPKG"

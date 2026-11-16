@@ -6,7 +6,7 @@
 # what makes it safe to run anywhere, any time, including on a repo you are
 # mid-feature in. `--fix` is opt-in and narrow: after the same read-only check
 # it runs only the mechanical, undoable fixes (the scoped writers gsdt-init and
-# gsdt-planning-repair, plus three one-liners), shows them first, asks, and
+# gsdt-planning-repair, plus a few one-liners), shows them first, asks, and
 # never commits. Anything that needs judgment stays a command for you.
 #
 # Without --fix nothing here writes to your repos: no fetch, no git config, no
@@ -17,15 +17,20 @@
 # in ~/.cache/gsd-toolkit/ (GSD_NO_UPDATE_CHECK=1 turns it off).
 #
 # Usage:
-#   gsdt-doctor [--repo <path>] [--quiet] [--json]
+#   gsdt-doctor [--repo <path>] [--verbose] [--json]
 #   gsdt-doctor --fix [--yes] [--repo <path>]
 #
 # Options:
 #   --repo <path>  repo to inspect (default: the checkout containing cwd)
-#   --quiet        print findings and available updates only, not the checks that passed
+#   --verbose, -v  also list every check that passed and the optional tips (the
+#                  full report). By default doctor prints findings, available
+#                  updates, the notes that point at something to do in this
+#                  repo, and one line counting the checks that passed.
+#   --quiet, -q    accepted and ignored: the default output is the quiet one
 #   --fix          after the check, run the SAFE fixes it found — shown first,
 #                  then asked (y/N) — and check again. Safe = mechanical and
-#                  undoable: gsdt-init --no-launch --no-commit (T010–T014,
+#                  undoable: git worktree prune (W027: records whose folder
+#                  is already gone), gsdt-init --no-launch --no-commit (T010–T014,
 #                  T016, T052, T058, T061), gsdt-planning-repair (T020, stale counters),
 #                  git branch --track <base> (T015), chmod +x the pre-merge
 #                  script (T019), remove a dead lock (T030), gsdt-migrate --apply
@@ -41,8 +46,8 @@
 #                  instruction_file, instruction_integrated, skill_installed,
 #                  command_guard, native_hook}, count, findings [{code,message,fix}],
 #                  updates [{name,installed,latest,fix}] (newer gsd-toolkit /
-#                  GSD; shown with --quiet too, never a finding),
-#                  notes [text] (what the text report shows as • lines)
+#                  GSD; shown by default too, never a finding),
+#                  notes [text] (every • line the text report can show, tips included)
 #                  Codes shared with gsd-core's /gsd-health where they mean the
 #                  same thing (W017 orphan branch, W027 stale worktree record);
 #                  toolkit-only findings use T0xx.

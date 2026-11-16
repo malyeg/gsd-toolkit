@@ -46,7 +46,7 @@ farm() {  # $1=dir  $2...=names to leave out
 }
 
 OUT="$WORK/out"
-doc()  { PATH="${DPATH:-$BASEPATH}" gsdt-doctor --repo "$1" > "$OUT" 2>&1; }
+doc()  { PATH="${DPATH:-$BASEPATH}" gsdt-doctor --verbose --repo "$1" > "$OUT" 2>&1; }
 json() { PATH="${DPATH:-$BASEPATH}" gsdt-doctor --json --repo "$1" > "$OUT" 2>&1; }
 
 mkrepo() {  # $1=dir — a small GSD repo on develop with an origin

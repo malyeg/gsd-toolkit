@@ -246,7 +246,7 @@ function pn(v: string): string | null {
 
 // ── the doctor ──────────────────────────────────────────────────────────────
 
-type Opts = { repo: string; quiet: boolean; json: boolean; fix: boolean; yes: boolean };
+type Opts = { repo: string; verbose: boolean; json: boolean; fix: boolean; yes: boolean };
 
 class Doctor {
   readonly pkg = gsdPkg();
@@ -266,12 +266,20 @@ class Doctor {
     this.o = o;
   }
 
+  passed = 0;
   pass(m: string): void {
-    if (!this.o.quiet) out(`  \x1b[32m✔\x1b[0m ${m}\n`);
+    if (this.o.verbose) out(`  \x1b[32m✔\x1b[0m ${m}\n`);
+    else this.passed++;
   }
+  /** a note that points at something to do in this repo: shown by default */
   note(m: string): void {
     if (this.o.json) this.notesJson.push(`"${jstr(m)}"`);
-    if (!this.o.quiet) out(`  • ${m}\n`);
+    else out(`  • ${m}\n`);
+  }
+  /** an optional tip or plain information: only with --verbose (still in --json "notes") */
+  tip(m: string): void {
+    if (this.o.json) this.notesJson.push(`"${jstr(m)}"`);
+    else if (this.o.verbose) out(`  • ${m}\n`);
   }
   update(name: string, installed: string, latest: string, cmd: string): void {
     if (!this.o.json) out(`  \x1b[33m↑\x1b[0m ${name} ${installed} installed, ${latest} available — update: ${cmd}\n`);
@@ -295,6 +303,9 @@ class Doctor {
       case 'T030':
         this.safe('unlock');
         break;
+      case 'W027':
+        this.safe('prune');
+        break;
     }
     if (this.o.json) {
       this.jsonItems.push(`{"code":"${code}","message":"${jstr(msg)}","fix":"${jstr(fix)}"}`);
@@ -304,7 +315,7 @@ class Doctor {
     if (!this.fixes.includes(fix)) this.fixes.push(fix);
   }
   section(t: string): void {
-    if (!this.o.quiet) out(`\n\x1b[1m${t}\x1b[0m\n`);
+    if (this.o.verbose) out(`\n\x1b[1m${t}\x1b[0m\n`);
   }
 
   // ── the run ───────────────────────────────────────────────────────────────
@@ -329,6 +340,7 @@ class Doctor {
     this.main = MAIN;
     const pkg = this.pkg;
     const note = this.note.bind(this);
+    const tip = this.tip.bind(this);
     const pass = this.pass.bind(this);
     const fail = this.fail.bind(this);
     const section = this.section.bind(this);
@@ -451,7 +463,7 @@ class Doctor {
       const tkCur = gsdVersion();
       if (tkNew !== '' && versionGt(tkNew, tkCur)) this.update('gsd-toolkit', tkCur, tkNew, updateHow());
       else if (tkNew !== '') pass(`gsd-toolkit ${tkCur} (latest release: ${tkNew})`);
-      else note(`gsd-toolkit ${tkCur} (latest release unknown — GitHub not reachable)`);
+      else tip(`gsd-toolkit ${tkCur} (latest release unknown — GitHub not reachable)`);
     }
 
     // GSD itself: a newer release on npm?
@@ -459,21 +471,21 @@ class Doctor {
     if (!noUpdateCheck && have !== '' && commandOnPath('npm') !== null) {
       if (gsdStale()) gsdRefresh();
       const want = gsdCached();
-      if (want === '') note(`gsd-core ${have} installed (npm not reachable — latest unknown)`);
+      if (want === '') tip(`gsd-core ${have} installed (npm not reachable — latest unknown)`);
       else if (have === want) pass(`gsd-core ${have} is the latest on npm`);
       else if (versionGt(want, have)) this.update('gsd-core', have, want, `${coreUpdateHow(gsdAgent)} (then re-check gsdt-list/gsdt-planning-repair)`);
-      else note(`gsd-core ${have} installed, ahead of npm latest (${want})`);
+      else tip(`gsd-core ${have} installed, ahead of npm latest (${want})`);
     }
 
     // Notes about the toolkit checkout.
     if (exists(`${pkg}/.git`)) {
-      note(`toolkit runs from a git checkout (${pkg}), not a release — install the release: ${pkg}/install.sh --reuse-install-config`);
+      tip(`toolkit runs from a git checkout (${pkg}), not a release — install the release: ${pkg}/install.sh --reuse-install-config`);
     }
-    if (chomp(git(pkg, ['status', '--porcelain']).stdout) !== '') note(`toolkit has uncommitted changes (${pkg})`);
+    if (chomp(git(pkg, ['status', '--porcelain']).stdout) !== '') tip(`toolkit has uncommitted changes (${pkg})`);
     if (git(pkg, ['rev-parse', '--abbrev-ref', '@{u}']).status === 0) {
       const r = git(pkg, ['rev-list', '--count', '@{u}..HEAD']);
       const ahead = r.status === 0 ? chomp(r.stdout) : '0';
-      if (/^[0-9]+$/.test(ahead) && Number(ahead) > 0) note(`toolkit has ${ahead} unpushed commit(s) — git push them`);
+      if (/^[0-9]+$/.test(ahead) && Number(ahead) > 0) tip(`toolkit has ${ahead} unpushed commit(s) — git push them`);
     }
 
     // ── is this even a GSD repo? ────────────────────────────────────────────
@@ -481,7 +493,7 @@ class Doctor {
     let IS_GSD_REPO: boolean;
     if (isFile(`${pkg}/install.sh`) && isDir(`${pkg}/shims`) && MAIN === TOOLKIT_MAIN) {
       section('repo setup');
-      note('this is the gsd-toolkit toolkit itself, not a GSD project — setup checks skipped');
+      tip('this is the gsd-toolkit toolkit itself, not a GSD project — setup checks skipped');
       IS_GSD_REPO = false;
     } else if (
       isDir(`${MAIN}/.planning`) ||
@@ -545,7 +557,7 @@ class Doctor {
         if (providerInstructionIntegrated(MAIN, DOCTOR_PROVIDER)) pass(`${instruction} points to canonical .gsd/INSTRUCTIONS.md`);
         else fail(`${instruction} integration is missing, malformed or legacy`, 'gsdt-init --no-launch', 'T052');
         const hookstate = providerHookState(MAIN, DOCTOR_PROVIDER);
-        if (hookstate === 'unsupported') note(`${DOCTOR_PROVIDER} native hook unsupported; command-level guard is the enforcement path`);
+        if (hookstate === 'unsupported') tip(`${DOCTOR_PROVIDER} native hook unsupported; command-level guard is the enforcement path`);
         else if (hookstate === 'present') pass(`${DOCTOR_PROVIDER} native guard hook present (defense in depth)`);
         else note(`${DOCTOR_PROVIDER} native hook ${hookstate} — inspect provider settings, then gsdt-init --no-launch`);
         if (commandGuardsActive(pkg)) pass('mandatory command-level guards are active');
@@ -562,7 +574,7 @@ class Doctor {
             'T056',
           );
         } else {
-          note(`legacy 'provider' key is supported but redundant — gsdt-init --providers ${configuredList} --no-launch migrates it`);
+          tip(`legacy 'provider' key is supported but redundant — gsdt-init --providers ${configuredList} --no-launch migrates it`);
         }
       }
       for (const cp of splitComma(configuredList)) {
@@ -581,7 +593,7 @@ class Doctor {
         // Skills: installed, and the same as this toolkit's.
         const skillroot = providerSkillRoot(cp) ?? '';
         if (skillroot === '') {
-          note(`${cp} has no installable native skill format; it runs gsdt-rules, follows .gsd/INSTRUCTIONS.md and gsdt-flow-next`);
+          tip(`${cp} has no installable native skill format; it runs gsdt-rules, follows .gsd/INSTRUCTIONS.md and gsdt-flow-next`);
         } else if (!isFile(`${skillroot}/gsdt-flow/SKILL.md`)) {
           note(`${cp} skills not installed — ${REINSTALL} --agent ${cp}`);
         } else {
@@ -636,7 +648,7 @@ class Doctor {
         } else if (!rulesHookPresent(rulesHook)) {
           const man = readFileText(`${path.dirname(rulesBin)}/.gsd-install-manifest`);
           if (man !== null && lineList(man).includes('user_hook\toff')) {
-            note('Claude sessions do not load gsdt-rules (installed with --no-user-hook); they follow the entry line in CLAUDE.md');
+            tip('Claude sessions do not load gsdt-rules (installed with --no-user-hook); they follow the entry line in CLAUDE.md');
           } else {
             fail(`no Claude SessionStart hook runs gsdt-rules in ${rulesHook} — sessions miss the toolkit rules`, REINSTALL, 'T062');
           }
@@ -651,7 +663,7 @@ class Doctor {
       }
 
       if (isFile(`${MAIN}/.gsd.conf`)) pass(`.gsd.conf (base ${confBase(MAIN)}, worktrees ${confWtdir(MAIN)})`);
-      else note(`no .gsd.conf — settings are auto-detected (base ${confBase(MAIN)})`);
+      else tip(`no .gsd.conf — settings are auto-detected (base ${confBase(MAIN)})`);
 
       // .gsd.conf: a misspelled key is silently ignored, so name it.
       if (isFile(`${MAIN}/.gsd.conf`)) this.checkConf(MAIN);
@@ -668,7 +680,7 @@ class Doctor {
         fail(`base branch '${BASE}' does not exist — claims and finishes have nothing to work on`, 'create it, or set base = <branch> in .gsd.conf', 'T015');
       }
       if (git(MAIN, ['remote', 'get-url', 'origin']).status !== 0) {
-        note("no 'origin' remote — claims and finishes stay local (fine on one machine; parallel sessions elsewhere won't see them)");
+        tip("no 'origin' remote — claims and finishes stay local (fine on one machine; parallel sessions elsewhere won't see them)");
       }
 
       // The pre-merge gate.
@@ -710,7 +722,7 @@ class Doctor {
           fail(`tracker profile '${cuProf}' is not a name (letters, digits, . _ -)`, `fix ${tkWhere(tkConf('profile_from'), 'profile', 'tracker_profile')} (e.g. acme)`, 'T018');
         } else if (tkConf('token') === 'env') {
           pass('tracker: clickup, token from $CLICKUP_API_TOKEN (test it: gsdt-tracker check)');
-          if (cuProf !== '') note(`CLICKUP_API_TOKEN is set in your environment, so profile '${cuProf}' (${cuCfg}) is not used`);
+          if (cuProf !== '') tip(`CLICKUP_API_TOKEN is set in your environment, so profile '${cuProf}' (${cuCfg}) is not used`);
         } else if (tkConf('token') === 'file') {
           pass(`tracker: clickup${cuProf !== '' ? ` (profile ${cuProf})` : ''}, token found (test it: gsdt-tracker check)`);
         } else {
@@ -782,7 +794,7 @@ class Doctor {
         wsNonEmpty = false;
       }
       if (!isDir(`${MAIN}/.planning`)) {
-        note('no .planning/ — this repo has no GSD planning state yet');
+        tip('no .planning/ — this repo has no GSD planning state yet');
       } else if (isDir(`${MAIN}/.planning/workstreams`) && wsNonEmpty) {
         fail(
           'gsd-core workstreams in use (.planning/workstreams/) — this toolkit only reads the top-level .planning/ and is not workstream-aware',
@@ -799,7 +811,7 @@ class Doctor {
           case 0:
             pass('.planning is coherent');
             // the bash made these notes in a pipeline subshell: shown in the text report, never in --json
-            for (const l of ls) if (l.startsWith('  - ') && !o.quiet) out(`  • ${l.slice(4)}\n`);
+            for (const l of ls) if (l.startsWith('  - ') && !o.json) out(`  • ${l.slice(4)}\n`);
             if (ls.some((l) => l.startsWith('• a repair would update:'))) safe('repair');
             break;
           case 1:
@@ -807,7 +819,7 @@ class Doctor {
             for (const l of ls) if (l.startsWith('  • ')) out(`      ·${l.slice(3)}\n`);
             break;
           default:
-            note('.planning has no ROADMAP.md — nothing to check');
+            tip('.planning has no ROADMAP.md — nothing to check');
         }
       }
 
@@ -847,7 +859,7 @@ class Doctor {
 
       if (isFile(ROADMAP)) {
         const audit = chomp(roadmapAudit(ROADMAP));
-        if (BR !== '') note(`roadmap checked on '${BR}' (this worktree's own copy, not ${confBase(MAIN)}'s)`);
+        if (BR !== '') tip(`roadmap checked on '${BR}' (this worktree's own copy, not ${confBase(MAIN)}'s)`);
         if (audit === '') {
           pass('roadmap: every phase has its rows and ticks its own checkbox');
         } else {
@@ -880,7 +892,7 @@ class Doctor {
           note(`phases have screens but .planning/design/DESIGN.md is ${ds} — gsdt-ui design, then fill it (ui_gates = strict makes this a finding)`);
         }
         if (uiPlaywrightInstalled(HERE) === null) {
-          note('no Playwright for gsdt-ui check (looked in the project and the global npm folder) — once per machine: npm i -g playwright && npx playwright install chromium');
+          tip('no Playwright for gsdt-ui check (looked in the project and the global npm folder) — once per machine: npm i -g playwright && npx playwright install chromium');
         }
         if (commandOnPath('node') === null) note('no node on PATH — gsdt-ui check needs it');
         const uiStackWords = ` ${uiStack(HERE)} `;
@@ -889,8 +901,8 @@ class Doctor {
         for (const addon of addons) {
           if (uiAddonPresent(HERE, addon)) continue;
           for (const p of splitComma(configuredList || 'claude')) {
-            const tip = providerUiAddon(p, addon);
-            if (tip !== null) note(`optional for ${p} — ${tip}`);
+            const hint = providerUiAddon(p, addon);
+            if (hint !== null) tip(`optional for ${p} — ${hint}`);
           }
         }
         // The pictures are large and change on every run: they stay local.
@@ -959,7 +971,7 @@ class Doctor {
       bigFile('AGENTS.md', 'Codex reads only the first 32 KiB by default (project_doc_max_bytes); move rarely needed parts into docs it can open');
     }
     if (provSet.includes(',claude,')) {
-      note('claude: for CLAUDE.md, memory, MCP servers and plugins, run /doctor and /skill-doctor in a Claude session; /context shows the real numbers');
+      tip('claude: for CLAUDE.md, memory, MCP servers and plugins, run /doctor and /skill-doctor in a Claude session; /context shows the real numbers');
     }
 
     // ── worktree hygiene ────────────────────────────────────────────────────
@@ -968,7 +980,7 @@ class Doctor {
     if (isDir(LOCK)) {
       const pidText = readFileText(`${LOCK}/pid`);
       const pid = pidText === null ? '' : chomp(pidText);
-      if (pid !== '' && alive(pid)) note(`a gsd command is running right now (pid ${pid})`);
+      if (pid !== '' && alive(pid)) tip(`a gsd command is running right now (pid ${pid})`);
       else if (pid === '') {
         fail('command lock with no owner pid (a command starting now, or one that died at once)', 'rm -rf .git/gsd-cmd.lock   (only if no gsd command is running)', 'T033');
       } else {
@@ -991,7 +1003,7 @@ class Doctor {
       if (!(wt !== MAIN && isFile(`${wt}/.gsd-install.status`))) continue;
       const st = (readFileText(`${wt}/.gsd-install.status`) ?? '').replace(/[ \t\n\r\f\v]/g, '');
       if (st === 'fail') fail(`dependency install failed in ${path.basename(wt)} — execute-phase is blocked there`, `read ${wt}/.gsd-install.log, fix, then re-run the install in that worktree`, 'T032');
-      else if (st === 'running') note(`dependency install still running in ${path.basename(wt)}`);
+      else if (st === 'running') tip(`dependency install still running in ${path.basename(wt)}`);
     }
 
     // T034 — worktree.baseRef = "head".
@@ -1083,13 +1095,14 @@ class Doctor {
       out(s);
       return this.findings === 0 ? 0 : 1;
     }
+    if (!o.verbose && this.passed > 0) out(`  \x1b[32m✔\x1b[0m ${this.passed} check${this.passed === 1 ? '' : 's'} passed (--verbose to list them)\n`);
     out('\n');
     // ── --fix: run the safe actions, then check again ───────────────────────
     if (o.fix) {
       if (this.safeList.length === 0) {
         if (this.findings !== 0) out('--fix: none of these findings has a safe automatic fix — run the commands below.\n');
       } else {
-        const ordered = ['unlock', 'track', 'migrate', 'chmod', 'init', 'repair', 'baseref'].filter((a) => this.safeList.includes(a) && !(WIN && a === 'chmod'));
+        const ordered = ['prune', 'unlock', 'track', 'migrate', 'chmod', 'init', 'repair', 'baseref'].filter((a) => this.safeList.includes(a) && !(WIN && a === 'chmod'));
         out(`\x1b[1m--fix will run (in ${MAIN}):\x1b[0m\n`);
         for (const a of ordered) out(`  ${this.safeLabel(a)}\n`);
         let answer = 'n';
@@ -1108,7 +1121,7 @@ class Doctor {
           }
           out('\n');
           out('Checking again:\n');
-          const rc = runInheritSelf('doctor', ['--quiet', '--repo', REPO]);
+          const rc = runInheritSelf('doctor', ['--repo', REPO]);
           out('\n');
           out('Changed files (not committed — review with git diff, then commit):\n');
           const st = git(MAIN, ['status', '--short']);
@@ -1122,8 +1135,7 @@ class Doctor {
     if (this.findings === 0) {
       out('\x1b[32m✔ no findings\x1b[0m\n');
       if (!o.fix && this.safeList.length > 0) {
-        if (o.quiet) out('(there are notes — gsdt-doctor shows them; gsdt-doctor --fix can tidy them)\n');
-        else out('(gsdt-doctor --fix can tidy the notes above)\n');
+        out('(gsdt-doctor --fix can tidy the notes above)\n');
       }
       return 0;
     }
@@ -1231,7 +1243,7 @@ class Doctor {
       }
       if (pd === '') p = `${ni.toString().padStart(2, '0')}${nd}`;
       if (pd === '') {
-        this.note(`Phase ${n}: no .planning/phases/${p}-* directory (archived?) — skipped`);
+        this.tip(`Phase ${n}: no .planning/phases/${p}-* directory (archived?) — skipped`);
         continue;
       }
       checked++;
@@ -1300,13 +1312,15 @@ class Doctor {
         this.fail(`Phase ${n} merged without:${miss}`, `in a phase-${n} worktree:${fix.replace(/;$/, '')}`, 'T040');
       }
     }
-    if (skipped !== '') this.note(`not checked (flow_skip in .gsd.conf):${skipped}`);
+    if (skipped !== '') this.tip(`not checked (flow_skip in .gsd.conf):${skipped}`);
     if (debt === 0) this.pass(`every merged phase since ${SINCE} carries its mandatory artifacts (${checked} checked)`);
   }
 
   safeLabel(a: string): string {
     const MAIN = this.main;
     switch (a) {
+      case 'prune':
+        return 'git worktree prune                (records of worktrees whose folder is gone)';
       case 'unlock':
         return "rm -rf .git/gsd-cmd.lock          (the lock's process is gone)";
       case 'migrate':
@@ -1330,6 +1344,8 @@ class Doctor {
     const MAIN = this.main;
     const pkg = this.pkg;
     switch (a) {
+      case 'prune':
+        return git(MAIN, ['worktree', 'prune'], { inheritStderr: true }).status === 0;
       case 'unlock': {
         // check again: the lock may have changed hands since the report
         const t = readFileText(`${MAIN}/.git/gsd-cmd.lock/pid`);
@@ -1456,7 +1472,7 @@ function readLine(): string | null {
 }
 
 export function main(argv: string[]): number {
-  const o: Opts = { repo: '', quiet: false, json: false, fix: false, yes: false };
+  const o: Opts = { repo: '', verbose: false, json: false, fix: false, yes: false };
   const die = (m: string): number => {
     err(`✖ ${m}\n`);
     return 1;
@@ -1473,14 +1489,18 @@ export function main(argv: string[]): number {
         o.repo = argv[i + 1] as string;
         i += 2;
         break;
-      case '--quiet':
+      case '--quiet': // the default now; kept so old scripts keep working
       case '-q':
-        o.quiet = true;
+        o.verbose = false;
+        i++;
+        break;
+      case '--verbose':
+      case '-v':
+        o.verbose = true;
         i++;
         break;
       case '--json':
         o.json = true;
-        o.quiet = true;
         i++;
         break;
       case '--fix':
@@ -1497,6 +1517,7 @@ export function main(argv: string[]): number {
         return die(`unknown argument: ${a} (see gsdt-doctor --help)`);
     }
   }
+  if (o.json) o.verbose = false; // --json is one object, whatever else is asked
   try {
     return new Doctor(o).run();
   } catch (e) {

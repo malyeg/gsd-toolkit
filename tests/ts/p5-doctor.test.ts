@@ -240,7 +240,36 @@ async function check(sc: Sc): Promise<void> {
     return;
   }
   for (const argv of runs) {
-    const [o, n] = await Promise.all(worlds.map((c) => runBin(c, sc, argv, sc.cwd ? sc.cwd(c) : c.W)));
+    // The frozen oracle prints the full report by default; the TS command now prints it with --verbose,
+    // and its default (= the oracle's --quiet, plus the notes that point at something to do and one
+    // summary line) is compared after dropping those two.
+    const quiet = argv.includes('--quiet') || argv.includes('-q');
+    const asIs = quiet || argv.includes('--json') || argv.includes('--help') || argv.includes('-h');
+    const [o, n] = await Promise.all(worlds.map((c) => runBin(c, sc, c.name === 'new' && !asIs ? ['--verbose', ...argv] : argv, sc.cwd ? sc.cwd(c) : c.W)));
+    if (argv.includes('--json')) {
+      // W027 is a safe fix now (--fix runs git worktree prune): the oracle's "safe" list has no "prune"
+      const nj = n as { out: string };
+      nj.out = nj.out.replace(/("safe":\[[^\]]*?),?"prune"/, '$1').replace('"safe":[,', '"safe":[');
+    }
+    if (argv.includes('--help') || argv.includes('-h')) {
+      // the help text changed on purpose (--verbose, W027); the oracle's is the old one
+      assert.match((n as { out: string }).out, /--verbose/, `${sc.name}: help names --verbose`);
+      assert.match((n as { out: string }).out, /git worktree prune/, `${sc.name}: help names the prune fix`);
+      (n as { out: string }).out = (o as { out: string }).out;
+    }
+    if (quiet || argv.includes('--fix')) {
+      const strip = (t: string): string =>
+        t
+          .replace(/^ {2}(?:• .*|\x1b\[32m✔\x1b\[0m \d+ checks? passed \(--verbose to list them\))\n/gm, '')
+          .replace('(gsdt-doctor --fix can tidy the notes above)', '(there are notes — gsdt-doctor shows them; gsdt-doctor --fix can tidy them)');
+      const nn = n as { out: string };
+      if (quiet) nn.out = strip(nn.out);
+      else {
+        // --fix: the check-again run is the plain (quiet) one in both
+        const i = nn.out.indexOf('Checking again:');
+        if (i >= 0) nn.out = nn.out.slice(0, i) + strip(nn.out.slice(i));
+      }
+    }
     const lab = `${sc.name} [${argv.join(' ')}]`;
     const a = worlds[0] as Ctx;
     const b = worlds[1] as Ctx;

@@ -7,6 +7,22 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## Unreleased
+
+- **`gsdt-doctor` prints only what matters by default.** The passed checks are
+  now one line (`✔ 30 checks passed (--verbose to list them)`); findings,
+  newer-version lines and notes that point at something to do in this repo (an
+  oversized `ROADMAP.md`, a branch whose upstream is gone, …) still show.
+  Optional tips and plain information (the Playwright / Impeccable / shadcn
+  tips, the toolkit-checkout and Claude `/doctor` pointers, …) moved to
+  `--verbose`, which prints the full report as before. `--quiet` / `-q` is still
+  accepted and does nothing (it is the default now). `--json` is unchanged
+  (`notes` still lists everything), except that `safe` can now hold `prune`.
+- **`gsdt-doctor --fix` also runs `git worktree prune`** for W027 ("N
+  worktree(s) recorded but missing on disk"). It only removes git's records
+  whose folder is already gone. It is shown first and asked (y/N) like the
+  other safe fixes.
+
 ## 0.11.0
 
 **Breaking: the toolkit is now TypeScript on Node.js 24 or newer, installed

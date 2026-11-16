@@ -322,7 +322,7 @@ function run(argv: string[]): number {
     const bookkeeping = chomp(
       (d.stdout ?? '')
         .split('\n')
-        .filter((l) => /checklist row|Progress table|tick/.test(l))
+        .filter((l) => !/^ {2}• /.test(l) && /checklist row|Progress table|tick/.test(l))
         .join('\n'),
     );
     if (bookkeeping !== '') {

@@ -453,7 +453,7 @@ printf '.planning/ROADMAP.md merge=union\n.planning/STATE.md merge=union\n' > "$
 cp "$FIX/phase-11-merge/ROADMAP.md" "$FIX/phase-11-merge/STATE.md" "$DOC/.planning/"
 git -C "$DOC" add -A && git -C "$DOC" commit -qm init
 
-out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$DOC" 2>&1)"
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --verbose --repo "$DOC" 2>&1)"
 is "reports merge=union"          "$(grep -c 'still on merge=union' <<<"$out")" 1
 is "reports the missing driver"   "$(grep -c 'merge driver not registered' <<<"$out")" 1
 is "reports the missing hook"     "$(grep -c 'no post-merge hook' <<<"$out")" 1
@@ -466,7 +466,7 @@ is "names the repair as the fix"  "$([ "$(grep -c 'gsdt-planning-repair' <<<"$ou
 before_tree="$(git -C "$DOC" status --porcelain)"
 before_cfg="$(git -C "$DOC" config --local --list | sort)"
 before_files="$(find "$DOC" -type f -not -path '*/.git/*' | sort | xargs shasum 2>/dev/null | shasum)"
-PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$DOC" >/dev/null 2>&1
+PATH="$PKG/bin:$PATH" gsdt-doctor --verbose --repo "$DOC" >/dev/null 2>&1
 is "working tree untouched"  "$(git -C "$DOC" status --porcelain)" "$before_tree"
 is "git config untouched"    "$(git -C "$DOC" config --local --list | sort)" "$before_cfg"
 is "no file contents changed" "$(find "$DOC" -type f -not -path '*/.git/*' | sort | xargs shasum 2>/dev/null | shasum)" "$before_files"
@@ -481,7 +481,7 @@ head_before="$(git -C "$DOC" rev-parse HEAD)"
 out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --fix --yes --repo "$DOC" 2>&1)"
 is "--fix ran gsdt-init and the repair" "$(grep -c '^▶ gsdt-init\|^▶ gsdt-planning-repair' <<<"$out")" 2
 is "--fix committed nothing"            "$(git -C "$DOC" rev-parse HEAD)" "$head_before"
-out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$DOC" 2>&1)"
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --verbose --repo "$DOC" 2>&1)"
 is "merge=union finding clears"   "$(grep -c 'still on merge=union' <<<"$out")" 0
 is "driver finding clears"        "$(grep -c 'merge driver not registered' <<<"$out")" 0
 is "hook finding clears"          "$(grep -c 'no post-merge hook' <<<"$out")" 0
@@ -533,7 +533,7 @@ git -C "$PLAIN" config user.email t@example.com
 git -C "$PLAIN" config user.name test
 echo hi > "$PLAIN/f" && git -C "$PLAIN" add -A && git -C "$PLAIN" commit -qm init
 
-out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$PLAIN" 2>&1)"; rc=$?
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --verbose --repo "$PLAIN" 2>&1)"; rc=$?
 is "a plain repo has no findings"       "$rc" 0
 is "it says the repo does not use GSD"  "$(grep -c 'does not use GSD' <<<"$out")" 1
 is "no red line about .gitattributes"   "$(grep -c 'gitattributes' <<<"$out")" 0
@@ -541,7 +541,7 @@ is "no red line about the driver"       "$(grep -c 'merge driver not registered'
 is "no red line about the hook"         "$(grep -c 'no post-merge hook' <<<"$out")" 0
 is "no red line about shims"            "$(grep -c 'shims:' <<<"$out")" 0
 
-out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$PKG" 2>&1)"
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --verbose --repo "$PKG" 2>&1)"
 is "the toolkit is recognised as itself" "$(grep -c 'toolkit itself, not a GSD project' <<<"$out")" 1
 is "and its setup checks are skipped"    "$(grep -c 'merge driver not registered' <<<"$out")" 0
 
@@ -556,20 +556,20 @@ git -C "$TOOLKIT_FIXTURE" add .
 git -C "$TOOLKIT_FIXTURE" -c user.name=t -c user.email=t@t commit -qm toolkit
 git -C "$TOOLKIT_FIXTURE" worktree add -q -b test-linked "$TOOLKIT_LINKED"
 for target in "$TOOLKIT_FIXTURE" "$TOOLKIT_LINKED"; do
-  out="$(PATH="$TOOLKIT_LINKED/bin:$PATH" "$TOOLKIT_LINKED/bin/gsdt-doctor" --repo "$target" 2>&1)"; rc=$?
+  out="$(PATH="$TOOLKIT_LINKED/bin:$PATH" "$TOOLKIT_LINKED/bin/gsdt-doctor" --verbose --repo "$target" 2>&1)"; rc=$?
   is "linked toolkit recognises $(basename "$target")" "$(grep -c 'toolkit itself, not a GSD project' <<<"$out")" 1
   is "linked toolkit setup checks produce no findings" "$rc" 0
 done
-out="$(PATH="$TOOLKIT_LINKED/bin:$PATH" "$TOOLKIT_LINKED/bin/gsdt-doctor" --repo "$DOC" 2>&1)"
+out="$(PATH="$TOOLKIT_LINKED/bin:$PATH" "$TOOLKIT_LINKED/bin/gsdt-doctor" --verbose --repo "$DOC" 2>&1)"
 is "linked toolkit still checks an unrelated GSD repo" "$(grep -c 'merge=gsd-planning on ROADMAP' <<<"$out")" 1
 
 # Toolkit housekeeping is a note, not a finding: it is about the toolkit
 # checkout, not the repo you asked about.
 is "a dirty toolkit does not fail another repo's check" \
-   "$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$PLAIN" 2>&1 | grep -c '✖.*toolkit has')" 0
+   "$(PATH="$PKG/bin:$PATH" gsdt-doctor --verbose --repo "$PLAIN" 2>&1 | grep -c '✖.*toolkit has')" 0
 
 # A real GSD repo must still get the full treatment.
-out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --repo "$DOC" 2>&1)"
+out="$(PATH="$PKG/bin:$PATH" gsdt-doctor --verbose --repo "$DOC" 2>&1)"
 is "a real GSD repo is still checked in full" "$(grep -c 'merge=gsd-planning on ROADMAP' <<<"$out")" 1
 
 section "gsdt-doctor tells you what to run"
