@@ -197,7 +197,8 @@ check_moved() {  # $1=label, $2=output file
   has "$l: Claude hooks point at the npm bin dir (rules)" "$s" "exec '$PFX/bin/gsdt-rules' --hook"
   hasnt "$l: no hook still points at ~/.local/bin" "$s" "$H/.local/bin"
   [ -f "$(sk gsdt-flow)" ] && ok "$l: skills present" || bad "$l: skills present"
-  has "$l: …marked with the new package's version" "$(tail -1 "$(sk gsdt-flow)")" "$VER"
+  # gsdt-worktrees changed since 0.10.0 (an unchanged skill keeps its old mark: "already current")
+  has "$l: …a changed skill is marked with the new package's version" "$(tail -1 "$(sk gsdt-worktrees)")" "$VER"
 }
 
 # a: the 0.10.0 install.sh
