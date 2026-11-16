@@ -509,7 +509,7 @@ test('gsdt-doctor', () => {
   git(DOC, 'add', '-A');
   git(DOC, 'commit', '-qm', 'init');
 
-  let out = g('doctor', ['--repo', DOC]).out;
+  let out = g('doctor', ['--verbose', '--repo', DOC]).out;
   assert.equal(count(out, /still on merge=union/), 1, 'reports merge=union');
   assert.equal(count(out, /merge driver not registered/), 1, 'reports the missing driver');
   assert.equal(count(out, /no post-merge hook/), 1, 'reports the missing hook');
@@ -522,7 +522,7 @@ test('gsdt-doctor', () => {
   const beforeTree = git(DOC, 'status', '--porcelain').stdout;
   const beforeCfg = cfgList(DOC);
   const beforeFiles = digest(DOC);
-  g('doctor', ['--repo', DOC]);
+  g('doctor', ['--verbose', '--repo', DOC]);
   assert.equal(git(DOC, 'status', '--porcelain').stdout, beforeTree, 'working tree untouched');
   assert.equal(cfgList(DOC), beforeCfg, 'git config untouched');
   assert.equal(digest(DOC), beforeFiles, 'no file contents changed');
@@ -537,7 +537,7 @@ test('gsdt-doctor', () => {
   out = g('doctor', ['--fix', '--yes', '--repo', DOC]).out;
   assert.equal(count(out, /^▶ gsdt-init|^▶ gsdt-planning-repair/), 2, '--fix ran gsdt-init and the repair');
   assert.equal(chomp(git(DOC, 'rev-parse', 'HEAD').stdout), headBefore, '--fix committed nothing');
-  out = g('doctor', ['--repo', DOC]).out;
+  out = g('doctor', ['--verbose', '--repo', DOC]).out;
   assert.equal(count(out, /still on merge=union/), 0, 'merge=union finding clears');
   assert.equal(count(out, /merge driver not registered/), 0, 'driver finding clears');
   assert.equal(count(out, /no post-merge hook/), 0, 'hook finding clears');
@@ -579,7 +579,7 @@ test('gsdt-doctor does not demand GSD from repos that do not use it', () => {
   git(PLAIN, 'add', '-A');
   git(PLAIN, 'commit', '-qm', 'init');
 
-  let r = g('doctor', ['--repo', PLAIN]);
+  let r = g('doctor', ['--verbose', '--repo', PLAIN]);
   assert.equal(r.status, 0, 'a plain repo has no findings');
   assert.equal(count(r.out, /does not use GSD/), 1, 'it says the repo does not use GSD');
   assert.equal(count(r.out, /gitattributes/), 0, 'no red line about .gitattributes');
@@ -587,7 +587,7 @@ test('gsdt-doctor does not demand GSD from repos that do not use it', () => {
   assert.equal(count(r.out, /no post-merge hook/), 0, 'no red line about the hook');
   assert.equal(count(r.out, /shims:/), 0, 'no red line about shims');
 
-  r = g('doctor', ['--repo', PKG]);
+  r = g('doctor', ['--verbose', '--repo', PKG]);
   assert.equal(count(r.out, /toolkit itself, not a GSD project/), 1, 'the toolkit is recognised as itself');
   assert.equal(count(r.out, /merge driver not registered/), 0, 'and its setup checks are skipped');
 
@@ -603,7 +603,7 @@ test('gsdt-doctor does not demand GSD from repos that do not use it', () => {
   git(FIXTURE, 'commit', '-qm', 'toolkit');
   git(FIXTURE, 'worktree', 'add', '-q', '-b', 'test-linked', LINKED);
   const linkedDoctor = (target: string): Run =>
-    run(process.execPath, [path.join(LINKED, 'src', 'launch.mjs'), 'doctor', '--repo', target], {
+    run(process.execPath, [path.join(LINKED, 'src', 'launch.mjs'), 'doctor', '--verbose', '--repo', target], {
       env: { ...DENV, PATH: [path.join(LINKED, 'bin'), process.env.PATH ?? ''].join(path.delimiter) },
     });
   for (const target of [FIXTURE, LINKED]) {
@@ -615,10 +615,10 @@ test('gsdt-doctor does not demand GSD from repos that do not use it', () => {
 
   // Toolkit housekeeping is a note, not a finding: it is about the toolkit checkout, not the repo
   // you asked about.
-  assert.equal(count(g('doctor', ['--repo', PLAIN]).out, /✖.*toolkit has/), 0, "a dirty toolkit does not fail another repo's check");
+  assert.equal(count(g('doctor', ['--verbose', '--repo', PLAIN]).out, /✖.*toolkit has/), 0, "a dirty toolkit does not fail another repo's check");
 
   // A real GSD repo must still get the full treatment.
-  assert.equal(count(g('doctor', ['--repo', DOC]).out, /merge=gsd-planning on ROADMAP/), 1, 'a real GSD repo is still checked in full');
+  assert.equal(count(g('doctor', ['--verbose', '--repo', DOC]).out, /merge=gsd-planning on ROADMAP/), 1, 'a real GSD repo is still checked in full');
 });
 
 test('gsdt-doctor tells you what to run', () => {
@@ -635,7 +635,7 @@ test('gsdt-doctor tells you what to run', () => {
   git(SUMM, 'commit', '-qm', 'init');
 
   // colour codes sit between words and break plain matches
-  const out = plain(g('doctor', ['--repo', SUMM]).out);
+  const out = plain(g('doctor', ['--verbose', '--repo', SUMM]).out);
   assert.equal(count(out, /finding\(s\)\./), 1, 'the summary says what to run');
   assert.equal(count(out, /→ cd /), 0, "no repeated 'cd … &&' on findings");
   assert.equal(count(out, /^ {2}cd .*[\\/]summary$/), 1, 'the cd is given once');
