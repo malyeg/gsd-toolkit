@@ -378,6 +378,7 @@ test('planningHook / planningStatus', () => {
     (r) => write(path.join(r, '.git', 'hooks', 'post-merge'), '#!/bin/sh\ngsdt-planning-repair\n', 0o644),
   ];
   for (const [i, v] of variants.entries()) {
+    if (process.platform === 'win32' && i === 8) continue; // a hook that is not executable: Windows has no exec bit
     const r = repo(path.join(tmp(), 'pl'));
     v(r);
     const s = C.planningStatus(r);
@@ -718,7 +719,7 @@ test('replaceOwnedBlock', () => {
       const b = write(path.join(d, `b-${name}-${mode}`), body, mode);
       const rb = P.replaceOwnedBlock(b, 'provider', blockFile);
       const lbl = `# replaceOwnedBlock ${name} ${mode.toString(8)}`;
-      gold(`${lbl}\nrc=${rb ? 0 : 1}\ncontent=${JSON.stringify(readFileSync(b, 'latin1'))}\nmode=${(statSync(b).mode & 0o777).toString(8)}`);
+      gold(`${lbl}\nrc=${rb ? 0 : 1}\ncontent=${JSON.stringify(readFileSync(b, 'latin1'))}\nmode=${process.platform === 'win32' ? mode.toString(8) : (statSync(b).mode & 0o777).toString(8)}`); // Windows has no mode bits
     }
   }
   // a file that does not exist is created (mode 0600 as before)

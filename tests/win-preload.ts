@@ -10,6 +10,32 @@ import { planSpawn } from '../src/spawn.ts';
 
 if (process.platform === 'win32' && !(cp as { __gsdWin?: boolean }).__gsdWin) {
   (cp as { __gsdWin?: boolean }).__gsdWin = true;
+  // The suites write PATH the POSIX way (`dir:dir:/usr/bin:/bin`). On Windows that is one broken entry, so no program is found.
+  // Entries with a drive (C:\x or C:/x) are kept, `/usr/bin`-style ones dropped, and the PATH this run started with is
+  // appended (it holds git, node and Git's sh: what `/usr/bin:/bin` stands for).
+  const BASE = process.env.PATH ?? process.env.Path ?? '';
+  const fixPath = (v: string): string => {
+    if (!v.replace(/(^|[;:])[A-Za-z]:(?=[\\/])/g, '$1$2').includes(':')) return v;
+    const keep = v.match(/[A-Za-z]:[\\/][^;:]*|[^;:]+/g)?.filter((e) => /^[A-Za-z]:[\\/]/.test(e)) ?? [];
+    return [...keep, BASE].join(';');
+  };
+  const fixEnv = <T extends { env?: NodeJS.ProcessEnv }>(o: T | undefined): T | undefined => {
+    if (!o?.env) return o;
+    const keys = Object.keys(o.env).filter((k) => /^path$/i.test(k));
+    if (keys.length === 0) return o;
+    const env = { ...o.env };
+    const k = keys.includes('PATH') ? 'PATH' : (keys[0] as string);
+    const v = fixPath(String(env[k] ?? ''));
+    for (const x of keys) delete env[x];
+    env.PATH = v;
+    return { ...o, env };
+  };
+  process.env = new Proxy(process.env, {
+    set(target, key, value) {
+      target[key as string] = typeof key === 'string' && /^path$/i.test(key) && typeof value === 'string' ? fixPath(value) : value;
+      return true;
+    },
+  });
   type Opts = { env?: NodeJS.ProcessEnv; windowsVerbatimArguments?: boolean; shell?: unknown } & Record<string, unknown>;
   const FIX: Record<string, string> = { '/bin/bash': 'bash', '/bin/sh': 'sh', '/usr/bin/env': 'env' };
   function plan(file: unknown, rest: unknown[]): { file: string; args: string[]; opts: Opts | undefined; optIdx: number } | null {
@@ -27,6 +53,7 @@ if (process.platform === 'win32' && !(cp as { __gsdWin?: boolean }).__gsdWin) {
       optIdx = i;
     }
     if (opts?.shell) return null;
+    if (opts) opts = fixEnv(opts);
     const p = planSpawn(FIX[file] ?? file, args, { env: opts?.env ?? process.env });
     return { file: p.file, args: p.args, opts: p.windowsVerbatimArguments ? { ...(opts ?? {}), windowsVerbatimArguments: true } : opts, optIdx };
   }

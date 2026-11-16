@@ -333,9 +333,9 @@ test('gsdt-batch — the launcher', () => {
   r = GB(['--print', '--model', 'opus', '--file', 'a.md'], { cwd: L });
   has('claude: --model wins', r.out, /claude --model opus \/gsdt-batch.*--file.*a\.md/);
   has('--file: the name of the file is the slug', r.out, `batch-${D}-a `);
-  has('--file not committed: read from the main checkout, by absolute path', r.out, new RegExp(`file.*${LP().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[/\\\\]a\\.md`));
+  has('--file not committed: read from the main checkout, by absolute path', r.out, new RegExp(`file.*${fwd(LP()).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[/\\\\]a\\.md`));
   r = GB(['--print', '--file', 'brief.md'], { cwd: L });
-  has("--file committed: the worktree's own copy", r.stdout, new RegExp(`file.*${LW().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}.*batch-${D}-brief.*brief\\.md`));
+  has("--file committed: the worktree's own copy", r.stdout, new RegExp(`file.*${fwd(LW()).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}.*batch-${D}-brief.*brief\\.md`));
   r = GB(['--print', '--file', 'nope.md'], { cwd: L });
   is('--file missing → 64', r.status, 64);
   r = GB(['--print', '--model', 'default', '--file', 'a.md'], { cwd: L });

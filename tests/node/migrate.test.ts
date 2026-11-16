@@ -8,7 +8,7 @@
 // Run: node --test tests/node/migrate.test.ts
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
 import type { TestContext } from 'node:test';
@@ -16,6 +16,10 @@ import {
   PKG, WIN, add, baseEnv, chomp, files, gitOk, gitOut, gsdt, has, hasnt, initRepo, is, isExec, lf, mkWork, mkexec, ok, pathWith, read, run, stubSh, w, fileHas, fileHasnt,
 } from './g4-env.ts';
 import type { Env } from './g4-env.ts';
+import { normalizePath } from '../../src/spawn.ts';
+
+/** the repo path as the product prints it in a command: git's spelling (long names, `/`) on Windows */
+const gp = (p: string): string => (WIN ? normalizePath(realpathSync.native(p)) : p);
 
 const WORK = mkWork('g4mig-');
 const SETTINGS = path.join(WORK, 'user-settings.json');
@@ -253,7 +257,7 @@ test('--commit: exactly the repo files this run changed, nothing else, no push',
   is('exit 0', r.status, 0);
   has('says committed', OUT, '(14 change(s), committed)');
   has('prints the short hash', OUT, /^commit [0-9a-f]{7,}: Switch to gsdt-\* toolkit commands/m);
-  has('prints the push hint (only a hint)', OUT, `push when ready: git -C '${R5}' push`);
+  has('prints the push hint (only a hint)', OUT, `push when ready: git -C '${gp(R5)}' push`);
   hasnt("no teammates' line (every commit is by t@t)", OUT, 'then each teammate');
   has('lists the files first, git-style', OUT, /^files to commit \(17\):$/m);
   has('…a deletion', OUT, /^ {2}D scripts\/gsd-premerge-check\.sh$/m);
@@ -296,8 +300,8 @@ test('no terminal, no --commit: nothing committed, the path-limited command is p
   is('exit 0', r.status, 0);
   has('says not committed', OUT, '(14 change(s), not committed)');
   is('HEAD did not move', gitOut(ENV, R6, ['rev-parse', 'HEAD']), head6);
-  has('prints add -- <paths> for exactly those paths', OUT, new RegExp(`^to commit by hand: {2}git -C '${esc(R6)}' add -A -- scripts/gsd-new-worktree-feature\\.sh scripts/gsdt-new-worktree-feature\\.sh `, 'm'));
-  has('…and the commit limited to the same paths', OUT, new RegExp(`&& git -C '${esc(R6)}' commit -m 'Switch to gsdt-\\* toolkit commands' -- scripts/gsd-new-worktree-feature\\.sh `));
+  has('prints add -- <paths> for exactly those paths', OUT, new RegExp(`^to commit by hand: {2}git -C '${esc(gp(R6))}' add -A -- scripts/gsd-new-worktree-feature\\.sh scripts/gsdt-new-worktree-feature\\.sh `, 'm'));
+  has('…and the commit limited to the same paths', OUT, new RegExp(`&& git -C '${esc(gp(R6))}' commit -m 'Switch to gsdt-\\* toolkit commands' -- scripts/gsd-new-worktree-feature\\.sh `));
   hasnt('…never the whole tree (no bare add -A)', OUT, /add -A &&|add -A$/m);
   hasnt('no prompt', OUT, '[y/N]');
   // the printed command works as printed
@@ -316,7 +320,7 @@ test('--commit with a file that was dirty before: no commit, the file is listed'
   has('says not committed', r.out, 'not committed');
   has('says why', r.out, 'had uncommitted changes before the migration');
   has('lists the file', r.out, /^ {2}scripts\/gsd-derive-port\.sh$/m);
-  has('prints the command to commit by hand', r.out, new RegExp(`^to commit by hand: {2}git -C '${esc(R7)}' add -A -- `, 'm'));
+  has('prints the command to commit by hand', r.out, new RegExp(`^to commit by hand: {2}git -C '${esc(gp(R7))}' add -A -- `, 'm'));
   is('HEAD did not move', gitOut(ENV, R7, ['rev-parse', 'HEAD']), head7);
   const R7b = path.join(WORK, 'proj7b');
   mkold(R7b);
@@ -335,7 +339,7 @@ test('--commit when the main checkout is not on the base branch: no commit', () 
   const r = g('gsdt-migrate', ['--apply', '--commit'], R8);
   is('exit 0', r.status, 0);
   has('says why', r.out, "not committing: this checkout is on 'side', not the base branch 'main'");
-  has('prints the command', r.out, new RegExp(`^to commit by hand: {2}git -C '${esc(R8)}' add -A -- `, 'm'));
+  has('prints the command', r.out, new RegExp(`^to commit by hand: {2}git -C '${esc(gp(R8))}' add -A -- `, 'm'));
   is('HEAD did not move', gitOut(ENV, R8, ['rev-parse', 'HEAD']), head8);
 });
 
@@ -348,7 +352,7 @@ test("--commit when the commit fails (a pre-commit hook says no): git's error, t
   is('exit 1', r.status, 1);
   has("prints git's error", r.out, 'hook says no');
   has('says not committed', r.out, 'not committed');
-  has('prints the command', r.out, new RegExp(`^to commit by hand: {2}git -C '${esc(R9)}' add -A -- `, 'm'));
+  has('prints the command', r.out, new RegExp(`^to commit by hand: {2}git -C '${esc(gp(R9))}' add -A -- `, 'm'));
   is('HEAD did not move', gitOut(ENV, R9, ['rev-parse', 'HEAD']), head9);
 });
 
@@ -414,7 +418,7 @@ if (!OLDTAG && process.env.CI) {
     mkdirSync(OLD, { recursive: true });
     const tarball = path.join(WORK, 'v090.tar');
     gitOk(ENV, PKG, ['archive', '--format=tar', '-o', tarball, 'v0.9.0']);
-    const x = spawnSync('tar', ['-xf', tarball, '-C', OLD], { encoding: 'utf8' });
+    const x = spawnSync('tar', ['-xf', 'v090.tar', '-C', 'src-090'], { cwd: WORK, encoding: 'utf8' }); // relative: GNU tar reads `D:\\…` as a remote host;
     is('the 0.9.0 sources unpack', x.status, 0);
     const R4 = path.join(WORK, 'proj4');
     initRepo(ENV, R4, 'main');

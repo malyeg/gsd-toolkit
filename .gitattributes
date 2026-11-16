@@ -1,3 +1,6 @@
+# Every text file is LF in the working tree on every OS (bash launchers, shims and skills must not get CRLF on Windows).
+* text=auto eol=lf
+
 # Left out of the release tarball (git archive): CI config only.
 .github export-ignore
 
