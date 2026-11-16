@@ -59,23 +59,23 @@ jobs:
           [ "$pv" = "$V" ] || { echo "package.json is $pv, VERSION is $V (tools/release.sh writes both)"; exit 1; }
       - name: build
         run: |
-          mkdir dist
+          mkdir out
           git archive --format=tar.gz --prefix="gsd-toolkit-$V/" \
-            -o "dist/gsd-toolkit-$V.tar.gz" HEAD
+            -o "out/gsd-toolkit-$V.tar.gz" HEAD
           npm ci
-          npm pack --silent --pack-destination dist
-          [ -f "dist/gsd-toolkit-$V.tgz" ] || { echo "npm pack did not make gsd-toolkit-$V.tgz"; ls dist; exit 1; }
-          (cd dist && sha256sum "gsd-toolkit-$V.tar.gz" "gsd-toolkit-$V.tgz" > SHA256SUMS && cat SHA256SUMS)
+          npm pack --silent --pack-destination out
+          [ -f "out/gsd-toolkit-$V.tgz" ] || { echo "npm pack did not make gsd-toolkit-$V.tgz"; ls out; exit 1; }
+          (cd out && sha256sum "gsd-toolkit-$V.tar.gz" "gsd-toolkit-$V.tgz" > SHA256SUMS && cat SHA256SUMS)
       - name: release notes (from CHANGELOG.md)
         run: |
           awk -v v="$V" '$1 == "##" && ($2 == v || $2 == "[" v "]") {on=1; next} on && /^## / {exit} on {print}' \
-            CHANGELOG.md > dist/notes.md
-          cat dist/notes.md
+            CHANGELOG.md > out/notes.md
+          cat out/notes.md
       - name: tag and publish
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "v$V" \
-            "dist/gsd-toolkit-$V.tgz" "dist/gsd-toolkit-$V.tar.gz" dist/SHA256SUMS \
+            "out/gsd-toolkit-$V.tgz" "out/gsd-toolkit-$V.tar.gz" out/SHA256SUMS \
             --target "$GITHUB_SHA" \
-            --title "gsd-toolkit $V" --notes-file dist/notes.md
+            --title "gsd-toolkit $V" --notes-file out/notes.md
