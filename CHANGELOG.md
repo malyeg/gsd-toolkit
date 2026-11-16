@@ -21,6 +21,11 @@ becomes its release notes.
 - "then each teammate: …" is printed only when HEAD has a commit by someone
   else.
 
+**gsdt-doctor:** its title says `gsdt-doctor` (it said `gsd-doctor`), and a
+note says when the toolkit is installed in a Node version manager's folder
+(nvm, fnm, Volta): switching Node versions leaves the commands and the Claude
+hooks behind.
+
 **y/N prompts wait for the answer again.** `gsdt-doctor --fix` printed "Run
 these? [y/N] Nothing changed." at once in a real terminal: Node had made the
 terminal's input non-blocking and the read's EAGAIN was taken as "no". One
