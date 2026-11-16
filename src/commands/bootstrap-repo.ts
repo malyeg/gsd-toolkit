@@ -3,7 +3,7 @@
 // tests/fixtures/p8-old-bins/). `gsdt-init` calls main() in-process. Still outside this file:
 // `bash -n` (the self-check) and `git`. The native hook merge into Claude's settings is done
 // in-process (no jq), written with the python-exact JSON writer.
-import { SH, normalizePath } from '../spawn.ts';
+import { SH, normalizePath, relUnder } from '../spawn.ts';
 import { appendFileSync, copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -414,7 +414,7 @@ function run(argv: string[]): number {
   say('✔ .gsd/INSTRUCTIONS.md (repo settings + core; the rules come from gsdt-rules)');
 
   const mergeHook = (provider: string, settings: string, event: string, matcher: string, command: string): void => {
-    const shown = settings.startsWith(`${DEST}/`) ? settings.slice(DEST.length + 1) : settings;
+    const shown = relUnder(DEST, settings);
     mkdirSync(path.dirname(settings), { recursive: true });
     if (!existsSync(settings)) writeFileSync(settings, '{}\n');
     if (providerHookState(DEST, provider) === 'present') {

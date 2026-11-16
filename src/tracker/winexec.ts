@@ -65,8 +65,8 @@ export function planSpawn(cmd: string, args: string[], o: PlanEnv = {}): Plan {
     const env = o.env ?? process.env;
     return { file: env.ComSpec ?? env.COMSPEC ?? 'cmd.exe', args: ['/d', '/s', '/c', cmdLine(r, args)], windowsVerbatimArguments: true };
   }
-  // Git's sh parses `'` as a quote and splits at a newline: wrap anything but plain characters in "…", verbatim
-  const q = [r.replace(/\\/g, '/'), ...args].map((a) => (/^[\w./:=@%+,-]+$/.test(a) ? a : `"${a.replace(/(\\*)"/g, '$1$1\\"').replace(/(\\+)$/, '$1$1')}"`));
+  // Git's sh parses `'` as a quote and splits at a newline: wrap anything but plain characters in "…" (with \\ and " backslash-escaped: MSYS parses shell-like), verbatim
+  const q = [r.replace(/\\/g, '/'), ...args].map((a) => (/^[\w./:=@%+,-]+$/.test(a) ? a : `"${a.replace(/[\\"]/g, '\\$&')}"`));
   return { file: 'sh', args: q, windowsVerbatimArguments: true };
 }
 

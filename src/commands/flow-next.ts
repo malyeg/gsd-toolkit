@@ -17,6 +17,7 @@ import { readdirSync, readFileSync, realpathSync } from 'node:fs';
 import { ticketExtract, trackerWhich } from '../ticket.ts';
 import { chomp, confGet, findMain, git, GsdExit, isDir, isFile, lf, migrateRefuse, reviewsProblem, validationProblem, workflowFlag } from '../common.ts';
 import { guardArgv } from '../guard.ts';
+import { relUnder } from '../spawn.ts';
 import { GSD_GEMINI_GONE, providerGone, providerKnown, providerReviewFlag } from '../provider.ts';
 import { uiCheckState, uiDesignState, uiExempt, uiGate, uiGates, uiLayoutState } from '../ui.ts';
 
@@ -261,7 +262,7 @@ function flowNextRun(argv: string[], env: NodeJS.ProcessEnv, cwd: string, so: st
   const has = (suffix: string): boolean => isFile(`${pd}/${P}-${suffix}`);
   const fm = (suffix: string, key: string): string => frontmatterValue(`${pd}/${P}-${suffix}`, key);
   /** ${pd#"$REPO"/} */
-  const relPd = pd.startsWith(`${REPO}/`) ? pd.slice(REPO.length + 1) : pd;
+  const relPd = relUnder(REPO, pd);
   let emitted = 0;
   const emit = (step: string, run: string, then: string, stop: string, note: string): void => {
     // --all is a preview, not authorization to execute future steps. Location

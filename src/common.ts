@@ -41,7 +41,7 @@ import {
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { baserefState } from './claude-settings.ts';
-import { WIN, resolveWin, spawnSyncX as spawnSync } from './spawn.ts';
+import { WIN, relUnder, resolveWin, spawnSyncX as spawnSync } from './spawn.ts';
 import { uiFinishGate } from './ui.ts'; // import cycle: ui.ts uses common.ts too; both only call at run time
 
 /** A bash `exit N` inside a library function. */
@@ -536,7 +536,7 @@ export const GSD_CORE_INSTALL = 'npx @opengsd/gsd-core@latest';
 
 /** gsd_cli — gsd-core's gsd_run (null when none) */
 export function cli(): string | null {
-  const home = process.env.HOME ?? '';
+  const home = (process.env.HOME ?? process.env.USERPROFILE ?? '');
   const cands = [
     process.env.GSD_CLI ?? '',
     commandOnPath('gsd_run') ?? '',
@@ -632,7 +632,7 @@ export function skillDiffers(src0: string, dest0: string): boolean {
 // ── worktree.baseRef in Claude's local settings ─────────────────────────────
 
 function baserefFiles(dir: string): string[] {
-  const claudeDir = envOr('CLAUDE_CONFIG_DIR', `${process.env.HOME ?? ''}/.claude`);
+  const claudeDir = envOr('CLAUDE_CONFIG_DIR', `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.claude`);
   return [`${dir}/.claude/settings.local.json`, `${dir}/.claude/settings.json`, `${claudeDir}/settings.json`];
 }
 
@@ -685,7 +685,7 @@ export function planningHook(repo: string): PlanningHook {
   else if (`${dir}/`.startsWith(`${root}/`)) versioned = true;
   let label: string;
   if (versioned) {
-    label = hookPath.startsWith(`${root}/`) ? hookPath.slice(root.length + 1) : hookPath;
+    label = relUnder(root, hookPath);
   } else {
     label = `${chomp(git(repo, ['rev-parse', '--git-path', 'hooks']).stdout)}/post-merge (not versioned)`;
   }

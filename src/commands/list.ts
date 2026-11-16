@@ -355,7 +355,7 @@ export function main(argv: string[]): number {
     // COLUMNS first: without a terminal (pipes, CI) tput cannot know the width.
     let cols = process.env.COLUMNS ?? '';
     if (cols === '' && WIN) {
-      cols = String(process.stdout.columns || 120); // no tput on Windows
+      cols = String(process.stdout.columns || 80); // no tput on Windows; 80 is what tput answers on a pipe with TERM set
     } else if (cols === '') {
       const t = spawnSync('tput', ['cols'], { encoding: 'utf8', stdio: ['inherit', 'pipe', 'ignore'] });
       cols = t.error || t.status !== 0 ? '120' : t.stdout.replace(/\n+$/, '');

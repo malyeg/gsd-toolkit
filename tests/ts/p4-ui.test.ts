@@ -203,7 +203,7 @@ test('uiHasScreens / uiPhaseScreens', () => {
 
 // ── playwright ──────────────────────────────────────────────────────────────
 
-test('uiPlaywright / uiGlobalRoot / uiPlaywrightInstalled', () => {
+test('uiPlaywright / uiGlobalRoot / uiPlaywrightInstalled', { skip: process.platform === 'win32' && 'needs a non-executable file (no exec bit on Windows)' }, () => {
   const emptyPath = tmp();
   const pin: Env = { PATH: `${emptyPath}:/usr/bin:/bin`, GSD_NPM_GLOBAL_ROOT: '' };
   const { r } = proj();

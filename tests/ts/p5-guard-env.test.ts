@@ -27,7 +27,7 @@ test('rule 5 reads the env passed to guard(), not process.env', () => {
 
     // an env whose git config ignores app.js: the code hash differs, so the check is stale
     write(`${d}/ignore`, 'app.js\n');
-    write(`${d}/gitconfig`, `[core]\n\texcludesFile = ${d}/ignore\n`);
+    write(`${d}/gitconfig`, `[core]\n\texcludesFile = ${d.replace(/\\/g, '/')}/ignore\n`);
     const plain: NodeJS.ProcessEnv = { ...process.env };
     const ignoring: NodeJS.ProcessEnv = { ...process.env, GIT_CONFIG_GLOBAL: `${d}/gitconfig` };
     assert.notEqual(uiCodeState(W, ignoring), code, 'the fixture must make the two envs differ');

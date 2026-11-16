@@ -58,7 +58,7 @@ test('planSpawn: .exe direct, .cmd via cmd.exe verbatim, scripts via sh', () => 
 
 test('shArgs: what the MSYS sh would split or unquote is wrapped in double quotes', () => {
   assert.deepEqual(shArgs(['C:/x/run', '-w', '--max-time=15', 'a/b.c']), ['C:/x/run', '-w', '--max-time=15', 'a/b.c']);
-  assert.deepEqual(shArgs(["Don't", 'a b', '', 'x\ny', '\\n%{http_code}', 'say "hi"', 'C:\\d\\']), ['"Don\'t"', '"a b"', '""', '"x\ny"', '"\\n%{http_code}"', '"say \\"hi\\""', '"C:\\d\\\\"']);
+  assert.deepEqual(shArgs(["Don't", 'a b', '', 'x\ny', '\\n%{http_code}', 'say "hi"', 'C:\\d\\']), ['"Don\'t"', '"a b"', '""', '"x\ny"', '"\\\\n%{http_code}"', '"say \\"hi\\""', '"C:\\\\d\\\\"']);
 });
 
 test('cmd quoting: every metacharacter is escaped, no injection', () => {

@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { mkdirSync, realpathSync, symlinkSync, writeFileSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 import path from 'node:path';
-import { golden, test } from './golden.ts';
+import { golden, goldenSkip, test } from './golden.ts';
 import { hookPaths, shlexSplit } from '../../src/hook-paths.ts';
 import { staleHooks } from '../../src/provider.ts';
 import { tmp, withEnv, write } from './helpers.ts';
@@ -124,16 +124,28 @@ test('commands: which words are judged, quoting, expansion', () => {
     ' ',
   ];
   const files: string[] = [];
+  // on Windows a hook command's backslashes are path separators (hookPaths turns them into `/`), not POSIX shell escapes
+  const winSkip = (c: string): boolean => process.platform === 'win32' && c.includes('\\');
   cmds.forEach((c, i) => {
     write(`${d}/c${i}.json`, hook(c));
     files.push(`user:${d}/c${i}.json`);
+    if (winSkip(c)) {
+      goldenSkip();
+      goldenSkip();
+      return;
+    }
     same(`cmd ${JSON.stringify(c)}`, [`user:${d}/c${i}.json`]);
     same(`cmd as project ${JSON.stringify(c)}`, ['--project', `${d}/proj`, `project:${d}/c${i}.json`]);
   });
   write(`${d}/all.json`, JSON.stringify({ hooks: { PreToolUse: cmds.map((c) => ({ hooks: [{ command: c }] })), SessionStart: [{ hooks: cmds.slice(0, 5).map((c) => ({ command: c })) }] }, statusLine: { command: cmds[0] } }));
-  const out = same('every command in one file', [`user:${d}/all.json`]);
-  assert.ok(out.split('\n').length > 10);
-  same('all files in one call', files);
+  if (cmds.some(winSkip)) {
+    goldenSkip();
+    goldenSkip();
+  } else {
+    const out = same('every command in one file', [`user:${d}/all.json`]);
+    assert.ok(out.split('\n').length > 10);
+    same('all files in one call', files);
+  }
 });
 
 test('HOME and --project handling', () => {

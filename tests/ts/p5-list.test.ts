@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { golden, test } from './golden.ts';
+import { golden, goldenSkip, test } from './golden.ts';
 import { PKG, repo, sh, tmp, write, LOCALE_ENV, subst } from './helpers.ts';
 import { renderList } from '../../src/commands/list.ts';
 
@@ -43,13 +43,14 @@ const go = (bin: string, args: string[], cwd: string, env: NodeJS.ProcessEnv): R
   return { out: r.stdout, err: r.stderr, rc: r.status ?? -1 };
 };
 const text = (label: string, r: R): string => `${label}\nrc=${r.rc}\n--- stdout\n${r.out}--- stderr\n${r.err}`;
-const both = (label: string, args: string[], cwd: string, extraEnv: Record<string, string | undefined> = {}, opts: { sortErr?: boolean; rc?: number; out?: RegExp; err?: RegExp } = {}): R => {
+const both = (label: string, args: string[], cwd: string, extraEnv: Record<string, string | undefined> = {}, opts: { sortErr?: boolean; rc?: number; out?: RegExp; err?: RegExp; noGolden?: boolean } = {}): R => {
   const env = baseEnv(extraEnv);
   const n = go(NEW_BIN, args, cwd, env);
   // (the installed gsd-core's version is the machine's own)
   n.err = subst(n.err, PKG, '<PKG>').replace(/(GSD [0-9.]+ is out \(you have )[0-9.]+/g, '$1<V>');
   const norm = (s: string): string => (opts.sortErr ? s.split('\n').sort().join('\n') : s);
-  golden(text(label, { ...n, err: norm(n.err) }));
+  if (opts.noGolden) goldenSkip();
+  else golden(text(label, { ...n, err: norm(n.err) }));
   if (opts.rc !== undefined) assert.equal(n.rc, opts.rc, `${label}: expected rc`);
   if (opts.out) assert.match(n.out, opts.out, label);
   if (opts.err) assert.match(n.err, opts.err, label);
@@ -104,7 +105,9 @@ test('the test-list.sh fixture: widths, compact and wrapped, every COLUMNS', () 
     assert.equal(n.err, '');
   }
   both('no COLUMNS (tput)', ['--repo', R], R, {}, { out: /┌/ });
-  both('no COLUMNS, TERM unset', ['--repo', R, '-c'], R, { TERM: undefined });
+  // (no TERM, no tput: POSIX falls back to 120; Windows has no tput and answers 80 whatever TERM is)
+  if (process.platform === 'win32') goldenSkip();
+  else both('no COLUMNS, TERM unset', ['--repo', R, '-c'], R, { TERM: undefined });
   both('TERM=dumb', ['--repo', R], R, { TERM: 'dumb' });
 });
 
@@ -235,7 +238,7 @@ test('notices on stderr: stale hooks and a newer release', () => {
   const cache = path.join(d, 'xdg', 'gsd-toolkit');
   write(`${cache}/latest-version`, '99.0.0\n');
   write(`${cache}/latest-gsd-core-version`, '99.0.0\n');
-  const rel = both('a newer release', ['--repo', R], R, { COLUMNS: '90', GSD_UPDATE_NOTICE: 'always', GSD_NO_UPDATE_CHECK: undefined, XDG_CACHE_HOME: `${d}/xdg`, GSD_CLAUDE_SETTINGS: `${d}/claude.json` }, { err: /gsd-toolkit 99\.0\.0 is out/ });
+  const rel = both('a newer release', ['--repo', R], R, { COLUMNS: '90', GSD_UPDATE_NOTICE: 'always', GSD_NO_UPDATE_CHECK: undefined, XDG_CACHE_HOME: `${d}/xdg`, GSD_CLAUDE_SETTINGS: `${d}/claude.json` }, { err: /gsd-toolkit 99\.0\.0 is out/, noGolden: process.platform === 'win32' }); // (the golden carries the machine's own gsd-core notice, which a Windows runner's HOME layout does not give)
   assert.match(rel.err, /⚠ 2 GSD hook/);
   both('release check off', ['--repo', R], R, { COLUMNS: '90', GSD_UPDATE_NOTICE: 'always', GSD_NO_UPDATE_CHECK: '1', XDG_CACHE_HOME: `${d}/xdg` });
 });

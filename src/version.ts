@@ -45,7 +45,7 @@ const nz = (v: string | undefined): string | undefined => (v === undefined || v 
  * the commands from).
  */
 export function setupManifestPath(): string {
-  return `${nz(process.env.XDG_CONFIG_HOME) ?? `${process.env.HOME ?? ''}/.config`}/gsd/setup-manifest`;
+  return `${nz(process.env.XDG_CONFIG_HOME) ?? `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.config`}/gsd/setup-manifest`;
 }
 
 /** key → value of a manifest file ({} when missing/unreadable; the first line of a key wins) */
@@ -69,7 +69,7 @@ export function readManifest(file: string): Record<string, string> {
 // ── latest-release check ────────────────────────────────────────────────────
 
 const GSD_UPDATE_REPO_DEFAULT = 'malyeg/gsd-toolkit';
-const cacheDir = (): string => `${nz(process.env.XDG_CACHE_HOME) ?? `${process.env.HOME ?? ''}/.cache`}/gsd-toolkit`;
+const cacheDir = (): string => `${nz(process.env.XDG_CACHE_HOME) ?? `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.cache`}/gsd-toolkit`;
 
 /** gsd_update_repo */
 export function updateRepo(): string {
@@ -173,7 +173,7 @@ export const gsdCached = (): string => cached(gsdCache());
 
 /** gsd_gsd_installed — installed gsd-core X.Y.Z ('' when not found), without starting node */
 export function gsdInstalled(): string {
-  const home = process.env.HOME ?? '';
+  const home = (process.env.HOME ?? process.env.USERPROFILE ?? '');
   const cands = [
     process.env.GSD_CLI ?? '',
     commandOnPath('gsd_run') ?? '',

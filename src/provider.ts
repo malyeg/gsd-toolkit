@@ -66,7 +66,7 @@ const nz = (v: string | undefined): string | undefined => (v === undefined || v 
 
 /** gsd_provider_skill_root — provider, optional home; null for custom (status 1); '' for an unknown name */
 export function providerSkillRoot(p: string, home?: string): string | null {
-  const h = home || process.env.HOME || '';
+  const h = home || process.env.HOME || process.env.USERPROFILE || '';
   if (p === 'claude') return nz(process.env.GSD_CLAUDE_SKILL_DIR) ?? nz(process.env.GSD_SKILL_DIR) ?? `${h}/.claude/skills`;
   if (p === 'codex') return nz(process.env.GSD_CODEX_SKILL_DIR) ?? `${h}/.agents/skills`;
   return p === 'custom' ? null : ''; // unknown: bash prints nothing, status 0
@@ -200,7 +200,7 @@ export function providerUserHookFile(p: string): string | null {
     return nz(process.env.GSD_CLAUDE_SETTINGS) ?? `${path.dirname(root)}/settings.json`;
   }
   if (p === 'codex') {
-    return nz(process.env.GSD_CODEX_HOOKS) ?? `${nz(process.env.CODEX_HOME) ?? `${process.env.HOME ?? ''}/.codex`}/hooks.json`;
+    return nz(process.env.GSD_CODEX_HOOKS) ?? `${nz(process.env.CODEX_HOME) ?? `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.codex`}/hooks.json`;
   }
   return null;
 }

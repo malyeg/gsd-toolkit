@@ -13,7 +13,7 @@ const nz = (v: string | undefined): string | undefined => (v === undefined || v 
 
 /** gsd_core_dir — the agent's config dir (null for an agent without one) */
 export function coreDir(provider: string): string | null {
-  const home = process.env.HOME ?? '';
+  const home = (process.env.HOME ?? process.env.USERPROFILE ?? '');
   if (provider === 'claude') return nz(process.env.CLAUDE_CONFIG_DIR) ?? `${home}/.claude`;
   if (provider === 'codex') return nz(process.env.CODEX_HOME) ?? `${home}/.codex`;
   return null;

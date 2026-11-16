@@ -168,6 +168,7 @@ export function golden(actual: string, old?: () => string): void {
       ? s
           .replace(/\bmode[= ][0-7]{3,4}\b| \[(?:600|644|666|755|777)\]/g, ' mode=*')
           .replace(/^(── .+) \[[x-]\]$/gm, '$1 [*]')
+          .replace(/^\t(?:filemode|symlinks) = (?:true|false)\n/gm, '') // git's core.* lines that Windows sets differently
           .replace(/^(\S+\.\w+) [67][0-7]{2} /gm, '$1 mode=* ') // `name 755 content` lines of a file dump
           .replace(/\bcommit [0-9a-f]{7,40}\b/g, 'commit <sha>')
       : s;

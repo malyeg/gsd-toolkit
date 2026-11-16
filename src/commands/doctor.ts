@@ -14,7 +14,7 @@
 // Differences (improvements): T062 reads the settings file natively (no python).
 import { closeSync, existsSync, lstatSync, mkdtempSync, openSync, readFileSync, readdirSync, readSync, readlinkSync, realpathSync, rmSync, statSync, writeSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { WIN, normalizePath, selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
+import { WIN, normalizePath, relUnder, selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
 import path from 'node:path';
 import {
   GSD_CORE_INSTALL,
@@ -1307,7 +1307,7 @@ class Doctor {
           if (!pd.includes('cu_')) {
             const tk = ticketExtract(path.basename(pd));
             miss += ' ticket';
-            fix += ` gsdt-tracker snapshot ${tk || '<id>'} --out ${pd.startsWith(`${MAIN}/`) ? pd.slice(MAIN.length + 1) : pd}/${p}-TICKET.md;`;
+            fix += ` gsdt-tracker snapshot ${tk || '<id>'} --out ${relUnder(MAIN, pd)}/${p}-TICKET.md;`;
           }
         }
         if (!flowHas('REVIEW.md')) {
@@ -1380,7 +1380,7 @@ class Doctor {
       case 'track':
         return `git branch --track ${this.base} origin/${this.base}`;
       case 'chmod':
-        return `chmod +x ${this.pmAbs.startsWith(`${MAIN}/`) ? this.pmAbs.slice(MAIN.length + 1) : this.pmAbs}`;
+        return `chmod +x ${relUnder(MAIN, this.pmAbs)}`;
       case 'init':
         return 'gsdt-init --no-launch --no-commit  (shims, merge rules, driver, hook, instructions)';
       case 'repair':

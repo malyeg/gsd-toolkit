@@ -68,7 +68,7 @@ Env: GSD_BIN_DIR, GSD_CLAUDE_SKILL_DIR, GSD_CODEX_SKILL_DIR, GSD_CLAUDE_SETTINGS
      GSD_OLD_BIN_DIR (the 0.10.x bin dir, default ~/.local/bin), GSD_NO_CORE=1
 `;
 
-const HOME = (): string => process.env.HOME ?? '';
+const HOME = (): string => (process.env.HOME ?? process.env.USERPROFILE ?? '');
 const nz = (v: string | undefined): string | undefined => (v === undefined || v === '' ? undefined : v);
 
 /** python os.path.realpath: resolves what exists, keeps the rest */

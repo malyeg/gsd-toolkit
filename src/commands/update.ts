@@ -77,7 +77,7 @@ function cacheWrite(file: string, v: string): void {
     // best effort
   }
 }
-const cacheDir = (): string => `${process.env.XDG_CACHE_HOME || `${process.env.HOME ?? ''}/.cache`}/gsd-toolkit`;
+const cacheDir = (): string => `${process.env.XDG_CACHE_HOME || `${(process.env.HOME ?? process.env.USERPROFILE ?? '')}/.cache`}/gsd-toolkit`;
 
 export function main(argv: string[]): number {
   // the launcher passes the dir a symlinked bin/gsdt-update sits in (the bash used `$0`)
@@ -111,7 +111,7 @@ function run(argv: string[], linkDir: string): number {
 
   const pkg = gsdPkg();
   const mode = installMode(pkg);
-  const home = process.env.HOME ?? '';
+  const home = (process.env.HOME ?? process.env.USERPROFILE ?? '');
   const installBin = linkDir !== '' ? linkDir : process.env.GSD_BIN_DIR || `${home}/.local/bin`;
 
   const cur = gsdVersion();

@@ -24,8 +24,10 @@ import {
 } from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
-import { golden, test } from './golden.ts';
-import { AWK_DIR, PKG, tmp, write, LOCALE_ENV } from './helpers.ts';
+import { golden, test, skipFileOnWindows } from './golden.ts';
+
+skipFileOnWindows('POSIX world: colon-joined PATH with /usr/bin, symlink farms, jq/awk, bash-built fixtures; Windows doctor is covered by tests/node/doctor.test.ts and tests/os');
+import { AWK_DIR, PKG, tmp, write, LOCALE_ENV, subst } from './helpers.ts';
 
 // A PATH folder holding only `node`: the folder node lives in can hold a global gsd_run
 // (CI installs gsd-core there), and "no gsd-core" scenarios must not find it.
@@ -189,7 +191,7 @@ function snapshot(dir: string, root = dir, out: Record<string, string> = {}): Re
 }
 
 // the world's root dir -> <W>; this test process's pid (the 'live lock' scenario writes it) -> <PID>
-const norm = (s: string, W: string): string => s.replaceAll(W, '<W>').replace(new RegExp(`\\b${process.pid}\\b`, 'g'), '<PID>');
+const norm = (s: string, W: string): string => subst(s, W, '<W>').replace(new RegExp(`\\b${process.pid}\\b`, 'g'), '<PID>');
 
 const only = process.env.P5_ONLY ? new RegExp(process.env.P5_ONLY) : null;
 
