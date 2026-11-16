@@ -37,6 +37,15 @@ export const AWK_DIR: string | null = (() => {
 })();
 if (AWK_DIR) process.env.PATH = `${AWK_DIR}:${process.env.PATH}`;
 
+// Git: no host config, but the global ignore the goldens were made with (Claude Code
+// keeps .claude/settings.local.json out of every repo that way). One dir for the run.
+const GIT_HOME = mkdtempSync(path.join(tmpdir(), 'gsd-gitcfg-'));
+writeFileSync(path.join(GIT_HOME, 'ignore'), '**/.claude/settings.local.json\n');
+writeFileSync(path.join(GIT_HOME, 'config'), `[core]\n\texcludesfile = ${path.join(GIT_HOME, 'ignore').replace(/\\/g, '/')}\n`);
+process.on('exit', () => rmSync(GIT_HOME, { recursive: true, force: true }));
+process.env.GIT_CONFIG_GLOBAL = path.join(GIT_HOME, 'config');
+process.env.GIT_CONFIG_NOSYSTEM = '1';
+
 /** What `$( … )` would capture. */
 export const chomp = (s: string): string => s.replace(/\n+$/, '');
 

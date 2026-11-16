@@ -13,8 +13,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -40,8 +38,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -85,8 +81,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -133,8 +127,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -183,8 +175,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"PreToolUse":[{"matcher":"Skill","hooks":[{"type":"command","command":"[ ! -x '/u/bin/gsd-worktree-guard' ] || exec '/u/bin/gsd-worktree-guard' --global"}]}]}}
@@ -203,8 +193,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -233,8 +221,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -266,8 +252,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -301,8 +285,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -327,8 +309,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -356,8 +336,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -388,8 +366,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -422,8 +398,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"n":[1,-0,1.0,1.50,1e5,1E-3,2.5e+22,123456789012345678901234567890,0.1,1e16,1e15,123456789.123456789,-1.5e-7,0.0001,0.00001,1e400,NaN,Infinity,-Infinity],"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
@@ -442,8 +416,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -491,8 +463,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -543,8 +513,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -597,8 +565,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"s":["Ã©","\u00e9","\ud83d\ude00","ð","\u0001\u007f\u001f","a\/b","\b\f\n\r\t\"\\","\u2028"],"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
@@ -617,8 +583,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -655,8 +619,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -696,8 +658,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -739,8 +699,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"2":"b","1":"a","10":{"x":1},"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]},"b":[],"c":{},"d":[[],{}]}
@@ -759,8 +717,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -798,8 +754,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -840,8 +794,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -884,8 +836,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"matcher":"m","hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"},{"command":"[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsd-rules' --hook"}]},{"matcher":"m","hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]},{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]},{"hooks":[{"command":"[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
@@ -904,8 +854,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -940,8 +888,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -979,8 +925,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1020,8 +964,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"echo"},{"command":"echo"},{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"},{"command":"[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
@@ -1040,8 +982,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1074,8 +1014,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1111,8 +1049,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1150,8 +1086,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[]},{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]},{"matcher":"x"}],"T":[{"hooks":[]}],"U":"str","V":[3,null,{"hooks":"x"}]}}
@@ -1170,8 +1104,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1210,8 +1142,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1253,8 +1183,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1296,8 +1224,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[]},{"hooks":[{"command":"echo"}]}]}}
@@ -1314,8 +1240,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[]},{"hooks":[{"command":"echo"}]}]}}
@@ -1329,8 +1253,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[]},{"hooks":[{"command":"echo"}]}]}}
@@ -1347,8 +1269,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[]},{"hooks":[{"command":"echo"}]}]}}
@@ -1367,8 +1287,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"gsd-rules run"},{"command":"gsd-worktree-guard check"},{"command":"gsd-rules --hook-x gsd-rules"},{"command":5},{"nocommand":1},"x"]}]}}
@@ -1387,8 +1305,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1428,8 +1344,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1472,8 +1386,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1518,8 +1430,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"a gsd-rules --hook b gsd-rules c xgsd-rules d gsd-rules-x e Ã©-gsd-rules f Ã¼gsd-rules g gsd-worktree-guard --global"}]}]}}
@@ -1538,8 +1448,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1566,8 +1474,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1597,8 +1503,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1630,8 +1534,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"matcher":1,"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]},{"matcher":1.0,"hooks":[{"command":"[ ! -x '/u/bin/gsdt-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
@@ -1650,8 +1552,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1679,8 +1579,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1711,8 +1609,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -1743,8 +1639,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks": {
@@ -1761,8 +1655,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks": {
@@ -1776,8 +1668,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks": {
@@ -1794,8 +1684,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks": {
@@ -1812,8 +1700,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}],}}
@@ -1830,8 +1716,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}],}}
@@ -1845,8 +1729,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}],}}
@@ -1863,8 +1745,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}],}}
@@ -1881,8 +1761,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 [1,2]
@@ -1899,8 +1777,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 [1,2]
@@ -1914,8 +1790,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 [1,2]
@@ -1932,8 +1806,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 [1,2]
@@ -1950,8 +1822,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"a":1}
@@ -1968,8 +1838,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"a":1}
@@ -1983,8 +1851,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"a":1}
@@ -2001,8 +1867,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"a":1}
@@ -2019,8 +1883,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":[]}
@@ -2037,8 +1899,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":[]}
@@ -2052,8 +1912,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":[]}
@@ -2070,8 +1928,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":[]}
@@ -2088,8 +1944,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 
@@ -2106,8 +1960,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 
@@ -2121,8 +1973,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 
@@ -2139,8 +1989,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 
@@ -2157,8 +2005,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 ï»¿{"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
@@ -2175,8 +2021,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 ï»¿{"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
@@ -2190,8 +2034,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 ï»¿{"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
@@ -2208,8 +2050,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 ï»¿{"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
@@ -2228,8 +2068,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -2255,8 +2093,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -2300,8 +2136,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -2348,8 +2182,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -2396,8 +2228,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook	"}]}]}}
@@ -2414,8 +2244,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook	"}]}]}}
@@ -2429,8 +2257,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook	"}]}]}}
@@ -2447,8 +2273,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook	"}]}]}}
@@ -2467,8 +2291,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"a":1,"hooks":{"S":[{"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]},"a":2}
@@ -2487,8 +2309,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -2516,8 +2336,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -2548,8 +2366,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -2580,8 +2396,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -2605,8 +2419,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -2627,8 +2439,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -2652,8 +2462,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {

@@ -91,8 +91,6 @@ echo 1.0.0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [remote "origin"]
 	url = <W>/repo.origin.git
 	fetch = +refs/heads/*:refs/remotes/origin/*

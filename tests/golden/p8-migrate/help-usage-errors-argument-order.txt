@@ -76,8 +76,6 @@ own clone after the commit with steps 1–5 reaches them.
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -311,8 +309,6 @@ own clone after the commit with steps 1–5 reaches them.
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -546,8 +542,6 @@ own clone after the commit with steps 1–5 reaches them.
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -736,8 +730,6 @@ rc=2
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -971,8 +963,6 @@ own clone after the commit with steps 1–5 reaches them.
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -1161,8 +1151,6 @@ rc=2
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -1351,8 +1339,6 @@ rc=2
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -1541,8 +1527,6 @@ rc=2
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -1731,8 +1715,6 @@ rc=2
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -1921,8 +1903,6 @@ rc=2
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -2139,8 +2119,6 @@ notes:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines

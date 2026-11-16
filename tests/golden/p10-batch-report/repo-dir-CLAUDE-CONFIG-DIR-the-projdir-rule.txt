@@ -1157,15 +1157,15 @@ Baseline: 8 /gsd-quick-batch runs, 50 items, the week before 2026-11-09 (docs/pl
 --- stderr
 
 @@@ 19 @@@
-### --repo <W>/llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+### --repo <W>/<LONG>
 rc=0
 --- stdout
-gsdt-batch-report: no /gsd-quick-batch or /gsdt-batch run found in <W>/long-home/projects/<W-MANGLED>-llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-h4sh
+gsdt-batch-report: no /gsd-quick-batch or /gsdt-batch run found in <W>/long-home/projects/<W-MANGLED>-<LONG>-h4sh
 
 --- stderr
 
 @@@ 20 @@@
-### --repo <W>/llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll --json
+### --repo <W>/<LONG> --json
 rc=0
 --- stdout
 {

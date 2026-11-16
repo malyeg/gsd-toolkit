@@ -194,7 +194,7 @@ const filesText = (W: string): string => {
   return Object.keys(snap)
     .sort()
     .map((k) => {
-      const v = norm(snap[k] as string, W);
+      const v = norm(snap[k] as string, W).replace(/^\t(ignorecase|precomposeunicode) = .*\n/gm, ''); // set by git on macOS only
       return `### ${k}\n${v.length > 3000 ? `<${v.length} chars sha1 ${createHash('sha1').update(v).digest('hex')}>` : v}`;
     })
     .join('\n');

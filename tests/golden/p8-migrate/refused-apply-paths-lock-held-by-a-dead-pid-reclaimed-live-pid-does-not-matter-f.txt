@@ -61,8 +61,6 @@ to commit by hand:  git -C '<S>/proj' add -A -- scripts/gsd-new-worktree-feature
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsdt-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -273,8 +271,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsdt-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -514,8 +510,6 @@ notes:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -703,8 +697,6 @@ rc=1
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsd-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -922,8 +914,6 @@ to commit by hand:  git -C '<S>/proj' add -A -- scripts/gsd-new-worktree-feature
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsdt-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines

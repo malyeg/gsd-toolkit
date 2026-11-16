@@ -36,8 +36,6 @@ notes:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsdt-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -248,8 +246,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsdt-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -466,8 +462,6 @@ notes:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 [merge "gsd-planning"]
 	driver = gsdt-planning-merge %O %A %B %P
 	name = GSD planning files: union, then reconcile single-value lines
@@ -661,8 +655,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -683,8 +675,6 @@ rc=0
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -710,8 +700,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {

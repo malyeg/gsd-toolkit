@@ -10,8 +10,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"matcher":["a"],"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}
@@ -27,8 +25,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {"hooks":{"S":[{"matcher":["a"],"hooks":[{"command":"[ ! -x '/u/bin/gsd-rules' ] || exec '/u/bin/gsd-rules' --hook"}]}]}}

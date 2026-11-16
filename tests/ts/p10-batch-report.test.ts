@@ -31,6 +31,7 @@ const NORM = (t: string): string =>
   t
     .split(W.replace(/[^A-Za-z0-9]/g, '-')).join('<W-MANGLED>')
     .split(W).join('<W>')
+    .replace(/l{30,}/g, '<LONG>') // the long-name fixture: its truncation point depends on the length of W
     .replace(/\b\d{4}-\d\d-\d\d \d\d:\d\d\b/g, '<DT>')
     .replace(/→ \d\d:\d\d\b/g, '→ <TM>')
     .replace(/\b1[5-9]\d{8}(\.\d+)?\b/g, '<EPOCH>');

@@ -73,8 +73,6 @@ Some of these are safe to run for you:  gsdt-doctor --fix
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 ### repo/.gsd.conf
 base = develop

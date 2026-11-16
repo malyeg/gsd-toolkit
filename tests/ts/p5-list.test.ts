@@ -24,6 +24,7 @@ const baseEnv = (extra: Record<string, string | undefined> = {}): NodeJS.Process
     CLAUDE_CONFIG_DIR: path.join(home, '.claude'),
     CODEX_HOME: path.join(home, '.codex'),
     GSD_NO_UPDATE_CHECK: '1',
+    TERM: 'xterm-256color', // tput cols answers by TERM; the goldens were made with this one
     ...LOCALE_ENV,
     GIT_CONFIG_GLOBAL: '/dev/null',
     GIT_CONFIG_NOSYSTEM: '1',

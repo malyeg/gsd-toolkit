@@ -13,8 +13,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 640 {
@@ -63,8 +61,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 755 {
@@ -111,8 +107,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 755 {
@@ -159,8 +153,6 @@ gsdt-migrate (dry run) — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 @@@ 5 @@@
@@ -176,8 +168,6 @@ gsdt-migrate — <S>/proj
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 @@@ 6 @@@
@@ -195,8 +185,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {
@@ -222,8 +210,6 @@ your Claude settings:
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
 
 lock: false
 USER user-settings.json: 644 {

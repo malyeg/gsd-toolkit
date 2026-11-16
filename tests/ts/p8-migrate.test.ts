@@ -156,7 +156,7 @@ function snap(s: Side): string {
       const p = path.join(dir, e.name);
       const r = rel === '' ? e.name : `${rel}/${e.name}`;
       if (e.name === '.git' && rel === '') {
-        lines.push(`.git/config: ${norm(readFileSync(path.join(p, 'config'), 'latin1'))}`);
+        lines.push(`.git/config: ${norm(readFileSync(path.join(p, 'config'), 'latin1').replace(/^\t(ignorecase|precomposeunicode) = .*\n/gm, ''))}`);
         const hk = path.join(p, 'hooks/post-merge');
         if (existsSync(hk)) lines.push(`.git/hooks/post-merge: ${(lstatSync(hk).mode & 0o7777).toString(8)} ${norm(readFileSync(hk, 'latin1'))}`);
         lines.push(`lock: ${existsSync(path.join(p, 'gsd-cmd.lock'))}`);
