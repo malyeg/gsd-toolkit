@@ -6,6 +6,8 @@
 // untouched. It only changes how a TEST starts a program, never what the product does.
 import cp from 'node:child_process';
 import { syncBuiltinESMExports } from 'node:module';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, renameSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { planSpawn, resolveWin } from '../src/spawn.ts';
 
@@ -21,7 +23,33 @@ if (process.platform === 'win32' && !(cp as { __gsdWin?: boolean }).__gsdWin) {
     const dirs = new Set<string>();
     for (const n of ['git', 'sh', 'bash', 'node', 'tar', 'curl']) {
       const r = resolveWin(n, { env: process.env });
-      if (r) dirs.add(path.win32.dirname(r));
+      if (!r) continue;
+      const d = path.win32.dirname(r);
+      // npm puts gsd_run (and a user's claude, codex, gh) next to node.exe: a test that says "no gsd-core" must be right.
+      // Such a folder is replaced by a copy of the one program that was asked for.
+      let agents = false;
+      try {
+        agents = readdirSync(d).some((f) => /^(?:gsd_run|claude|codex|gh|gsdt-[^.]*)(?:\.|$)/i.test(f));
+      } catch {
+        /* not listable: used as it is */
+      }
+      if (!agents || n !== 'node') {
+        dirs.add(d);
+        continue;
+      }
+      const shadow = path.join(tmpdir(), 'gsdt-win-shadow');
+      const to = path.join(shadow, path.win32.basename(r));
+      try {
+        mkdirSync(shadow, { recursive: true });
+        if (!existsSync(to)) {
+          const part = `${to}.${process.pid}.tmp`;
+          copyFileSync(r, part);
+          renameSync(part, to);
+        }
+        dirs.add(shadow);
+      } catch {
+        dirs.add(d);
+      }
     }
     if (process.env.SystemRoot) dirs.add(`${process.env.SystemRoot}\\System32`);
     return dirs.size ? [...dirs].join(';') : HOSTPATH;
@@ -49,6 +77,8 @@ if (process.platform === 'win32' && !(cp as { __gsdWin?: boolean }).__gsdWin) {
     },
   });
   type Opts = { env?: NodeJS.ProcessEnv; windowsVerbatimArguments?: boolean; shell?: unknown } & Record<string, unknown>;
+  // `/bin/true`, and also `custom=/opt/x/run` (MSYS rewrites the path after an `=` as well)
+  const POSIXARG = /^(?:[A-Za-z_][\w-]*=|--?[\w-]+=)?\/[^/]/;
   const FIX: Record<string, string> = { '/bin/bash': 'bash', '/bin/sh': 'sh', '/usr/bin/env': 'env' };
   function plan(file: unknown, rest: unknown[]): { file: string; args: string[]; opts: Opts | undefined; optIdx: number } | null {
     if (typeof file !== 'string') return null;
@@ -69,7 +99,7 @@ if (process.platform === 'win32' && !(cp as { __gsdWin?: boolean }).__gsdWin) {
     const p = planSpawn(FIX[file] ?? file, args, { env: opts?.env ?? process.env });
     // a script run by Git's sh must not have its /-leading arguments (/bin/true, /nonexistent) rewritten into C:/Program Files/Git/...
     // (only those arguments are excluded: the launchers' own /d/a/... paths still need the conversion to D:/a/...)
-    if (/^(?:.*[\\/])?(?:sh|bash)(?:\.exe)?$/i.test(p.file) && p.args.slice(1).some((x) => /^\/[^/]/.test(x))) opts = { ...(opts ?? {}), env: { ...(opts?.env ?? process.env), MSYS2_ARG_CONV_EXCL: p.args.slice(1).filter((x) => /^\/[^/]/.test(x)).join(';') } };
+    if (/^(?:.*[\\/])?(?:sh|bash)(?:\.exe)?$/i.test(p.file) && p.args.slice(1).some((x) => POSIXARG.test(x))) opts = { ...(opts ?? {}), env: { ...(opts?.env ?? process.env), MSYS2_ARG_CONV_EXCL: p.args.slice(1).filter((x) => POSIXARG.test(x)).join(';') } };
     return { file: p.file, args: p.args, opts: p.windowsVerbatimArguments ? { ...(opts ?? {}), windowsVerbatimArguments: true } : opts, optIdx };
   }
   const wrap = (name: 'spawn' | 'spawnSync' | 'execFile' | 'execFileSync'): void => {

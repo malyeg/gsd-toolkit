@@ -122,7 +122,7 @@ export function subst(text: string, dir: string, token: string): string {
     t = t.replace(new RegExp(f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), token);
   }
   const tk = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return t.replace(new RegExp(`(${tk})((?:\\\\\\\\|\\\\)(?:[^\\s"'\`<>|*?]| (?=[^\\s\\\\/"']*[\\\\/]))*)`, 'g'), (_m, p: string, rest: string) =>
+  return t.replace(new RegExp(`(${tk})((?:\\\\\\\\|\\\\(?![nrt](?:["\\\\\\s]|$)))(?:(?!\\\\[nrt](?:["\\\\\\s]|$))[^\\s"'\`<>|*?]| (?=[^\\s\\\\/"']*[\\\\/]))*)`, 'g'), (_m, p: string, rest: string) =>
     p + (rest.includes('\\\\') ? rest.replaceAll('\\\\', '/') : rest.replaceAll('\\', '/')),
   );
 }

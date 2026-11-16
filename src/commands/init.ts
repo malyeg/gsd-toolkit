@@ -415,7 +415,10 @@ function run(argv: string[]): number | Promise<number> {
     if (docs.length > 0) {
       MODE = 'ingest';
       say('▶ found existing planning docs — will initialize by ingesting them:');
-      for (const d of docs) say(d.startsWith(`${DEST}/`) ? `    ${d.slice(DEST.length + 1)}` : d);
+      for (const d of docs) {
+        const rel = path.relative(DEST, d).split(path.sep).join('/');
+        say(rel.startsWith('..') || path.isAbsolute(rel) ? d : `    ${rel}`);
+      }
       say("  (use 'gsdt-init --new' instead if these shouldn't seed the plan)");
     } else {
       MODE = 'new';

@@ -122,7 +122,8 @@ const farm = path.join(tmp(), 'nogh');
 export const noGhPath = cleanPath
   .split(path.delimiter)
   .map((d, i) => {
-    if (!d || !existsSync(d) || !existsSync(path.join(d, 'gh'))) return d;
+    if (!d || !existsSync(d) || !['gh', 'gh.exe', 'gh.cmd'].some((n) => existsSync(path.join(d, n)))) return d;
+    if (process.platform === 'win32') return ''; // no symlinks: the folder with gh leaves the PATH
     const f = path.join(farm, String(i));
     mkdirSync(f, { recursive: true });
     for (const n of readdirSync(d)) {
@@ -135,6 +136,7 @@ export const noGhPath = cleanPath
     }
     return f;
   })
+  .filter((d) => d !== '')
   .join(path.delimiter);
 
 export const wf = (args: Step['args'], extra: Partial<Step> = {}): Step => ({ cmd: 'wt-finish', args, env: E(), ...extra });

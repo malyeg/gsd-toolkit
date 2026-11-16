@@ -6,7 +6,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { test } from './golden.ts';
+import { test, goldenSkip } from './golden.ts';
 import {
   E,
   RACE_CONF,
@@ -150,7 +150,9 @@ test('the pre-merge script: passes, fails, not executable, none, absolute path',
   const hook = (body: string, mode = 0o755) => both(P, (s) => onMain(s, { 'scripts/gsdt-premerge-check.sh': body }, { mode }));
   scenario({}, hook('#!/bin/sh\necho "check $1 $2 in $(pwd -P | sed "s|.*/||")"\n'), [wf(['1'], { rc: 0, out: /pre-merge check \(scripts\/gsdt-premerge-check\.sh\)…\ncheck phase-1-catalog main in shop/ })]);
   scenario({}, hook('#!/bin/sh\necho no >&2\nexit 3\n'), [wf(['1'], { rc: 1, err: /validation failed \(before merge\) — not pushing or removing the phase worktree/ })]);
-  scenario({}, hook('#!/bin/sh\nexit 0\n', 0o644), [wf(['1'], { rc: 1, err: /scripts\/gsdt-premerge-check\.sh exists but is not executable/ })]);
+  // Windows has no exec bit: Git's sh runs the script whatever its mode
+  if (process.platform === 'win32') goldenSkip();
+  else scenario({}, hook('#!/bin/sh\nexit 0\n', 0o644), [wf(['1'], { rc: 1, err: /scripts\/gsdt-premerge-check\.sh exists but is not executable/ })]);
   scenario({ conf: 'install = none\ntest = none\npremerge = none\n' }, hook('#!/bin/sh\nexit 3\n'), [wf(['1'], { rc: 0 })]);
   scenario({ conf: 'install = none\ntest = false\npremerge = none\n' }, hook('#!/bin/sh\nexit 0\n', 0o644), [wf(['1'], { rc: 1, err: /skip with 'test = none' in \.gsd\.conf, or provide none/ })]);
   scenario({ conf: 'install = none\ntest = false\n' }, hook('#!/bin/sh\nexit 0\n'), [wf(['1'], { rc: 0 })]); // the script wins over tests

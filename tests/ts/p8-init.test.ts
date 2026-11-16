@@ -10,7 +10,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { test } from './golden.ts';
 import assert from 'node:assert/strict';
-import { cleanPath, git, norm, runStep, lenient, scenario, sh, write, makeSide, type Project, type Side, type Step } from './p6-helpers.ts';
+import { NOPTY, cleanPath, git, norm, runStep, lenient, scenario, sh, write, makeSide, type Project, type Side, type Step } from './p6-helpers.ts';
 
 // Windows has no exec bit: a script that starts with #! stands for an executable one
 const isX = (p: string, mode: number): boolean => (process.platform === 'win32' ? readFileSync(p, 'latin1').startsWith('#!') : (mode & 0o111) !== 0);
@@ -279,7 +279,7 @@ mkdir -p .planning
 printf '# Roadmap\\n\\n## Phase 3: first\\n\\n### Phase 4: second\\n\\n#### Phase 5.1: third\\n' > .planning/ROADMAP.md
 exit "\${AGENT_RC:-0}"
 `;
-t('launching in a terminal: plan ready / not written / the agent fails', () => {
+test('launching in a terminal: plan ready / not written / the agent fails', { skip: NOPTY || (only !== null && !only.test('launching in a terminal: plan ready / not written / the agent fails')) }, () => {
   const withAgent = (s: Side): void => write(path.join(s.stub, 'agentplan'), AGENT_PLAN, 0o755);
   const mk = (rc: string, extra: string[] = []): Step =>
     init((s) => ['--tracker', 'none', '--agent', path.join(s.stub, 'agentplan'), ...extra], { tty: true, env: { AGENT_RC: rc } });
@@ -427,6 +427,8 @@ t('.claude/settings.json: the native guard hook', () => {
 let noJq: string | null = null;
 function nojqPath(): string {
   if (noJq) return noJq;
+  // no symlinks on Windows, and nothing there reads jq: the run's own PATH
+  if (process.platform === 'win32') return (noJq = process.env.PATH ?? '');
   const d = mkdtempSync(path.join(tmpdir(), 'gsd-p8-nojq-'));
   for (const bin of ['bash', 'git', 'node', 'sh', 'sed', 'grep', 'tr', 'cat', 'mktemp', 'dirname', 'readlink', 'perl', 'env', 'head', 'cp', 'chmod', 'mkdir', 'rm', 'tail', 'touch', 'mv', 'find', 'awk', 'sort', 'uname', 'ls', 'basename', 'date', 'python3']) {
     for (const dir of (process.env.PATH ?? '').split(D)) {
@@ -508,12 +510,13 @@ t('the settings.json the hook is merged into keeps its mode', () => {
   const n = makeSide('new', withFiles({ '.claude/settings.json': '{}\n' }));
   chmodSync(path.join(n.R, '.claude/settings.json'), 0o644);
   assert.equal(runStep(n, init(NL)).rc, 0);
-  assert.equal(statSync(path.join(n.R, '.claude/settings.json')).mode & 0o777, 0o644);
+  // Windows has no mode bits to keep
+  if (process.platform !== 'win32') assert.equal(statSync(path.join(n.R, '.claude/settings.json')).mode & 0o777, 0o644);
 });
 
 t('init does not need gsdt-bootstrap-repo on PATH (it runs it in-process)', () => {
   const n = makeSide('new', FRESH);
-  const r = runStep(n, { cmd: 'init', args: NL, env: { PATH: `${path.dirname(process.execPath)}${D}/usr/bin${D}/bin${D}/opt/homebrew/bin` } });
+  const r = runStep(n, { cmd: 'init', args: NL, env: { PATH: process.platform === 'win32' ? (process.env.PATH ?? '') : `${path.dirname(process.execPath)}${D}/usr/bin${D}/bin${D}/opt/homebrew/bin` } });
   assert.equal(r.rc, 0, r.out + r.err);
 });
 

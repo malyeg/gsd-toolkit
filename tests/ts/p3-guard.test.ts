@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { chmodSync, copyFileSync, mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { golden, test } from './golden.ts';
+import { golden, goldenSkip, test } from './golden.ts';
 import { guard, guardArgv, parseArgs } from '../../src/guard.ts';
 import { main as guardMain } from '../../src/commands/worktree-guard.ts';
 import { PKG, repo, sh, tmp, write } from './helpers.ts';
@@ -46,7 +46,11 @@ async function runAll(cases: Case[]): Promise<void> {
     }),
   );
   const text = (c: Case, r: R): string => (c.rcOnly ? `${c.label}\nrc=${r.rc}` : `${c.label}\nrc=${r.rc}\nout=${JSON.stringify(r.out)}\nerr=${JSON.stringify(r.err)}`);
-  cases.forEach((c, i) => golden(text(c, res[i] as R)));
+  cases.forEach((c, i) => {
+    // MSYS's argv parser (the `sh` that runs the launcher) splits an argument at a newline; Windows cannot pass one through
+    if (process.platform === 'win32' && c.argv.some((a) => a.includes('\n'))) goldenSkip();
+    else golden(text(c, res[i] as R));
+  });
 }
 
 type Add = (label: string, argv: string[], opts?: { stdin?: string; cwd?: string; env?: Record<string, string | undefined>; pathDirs?: string; rcOnly?: boolean }) => void;

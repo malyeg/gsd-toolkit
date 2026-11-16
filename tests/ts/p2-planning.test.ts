@@ -11,6 +11,7 @@ import path from 'node:path';
 import { golden, test } from './golden.ts';
 import { main as planningMain, parseArgs } from '../../src/commands/planning.ts';
 import { reconcileRoadmap } from '../../src/planning.ts';
+import { shellPath } from '../../src/spawn.ts';
 import { PKG, tmp, write, subst } from './helpers.ts';
 
 const LAUNCH = path.join(PKG, 'src', 'launch.mjs');
@@ -486,7 +487,7 @@ test('gsdt-planning-repair --commit: a failing commit ends with its status (set 
 /** the driver the way gsd_register_merge_driver registers it, then a real conflicting merge */
 function mergeRepo(bin: string, ours: Files, theirs: Files, base: Files): { repo: string; res: R } {
   const d = gitRepo({ ...base, '.gitattributes': '.planning/ROADMAP.md merge=gsd-planning\n.planning/STATE.md merge=gsd-planning\n' });
-  git(d, ['config', 'merge.gsd-planning.driver', `${bin} %O %A %B %P`]);
+  git(d, ['config', 'merge.gsd-planning.driver', `${shellPath(bin)} %O %A %B %P`]);
   git(d, ['checkout', '-q', '-b', 'topic']);
   for (const [rel, body] of Object.entries(theirs)) write(path.join(d, rel), body as string);
   git(d, ['commit', '-qam', 'theirs']);
@@ -563,7 +564,7 @@ test('gsdt-planning-merge called directly: launcher', () => {
   callDirect((t) => [t.o, path.join(t.dir, 'nonexistent'), t.b, 'ROADMAP.md'], 'missing %A');
 });
 
-test('gsdt-planning-merge degrades safely without a usable node', () => {
+test('gsdt-planning-merge degrades safely without a usable node', { skip: process.platform === 'win32' && 'bash launcher internals: symlinked stub tools, no Windows equivalent' }, () => {
   const stubs = tmp();
   for (const tool of ['git', 'bash', 'env', 'dirname', 'readlink']) {
     const real = run('sh', ['-c', `command -v ${tool}`]).out.trim();
@@ -585,7 +586,7 @@ test('gsdt-planning-merge degrades safely without a usable node', () => {
   }
 });
 
-test('launchers: no node means a clear message from repair', () => {
+test('launchers: no node means a clear message from repair', { skip: process.platform === 'win32' && 'bash launcher internals: symlinked stub tools, no Windows equivalent' }, () => {
   const stubs = tmp();
   for (const tool of ['bash', 'env', 'dirname', 'readlink']) symlinkSync(run('sh', ['-c', `command -v ${tool}`]).out.trim(), path.join(stubs, tool));
   const r = run(newBin('gsdt-planning-repair'), ['--check'], tmp(), { PATH: stubs });

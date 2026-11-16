@@ -107,6 +107,7 @@ function spellings(d: string): string[] {
   if (!WIN) return [d];
   const out = new Set<string>();
   for (const x of [d, d.replace(/\\/g, '/')]) {
+    out.add(x.replace(/\\/g, '\\\\\\\\')); // JSON of JSON
     out.add(x.replace(/\\/g, '\\\\'));
     out.add(x);
   }
@@ -124,7 +125,7 @@ export function goldenNorm(s: string): string {
   const roots = [realpathSync(tmpdir()), tmpdir()];
   if (WIN) roots.push(realpathSync.native(tmpdir()));
   const flags = WIN ? 'gi' : 'g';
-  const sep = WIN ? '(?:\\\\\\\\|[\\\\/])' : '[\\\\/]';
+  const sep = WIN ? '(?:\\\\{1,4}|/)' : '[\\\\/]';
   for (const d of folders(...roots)) {
     const re = new RegExp(`${reEsc(d)}${sep}gsd-[A-Za-z0-9-]*?-?[A-Za-z0-9]{6}`, flags);
     t = t.replace(re, '<TMP>');
@@ -132,8 +133,8 @@ export function goldenNorm(s: string): string {
   for (const d of folders(PKG)) t = t.replace(new RegExp(reEsc(d), flags), '<PKG>');
   if (WIN) {
     // a path after a placeholder (<TMP>, <PKG>, <D>, <W> …): the macOS spelling, `/` between folders
-    t = t.replace(/(<[A-Za-z]+>)((?:\\\\|\\|\/)(?:[^\s"'`<>|*?]| (?=[^\s\\/"']*[\\/]))*)/g, (_m, p: string, rest: string) =>
-      p + (rest.includes('\\\\') ? rest.replaceAll('\\\\', '/') : rest.replaceAll('\\', '/')),
+    t = t.replace(/(<[A-Za-z]+>)((?!\\{1,4}[nrt](?:["\\\s]|$))(?:\\{1,4}|\/)(?=[A-Za-z0-9_.~-])(?:(?!\\{1,4}[nrt](?:["\\\s]|$))[^\s"'`<>|*?]| (?=[^\s\\/"']*[\\/]))*)/g, (_m, p: string, rest: string) =>
+      p + rest.replace(/\\{1,4}/g, '/'),
     );
   }
   return t;
@@ -161,7 +162,14 @@ function load(file: string): string[] {
 export function golden(actual: string, old?: () => string): void {
   assert.ok(current, 'golden() outside a test');
   // Windows has no mode bits: a mode shown in a golden cannot be compared there
-  const nomode = (s: string): string => (WIN ? s.replace(/\bmode[= ][0-7]{3,4}\b| \[(?:600|644|666|755|777)\]/g, ' mode=*') : s);
+  // (nor an exec bit shown as [x] / [-]; nor the sha of a commit whose timestamps and line endings are the machine's)
+  const nomode = (s: string): string =>
+    WIN
+      ? s
+          .replace(/\bmode[= ][0-7]{3,4}\b| \[(?:600|644|666|755|777)\]/g, ' mode=*')
+          .replace(/^(── .+) \[[x-]\]$/gm, '$1 [*]')
+          .replace(/\bcommit [0-9a-f]{7,40}\b/g, 'commit <sha>')
+      : s;
   const text = nomode(goldenNorm(actual));
   assert.ok(!text.split('\n').some((l) => DELIM.test(l)), 'text looks like a golden delimiter');
   const n = ++current.n;

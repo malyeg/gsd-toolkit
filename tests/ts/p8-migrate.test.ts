@@ -25,7 +25,9 @@ import {
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { before } from 'node:test';
-import { test, golden } from './golden.ts';
+import { test, golden, skipFileOnWindows } from './golden.ts';
+
+skipFileOnWindows('POSIX fixtures (file modes in the goldens, symlinks, /dev/null git config, a bash-aged repo); Windows is covered by tests/node/migrate.test.ts');
 import { PKG, subst } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p8m-')));

@@ -3,7 +3,7 @@
 // tests/fixtures/p8-old-bins/). `gsdt-init` calls main() in-process. Still outside this file:
 // `bash -n` (the self-check) and `git`. The native hook merge into Claude's settings is done
 // in-process (no jq), written with the python-exact JSON writer.
-import { SH } from '../spawn.ts';
+import { SH, normalizePath } from '../spawn.ts';
 import { appendFileSync, copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -274,7 +274,7 @@ function run(argv: string[]): number {
   if (TRACKER === 'custom' && TRACKER_COMMAND === '' && confGet(DEST, 'tracker_command') === '') {
     die('--tracker custom needs --tracker-command <script> (e.g. scripts/tracker.sh)');
   }
-  if (DEST === PKG) die("you're inside the toolkit repo itself — cd into the target repo first");
+  if (normalizePath(DEST) === normalizePath(PKG)) die("you're inside the toolkit repo itself — cd into the target repo first");
   const DIRTY_BEFORE = chomp(git(DEST, ['status', '--porcelain']).stdout);
   const CONF = `${DEST}/.gsd.conf`;
 

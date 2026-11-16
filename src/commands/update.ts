@@ -11,7 +11,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { spawnSyncX } from '../spawn.ts';
 import { gsdPkg } from '../common.ts';
 import { coreSync, coreVersion } from '../core.ts';
 import { err, inherit, out } from '../stdio.ts';
@@ -177,7 +177,7 @@ function run(argv: string[], linkDir: string): number {
 
 /** Download `url` to `file` with curl (retrying a GitHub blip). */
 function download(url: string, file: string, maxTime: number): boolean {
-  const r = spawnSync('curl', ['-fsSL', '--retry', '3', '--retry-delay', '2', '--max-time', String(maxTime), url, '-o', file], {
+  const r = spawnSyncX('curl', ['-fsSL', '--retry', '3', '--retry-delay', '2', '--max-time', String(maxTime), url, '-o', file], {
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   if (r.status === 0 && existsSync(file)) return true;

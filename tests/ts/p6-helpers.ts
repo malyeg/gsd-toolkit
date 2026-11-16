@@ -146,9 +146,13 @@ export function makeSide(kind: 'old' | 'new', p: Project = {}): Side {
 // "no gsdt-doctor on PATH" must mean it). A directory that holds one of them is replaced
 // by a farm of links to everything else in it.
 const BLOCKED = ['claude', 'codex', 'gsd_run'];
+/** tests that run a session under a terminal need python's pty module: no such thing on Windows */
+export const NOPTY: string | false = process.platform === 'win32' && 'needs a pty (python pty module); none on Windows';
+// Windows names a program claude.exe / gsd_run.cmd
+const stem = (n: string): string => (process.platform === 'win32' ? n.replace(/\.(?:exe|cmd|bat|com|ps1)$/i, '') : n);
 // ...and any gsdt-* command: a checkout's bin/ or an installed release on this machine's PATH would
 // answer for a tool a test says is missing ("no gsdt-planning-repair on PATH")
-const blocked = (n: string): boolean => BLOCKED.includes(n) || n.startsWith('gsdt-');
+const blocked = (n: string): boolean => BLOCKED.includes(stem(n)) || stem(n).startsWith('gsdt-');
 const farmRoot = path.join(root, 'pathfarm');
 const readdirSafe = (d: string): string[] => {
   try {
@@ -161,7 +165,8 @@ export const cleanPath = (process.env.PATH ?? '')
   .split(path.delimiter)
   .map((d, i) => {
     if (!d || !existsSync(d) || !readdirSafe(d).some(blocked)) return d;
-    if (!d || !existsSync(d) || !readdirSafe(d).some(blocked)) return d;
+    // no symlinks on Windows: such a folder is left out of the PATH (the preload puts node's own back, minus the agents)
+    if (process.platform === 'win32') return '';
     const farm = path.join(farmRoot, String(i));
     mkdirSync(farm, { recursive: true });
     for (const n of readdirSync(d)) {
@@ -174,6 +179,7 @@ export const cleanPath = (process.env.PATH ?? '')
     }
     return farm;
   })
+  .filter((d) => d !== '' || process.platform !== 'win32')
   .join(path.delimiter);
 
 export function envFor(s: Side, extra: Record<string, string | undefined> = {}): NodeJS.ProcessEnv {
