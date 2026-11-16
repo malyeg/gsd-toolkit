@@ -6,10 +6,10 @@ rc=1
 <W>/repo
   [31m✖[0m provider executable 'claude' is unavailable (print-only still works) [2m→ install claude or set claude_command in .gsd.conf [T051][0m
   [31m✖[0m configured provider claude executable 'claude' is unavailable [2m→ install it, set claude_command, or use print-only [T057][0m
-  • claude skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent claude
+  • claude skills not installed — bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config --agent claude
   [31m✖[0m configured provider codex executable 'codex' is unavailable [2m→ install it, set codex_command, or use print-only [T057][0m
-  • codex skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent codex
-  [31m✖[0m no Claude SessionStart hook runs gsdt-rules in <W>/home/.claude/settings.json — sessions miss the toolkit rules [2m→ bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config [T062][0m
+  • codex skills not installed — bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config --agent codex
+  [31m✖[0m no Claude SessionStart hook runs gsdt-rules in <W>/home/.claude/settings.json — sessions miss the toolkit rules [2m→ bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config [T062][0m
   • STATE.md: progress bar recomputed to 0% (was Progress: [█████░░░░░] 50%)
   [31m✖[0m Phase 1 has no checklist row — completing it ticks nothing, silently [2m→ edit .planning/ROADMAP.md [T022][0m
   [31m✖[0m Phase 1 is missing from the Progress table [2m→ edit .planning/ROADMAP.md [T023][0m
@@ -30,10 +30,10 @@ Checking again:
 <W>/repo
   [31m✖[0m provider executable 'claude' is unavailable (print-only still works) [2m→ install claude or set claude_command in .gsd.conf [T051][0m
   [31m✖[0m configured provider claude executable 'claude' is unavailable [2m→ install it, set claude_command, or use print-only [T057][0m
-  • claude skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent claude
+  • claude skills not installed — bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config --agent claude
   [31m✖[0m configured provider codex executable 'codex' is unavailable [2m→ install it, set codex_command, or use print-only [T057][0m
-  • codex skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent codex
-  [31m✖[0m no Claude SessionStart hook runs gsdt-rules in <W>/home/.claude/settings.json — sessions miss the toolkit rules [2m→ bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config [T062][0m
+  • codex skills not installed — bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config --agent codex
+  [31m✖[0m no Claude SessionStart hook runs gsdt-rules in <W>/home/.claude/settings.json — sessions miss the toolkit rules [2m→ bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config [T062][0m
   [31m✖[0m Phase 1 has no checklist row — completing it ticks nothing, silently [2m→ edit .planning/ROADMAP.md [T022][0m
   [31m✖[0m Phase 1 is missing from the Progress table [2m→ edit .planning/ROADMAP.md [T023][0m
   [31m✖[0m Phase 2 has no checklist row — completing it ticks nothing, silently [2m→ edit .planning/ROADMAP.md [T022][0m
@@ -47,7 +47,7 @@ Checking again:
   install claude or set claude_command in .gsd.conf
   install it, set claude_command, or use print-only
   install it, set codex_command, or use print-only
-  bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config
+  bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config
   edit .planning/ROADMAP.md
 
 (then re-run gsdt-doctor to confirm)

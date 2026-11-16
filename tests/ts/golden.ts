@@ -21,6 +21,8 @@ import path from 'node:path';
 import { test as nodeTest } from 'node:test';
 
 const PKG = path.resolve(import.meta.dirname, '..', '..');
+// the package's own version: a release changes it, so goldens save it as <VERSION>
+const VERSION_RE = new RegExp(`(?<![\\d.])${readFileSync(path.join(PKG, 'VERSION'), 'utf8').trim().replace(/\./g, '\\.')}(?!\\.?\\d)`, 'g');
 const GOLDEN = path.join(PKG, 'tests', 'golden');
 export const UPDATE = process.env.UPDATE_GOLDEN === '1';
 const DELIM = /^@@@ (\d+) @@@$/;
@@ -172,7 +174,7 @@ export function golden(actual: string, old?: () => string): void {
           .replace(/^(\S+\.\w+) [67][0-7]{2} /gm, '$1 mode=* ') // `name 755 content` lines of a file dump
           .replace(/\bcommit [0-9a-f]{7,40}\b/g, 'commit <sha>')
       : s;
-  const text = nomode(goldenNorm(actual));
+  const text = nomode(goldenNorm(actual)).replace(VERSION_RE, '<VERSION>');
   assert.ok(!text.split('\n').some((l) => DELIM.test(l)), 'text looks like a golden delimiter');
   const n = ++current.n;
   if (UPDATE) {

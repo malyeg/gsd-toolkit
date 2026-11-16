@@ -530,7 +530,8 @@ const hasExpect = spawnSync('expect', ['-c', 'exit 0']).status === 0;
 function expectCase(title: string, setup: (s: Side) => void, prof: string, ans: string, tokenText: string, cwd = 'plain'): void {
   test(`tty login (expect): ${title}`, { skip: !hasExpect }, () => {
     const exp = path.join(W, `login-${counter}.exp`);
-    writeFileSync(exp, 'spawn {*}$env(CMD) login $env(PROF)\nexpect {\n  -ex {[U/r] }    { send "$env(ANS)\\r"; exp_continue }\n  -ex {hidden): } { send "$env(TOK)\\r"; exp_continue }\n  eof\n}\nlassign [wait] a b c rc\nexit $rc\n');
+    // ANS = the answers to [U/r], comma-separated, the last one repeated (a loop that never ends would make the output timing-dependent)
+    writeFileSync(exp, 'spawn {*}$env(CMD) login $env(PROF)\nset ans [split $env(ANS) ,]\nexpect {\n  -ex {[U/r] }    { send "[lindex $ans 0]\\r"; if {[llength $ans] > 1} { set ans [lrange $ans 1 end] }; exp_continue }\n  -ex {hidden): } { send "$env(TOK)\\r"; exp_continue }\n  eof\n}\nlassign [wait] a b c rc\nexit $rc\n');
     const n = makeSide(`en-${counter++}`);
     setup(n);
     const go = (s: Side, bin: string): Res => {
@@ -548,7 +549,7 @@ expectCase('a new token is typed hidden', () => undefined, 'brandnew', '', 'pk_b
 expectCase('a saved token: Enter keeps it', saved, 'solo', '', 'pk_unused');
 expectCase('a saved token: u keeps it', saved, 'solo', 'u', 'pk_unused');
 expectCase('a saved token: r replaces it', saved, 'solo', 'r', 'pk_fresh');
-expectCase('a saved token: a wrong answer asks again', saved, 'solo', 'x', 'pk_fresh');
+expectCase('a saved token: a wrong answer asks again', saved, 'solo', 'x,x,u', 'pk_unused');
 expectCase('a saved token ClickUp refuses asks for a new one', (s) => gsdFile(s, 'clickup-stale.env', 'CLICKUP_API_TOKEN=pk_bad\n'), 'stale', 'u', 'pk_fresh');
 expectCase('a refused typed token saves nothing', () => undefined, 'refused', '', 'pk_bad');
 expectCase('no repo: a name is needed', () => undefined, '', '', 'pk_x', 'nogit');

@@ -233,7 +233,7 @@ rc=0
 └──────┴────────────────────────────────────────────────┴───────┴─────────┴──────────────┘
   new phase: gsdt-start -n "<desc>" · attach: gsdt-start -p <N> · ● worktree attached
 --- stderr
-• gsd-toolkit 99.0.0 is out (you have 0.11.0) — update: <PKG>/install.sh
+• gsd-toolkit 99.0.0 is out (you have <VERSION>) — update: <PKG>/install.sh
 • GSD 99.0.0 is out (you have <V>) — update: npx @opengsd/gsd-core@latest --claude --global --profile=full
 ⚠ 2 GSD hook(s) in <TMP>/claude.json run a file that is gone, so they fail silently — run gsdt-doctor
 

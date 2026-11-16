@@ -8,7 +8,7 @@ rc=1
   [31m✖[0m CLAUDE.md integration is missing, malformed or legacy [2m→ gsdt-init --no-launch [T052][0m
   • claude native hook absent — inspect provider settings, then gsdt-init --no-launch
   [31m✖[0m configured provider claude executable 'claude' is unavailable [2m→ install it, set claude_command, or use print-only [T057][0m
-  • claude skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent claude
+  • claude skills not installed — bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config --agent claude
   [31m✖[0m claude instruction adapter is missing or malformed in CLAUDE.md [2m→ gsdt-init --no-launch [T058][0m
   [31m✖[0m shims: 5 missing, 0 out of date [2m→ gsdt-init [T010][0m
   [31m✖[0m .gitattributes missing the .planning merge rules [2m→ gsdt-init [T012][0m
@@ -46,7 +46,7 @@ rc=1
   [31m✖[0m CLAUDE.md integration is missing, malformed or legacy [2m→ gsdt-init --no-launch [T052][0m
   • claude native hook absent — inspect provider settings, then gsdt-init --no-launch
   [31m✖[0m configured provider claude executable 'claude' is unavailable [2m→ install it, set claude_command, or use print-only [T057][0m
-  • claude skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent claude
+  • claude skills not installed — bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config --agent claude
   [31m✖[0m claude instruction adapter is missing or malformed in CLAUDE.md [2m→ gsdt-init --no-launch [T058][0m
   [31m✖[0m shims: 5 missing, 0 out of date [2m→ gsdt-init [T010][0m
   [31m✖[0m .gitattributes missing the .planning merge rules [2m→ gsdt-init [T012][0m

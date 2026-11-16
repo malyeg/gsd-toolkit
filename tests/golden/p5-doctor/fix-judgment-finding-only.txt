@@ -6,10 +6,10 @@ rc=1
 <W>/repo
   [31m✖[0m provider executable 'claude' is unavailable (print-only still works) [2m→ install claude or set claude_command in .gsd.conf [T051][0m
   [31m✖[0m configured provider claude executable 'claude' is unavailable [2m→ install it, set claude_command, or use print-only [T057][0m
-  • claude skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent claude
+  • claude skills not installed — bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config --agent claude
   [31m✖[0m configured provider codex executable 'codex' is unavailable [2m→ install it, set codex_command, or use print-only [T057][0m
-  • codex skills not installed — bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config --agent codex
-  [31m✖[0m no Claude SessionStart hook runs gsdt-rules in <W>/home/.claude/settings.json — sessions miss the toolkit rules [2m→ bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config [T062][0m
+  • codex skills not installed — bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config --agent codex
+  [31m✖[0m no Claude SessionStart hook runs gsdt-rules in <W>/home/.claude/settings.json — sessions miss the toolkit rules [2m→ bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config [T062][0m
   [31m✖[0m ROADMAP has more than one heading for phase(s): 2 [2m→ edit .planning/ROADMAP.md (one '### Phase N:' heading per number) [T025][0m
   [31m✖[0m Phase 2 has no checklist row — completing it ticks nothing, silently [2m→ edit .planning/ROADMAP.md [T022][0m
   [31m✖[0m Phase 2 is missing from the Progress table [2m→ edit .planning/ROADMAP.md [T023][0m
@@ -26,7 +26,7 @@ rc=1
   install claude or set claude_command in .gsd.conf
   install it, set claude_command, or use print-only
   install it, set codex_command, or use print-only
-  bash <W>/pkg/install.sh --version 0.11.0 --reuse-install-config
+  bash <W>/pkg/install.sh --version <VERSION> --reuse-install-config
   edit .planning/ROADMAP.md (one '### Phase N:' heading per number)
   edit .planning/ROADMAP.md
 
