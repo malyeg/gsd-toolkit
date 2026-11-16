@@ -16,7 +16,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, wri
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
-import { test, golden } from './golden.ts';
+import { test, golden, goldenSkip } from './golden.ts';
 import { PKG, repo, sh, tmp, write, subst } from './helpers.ts';
 
 const NEW_BIN = path.join(PKG, 'bin', 'gsdt-ui');
@@ -413,7 +413,9 @@ test('gsdt-ui: src/commands/ui.ts, step by step', async () => {
     const sx: Step = { ...s, argv: s.argv.map((a) => (a === '__APP__' ? w.app : a)) };
     const n = { w, r: await run(w, sx) };
     ran++;
-    golden(PN(text(s.label, s.argv, n)));
+    // Windows has no exec bit, so the "not executable" message (bash's own) cannot be the golden there
+    if (process.platform === 'win32' && s.label === 'check: runner not executable') goldenSkip();
+    else golden(PN(text(s.label, s.argv, n)));
     const diffs: string[] = [];
     if (s.rc !== undefined && n.r.rc !== s.rc) diffs.push(`sanity: expected rc ${s.rc}, got ${n.r.rc} (${JSON.stringify(n.r.err + n.r.out)})`);
     if (s.expect && !s.expect.test(n.r.out + n.r.err)) diffs.push(`sanity: output does not match ${s.expect}: ${JSON.stringify(n.r.out + n.r.err)}`);

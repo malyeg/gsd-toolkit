@@ -57,6 +57,15 @@ export function cmdEscapeArg(arg: string): string {
   return a.replace(/([()[\]%!^"`<>&|;, *?])/g, '^$1');
 }
 
+/**
+ * Arguments for Git for Windows' `sh` (MSYS): its command-line parser treats `'` as a quote too, which Node's own quoting
+ * (only for a space, tab or `"`) leaves bare, so `Don't` swallowed the arguments after it; a newline split an argument.
+ * Anything but plain characters is wrapped in `"…"` the CRT way, and the line is passed verbatim.
+ */
+export function shArgs(args: string[]): string[] {
+  return args.map((a) => (/^[\w./:=@%+,-]+$/.test(a) ? a : `"${a.replace(/(\\*)"/g, '$1$1\\"').replace(/(\\+)$/, '$1$1')}"`));
+}
+
 /** The command line for `cmd.exe /d /s /c` (outer quotes are removed by /s). */
 export function cmdLine(file: string, args: string[]): string {
   return `"${[file, ...args].map(cmdEscapeArg).join(' ')}"`;
@@ -113,7 +122,7 @@ export function planSpawn(cmd: string, args: string[], o: PlanEnv = {}): Plan {
     if (/^#!\s*(?:\S*\/env\s+(?:-S\s+)?)?(?:\S*\/)?node(?:\s|$)/.test(head)) return { file: process.execPath, args: [shellPath(r, 'win32'), ...args] };
   }
   // extensionless, .sh, anything else: a shell script
-  return { file: 'sh', args: [shellPath(r, 'win32'), ...args] };
+  return { file: 'sh', args: shArgs([shellPath(r, 'win32'), ...args]), windowsVerbatimArguments: true };
 }
 
 /** spawnSync through planSpawn. */

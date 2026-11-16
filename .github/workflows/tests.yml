@@ -88,7 +88,7 @@ jobs:
           npm install --no-audit --no-fund playwright@1.63.0
           if [ "$RUNNER_OS" = Linux ]; then npx playwright install --with-deps chromium; else npx playwright install chromium; fi
       - name: tests (node --test, shard ${{ matrix.shard }})
-        timeout-minutes: ${{ matrix.shard == 'ts-c' && matrix.os == 'windows-latest' && 14 || 30 }}   # a hang ends here with its log kept, not at the job's 40
+        timeout-minutes: ${{ 30 }}   # a hang ends here with its log kept, not at the job's 40
         env:
           GSD_TEST_REQUIRE_GSD: 1       # a skip here would mean an untested claim path
           GSD_TEST_REQUIRE_BROWSER: 1   # a skip here would mean an untested checker
@@ -100,4 +100,14 @@ jobs:
           PRE=
           if [ "$RUNNER_OS" = Windows ]; then PRE="--import ./tests/win-preload.ts"; fi
           # shellcheck disable=SC2086
+          if [ "$SHARD" = ts-c ] && [ "$RUNNER_OS" = Windows ]; then
+            # one file at a time, each with a deadline: a file that hangs (a blocked child process no test timeout can end) is named, and does not eat the rest
+            rc=0
+            for f in $FILES; do
+              echo "::group::$f"
+              timeout 240 node --test $PRE --test-reporter=tap --test-reporter-destination=stdout --test-reporter=./tests/bail-reporter.mjs --test-reporter-destination=stderr --test-timeout=120000 "$f" || { echo "FILE FAILED OR HUNG (exit $?): $f"; rc=1; }
+              echo "::endgroup::"
+            done
+            exit $rc
+          fi
           node --test $PRE --test-reporter=tap --test-reporter-destination=stdout --test-reporter=./tests/bail-reporter.mjs --test-reporter-destination=stderr --test-timeout=120000 $FILES

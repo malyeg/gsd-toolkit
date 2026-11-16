@@ -3,7 +3,7 @@
 // Run: node --test tests/ts/p12-win-unit.test.ts
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { cmdEscapeArg, cmdLine, normalizePath, planSpawn, resolveWin, selfArgv, shellPath } from '../../src/spawn.ts';
+import { cmdEscapeArg, cmdLine, normalizePath, planSpawn, resolveWin, selfArgv, shArgs, shellPath } from '../../src/spawn.ts';
 import * as trk from '../../src/tracker/winexec.ts';
 
 const files = new Set([
@@ -51,9 +51,14 @@ test('planSpawn: .exe direct, .cmd via cmd.exe verbatim, scripts via sh', () => 
   assert.equal(c.windowsVerbatimArguments, true);
   assert.deepEqual(c.args.slice(0, 3), ['/d', '/s', '/c']);
   assert.equal(c.args[3], cmdLine('C:\\nodejs\\npm.cmd', ['view', 'x y']));
-  assert.deepEqual(planSpawn('mytool', ['1'], o), { file: 'sh', args: ['C:/stubs/mytool', '1'] });
-  assert.deepEqual(planSpawn('hook.sh', [], o), { file: 'sh', args: ['C:/stubs/hook.sh'] });
+  assert.deepEqual(planSpawn('mytool', ['1'], o), { file: 'sh', args: ['C:/stubs/mytool', '1'], windowsVerbatimArguments: true });
+  assert.deepEqual(planSpawn('hook.sh', [], o), { file: 'sh', args: ['C:/stubs/hook.sh'], windowsVerbatimArguments: true });
   assert.deepEqual(planSpawn('unknown', ['x'], o), { file: 'unknown', args: ['x'] });
+});
+
+test('shArgs: what the MSYS sh would split or unquote is wrapped in double quotes', () => {
+  assert.deepEqual(shArgs(['C:/x/run', '-w', '--max-time=15', 'a/b.c']), ['C:/x/run', '-w', '--max-time=15', 'a/b.c']);
+  assert.deepEqual(shArgs(["Don't", 'a b', '', 'x\ny', '\\n%{http_code}', 'say "hi"', 'C:\\d\\']), ['"Don\'t"', '"a b"', '""', '"x\ny"', '"\\n%{http_code}"', '"say \\"hi\\""', '"C:\\d\\\\"']);
 });
 
 test('cmd quoting: every metacharacter is escaped, no injection', () => {

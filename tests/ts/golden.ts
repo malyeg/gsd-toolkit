@@ -169,7 +169,6 @@ export function golden(actual: string, old?: () => string): void {
           .replace(/\bmode[= ][0-7]{3,4}\b| \[(?:600|644|666|755|777)\]/g, ' mode=*')
           .replace(/^(── .+) \[[x-]\]$/gm, '$1 [*]')
           .replace(/^(\S+\.\w+) [67][0-7]{2} /gm, '$1 mode=* ') // `name 755 content` lines of a file dump
-          .replace(/\u001Fn%http_code/g, '\u001F\\n%{http_code}') // MSYS's argv parser drops the backslash and braces of a bare `\\n%{http_code}` given to a script run by sh
           .replace(/\bcommit [0-9a-f]{7,40}\b/g, 'commit <sha>')
       : s;
   const text = nomode(goldenNorm(actual));
