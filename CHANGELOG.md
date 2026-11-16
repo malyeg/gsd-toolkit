@@ -7,7 +7,24 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## 0.11.1 (unreleased)
+## 0.11.1
+
+**Windows fixes** (found once every test ran on Windows):
+
+- `gsdt-finish` removed the worktree from inside it, and Windows said
+  "Permission denied". It now steps out first.
+- Scripts run through Git's `sh` (shims, custom trackers) got their arguments
+  mangled: a `'` ate the rest, a newline split one. Arguments are now quoted.
+- `gsdt-update` ran Windows' own `curl.exe` instead of the one on PATH.
+- doctor T002 misread npm's `.cmd` wrappers; T008 never saw a stale `C:/…`
+  hook path; `gsdt-setup` split PATH on `:`; the UI app probe wrote to
+  `/dev/null`; `wtdir`, paths under a root, and UI folder names came out wrong
+  with `\` paths. A merged UI review was missed from the main checkout.
+- `HOME` unset (cmd, PowerShell) now falls back to `USERPROFILE`.
+
+**Tests:** every suite is `node:test` and runs on Linux, macOS and Windows
+(the bash suites and the old bash/python/perl code are gone). CI runs them in
+shards and stops a shard after 15 failures.
 
 **gsdt-migrate fixes** (found migrating a real repo):
 
