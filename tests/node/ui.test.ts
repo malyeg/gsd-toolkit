@@ -273,7 +273,7 @@ test('gsdt-ui look and approve', () => {
   checkWith({ STUB_MODE: 'fail' });
   is('look after a failed check → exit 1', g('gsdt-ui', ['look', '5'], R).status, 1);
   OUT.v = g('gsdt-ui', ['sheet', '5'], R).out;
-  is('sheet prints the path', lf(OUT.v).replace(/\n+$/, ''), path.join(PD, '05-SHOTS', 'index.html'));
+  is('sheet prints the path', lf(OUT.v).replace(/\n+$/, '').replace(/\\/g, '/'), path.join(PD, '05-SHOTS', 'index.html').replace(/\\/g, '/')); // the product prints `/`
   checkWith();
   let r = g('gsdt-ui', ['look', '5'], R);
   is('look after a passed check → exit 0', r.status, 0);

@@ -15,7 +15,9 @@ import {
   writeFileSync,
 } from 'node:fs';
 import path from 'node:path';
-import { test, golden } from './golden.ts';
+import { test, golden, skipFileOnWindows } from './golden.ts';
+
+skipFileOnWindows('POSIX installer parity (symlinked skills and settings, 0.10.x links, colon-separated PATH, exec bits); Windows is covered by tests/node/npm.test.ts and tests/os');
 import assert from 'node:assert/strict';
 import { PKG, tmp, write, subst } from './helpers.ts';
 

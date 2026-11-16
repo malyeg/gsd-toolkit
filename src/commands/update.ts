@@ -178,7 +178,7 @@ function run(argv: string[], linkDir: string): number {
 /** Download `url` to `file` with curl (retrying a GitHub blip). */
 function download(url: string, file: string, maxTime: number): boolean {
   const r = spawnSync('curl', ['-fsSL', '--retry', '3', '--retry-delay', '2', '--max-time', String(maxTime), url, '-o', file], {
-    stdio: ['ignore', 'ignore', 'ignore'],
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
   return r.status === 0 && existsSync(file);
 }

@@ -132,7 +132,7 @@ export function goldenNorm(s: string): string {
   for (const d of folders(PKG)) t = t.replace(new RegExp(reEsc(d), flags), '<PKG>');
   if (WIN) {
     // a path after a placeholder (<TMP>, <PKG>, <D>, <W> …): the macOS spelling, `/` between folders
-    t = t.replace(/(<[A-Za-z]+>)((?:\\\\|\\|\/)[^\n"'`<>|*?]*)/g, (_m, p: string, rest: string) =>
+    t = t.replace(/(<[A-Za-z]+>)((?:\\\\|\\|\/)(?:[^\s"'`<>|*?]| (?=[^\s\\/"']*[\\/]))*)/g, (_m, p: string, rest: string) =>
       p + (rest.includes('\\\\') ? rest.replaceAll('\\\\', '/') : rest.replaceAll('\\', '/')),
     );
   }

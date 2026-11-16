@@ -19,7 +19,7 @@ const fresh = (): string => {
 };
 const snap = (dir: string): string =>
   readdirSync(dir, { recursive: true })
-    .map(String)
+    .map((f) => String(f).replace(/\\/g, '/'))
     .sort()
     .map((f) => {
       const p = path.join(dir, f);

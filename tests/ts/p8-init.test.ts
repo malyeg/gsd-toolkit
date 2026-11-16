@@ -12,6 +12,9 @@ import { test } from './golden.ts';
 import assert from 'node:assert/strict';
 import { cleanPath, git, norm, runStep, lenient, scenario, sh, write, makeSide, type Project, type Side, type Step } from './p6-helpers.ts';
 
+// Windows has no exec bit: a script that starts with #! stands for an executable one
+const isX = (p: string, mode: number): boolean => (process.platform === 'win32' ? readFileSync(p, 'latin1').startsWith('#!') : (mode & 0o111) !== 0);
+
 const only = process.env.P8_ONLY ? new RegExp(process.env.P8_ONLY) : null;
 const t = (name: string, fn: () => void): void => void test(name, { skip: only !== null && !only.test(name) }, fn);
 
@@ -44,13 +47,13 @@ function tree(s: Side): string {
       const st = statSync(p, { throwIfNoEntry: false });
       if (!st) continue;
       if (st.isDirectory()) walk(r);
-      else parts.push(`── ${r} [${st.mode & 0o111 ? 'x' : '-'}]\n${readFileSync(p, 'latin1')}`);
+      else parts.push(`── ${r} [${isX(p, st.mode) ? 'x' : '-'}]\n${readFileSync(p, 'latin1')}`);
     }
   };
   walk('');
   const hook = path.join(s.R, '.git/hooks/post-merge');
   const hs = statSync(hook, { throwIfNoEntry: false });
-  parts.push(`── post-merge hook [${hs ? (hs.mode & 0o111 ? 'x' : '-') : 'none'}]\n${hs ? readFileSync(hook, 'latin1') : ''}`);
+  parts.push(`── post-merge hook [${hs ? (isX(hook, hs.mode) ? 'x' : '-') : 'none'}]\n${hs ? readFileSync(hook, 'latin1') : ''}`);
   const g = (a: string[]): string => {
     const r = spawnSync('git', a, { cwd: s.R, encoding: 'utf8' });
     return (r.stdout ?? '') + (r.stderr ?? '');

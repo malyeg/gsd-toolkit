@@ -14,7 +14,9 @@ import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, re
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { test, golden } from './golden.ts';
+import { test, golden, skipFileOnWindows } from './golden.ts';
+
+skipFileOnWindows('POSIX installer parity (symlinked skills and settings, 0.10.x links, colon-separated PATH, exec bits); Windows is covered by tests/node/npm.test.ts and tests/os');
 import { PKG, subst } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p11u-')));
