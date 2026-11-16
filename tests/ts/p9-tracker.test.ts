@@ -15,7 +15,7 @@ import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, rea
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, golden } from './golden.ts';
-import { PKG, LOCALE_ENV } from './helpers.ts';
+import { PKG, LOCALE_ENV, subst } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p9-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
@@ -136,7 +136,7 @@ function makeSide(name: string): Side {
 
 type Step = { a: string[]; cwd?: string; env?: Record<string, string>; stdin?: string };
 type Res = { out: string; err: string; rc: number };
-const norm = (s: string, side: Side): string => s.split(side.root).join('<ROOT>').split(PKG).join('<PKG>').replace(/\.tmp\.\d+/g, '.tmp.<pid>');
+const norm = (s: string, side: Side): string => subst(subst(s, side.root, '<ROOT>'), PKG, '<PKG>').replace(/\.tmp\.\d+/g, '.tmp.<pid>');
 
 function exec(side: Side, bin: string, st: Step): Res {
   const r = spawnSync(bin, st.a, { cwd: path.join(side.root, st.cwd ?? 'gsd'), env: { ...side.env, ...(st.env ?? {}) }, input: st.stdin ?? '', encoding: 'utf8', timeout: 60000 });

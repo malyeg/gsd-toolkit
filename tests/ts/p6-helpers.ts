@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { PKG, sh, tmp, write, LOCALE_ENV } from './helpers.ts';
+import { PKG, sh, tmp, write, LOCALE_ENV, subst } from './helpers.ts';
 import { golden } from './golden.ts';
 
 export { PKG, sh, tmp, write };
@@ -266,11 +266,7 @@ export function settle(s: Side): void {
 }
 
 export const norm = (s: Side, text: string): string =>
-  text
-    .split(s.root)
-    .join('<T>')
-    .split(s.pkg)
-    .join('<PKG>')
+  subst(subst(text, s.root, '<T>'), s.pkg, '<PKG>')
     .replace(/HEAD is now at [0-9a-f]+/g, 'HEAD is now at <sha>')
     .replace(/\b[0-9a-f]{40}\b/g, '<sha40>');
 

@@ -172,7 +172,7 @@ function resolveAt(root: string): Playwright | null {
 }
 
 export function findPlaywright(job: Job): Playwright {
-  const rel = (d: string) => path.relative(job.repo, d) || '.';
+  const rel = (d: string) => (path.relative(job.repo, d) || '.').replace(/\\/g, '/');
   if (job.approot) {
     const root = path.resolve(job.repo, job.approot);
     return resolveAt(root) || cannot(`no Playwright in ${rel(root)} (${job.approot_from || 'app:'}). Install it there: npm i -D playwright && npx playwright install chromium`);

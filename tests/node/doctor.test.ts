@@ -6,7 +6,7 @@
 // copy installer here; gsdt-setup is its replacement).
 // Everything runs in throwaway repos; HOME is a temp dir. Run: node --test tests/node/doctor.test.ts
 import assert from 'node:assert/strict';
-import { chmodSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { chmodSync, cpSync, existsSync, mkdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, it } from 'node:test';
 import { rulesText } from '../../src/provider.ts';
@@ -898,7 +898,7 @@ describe('GSD hooks that run a missing file (T008)', () => {
     json(R);
     has('npx @opengsd/gsd-core@latest --claude --local');
   });
-  it('…$CLAUDE_PROJECT_DIR read as the repo', () => hasP(`${R}/.claude/hooks/gsd-read-guard.js`));
+  it('…$CLAUDE_PROJECT_DIR read as the repo', () => hasP(`${WIN ? realpathSync.native(R) : R}/.claude/hooks/gsd-read-guard.js`)); // doctor's repo is git's spelling: long names on Windows
   it('settings that are not JSON → skipped, no crash', () => {
     writeFileSync(path.join(R, '.claude', 'settings.json'), 'not json');
     json(R);

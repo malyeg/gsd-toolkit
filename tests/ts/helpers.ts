@@ -97,3 +97,32 @@ export function write(file: string, content: string, mode?: number): string {
   if (mode !== undefined) chmodSync(file, mode);
   return file;
 }
+
+/**
+ * `text` with the folder `dir` replaced by `token`, in every spelling a program may print it in. POSIX: as is.
+ * Windows: native and `/`, JSON-escaped, 8.3 (RUNNER~1) and long names; the path after the token then uses `/`.
+ */
+export function subst(text: string, dir: string, token: string): string {
+  if (process.platform !== 'win32') return text.split(dir).join(token);
+  const forms = new Set<string>();
+  let real = dir;
+  try {
+    real = realpathSync.native(dir);
+  } catch {
+    /* not there (yet): its own spelling only */
+  }
+  for (const d of [dir, real]) {
+    for (const x of [d, d.replace(/\\/g, '/')]) {
+      forms.add(x.replace(/\\/g, '\\\\'));
+      forms.add(x);
+    }
+  }
+  let t = text;
+  for (const f of [...forms].sort((a, b) => b.length - a.length)) {
+    t = t.replace(new RegExp(f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), token);
+  }
+  const tk = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return t.replace(new RegExp(`(${tk})((?:\\\\\\\\|\\\\)[^\\n"'\`<>|*?]*)`, 'g'), (_m, p: string, rest: string) =>
+    p + (rest.includes('\\\\') ? rest.replaceAll('\\\\', '/') : rest.replaceAll('\\', '/')),
+  );
+}

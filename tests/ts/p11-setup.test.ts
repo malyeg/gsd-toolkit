@@ -17,7 +17,7 @@ import {
 import path from 'node:path';
 import { test, golden } from './golden.ts';
 import assert from 'node:assert/strict';
-import { PKG, tmp, write } from './helpers.ts';
+import { PKG, tmp, write, subst } from './helpers.ts';
 
 const NODE_DIR = path.dirname(process.execPath);
 const BASE_PATH = `${NODE_DIR}:/usr/bin:/bin`;
@@ -55,7 +55,7 @@ function setup(w: World, args: string[] = [], extra: Record<string, string> = {}
 }
 const settingsOf = (w: World): string => path.join(w.home, '.claude', 'settings.json');
 const read = (p: string): string | null => (existsSync(p) ? readFileSync(p, 'utf8') : null);
-const norm = (s: string, w: World): string => s.split(w.home).join('<H>').split(w.bin).join('<B>');
+const norm = (s: string, w: World): string => subst(subst(s, w.home, '<H>'), w.bin, '<B>');
 const unPrivate = (s: string): string => s.replace(/\/private(?=\/var\/)/g, '');
 const hookLines = (s: string): string =>
   s

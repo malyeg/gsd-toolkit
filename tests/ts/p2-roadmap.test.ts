@@ -9,7 +9,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { golden, test } from './golden.ts';
 import { roadmapAudit, roadmapRows, unmarkedDone } from '../../src/roadmap.ts';
-import { PKG, tmp, write } from './helpers.ts';
+import { PKG, tmp, write, subst } from './helpers.ts';
 
 type Run = { out: Buffer; err: string; rc: number; file: Buffer | null };
 
@@ -30,7 +30,7 @@ function runKind(kind: 'audit' | 'rows', content: string | Buffer, extra: string
   const f = write(path.join(tmp(), 'ROADMAP.md'), content as string);
   const t = run(...ts(kind === 'audit' ? 'roadmap-audit' : 'roadmap-rows', [f, ...extra]), f);
   // Error text names the file path.
-  t.err = t.err.split(f).join('<F>');
+  t.err = subst(t.err, f, '<F>');
   return t;
 }
 

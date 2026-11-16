@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { golden, test } from './golden.ts';
-import { PKG, repo, sh, tmp, write, LOCALE_ENV } from './helpers.ts';
+import { PKG, repo, sh, tmp, write, LOCALE_ENV, subst } from './helpers.ts';
 import { renderList } from '../../src/commands/list.ts';
 
 const NEW_BIN = path.join(PKG, 'bin', 'gsdt-list');
@@ -47,7 +47,7 @@ const both = (label: string, args: string[], cwd: string, extraEnv: Record<strin
   const env = baseEnv(extraEnv);
   const n = go(NEW_BIN, args, cwd, env);
   // (the installed gsd-core's version is the machine's own)
-  n.err = n.err.split(PKG).join('<PKG>').replace(/(GSD [0-9.]+ is out \(you have )[0-9.]+/g, '$1<V>');
+  n.err = subst(n.err, PKG, '<PKG>').replace(/(GSD [0-9.]+ is out \(you have )[0-9.]+/g, '$1<V>');
   const norm = (s: string): string => (opts.sortErr ? s.split('\n').sort().join('\n') : s);
   golden(text(label, { ...n, err: norm(n.err) }));
   if (opts.rc !== undefined) assert.equal(n.rc, opts.rc, `${label}: expected rc`);

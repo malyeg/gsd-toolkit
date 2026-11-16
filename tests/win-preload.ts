@@ -6,14 +6,26 @@
 // untouched. It only changes how a TEST starts a program, never what the product does.
 import cp from 'node:child_process';
 import { syncBuiltinESMExports } from 'node:module';
-import { planSpawn } from '../src/spawn.ts';
+import path from 'node:path';
+import { planSpawn, resolveWin } from '../src/spawn.ts';
 
 if (process.platform === 'win32' && !(cp as { __gsdWin?: boolean }).__gsdWin) {
   (cp as { __gsdWin?: boolean }).__gsdWin = true;
   // The suites write PATH the POSIX way (`dir:dir:/usr/bin:/bin`). On Windows that is one broken entry, so no program is found.
   // Entries with a drive (C:\x or C:/x) are kept, `/usr/bin`-style ones dropped, and the PATH this run started with is
   // appended (it holds git, node and Git's sh: what `/usr/bin:/bin` stands for).
-  const BASE = process.env.PATH ?? process.env.Path ?? '';
+  // only the folders of the tools a test needs (git, Git's sh and usr/bin, node, System32): not the whole machine PATH,
+  // which would let a test find a gsd_run or claude of the runner.
+  const HOSTPATH = process.env.PATH ?? process.env.Path ?? '';
+  const BASE = (() => {
+    const dirs = new Set<string>();
+    for (const n of ['git', 'sh', 'bash', 'node', 'tar', 'curl']) {
+      const r = resolveWin(n, { env: process.env });
+      if (r) dirs.add(path.win32.dirname(r));
+    }
+    if (process.env.SystemRoot) dirs.add(`${process.env.SystemRoot}\\System32`);
+    return dirs.size ? [...dirs].join(';') : HOSTPATH;
+  })();
   const fixPath = (v: string): string => {
     if (!v.replace(/(^|[;:])[A-Za-z]:(?=[\\/])/g, '$1$2').includes(':')) return v;
     const keep = v.match(/[A-Za-z]:[\\/][^;:]*|[^;:]+/g)?.filter((e) => /^[A-Za-z]:[\\/]/.test(e)) ?? [];

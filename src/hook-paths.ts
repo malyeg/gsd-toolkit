@@ -135,7 +135,8 @@ const isAbs = (p: string): boolean => p.startsWith('/') || (process.platform ===
 const baseName = (p: string): string => p.slice(p.lastIndexOf('/') + 1);
 
 function missing(command: string, project: string | null): { owner: string | null; gone: string[] } {
-  let words = shlexSplit(command);
+  // a Windows path in a command (C:\x\hook.js): shlex would read its backslashes as escapes
+  let words = shlexSplit(process.platform === 'win32' ? command.replace(/\\/g, '/') : command);
   if (words === null) return { owner: null, gone: [] };
   const names = words.map(baseName);
   if (!names.some((n) => GSD_WORD.test(n))) return { owner: null, gone: [] };

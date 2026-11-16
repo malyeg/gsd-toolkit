@@ -17,7 +17,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, golden } from './golden.ts';
 import { parse, parseDuration, human, scan, when } from '../../src/codex-wait.ts';
-import { PKG } from './helpers.ts';
+import { PKG, subst } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p10-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
@@ -72,7 +72,7 @@ function exec(side: Side, tz: string, s: Scn): Res {
   };
   const args = s.args.map((a) => a.split('$D').join(D));
   const r = spawnSync(BINS[side], args, { encoding: 'utf8', env, input: s.stdin ?? '' });
-  const norm = (t: string): string => t.split(D).join('<D>').split(PKG).join('<PKG>');
+  const norm = (t: string): string => subst(subst(t, D, '<D>'), PKG, '<PKG>');
   return {
     out: norm(r.stdout ?? ''),
     err: norm(r.stderr ?? ''),

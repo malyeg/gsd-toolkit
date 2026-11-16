@@ -169,6 +169,23 @@ function retireSkills(pkg: string, dir: string, provider: string, all: boolean):
   }
 }
 
+/** is `bin` one of the PATH folders (Windows: `;` between them, same folder in any spelling) */
+function binOnPath(bin: string): boolean {
+  const p = process.env.PATH ?? (WIN ? process.env.Path : undefined) ?? '';
+  if (!WIN) return `:${p}:`.includes(`:${bin}:`);
+  const key = (d: string): string => {
+    let r = d;
+    try {
+      r = realpathSync.native(d);
+    } catch {
+      /* not there: compare as written */
+    }
+    return r.replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+  };
+  const want = key(bin);
+  return p.split(';').some((d) => d !== '' && key(d) === want);
+}
+
 function installSkills(pkg: string, provider: string, skillDir: string): void {
   mkdirSync(skillDir, { recursive: true });
   const mark = `${GSD_SKILL_MARK} ${skillVersion(pkg)} -->\n`;
@@ -501,7 +518,7 @@ export function main(argv: string[]): number {
   writeFileSync(tmp, `${lines.join('\n')}\n`);
   renameSync(tmp, manifestFile);
 
-  if (!`:${process.env.PATH ?? ''}:`.includes(`:${bin}:`)) out(`⚠ ${bin} is not on your PATH — add it to your shell profile\n`);
+  if (!binOnPath(bin)) out(`⚠ ${bin} is not on your PATH — add it to your shell profile\n`);
   out('\nDone. Try:  gsdt-list --help\n');
   return 0;
 }

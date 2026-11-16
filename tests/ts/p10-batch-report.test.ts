@@ -13,7 +13,7 @@ import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test, golden } from './golden.ts';
-import { PKG, LOCALE_ENV } from './helpers.ts';
+import { PKG, LOCALE_ENV, subst } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p10-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
@@ -28,9 +28,7 @@ function run(bin: string, args: string[], o: { cwd?: string; env?: Record<string
 }
 // machine- and run-specific text: the temp dir, and every date/time (the fixtures are made relative to now)
 const NORM = (t: string): string =>
-  t
-    .split(W.replace(/[^A-Za-z0-9]/g, '-')).join('<W-MANGLED>')
-    .split(W).join('<W>')
+  subst(t.split(W.replace(/[^A-Za-z0-9]/g, '-')).join('<W-MANGLED>'), W, '<W>')
     .replace(/l{30,}/g, '<LONG>') // the long-name fixture: its truncation point depends on the length of W
     .replace(/\b\d{4}-\d\d-\d\d \d\d:\d\d\b/g, '<DT>')
     .replace(/→ \d\d:\d\d\b/g, '→ <TM>')

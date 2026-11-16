@@ -11,7 +11,7 @@ import path from 'node:path';
 import { golden, test } from './golden.ts';
 import { main as planningMain, parseArgs } from '../../src/commands/planning.ts';
 import { reconcileRoadmap } from '../../src/planning.ts';
-import { PKG, tmp, write } from './helpers.ts';
+import { PKG, tmp, write, subst } from './helpers.ts';
 
 const LAUNCH = path.join(PKG, 'src', 'launch.mjs');
 const FIX = path.join(PKG, 'tests', 'fixtures');
@@ -52,7 +52,7 @@ function tree(files: Files): string {
 
 const showFiles = (snap: Record<string, string>): string => Object.entries(snap).map(([k, v]) => `${k}: ${JSON.stringify(Buffer.from(v, 'base64').toString('latin1'))}`).join('\n');
 const showR = (label: string, r: R, root: string, snap: Record<string, string>): string => {
-  const n = (x: string): string => x.split(root).join('<root>');
+  const n = (x: string): string => subst(x, root, '<root>');
   return `${label}\nrc=${r.rc}\nout=${JSON.stringify(n(r.out))}\nerr=${JSON.stringify(n(r.err))}\n${showFiles(snap)}`;
 };
 
@@ -430,7 +430,7 @@ function gitRepo(files: Files): string {
 function binCase(label: string, bin: string, files: Files, args: (repo: string) => string[], opts: { cwd?: (repo: string) => string; after?: (repo: string) => string } = {}): R {
   const repo = gitRepo(files);
   const r = run(newBin(bin), args(repo), opts.cwd ? opts.cwd(repo) : repo);
-  const n = (x: string): string => x.split(repo).join('<repo>');
+  const n = (x: string): string => subst(x, repo, '<repo>');
   const after = opts.after ? `\nafter=${JSON.stringify(opts.after(repo))}` : '';
   golden(`${label}\nrc=${r.rc}\nout=${JSON.stringify(n(r.out))}\nerr=${JSON.stringify(n(r.err))}\n${showFiles(snapshot(repo))}${after}`);
   return r;
@@ -479,7 +479,7 @@ test('gsdt-planning-repair --commit: a failing commit ends with its status (set 
   mkdirSync(path.join(r, '.git', 'hooks'), { recursive: true });
   write(path.join(r, '.git', 'hooks', 'pre-commit'), '#!/bin/sh\necho rejected >&2\nexit 7\n', 0o755);
   const res = run(newBin('gsdt-planning-repair'), ['--commit'], r);
-  golden(`rc=${res.rc}\nout=${JSON.stringify(res.out.split(r).join('<repo>'))}\nerr=${JSON.stringify(res.err.split(r).join('<repo>'))}`);
+  golden(`rc=${res.rc}\nout=${JSON.stringify(subst(res.out, r, '<repo>'))}\nerr=${JSON.stringify(subst(res.err, r, '<repo>'))}`);
   assert.notEqual(res.rc, 0);
 });
 
@@ -524,7 +524,7 @@ test('gsdt-planning-merge through a real git merge: launcher', () => {
   for (const [name, ours, theirs] of variants) {
     // the merge output names the driver's own stderr; compare it without the repo path
     const m = mergeRepo(newBin('gsdt-planning-merge'), ours, theirs, base);
-    const n = (x: string): string => x.split(m.repo).join('<repo>');
+    const n = (x: string): string => subst(x, m.repo, '<repo>');
     golden(`${name}\nrc=${m.res.rc}\nout=${JSON.stringify(n(m.res.out).replace(/\b[0-9a-f]{7,}\b/g, '<sha>'))}\nerr=${JSON.stringify(n(m.res.err))}\n${showFiles(snapshot(m.repo))}`);
   }
 });
@@ -545,7 +545,7 @@ test('gsdt-planning-merge called directly: launcher', () => {
     // bash's own `${1:?}` error names the script path and line
     const norm = (r: R, t: ReturnType<typeof trio>, bin: string): R => ({
       ...r,
-      err: r.err.split(t.dir).join('<d>').split(bin).join('<bin>').replace(/line \d+/, 'line N'),
+      err: subst(subst(r.err, t.dir, '<d>'), bin, '<bin>').replace(/line \d+/, 'line N'),
     });
     const show = (r: R, t: ReturnType<typeof trio>, bin: string): string => {
       const n = norm(r, t, bin);

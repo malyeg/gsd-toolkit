@@ -17,7 +17,7 @@ import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
 import { test, golden } from './golden.ts';
-import { PKG, repo, sh, tmp, write } from './helpers.ts';
+import { PKG, repo, sh, tmp, write, subst } from './helpers.ts';
 
 const NEW_BIN = path.join(PKG, 'bin', 'gsdt-ui');
 
@@ -102,8 +102,8 @@ function cleanPath(): string {
 const PATH_CLEAN = cleanPath();
 
 function norm(s: string, w: World): string {
-  let t = s.split(w.pkg).join('<PKG>');
-  t = t.split(w.root).join('<W>');
+  let t = subst(s, w.pkg, '<PKG>');
+  t = subst(t, w.root, '<W>');
   t = t.replace(/\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ/g, '<TS>');
   return t;
 }
@@ -163,7 +163,7 @@ const RUNNER_ENV = { GSD_UI_RUNNER: (w: World): string => path.join(w.stub, 'run
 test('gsdt-ui: src/commands/ui.ts, step by step', async () => {
   await startServer();
   const base = PORT - 5;
-  const PN = (t: string): string => t.split(String(PORT)).join('<PORT>').replace(new RegExp(`\\b${base}\\b`, 'g'), '<BASE>').replace(/\b[0-9a-f]{40}\b/g, '<H>');
+  const PN = (t: string): string => subst(t, String(PORT), '<PORT>').replace(new RegExp(`\\b${base}\\b`, 'g'), '<BASE>').replace(/\b[0-9a-f]{40}\b/g, '<H>');
   const w = makeWorld('new', base);
   const FULL = 'sketch: skip a test\npages: /, cart\napp: apps/web\nmain_button: / = Start now\nmain_button: /cart = none\nexpect: /cart = cart\nwaive: C3 | * | * | .brand | agreed with the user\n';
   const steps: Step[] = [

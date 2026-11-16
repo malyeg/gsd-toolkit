@@ -26,7 +26,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { before } from 'node:test';
 import { test, golden } from './golden.ts';
-import { PKG } from './helpers.ts';
+import { PKG, subst } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p8m-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
@@ -150,7 +150,7 @@ type Step = { args: string[] } & Opts;
 const st = (args: string[], o: Opts = {}): Step => ({ args, ...o });
 
 function snap(s: Side): string {
-  const norm = (t: string): string => t.split(s.root).join('<S>');
+  const norm = (t: string): string => subst(t, s.root, '<S>');
   const lines: string[] = [];
   const walk = (dir: string, rel: string): void => {
     for (const e of readdirSync(dir, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : 1))) {
@@ -181,7 +181,7 @@ function runStep(s: Side, step: Step): Ran {
   const env = baseEnv(s, step.env);
   if (step.path !== undefined) env.PATH = step.path;
   const r = spawnSync(NEW_BIN, step.args, { cwd, env, encoding: 'utf8', timeout: 60000 });
-  const norm = (t: string): string => t.split(s.root).join('<S>');
+  const norm = (t: string): string => subst(t, s.root, '<S>');
   return { out: norm(r.stdout ?? ''), err: norm(r.stderr ?? ''), rc: r.status ?? -1, files: snap(s) };
 }
 

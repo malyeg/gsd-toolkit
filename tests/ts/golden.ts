@@ -143,7 +143,9 @@ function load(file: string): string[] {
  */
 export function golden(actual: string, old?: () => string): void {
   assert.ok(current, 'golden() outside a test');
-  const text = goldenNorm(actual);
+  // Windows has no mode bits: a mode shown in a golden cannot be compared there
+  const nomode = (s: string): string => (WIN ? s.replace(/\bmode=[0-7]{3,4}\b/g, 'mode=*') : s);
+  const text = nomode(goldenNorm(actual));
   assert.ok(!text.split('\n').some((l) => DELIM.test(l)), 'text looks like a golden delimiter');
   const n = ++current.n;
   if (UPDATE) {
@@ -157,5 +159,5 @@ export function golden(actual: string, old?: () => string): void {
   }
   const want = current.saved[n - 1];
   assert.notEqual(want, undefined, `golden ${n} missing in ${path.relative(PKG, current.file)}`);
-  assert.equal(text, want, `golden ${n} of "${current.name}" (${path.relative(PKG, current.file)})`);
+  assert.equal(text, nomode(want), `golden ${n} of "${current.name}" (${path.relative(PKG, current.file)})`);
 }

@@ -15,7 +15,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { test, golden } from './golden.ts';
-import { PKG } from './helpers.ts';
+import { PKG, subst } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p11u-')));
 process.on('exit', () => rmSync(W, { recursive: true, force: true }));
@@ -134,7 +134,7 @@ function build(kind: 'release' | 'copy'): void {
 }
 for (const k of ['release', 'copy'] as const) build(k);
 
-const norm = (s: string): string => s.split(path.join(W, 'rt')).join('<R>').replace(/\/run-\d+\//g, '/run-N/');
+const norm = (s: string): string => subst(s, path.join(W, 'rt'), '<R>').replace(/\/run-\d+\//g, '/run-N/');
 function runSide(kind: 'release' | 'copy', how: 'link' | 'direct', args: string[], sc: Scn, git = false): Res & { install: string; npm: string; npx: string; cache: string; manifest: string } {
   const rt = runtimes[kind] as { pkg: string; bin: string; link: string };
   const c = ctx(sc);
