@@ -594,7 +594,7 @@ test('launchers: no node means a clear message from repair', () => {
 });
 
 test('the workflow still runs the node tests', () => {
-  assert.match(read(path.join(PKG, '.github', 'workflows', 'tests.yml')), /node --test (--test-timeout=\d+ )?'tests\/node\/\*\.test\.ts' 'tests\/ts\/\*\.test\.ts' 'tests\/os\/\*\.test\.ts'/);
+  assert.match(read(path.join(PKG, '.github', 'workflows', 'tests.yml')), /node --test (--test-reporter=tap )?(--test-timeout=\d+ )?'tests\/node\/\*\.test\.ts' 'tests\/ts\/\*\.test\.ts' 'tests\/os\/\*\.test\.ts'/);
 });
 
 // Not in the oracle: gsd-core's phase.add appends "### Phase N" after the Progress table, and a merge can then

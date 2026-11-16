@@ -92,4 +92,4 @@ jobs:
           GSD_TEST_REQUIRE_BROWSER: 1   # a skip here would mean an untested checker
         run: |
           export GSD_PLAYWRIGHT_ROOT="$RUNNER_TEMP/pw"
-          node --test --test-timeout=300000 'tests/node/*.test.ts' 'tests/ts/*.test.ts' 'tests/os/*.test.ts'
+          node --test --test-reporter=tap --test-timeout=300000 'tests/node/*.test.ts' 'tests/ts/*.test.ts' 'tests/os/*.test.ts'
