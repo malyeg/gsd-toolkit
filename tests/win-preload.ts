@@ -99,7 +99,15 @@ if (process.platform === 'win32' && !(cp as { __gsdWin?: boolean }).__gsdWin) {
     const p = planSpawn(FIX[file] ?? file, args, { env: opts?.env ?? process.env });
     // a script run by Git's sh must not have its /-leading arguments (/bin/true, /nonexistent) rewritten into C:/Program Files/Git/...
     // (only those arguments are excluded: the launchers' own /d/a/... paths still need the conversion to D:/a/...)
-    if (/^(?:.*[\\/])?(?:sh|bash)(?:\.exe)?$/i.test(p.file) && p.args.slice(1).some((x) => POSIXARG.test(x))) opts = { ...(opts ?? {}), env: { ...(opts?.env ?? process.env), MSYS2_ARG_CONV_EXCL: p.args.slice(1).filter((x) => POSIXARG.test(x)).join(';') } };
+    if (/^(?:.*[\\/])?(?:sh|bash)(?:\.exe)?$/i.test(p.file)) {
+      const base = opts?.env ?? process.env;
+      const args = p.args.slice(1).filter((x) => POSIXARG.test(x));
+      // environment values too (GSD_CLAUDE_COMMAND=/opt/x/claude): MSYS rewrites them as well
+      const vars = Object.keys(base).filter((k) => !/^(?:path|home|tmp|temp|tmpdir)$/i.test(k) && typeof base[k] === 'string' && POSIXARG.test(base[k] as string));
+      if (args.length > 0 || vars.length > 0) {
+        opts = { ...(opts ?? {}), env: { ...base, ...(args.length ? { MSYS2_ARG_CONV_EXCL: args.join(';') } : {}), ...(vars.length ? { MSYS2_ENV_CONV_EXCL: vars.join(';') } : {}) } };
+      }
+    }
     return { file: p.file, args: p.args, opts: p.windowsVerbatimArguments ? { ...(opts ?? {}), windowsVerbatimArguments: true } : opts, optIdx };
   }
   const wrap = (name: 'spawn' | 'spawnSync' | 'execFile' | 'execFileSync'): void => {

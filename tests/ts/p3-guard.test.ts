@@ -54,8 +54,8 @@ async function runAll(cases: Case[]): Promise<void> {
 }
 
 type Add = (label: string, argv: string[], opts?: { stdin?: string; cwd?: string; env?: Record<string, string | undefined>; pathDirs?: string; rcOnly?: boolean }) => void;
-function group(name: string, build: (add: Add, cases: Case[]) => void): void {
-  test(name, async () => {
+function group(name: string, build: (add: Add, cases: Case[]) => void, skip: string | false = false): void {
+  test(name, { skip }, async () => {
     const cases: Case[] = [];
     const add: Add = (label, argv, o = {}) =>
       cases.push({ label, argv, stdin: o.stdin ?? '', cwd: o.cwd ?? tmp(), env: o.env ?? {}, pathDirs: o.pathDirs, rcOnly: o.rcOnly });
@@ -519,7 +519,7 @@ group('a PATH without jq: the Python-free reader', (add) => {
     go(`${t} explicit command`, [...g, '--command', 'gsd-plan-phase', '--phase', '8', '--repo', r7], '');
     go(`${t} skip guard`, g, 'x', { GSD_SKIP_GUARD: '1' });
   }
-});
+}, process.platform === 'win32' && 'bash launcher internals: symlinked stub tools, no Windows equivalent');
 
 // ── the launcher ────────────────────────────────────────────────────────────
 function linkTools(tools: string[]): string {
@@ -535,7 +535,7 @@ const runSync = (bin: string, argv: string[], env: Record<string, string>, input
   return { out: r.stdout ?? '', err: r.stderr ?? '', rc: r.status ?? 1 };
 };
 
-test('launcher: no node blocks, --global lets it through, GSD_SKIP_GUARD escapes', () => {
+test('launcher: no node blocks, --global lets it through, GSD_SKIP_GUARD escapes', { skip: process.platform === 'win32' && 'bash launcher internals: symlinked stub tools, no Windows equivalent' }, () => {
   const stubs = linkTools(['bash', 'env', 'dirname', 'readlink', 'git']);
   const r7 = mk({ branch: 'phase-7-thing' });
   const a = runSync(NEW, ['--command', 'gsd-plan-phase', '--phase', '8', '--repo', r7], { PATH: stubs });

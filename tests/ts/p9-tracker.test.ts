@@ -14,7 +14,7 @@ import { spawnSync } from 'node:child_process';
 import { chmodSync, cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { test, golden } from './golden.ts';
+import { test, golden, goldenSkip } from './golden.ts';
 import { PKG, LOCALE_ENV, subst } from './helpers.ts';
 
 const W = realpathSync(mkdtempSync(path.join(tmpdir(), 'gsd-p9-')));
@@ -162,12 +162,17 @@ function state(side: Side): string {
 const read = (f: string, side: Side): string => (existsSync(f) ? norm(readFileSync(f, 'utf8'), side) : '');
 
 /** Run the steps on a fresh fixture per scenario; golden every result and the final state. */
-function parity(title: string, steps: Step[], opts: { before?: (s: Side) => void } = {}): void {
-  test(title, () => {
+function parity(title: string, steps: Step[], opts: { before?: (s: Side) => void; noExecBit?: boolean } = {}): void {
+  test(title, { skip: process.platform === 'win32' && opts.noExecBit === true && 'an executable check: Windows has no exec bit' }, () => {
     const n = makeSide(`n-${counter++}`);
     opts.before?.(n);
     const txt = (r: Res, st: Step, i: number): string => `### step ${i}: ${JSON.stringify(st.a)} ${JSON.stringify(st.env ?? {})}\nrc=${r.rc}\n--- stdout\n${r.out}\n--- stderr\n${r.err}`;
     steps.forEach((st, i) => {
+      // MSYS's argv parser (the sh that runs a launcher) splits an argument at a newline; Windows cannot pass one through
+      if (process.platform === 'win32' && st.a.some((x) => x.includes('\n'))) {
+        goldenSkip();
+        return;
+      }
       const rn = exec(n, BINS.neu, st);
       golden(txt(rn, st, i));
     });
@@ -277,7 +282,7 @@ parity('custom: non-executable, a directory, a bad interpreter', [
   { a: ['check'], cwd: 'cust' },
   { a: ['start', 'A', 'b'], cwd: 'cust' },
   { a: ['config'], cwd: 'cust' },
-], { before: (s) => chmodSync(path.join(s.root, 'cust', 'scripts', 'tracker.sh'), 0o644) });
+], { noExecBit: true, before: (s) => chmodSync(path.join(s.root, 'cust', 'scripts', 'tracker.sh'), 0o644) });
 parity('custom: a script that hangs is stopped', [
   { a: ['start', 'PROJ-42', 'x'], cwd: 'cust', env: { GSD_TRACKER_TIMEOUT: '1' } },
   { a: ['check'], cwd: 'cust', env: { GSD_TRACKER_TIMEOUT: '1.9' } },

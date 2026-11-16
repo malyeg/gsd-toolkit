@@ -88,6 +88,7 @@ jobs:
           npm install --no-audit --no-fund playwright@1.63.0
           if [ "$RUNNER_OS" = Linux ]; then npx playwright install --with-deps chromium; else npx playwright install chromium; fi
       - name: tests (node --test, shard ${{ matrix.shard }})
+        timeout-minutes: ${{ matrix.shard == 'ts-c' && matrix.os == 'windows-latest' && 14 || 30 }}   # a hang ends here with its log kept, not at the job's 40
         env:
           GSD_TEST_REQUIRE_GSD: 1       # a skip here would mean an untested claim path
           GSD_TEST_REQUIRE_BROWSER: 1   # a skip here would mean an untested checker

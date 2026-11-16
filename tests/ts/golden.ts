@@ -133,7 +133,7 @@ export function goldenNorm(s: string): string {
   for (const d of folders(PKG)) t = t.replace(new RegExp(reEsc(d), flags), '<PKG>');
   if (WIN) {
     // a path after a placeholder (<TMP>, <PKG>, <D>, <W> …): the macOS spelling, `/` between folders
-    t = t.replace(/(<[A-Za-z]+>)((?!\\{1,4}[nrt](?:["\\\s]|$))(?:\\{1,4}|\/)(?=[A-Za-z0-9_.~-])(?:(?!\\{1,4}[nrt](?:["\\\s]|$))[^\s"'`<>|*?]| (?=[^\s\\/"']*[\\/]))*)/g, (_m, p: string, rest: string) =>
+    t = t.replace(/(<[A-Za-z]+>)((?!\\[nrt](?:["\\\s]|$))(?:\\{1,4}|\/)(?=[A-Za-z0-9_.~-])(?:(?!\\[nrt](?:["\\\s]|$))[^\s"'`<>|*?]| (?=[^\s\\/"']*[\\/]))*)/g, (_m, p: string, rest: string) =>
       p + rest.replace(/\\{1,4}/g, '/'),
     );
   }
@@ -168,6 +168,8 @@ export function golden(actual: string, old?: () => string): void {
       ? s
           .replace(/\bmode[= ][0-7]{3,4}\b| \[(?:600|644|666|755|777)\]/g, ' mode=*')
           .replace(/^(── .+) \[[x-]\]$/gm, '$1 [*]')
+          .replace(/^(\S+\.\w+) [67][0-7]{2} /gm, '$1 mode=* ') // `name 755 content` lines of a file dump
+          .replace(/\u001Fn%http_code/g, '\u001F\\n%{http_code}') // MSYS's argv parser drops the backslash and braces of a bare `\\n%{http_code}` given to a script run by sh
           .replace(/\bcommit [0-9a-f]{7,40}\b/g, 'commit <sha>')
       : s;
   const text = nomode(goldenNorm(actual));
