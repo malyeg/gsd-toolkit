@@ -33,7 +33,10 @@ COLUMNS
   PLANS     plans executed/total (a plan is done once it has a SUMMARY),
             e.g. 5/6 · ✔ = all executed · — = none yet
   STAGE     furthest lifecycle step reached, from the phase's artifact files:
-            spec → discuss → ui → plan → execute → done (all plans executed)
+            spec → discuss → ui → plan → execute → verify → done
+            verify = all plans executed but ROADMAP's checklist row is not
+            ticked yet (gsd-core ticks it when /gsd-verify-work passes);
+            done = ticked.
             A phase with no plan files is done when ROADMAP ticks it
             (- [x] **Phase N): work done outside GSD, like a baseline.
   WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
@@ -214,9 +217,9 @@ export function renderList(inp: ListInput): string {
     const s = scan(cache, inp.phasesRoot, p.n, wtroot ? wtroot : undefined);
     // PLANS: executed/total from the files · ✔ all executed · — no plans yet
     p.plans = s.fp === 0 ? '—' : s.fs >= s.fp ? '✔' : `${s.fs}/${s.fp}`;
-    // STAGE: furthest lifecycle step reached; 'done' once every plan is executed
+    // STAGE: furthest lifecycle step reached; 'verify' once every plan is executed, 'done' once ROADMAP ticks it
     p.stage =
-      s.fp > 0 ? (s.fs >= s.fp ? 'done' : s.fs > 0 ? 'execute' : 'plan') : ticked.has(norm(p.n)) ? 'done' : s.planning ? 'plan' : s.ui ? 'ui' : s.discuss ? 'discuss' : s.spec ? 'spec' : '—';
+      s.fp > 0 ? (s.fs >= s.fp ? (ticked.has(norm(p.n)) ? 'done' : 'verify') : s.fs > 0 ? 'execute' : 'plan') : ticked.has(norm(p.n)) ? 'done' : s.planning ? 'plan' : s.ui ? 'ui' : s.discuss ? 'discuss' : s.spec ? 'spec' : '—';
     // keep the branch name and the ● attached-marker apart so clipping a long
     // branch never eats the marker (it lives at the end of the cell)
     p.wt = br !== undefined ? show(br) : '—';
