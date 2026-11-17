@@ -4,7 +4,7 @@
 // gsdt-finish (addRepo, best-effort); doctor only reads it.
 import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { findMain } from './common.ts';
+import { findMain, toolkitRepo } from './common.ts';
 import { normalizePath } from './spawn.ts';
 
 const nz = (v: string | undefined): string | undefined => (v === undefined || v === '' ? undefined : v);
@@ -64,12 +64,12 @@ const isDir = (p: string): boolean => {
   }
 };
 
-/** Main checkouts holding `.gsd.conf` under `root` (depth <= 5; no node_modules, .git, *-worktrees; a phase worktree has a .git FILE). */
+/** Main checkouts set up with the toolkit (toolkitRepo) under `root` (depth <= 5; no node_modules, .git, *-worktrees; a phase worktree has a .git FILE). */
 export function scanFolder(root: string, maxDepth = 5): string[] {
   const found: string[] = [];
   const walk = (dir: string, depth: number): void => {
     if (isDir(path.join(dir, '.git'))) {
-      if (existsSync(path.join(dir, '.gsd.conf'))) found.push(normalizePath(dir));
+      if (toolkitRepo(dir)) found.push(normalizePath(dir));
       return; // a repo: its subfolders are its own business
     }
     if (depth >= maxDepth) return;

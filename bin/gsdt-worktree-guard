@@ -28,7 +28,8 @@
 #       check, look and approval of the built pages.
 #
 # --global: the user-level hook install.sh registers (~/.claude). It fires in
-# EVERY repo: where there is no .gsd.conf it applies rule 0 only. In a set-up
+# EVERY repo: where the toolkit is not set up (toolkitRepo: a tracker-only
+# .gsd.conf does not count) it applies rule 0 only. In a set-up
 # repo it applies every rule (it is the only hook that sees a slash command the
 # user TYPES). An unreadable payload is let through in this mode.
 #

@@ -31,6 +31,7 @@ import {
   isDir,
   isExec,
   isFile,
+  toolkitRepo,
   lf,
   planningStatus,
   run,
@@ -524,7 +525,7 @@ class Doctor {
       IS_GSD_REPO = false;
     } else if (
       isDir(`${MAIN}/.planning`) ||
-      isFile(`${MAIN}/.gsd.conf`) ||
+      toolkitRepo(MAIN) ||
       isFile(`${MAIN}/scripts/gsdt-finish-worktree-feature.sh`) ||
       isFile(`${MAIN}/scripts/gsd-finish-worktree-feature.sh`)
     ) {

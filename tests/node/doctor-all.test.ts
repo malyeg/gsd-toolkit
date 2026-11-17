@@ -61,6 +61,10 @@ mkrepo(BAD,'base = develop\nbogus_key = 1\n');
 gitOk(BAD, ['worktree', 'add', '-q', '-b', 'phase-1-x', path.join(PROJ, 'bad-wt')]);
 mkdirSync(path.join(PROJ, 'node_modules', 'dep'), { recursive: true });
 mkrepo(path.join(WORK, 'unrelated'));
+// a repo whose .gsd.conf only holds gsdt-tracker settings does not use the toolkit
+const TICKETS = path.join(PROJ, 'tickets');
+gitOk(WORK, ['init', '-q', '-b', 'main', TICKETS]);
+write(path.join(TICKETS, '.gsd.conf'), 'tracker = clickup\ntracker_profile = x   # tickets only\n');
 
 describe('doctor --all', () => {
   it('no registry, no folder: usage, exit 0', () => {
@@ -101,6 +105,7 @@ describe('doctor --all', () => {
     assert.match(o, /✖ bad /);
     assert.doesNotMatch(o, /bad-wt/);
     assert.doesNotMatch(o, /unrelated/);
+    assert.doesNotMatch(o, /tickets/);
     assert.match(o, /2 repos, 1 with findings/);
     assert.match(o, /gsdt-start \/ gsdt-init/);
     assert.equal(readFileSync(REG, 'utf8'), '');
@@ -180,5 +185,16 @@ describe('gsdt-repos', () => {
     const r = gsdt('repos', ['--help'], { env: env() });
     assert.equal(r.status, 0);
     assert.match(r.out, /gsdt-doctor --all/);
+  });
+
+  it('a tracker-only .gsd.conf is not a toolkit repo: no rules hook, guard rule 0 only', () => {
+    assert.equal(gsdt('rules', ['--hook'], { env: env(), cwd: TICKETS }).out, '');
+    assert.notEqual(gsdt('rules', ['--hook'], { env: env(), cwd: GOOD }).out, '');
+    const guard = (skill: string) =>
+      gsdt('worktree-guard', ['--global'], { env: env(), cwd: TICKETS, input: JSON.stringify({ tool_name: 'Skill', tool_input: { skill } }) });
+    const np = guard('gsd-new-project');
+    assert.equal(np.status, 2, np.out + np.stderr);
+    assert.match(np.out + np.stderr, /no \.gsd\.conf with GSD settings \(only tracker keys\)/);
+    assert.equal(guard('gsd-autonomous').status, 0);
   });
 });

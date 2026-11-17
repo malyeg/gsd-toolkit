@@ -7,6 +7,15 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## 0.11.3
+
+- **A `.gsd.conf` with only tracker settings no longer counts as a GSD repo.**
+  `gsdt-tracker` reads the `tracker*` keys, so a repo can keep one for tickets
+  alone. Such a repo is now left out of `gsdt-repos`, gets no toolkit rules in
+  its Claude sessions (`gsdt-rules --hook`), and the user-level guard applies
+  only rule 0 there. A repo counts as set up when it has
+  `.gsd/INSTRUCTIONS.md`, the finish shim, or any other `.gsd.conf` key.
+
 ## 0.11.2
 
 - **`gsdt-repos`** (= `gsdt-doctor --all [<folder>...]`): one line per GSD repo,

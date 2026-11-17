@@ -4,7 +4,7 @@
 // `--hook` is the Claude SessionStart hook and must never break a session:
 // stdin is read and dropped, nothing goes to stderr, and it always returns 0.
 import { readSync } from 'node:fs';
-import { chomp, findMain, flowMode, base, wtdir, confProviders, isDir, isFile } from '../common.ts';
+import { chomp, findMain, flowMode, base, wtdir, confProviders, isDir, isFile, toolkitRepo } from '../common.ts';
 import { repoValues, rulesText } from '../provider.ts';
 import { uiGates } from '../ui.ts';
 import { gsdVersion } from '../version.ts';
@@ -67,7 +67,7 @@ export type Rules = { text: string; exit: number; stderr: string };
  */
 export function rulesFor(repo: string, hook: boolean): Rules {
   let m = findMain(repo || '.');
-  if (m === '' || !isFile(`${m}/.gsd.conf`)) m = '';
+  if (m === '' || !toolkitRepo(m)) m = '';
   if (m === '') {
     if (hook) return { text: '', exit: 0, stderr: '' };
     if (repo !== '' && !isDir(repo)) return { text: '', exit: 2, stderr: `gsdt-rules: no such directory: ${repo}\n` };

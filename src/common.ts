@@ -221,6 +221,23 @@ export function confGet(repo: string, key: string): string {
   return '';
 }
 
+/**
+ * Is <repo> set up with the toolkit? A `.gsd.conf` alone is not enough: gsdt-tracker reads its
+ * `tracker*` keys, so a repo can hold one for tickets only. Set up = the canonical
+ * `.gsd/INSTRUCTIONS.md` (bootstrap writes it), the finish shim, or a `.gsd.conf` with any
+ * key that is not `tracker*`.
+ */
+export function toolkitRepo(repo: string): boolean {
+  if (isFile(`${repo}/.gsd/INSTRUCTIONS.md`) || isFile(`${repo}/scripts/gsdt-finish-worktree-feature.sh`)) return true;
+  const text = isFile(`${repo}/.gsd.conf`) ? readUtf8(`${repo}/.gsd.conf`) : null;
+  if (text === null) return false;
+  const re = new RegExp(`^${SP}*([A-Za-z_][A-Za-z0-9_]*)${SP}*=`);
+  return text.split('\n').some((l) => {
+    const m = re.exec(l);
+    return m !== null && !(m[1] as string).startsWith('tracker');
+  });
+}
+
 /** gsd_base — the base branch (conf, else develop, else main, else current). */
 export function base(repo: string, env?: NodeJS.ProcessEnv): string {
   const v = confGet(repo, 'base');

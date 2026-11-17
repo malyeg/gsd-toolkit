@@ -89,7 +89,7 @@ content outside the markers is preserved.
 How each provider gets the rules: Claude through a user-level `SessionStart`
 hook (`gsdt-setup`, next to the guard's `--global` hook) that runs
 `gsdt-rules --hook` — it fires on startup, resume, `/clear` and compaction,
-prints nothing outside a repo with `.gsd.conf`, and always exits 0; the
+prints nothing outside a set-up repo (a `.gsd.conf` with only `tracker*` keys does not count), and always exits 0; the
 entry line is the fallback. Codex and custom have no such hook: the
 `AGENTS.md` entry says to run `gsdt-rules` first (checked: fresh Codex
 sessions do, see `docs/plan-instructions-split.md`). Keep the output well

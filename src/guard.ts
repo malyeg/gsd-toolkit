@@ -9,7 +9,7 @@
 import { readFileSync, readdirSync, realpathSync } from 'node:fs';
 import { WIN } from './spawn.ts';
 import path from 'node:path';
-import { chomp, confGet, findMain, git, installCmd, isDir, isFile, reviewsProblem, validationProblem } from './common.ts';
+import { chomp, confGet, findMain, git, installCmd, isDir, isFile, reviewsProblem, toolkitRepo, validationProblem } from './common.ts';
 import { uiDesignState, uiExempt, uiGate, uiGates, uiLayoutState, uiStepCmd } from './ui.ts';
 
 export type GuardResult = { rc: number; stdout: string; stderr: string };
@@ -226,12 +226,12 @@ export function guard(opts: GuardOpts): GuardResult {
     }
   }
   const BASE = baseOrDevelop(dir, env);
-  const hasConf = isFile(`${dir}/.gsd.conf`);
+  const hasConf = toolkitRepo(dir);
 
   // Rule 0 — the plan is started by gsdt-init, never by the bare skill
   if ((cmd === 'gsd-new-project' || cmd === 'gsd-ingest-docs') && !hasConf) {
     return block(
-      `BLOCKED: /${shown} needs the gsd-toolkit setup first — this repo has no .gsd.conf.`,
+      `BLOCKED: /${shown} needs the gsd-toolkit setup first — this repo has no .gsd.conf${isFile(`${dir}/.gsd.conf`) ? ' with GSD settings (only tracker keys)' : ''}.`,
       `Run gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /${shown}. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)`,
     );
   }
