@@ -15,7 +15,7 @@ rc=0
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    5 │ half executed                                  │   1/2 │ execute │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
-│    6 │ finished work                                  │     ✔ │ done    │ —            │
+│    6 │ finished work                                  │     ✔ │ verify  │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
 │      │ description that must wrap across several      │       │         │              │
@@ -45,7 +45,7 @@ rc=0
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    5 │ half executed                                  │   1/2 │ execute │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
-│    6 │ finished work                                  │     ✔ │ done    │ —            │
+│    6 │ finished work                                  │     ✔ │ verify  │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
 │      │ description that must wrap across several      │       │         │              │
@@ -76,7 +76,7 @@ rc=0
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    5 │ half executed                                  │   1/2 │ execute │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
-│    6 │ finished work                                  │     ✔ │ done    │ —            │
+│    6 │ finished work                                  │     ✔ │ verify  │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
 │      │ description that must wrap across several      │       │         │              │
@@ -108,7 +108,7 @@ rc=0
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    5 │ half executed                                  │   1/2 │ execute │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
-│    6 │ finished work                                  │     ✔ │ done    │ —            │
+│    6 │ finished work                                  │     ✔ │ verify  │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
 │      │ description that must wrap across several      │       │         │              │
@@ -138,7 +138,7 @@ rc=0
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    5 │ half executed                                  │   1/2 │ execute │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
-│    6 │ finished work                                  │     ✔ │ done    │ —            │
+│    6 │ finished work                                  │     ✔ │ verify  │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
 │      │ description that must wrap across several      │       │         │              │
@@ -182,7 +182,10 @@ COLUMNS
   PLANS     plans executed/total (a plan is done once it has a SUMMARY),
             e.g. 5/6 · ✔ = all executed · — = none yet
   STAGE     furthest lifecycle step reached, from the phase's artifact files:
-            spec → discuss → ui → plan → execute → done (all plans executed)
+            spec → discuss → ui → plan → execute → verify → done
+            verify = all plans executed but ROADMAP's checklist row is not
+            ticked yet (gsd-core ticks it when /gsd-verify-work passes);
+            done = ticked.
             A phase with no plan files is done when ROADMAP ticks it
             (- [x] **Phase N): work done outside GSD, like a baseline.
   WORKTREE  the phase's phase-<N>-* branch; ● = worktree attached
@@ -221,7 +224,7 @@ rc=0
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    5 │ half executed                                  │   1/2 │ execute │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
-│    6 │ finished work                                  │     ✔ │ done    │ —            │
+│    6 │ finished work                                  │     ✔ │ verify  │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
 │      │ description that must wrap across several      │       │         │              │
@@ -254,7 +257,7 @@ rc=0
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    5 │ half executed                                  │   1/2 │ execute │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
-│    6 │ finished work                                  │     ✔ │ done    │ —            │
+│    6 │ finished work                                  │     ✔ │ verify  │ —            │
 ├┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
 │    7 │ in flight in its worktree with a very long     │   0/1 │ plan    │ phase-7-wt ● │
 │      │ description that must wrap across several      │       │         │              │
