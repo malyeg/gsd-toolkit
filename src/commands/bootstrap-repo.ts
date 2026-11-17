@@ -3,6 +3,7 @@
 // tests/fixtures/p8-old-bins/). `gsdt-init` calls main() in-process. Still outside this file:
 // `bash -n` (the self-check) and `git`. The native hook merge into Claude's settings is done
 // in-process (no jq), written with the python-exact JSON writer.
+import { addRepo } from '../repos.ts';
 import { SH, normalizePath, relUnder } from '../spawn.ts';
 import { appendFileSync, copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -275,7 +276,8 @@ function run(argv: string[]): number {
     die('--tracker custom needs --tracker-command <script> (e.g. scripts/tracker.sh)');
   }
   if (normalizePath(DEST) === normalizePath(PKG)) die("you're inside the toolkit repo itself — cd into the target repo first");
-  const DIRTY_BEFORE = chomp(git(DEST, ['status', '--porcelain']).stdout);
+  addRepo(DEST);
+  const DIRTY_BEFORE =chomp(git(DEST, ['status', '--porcelain']).stdout);
   const CONF = `${DEST}/.gsd.conf`;
 
   // Gemini was a provider until 0.5.0: an older repo's list loses it here, and the Gemini

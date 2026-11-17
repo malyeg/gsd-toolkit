@@ -130,6 +130,8 @@ rc=1
 -> <W>/pkg/bin/gsdt-planning-merge
 ### ibin/gsdt-planning-repair
 -> <W>/pkg/bin/gsdt-planning-repair
+### ibin/gsdt-repos
+-> <W>/pkg/bin/gsdt-repos
 ### ibin/gsdt-rules
 -> <W>/pkg/bin/gsdt-rules
 ### ibin/gsdt-setup

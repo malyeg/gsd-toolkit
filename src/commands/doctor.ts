@@ -69,6 +69,7 @@ import {
   providerUserHookFile,
   staleHooks,
 } from '../provider.ts';
+import { doctorAll } from '../doctor-all.ts';
 import { roadmapAudit, unmarkedDone } from '../roadmap.ts';
 import {
   coreUpdateHow,
@@ -1516,6 +1517,8 @@ function readLine(): string | null {
 
 export function main(argv: string[]): number {
   const o: Opts = { repo: '', verbose: false, json: false, fix: false, yes: false };
+  let all = false;
+  const folders: string[] = [];
   const die = (m: string): number => {
     err(`✖ ${m}\n`);
     return 1;
@@ -1556,9 +1559,24 @@ export function main(argv: string[]): number {
         o.yes = true;
         i++;
         break;
+      case '--all':
+        all = true;
+        i++;
+        break;
       default:
+        if (!a.startsWith('-')) {
+          folders.push(a);
+          i++;
+          break;
+        }
         return die(`unknown argument: ${a} (see gsdt-doctor --help)`);
     }
+  }
+  if (!all && folders.length > 0) return die(`unknown argument: ${folders[0]} (see gsdt-doctor --help)`);
+  if (all) {
+    if (o.fix) return die("--all is read-only and doesn't mix with --fix — run gsdt-doctor --fix in one repo");
+    if (o.repo !== '') return die("--all and --repo don't mix");
+    return doctorAll(folders, o.json);
   }
   if (o.json) o.verbose = false; // --json is one object, whatever else is asked
   try {

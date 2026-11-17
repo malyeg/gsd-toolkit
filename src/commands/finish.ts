@@ -6,6 +6,7 @@
 // gsdt-start does gsdt-wt-new), and afterwards the ticket write-back, the roadmap
 // bookkeeping note and the "cd" line. Tickets: src/ticket.ts; children: gsdt-wt-finish, gsdt-tracker, gsdt-doctor
 // (from PATH, as bash did), gh.
+import { addRepo } from '../repos.ts';
 import { spawnSyncX as spawnSync } from '../spawn.ts';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -193,7 +194,8 @@ function run(argv: string[]): number {
 
   const MAIN = findMain('.');
   migrateRefuse(MAIN);
-  const BASE = base(MAIN);
+  addRepo(MAIN);
+  const BASE =base(MAIN);
   if (BASE === '') die(`could not determine the base branch — set 'base = <branch>' in ${MAIN}/.gsd.conf`);
 
   // ── local lock: serialize gsd commands touching this checkout ────────────

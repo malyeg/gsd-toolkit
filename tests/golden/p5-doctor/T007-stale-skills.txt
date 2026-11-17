@@ -93,10 +93,10 @@ base = develop
 ### skills/gsdt-batch/SKILL.md
 <8992 chars sha1 1877e76a5e1c41824ec084e70ef9360885aab613>
 ### skills/gsdt-doctor/SKILL.md
-<4298 chars sha1 68bfedf899616b3c66fe34e7a7714ec5e592b8da>
+<4527 chars sha1 b8e6d707a83adc4a0718b56559c39c7c2b0ed566>
 ### skills/gsdt-flow/SKILL.md
 <9209 chars sha1 b465fd41cbd5519ff7c91ff737d47c870e4b3fa8>
 ### skills/gsdt-tracker/SKILL.md
 <3543 chars sha1 e883b68a30185e8faaaa1110a52f1fb11bcf5e91>
 ### skills/gsdt-worktrees/SKILL.md
-<9577 chars sha1 ab47857e372c4ba0815de11c2bbfd55920af8359>
+<9826 chars sha1 ea6b3393a00f6970b0d2d78a13c00b9107328fe9>
