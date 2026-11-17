@@ -1175,9 +1175,13 @@ class Doctor {
           out('Checking again:\n');
           const rc = runInheritSelf('doctor', ['--repo', REPO]);
           out('\n');
+          const changed = lineList(git(MAIN, ['status', '--short']).stdout);
+          if (changed.length === 0) {
+            out('Nothing to commit (git shows no changed files).\n');
+            return rc;
+          }
           out('Changed files (not committed — review with git diff, then commit):\n');
-          const st = git(MAIN, ['status', '--short']);
-          for (const l of lineList(st.stdout)) out(`  ${l}\n`);
+          for (const l of changed) out(`  ${l}\n`);
           return rc;
         }
         out('Nothing changed.\n');

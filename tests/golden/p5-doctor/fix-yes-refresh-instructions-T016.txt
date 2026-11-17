@@ -88,7 +88,7 @@ Checking again:
 
 (then re-run gsdt-doctor to confirm)
 
-Changed files (not committed — review with git diff, then commit):
+Nothing to commit (git shows no changed files).
 --- stderr
 
 @@@ 2 @@@

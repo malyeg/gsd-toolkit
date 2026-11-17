@@ -7,6 +7,12 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## 0.11.2 (unreleased)
+
+- `gsdt-doctor --fix`: when the fixes changed only git-ignored files (for example
+  `worktree.baseRef` in `.claude/settings.local.json`), it says "Nothing to
+  commit" instead of an empty "Changed files" list.
+
 ## 0.11.1
 
 **Windows fixes** (found once every test ran on Windows):
