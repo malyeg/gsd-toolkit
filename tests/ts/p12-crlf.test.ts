@@ -109,6 +109,7 @@ function build(eol: 'lf' | 'crlf', name: string): World {
   const env: NodeJS.ProcessEnv = {
     ...process.env,
     HOME: home,
+    XDG_CONFIG_HOME: path.join(home, '.config'),
     CLAUDE_CONFIG_DIR: path.join(home, '.claude'),
     CODEX_HOME: path.join(home, '.codex'),
     GSD_NO_UPDATE_CHECK: '1',

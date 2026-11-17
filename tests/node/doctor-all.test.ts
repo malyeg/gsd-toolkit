@@ -15,6 +15,8 @@ const REG = path.join(HOME, '.config', 'gsd', 'repos');
 const STUB = path.join(WORK, 'stub');
 const IDENT = '{"packageName":"@opengsd/gsd-core","version":"1.18.0"}';
 stubExe(STUB, 'gsd_run', `echo '${IDENT}'`, `echo ${IDENT}`);
+// a machine without Claude Code (CI) would add T051/T057 to every repo
+stubExe(STUB, 'claude', 'echo 2.0.0', 'echo 2.0.0');
 
 const SETTINGS = path.join(WORK, 'claude-settings.json');
 const rulesBin = path.join(PKG, 'bin', 'gsdt-rules').replace(/\\/g, '/');

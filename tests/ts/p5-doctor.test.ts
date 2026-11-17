@@ -128,6 +128,7 @@ function runBin(c: Ctx, sc: Sc, argv: string[], cwd: string): Promise<{ out: str
   }
   const env: Record<string, string> = {
     HOME: c.home,
+    XDG_CONFIG_HOME: path.join(c.home, '.config'),
     PATH,
     ...LOCALE_ENV,
     GSD_NO_UPDATE_CHECK: '1',
@@ -257,7 +258,7 @@ const git = (c: Ctx, ...a: string[]): string => g(c.repo, ...a);
 const init = (c: Ctx, extra: string[] = []): void => {
   spawnSync(path.join(c.pkg, 'bin', 'gsdt-bootstrap-repo'), ['--agents', 'claude,codex', ...extra], {
     cwd: c.repo,
-    env: { ...process.env, HOME: c.home, PATH: `${c.pkg}/bin:${process.env.PATH}` },
+    env: { ...process.env, HOME: c.home, XDG_CONFIG_HOME: path.join(c.home, '.config'), PATH: `${c.pkg}/bin:${process.env.PATH}` },
     stdio: 'ignore',
   });
   git(c, 'add', '-A');
