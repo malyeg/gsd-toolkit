@@ -7,8 +7,25 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## 0.11.2 (unreleased)
+## 0.11.2
 
+- **`gsdt-repos`** (= `gsdt-doctor --all [<folder>...]`): one line per GSD repo,
+  `ok` or its finding codes, instead of a doctor run in each. It reads the repos
+  from `~/.config/gsd/repos`, which `gsdt-init`, `gsdt-bootstrap-repo`,
+  `gsdt-start` and `gsdt-finish` now add to, plus the repos found under each
+  folder given (`gsdt-repos ~/projects` the first time). Read-only, like doctor:
+  it never writes that list; no `--fix`; `--json`.
+- **Unverified phases show up before they pile up.** `gsdt-list` shows STAGE
+  `verify` (not `done`) while every plan ran but the ROADMAP checklist row is not
+  ticked; `done` once `/gsd-verify-work` ticks it. `gsdt-finish` warns before it
+  merges such a phase (naming the VERIFICATION and UAT status) and repeats one
+  line at the end. A warning only: it never blocks.
+- `gsdt-finish`: when `gsdt-planning-repair` is not on PATH (after a Node version
+  switch, say), the `.planning` repair runs from the package itself instead of
+  being skipped; if it cannot run, the finish stops before pushing.
+- `gsdt-flow-next` works from a subfolder of a phase worktree, and finds a
+  zero-padded phase folder (`02.1-…` for phase `2.1`) as the guard does.
+- BLOCKED messages name `/gsdt-flow`, not `/gsd-flow` (which does not exist).
 - `gsdt-doctor --fix`: when the fixes changed only git-ignored files (for example
   `worktree.baseRef` in `.claude/settings.local.json`), it says "Nothing to
   commit" instead of an empty "Changed files" list.

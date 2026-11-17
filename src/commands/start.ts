@@ -8,6 +8,7 @@
 // its output is captured and printed once it is done), gsdt-planning-repair,
 // gsdt-flow-next and gsdt-tracker (children). The ROADMAP rows and STATE.md note
 // are edited in-process (no perl).
+import { addRepo } from '../repos.ts';
 import { selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
 import { existsSync, readFileSync, readdirSync, rmdirSync, appendFileSync, writeFileSync } from 'node:fs';
 import { isatty } from 'node:tty';
@@ -409,7 +410,8 @@ function run(argv: string[]): number | Promise<number> {
     MAIN = findMain('.');
   }
   migrateRefuse(MAIN);
-  const ROADMAP = `${MAIN}/.planning/ROADMAP.md`;
+  addRepo(MAIN);
+  const ROADMAP =`${MAIN}/.planning/ROADMAP.md`;
   if (!isFile(ROADMAP)) die(`${MAIN} has no .planning/ROADMAP.md — initialize GSD first (/gsd-new-project)`);
   let GSD_RUN = '';
   if (ATTACH === '') {

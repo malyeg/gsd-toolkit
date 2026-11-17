@@ -392,6 +392,45 @@ describe('finish — files the tests leave behind do not stop the cleanup', () =
   });
 });
 
+describe('finish — a phase merged with every plan run but its ROADMAP row unticked', () => {
+  const setup = (name: string, tick: boolean): { R: string; wt: string } => {
+    const R = path.join(W, name);
+    const wt = path.join(W, `${name}-wt`);
+    project(R);
+    write(path.join(R, '.gsd.conf'), 'install = none\ntest = none\nflow = strict\n');
+    commit(R, 'strict');
+    gitOk(R, ['push', '-q']);
+    gitOk(R, ['worktree', 'add', '-qb', 'phase-1-catalog', wt]);
+    const pd = path.join(wt, '.planning', 'phases', '01-catalog');
+    mkdirSync(pd, { recursive: true });
+    write(path.join(pd, '01-01-PLAN.md'), 'plan\n');
+    write(path.join(pd, '01-01-SUMMARY.md'), 'done\n');
+    write(path.join(pd, '01-VALIDATION.md'), '---\nnyquist_compliant: true\n---\n## Validation Audit\n');
+    write(path.join(pd, '01-VERIFICATION.md'), '---\nstatus: human_needed\n---\n');
+    write(path.join(wt, '.planning', 'ROADMAP.md'), `# Roadmap\n- [${tick ? 'x' : ' '}] **Phase 1: catalog** - x\n### Phase 1: catalog\n`);
+    write(path.join(wt, 'f.txt'), 'feature\n');
+    commit(wt, 'feature');
+    return { R, wt };
+  };
+  it('warns (naming VERIFICATION and UAT states) and still lands, repeating a short line at the end', () => {
+    const { R } = setup('unverified', false);
+    const r = gsdt('gsdt-wt-finish', ['1'], { cwd: R });
+    is('finish succeeds even with flow = strict', r.status, 0);
+    has('…warns', r.out, 'every plan ran, but its ROADMAP checklist row is not ticked');
+    has('…names the VERIFICATION state', r.out, '01-VERIFICATION.md: human_needed');
+    has('…and the UAT state', r.out, 'UAT: missing');
+    has('…and the fix', r.out, '/gsd-verify-work 1 in the phase worktree');
+    ok('…ends with the short line', r.out.trimEnd().endsWith('merged but not marked complete — /gsd-verify-work 1'), r.out.slice(-200));
+    is('…the feature is on main', countLines(gitOut(R, ['log', '--oneline', 'main']), /feature/), 1);
+  });
+  it('is silent when the row is ticked', () => {
+    const { R } = setup('verified', true);
+    const r = gsdt('gsdt-wt-finish', ['1'], { cwd: R });
+    is('finish succeeds', r.status, 0);
+    ok('…no warning', !r.out.includes('not marked complete') && !r.out.includes('not ticked'), r.out);
+  });
+});
+
 describe('finish — a gsdt-batch worktree (batch-*)', () => {
   const R = path.join(W, 'batch');
   const BB = 'batch-2026-11-09-fix-labels';

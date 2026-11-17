@@ -6,6 +6,7 @@
 // gsdt-start does gsdt-wt-new), and afterwards the ticket write-back, the roadmap
 // bookkeeping note and the "cd" line. Tickets: src/ticket.ts; children: gsdt-wt-finish, gsdt-tracker, gsdt-doctor
 // (from PATH, as bash did), gh.
+import { addRepo } from '../repos.ts';
 import { spawnSyncX as spawnSync } from '../spawn.ts';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -193,7 +194,8 @@ function run(argv: string[]): number {
 
   const MAIN = findMain('.');
   migrateRefuse(MAIN);
-  const BASE = base(MAIN);
+  addRepo(MAIN);
+  const BASE =base(MAIN);
   if (BASE === '') die(`could not determine the base branch — set 'base = <branch>' in ${MAIN}/.gsd.conf`);
 
   // ── local lock: serialize gsd commands touching this checkout ────────────
@@ -261,8 +263,10 @@ function run(argv: string[]): number {
     if (git(MAIN, ['show-ref', '--verify', '--quiet', `refs/heads/${BR}-pr`]).status === 0) HEAD_BR = `${BR}-pr`;
     // The same UI gate as the merge path (the PR is how this phase reaches the base).
     const PR_WT = worktreeOf(MAIN, BR);
+    let unverified: string | undefined;
     if (KIND !== 'batch') {
       const g = finishGates(MAIN, BR, PR_WT);
+      unverified = g.unverified;
       if (g.stderr !== '') err(g.stderr);
       if (!g.ok) die('no PR was opened');
     }
@@ -291,6 +295,7 @@ function run(argv: string[]): number {
     }
     out('\n');
     out(`Worktree kept. After the PR merges:  gsdt-finish ${BR}\n`);
+    if (unverified !== undefined) err(`⚠ phase ${unverified} is not marked complete — /gsd-verify-work ${unverified} before merging\n`);
     return 0;
   }
 

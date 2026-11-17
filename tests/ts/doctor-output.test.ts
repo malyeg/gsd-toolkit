@@ -43,6 +43,7 @@ function world(): { W: string; repo: string; run: (argv: string[]) => { out: str
     ...process.env,
     ...GIT_ENV,
     HOME: home,
+    XDG_CONFIG_HOME: path.join(home, '.config'),
     GSD_NO_UPDATE_CHECK: '1',
     GSD_NO_CORE: '1',
     PATH: `${path.join(PKG, 'bin')}:${stub}:${path.dirname(process.execPath)}:/usr/bin:/bin:/usr/sbin:/sbin`,

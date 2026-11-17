@@ -42,6 +42,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { baserefState } from './claude-settings.ts';
 import { WIN, relUnder, resolveWin, spawnSyncX as spawnSync } from './spawn.ts';
+import { allPlansRan, rowUnticked } from './roadmap.ts'; // import cycle too: call-time only
 import { uiFinishGate } from './ui.ts'; // import cycle: ui.ts uses common.ts too; both only call at run time
 
 /** A bash `exit N` inside a library function. */
@@ -490,7 +491,7 @@ export function gateTreeDone(mainCheckout: string, g: GateTree): void {
   git(mainCheckout, ['worktree', 'prune']);
 }
 
-export type Gate = { ok: boolean; stderr: string };
+export type Gate = { ok: boolean; stderr: string; /** phase number merged without verification (verifyDebtGate) */ unverified?: string };
 
 /** gsd_flow_finish_gate — ok = false: refuse the finish (flow = strict, no test audit); `stderr` is what bash printed. */
 export function flowFinishGate(mainCheckout: string, branch: string, worktree: string): Gate {
@@ -508,6 +509,45 @@ export function flowFinishGate(mainCheckout: string, branch: string, worktree: s
   };
 }
 
+/** `status:` in a file's front matter ('missing' = no file, 'unknown' = no status line) */
+function fmStatus(file: string): string {
+  const t = readLatin1(file);
+  if (t === null) return 'missing';
+  const lines = t.replace(/\r/g, '').split('\n');
+  if (lines[0] !== '---') return 'unknown';
+  for (const l of lines.slice(1)) {
+    if (l === '---') break;
+    const m = /^status:\s*["']?([^"'#\s]+)/.exec(l);
+    if (m) return m[1] as string;
+  }
+  return 'unknown';
+}
+
+/** Every plan ran but the ROADMAP checklist row is not ticked: a warning, never a refusal (ok stays true). */
+export function verifyDebtGate(worktree: string, branch: string): Gate {
+  const pd = phaseDir(worktree, branch);
+  if (pd === null) return { ok: true, stderr: '' };
+  let files: string[] = [];
+  try {
+    files = readdirSync(pd.pd);
+  } catch {
+    return { ok: true, stderr: '' };
+  }
+  const roadmap = readLatin1(`${worktree}/.planning/ROADMAP.md`);
+  if (roadmap === null || !allPlansRan(files) || !rowUnticked(roadmap, pd.n)) return { ok: true, stderr: '' };
+  const uat = files.filter((f) => /-UAT\.md$/i.test(f)).sort()[0];
+  const ver = fmStatus(`${pd.pd}/${pd.p}-VERIFICATION.md`);
+  const uatS = uat === undefined ? 'missing' : fmStatus(`${pd.pd}/${uat}`);
+  return {
+    ok: true,
+    unverified: pd.n,
+    stderr:
+      `⚠ phase ${pd.n}: every plan ran, but its ROADMAP checklist row is not ticked — the phase is not verified.\n` +
+      `  ${pd.p}-VERIFICATION.md: ${ver} · UAT: ${uatS}\n` +
+      `  Fix: /gsd-verify-work ${pd.n} in the phase worktree before finishing (gsd-core ticks the row when it passes). Finishing anyway merges it unverified.\n`,
+  };
+}
+
 /**
  * gsd_finish_gates — the UI steps, then the test audit. ok = false: refuse.
  * `stderr` is everything bash wrote to stderr, in order.
@@ -519,15 +559,21 @@ export function finishGates(mainCheckout: string, branch: string, worktree: stri
     stderr += `⚠ could not check out '${branch}' to check its files — the finish gates see only what is on disk\n`;
   }
   let ok = false;
+  let unverified: string | undefined;
   const ui = uiFinishGate(mainCheckout, branch, g.wt);
   stderr += ui.stderr;
   if (ui.ok) {
     const f = flowFinishGate(mainCheckout, branch, g.wt);
     stderr += f.stderr;
     ok = f.ok;
+    if (ok) {
+      const v = verifyDebtGate(g.wt, branch);
+      stderr += v.stderr;
+      unverified = v.unverified;
+    }
   }
   gateTreeDone(mainCheckout, g);
-  return { ok, stderr };
+  return { ok, stderr, unverified };
 }
 
 // ── gsd-core's CLI ──────────────────────────────────────────────────────────

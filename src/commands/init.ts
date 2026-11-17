@@ -4,6 +4,7 @@
 // ROADMAP is there. --no-launch, or no terminal, prints the command instead. Provider adapters
 // choose the actual CLI argv. Port of the bash bin/gsdt-init (parity oracle:
 // tests/fixtures/p8-old-bins/gsdt-init).
+import { addRepo } from '../repos.ts';
 import { existsSync, lstatSync, readFileSync, readSync, readdirSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import path from 'node:path';
@@ -258,6 +259,7 @@ function run(argv: string[]): number | Promise<number> {
   if (top.status !== 0) die('run this from inside the target git repo');
   const DEST = chomp(top.stdout);
   migrateRefuse(findMain(DEST));
+  addRepo(DEST);
 
   // Build bootstrap arguments only after validating the complete selection. This prevents a typo
   // or a launch provider outside the configured set from writing a partially initialized repository.

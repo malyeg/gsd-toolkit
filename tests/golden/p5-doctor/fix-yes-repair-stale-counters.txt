@@ -57,6 +57,9 @@ Changed files (not committed — review with git diff, then commit):
 --- stderr
 
 @@@ 2 @@@
+### home/.config/gsd/repos
+<W>/repo
+
 ### repo/.claude/settings.json
 {
   "hooks": {

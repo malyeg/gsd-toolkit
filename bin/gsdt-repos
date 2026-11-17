@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# gsdt-repos — list the GSD phases of a repo: number, description, plan
+# progress, and worktree/branch state. Read-only; safe from anywhere.
+#
+# Usage (from anywhere inside a GSD-fitted repo or its worktrees):
+#   gsdt-repos [--repo <path>] [--compact]
+#
+# By default long PHASE/WORKTREE text wraps across lines to fit the screen so
+# nothing is truncated; pass --compact for the one-line-per-phase view.
+#
+# Options:
+#   --repo <path>    main checkout of the target repo (default: derived from cwd)
+#   --compact, -c    one line per phase, clipping each cell (the old default)
+#
+# Columns:
+#   N         phase number (what gsdt-start -p <N> takes)
+#   PHASE     description from the '### Phase N:' heading in ROADMAP.md
+#   PLANS     plans executed/total (a plan is done once it has a SUMMARY) ·
+#             ✔ all executed · — no plans yet
+#   STAGE     furthest lifecycle step reached, from the phase's artifact files:
+#             spec → discuss → ui → plan → execute → done (all plans executed)
+#   WORKTREE  the phase's phase-<N>-* branch, ● = worktree attached
+# Under the table: the gsdt-batch branches (batch-*), ● = worktree attached.
+set -euo pipefail
+
+# Ported to TypeScript (src/commands/list.ts, which holds the --help text);
+# this launcher only finds the package.
+SELF=$0
+while [ -L "$SELF" ]; do t=$(readlink "$SELF"); case "$t" in /*) SELF=$t ;; *) SELF="$(dirname "$SELF")/$t" ;; esac; done
+if ! command -v node >/dev/null 2>&1; then
+  echo "gsdt-repos: needs Node.js >= 24 (node not found on PATH)" >&2
+  exit 1
+fi
+exec node "$(cd "$(dirname "$SELF")/.." && pwd)/src/launch.mjs" repos "$@"

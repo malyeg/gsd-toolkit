@@ -381,3 +381,13 @@ test('rule 0b — GSD skills that clash with the worktree model (set-up repos)',
   gis('--global: typed feature work on the base of a set-up repo → blocked (all rules apply)', gg(upe('gsd-discuss-phase', REPO)), 2);
   gis('--global: /gsd-autonomous in a repo without .gsd.conf → allowed', gg(upe('gsd-autonomous', BARE)), 0);
 });
+
+test('BLOCKED texts name /gsdt-flow, the skill that exists, not /gsd-flow', () => {
+  mkrepo('', 'phase-7-thing', '07-thing');
+  git(REPO, 'checkout', '-q', 'develop'); // the base branch: feature work is refused here
+  for (const skill of ['gsdt-flow', 'gsdw-flow']) {
+    blocked(`${skill} on the base branch`, skill, '7');
+    assert.match(lastErr, /\/gsdt-flow is feature work/, `${skill}: names /gsdt-flow: ${lastErr}`);
+    assert.doesNotMatch(lastErr, /\/gsd-flow/, `${skill}: never /gsd-flow: ${lastErr}`);
+  }
+});

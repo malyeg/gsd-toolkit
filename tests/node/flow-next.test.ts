@@ -306,3 +306,17 @@ test('UI gates (design system, layout, the checks of the rendered pages)', () =>
   git(U, 'branch', '-f', 'develop', 'phase-5-shop');
   assert.equal(ustep(), 'validate', 'UI-REVIEW.md on the base branch → no UI steps');
 });
+
+test('from a subfolder of the worktree, and with a zero-padded decimal phase dir', () => {
+  const R = tmp('sub');
+  git(R, 'init', '-q', '-b', 'develop');
+  git(R, 'commit', '-q', '--allow-empty', '-m', 'init');
+  git(R, 'checkout', '-q', '-b', 'phase-2.1-fix');
+  mkdirSync(path.join(R, '.planning', 'phases', '02.1-fix'), { recursive: true });
+  mkdirSync(path.join(R, 'src', 'deep'), { recursive: true });
+  // no --repo: the repo is found from the cwd, which is a subfolder
+  const r = gsdt('flow-next', ['2.1'], { cwd: path.join(R, 'src', 'deep'), env: { GSD_TRACKER: undefined } });
+  assert.equal(r.status, 0, `exit ${r.status}: ${r.out}`);
+  assert.doesNotMatch(r.out, /no \.planning\/phases/, r.out);
+  assert.match(r.stdout, /step=/, 'prints a step');
+});

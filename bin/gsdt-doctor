@@ -19,8 +19,15 @@
 # Usage:
 #   gsdt-doctor [--repo <path>] [--verbose] [--json]
 #   gsdt-doctor --fix [--yes] [--repo <path>]
+#   gsdt-doctor --all [<folder>...] [--json]
 #
 # Options:
+#   --all          one line per GSD repo (ok, or the finding codes): the repos
+#                  listed in ~/.config/gsd/repos (gsdt-init, gsdt-bootstrap-repo,
+#                  gsdt-start and gsdt-finish add the repo they run in) plus the
+#                  repos with a .gsd.conf found under each <folder>. Read-only
+#                  (never writes that list), no version check, no --fix;
+#                  exit 1 if any repo has findings. --json: [{repo,path,findings}].
 #   --repo <path>  repo to inspect (default: the checkout containing cwd)
 #   --verbose, -v  also list every check that passed and the optional tips (the
 #                  full report). By default doctor prints findings, available

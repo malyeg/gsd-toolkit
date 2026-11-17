@@ -214,8 +214,8 @@ test('.planning: the driver reconciles a conflicting ROADMAP; the repair runs af
   scenario({ roadmap: rm }, P, [wf(['1'], { rc: 1, env: E({ REPAIR_MODE: 'badcheck' }), err: /STILL self-contradictory after the repair — not pushing\.\nstub: ROADMAP is self-contradictory\nstub check failed\n {2}The merge is committed locally only/ })]);
   scenario({ roadmap: rm }, P, [wf(['1'], { rc: 0, env: E({ REPAIR_MODE: 'failcommit' }), err: /stub repair broke\n⚠ \.planning reconcile exited nonzero — verifying before we go on/ })]);
   scenario({ roadmap: rm }, P, [wf(['1'], { rc: 1, env: E({ REPAIR_MODE: 'dirty' }), err: /the \.planning repair was not committed — not pushing\.\n M \.planning\/ROADMAP\.md\n {2}Commit it, then re-run finish\./ })]);
-  // no repair tool on PATH: a warning, and the finish goes on
-  scenario({ roadmap: rm }, both((s) => tools(s, { repair: false }), (s) => void phase(s)), [wf(['1'], { rc: 0, err: /gsdt-planning-repair not on PATH — skipping the \.planning reconcile/ })]);
+  // no repair tool on PATH: the package's own copy runs it; the finish is never pushed unrepaired
+  scenario({ roadmap: rm }, both((s) => tools(s, { repair: false }), (s) => void phase(s)), [wf(['1'], { rc: 0, out: /gsdt-planning-repair is not on PATH — running it from the toolkit package\n▶ reconciling \.planning after the phase merge/ })]);
   // no ROADMAP at all: nothing to reconcile
   scenario({}, both(P, (s) => {
     git(s.R, 'rm', '-q', '-f', '.planning/ROADMAP.md');

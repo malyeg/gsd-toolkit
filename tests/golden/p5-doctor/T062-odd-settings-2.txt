@@ -66,6 +66,9 @@ rc=1
 --- stderr
 
 @@@ 3 @@@
+### home/.config/gsd/repos
+<W>/repo
+
 ### hook.json
 {"hooks":{"SessionStart":[{"hooks":[{"command":"gsdt-rules --hook"}]}]}}
 

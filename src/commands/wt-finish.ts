@@ -33,7 +33,7 @@
 //
 // Still outside this file: gsdt-planning-repair (found on PATH, as bash did) and
 // the project's own pre-merge script / test command (children).
-import { SH, WIN, normalizePath, spawnSyncX as spawnSync } from '../spawn.ts';
+import { SH, WIN, normalizePath, selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
 import path from 'node:path';
 import {
   acquireLock,
@@ -151,20 +151,23 @@ function run(argv: string[]): number {
     if (!isDir(pl)) return true;
     // No ROADMAP.md → nothing to reconcile (the repair tool exits 2 on this, which would read as "corrupt — not pushing").
     if (!isFile(`${pl}/ROADMAP.md`)) return true;
-    const repair = commandOnPath('gsdt-planning-repair');
-    if (repair === null) {
-      err('⚠ gsdt-planning-repair not on PATH — skipping the .planning reconcile (re-run install.sh)\n');
-      return true;
-    }
+    // On PATH when installed; else through this package's own launcher (a Node switch can drop the install from PATH).
+    // Never skipped: merge damage must not be pushed.
+    const onPath = commandOnPath('gsdt-planning-repair') !== null;
+    const repairCmd = (args: string[]): [string, string[]] => (onPath ? ['gsdt-planning-repair', args] : selfArgv('planning-repair', args));
+    if (!onPath) out('▶ gsdt-planning-repair is not on PATH — running it from the toolkit package\n');
     out(`▶ reconciling .planning after ${phrase}…\n`);
-    if (inherit('gsdt-planning-repair', ['--repo', MAIN, '--commit']) !== 0) {
-      err('⚠ .planning reconcile exited nonzero — verifying before we go on\n');
+    {
+      const [c, a] = repairCmd(['--repo', MAIN, '--commit']);
+      if (inherit(c, a) !== 0) err('⚠ .planning reconcile exited nonzero — verifying before we go on\n');
     }
     // Assert the guarantee rather than assume it, even when the repair itself failed: the files must be coherent, and the
     // repair must have been COMMITTED (--check reads the working tree).
-    if (inherit('gsdt-planning-repair', ['--repo', MAIN, '--check'], { stdio: ['inherit', 'ignore', 'ignore'] }) !== 0) {
+    const [cc, ca] = repairCmd(['--repo', MAIN, '--check']);
+    if (inherit(cc, ca, { stdio: ['inherit', 'ignore', 'ignore'] }) !== 0) {
       err('✗ .planning is STILL self-contradictory after the repair — not pushing.\n');
-      toStderr('gsdt-planning-repair', ['--repo', MAIN, '--check']);
+      if (!onPath) err('  (gsdt-planning-repair is not on PATH and the package copy did not run it either — re-run gsdt-setup, or check Node >= 24.)\n');
+      toStderr(cc, ca);
       err('  The merge is committed locally only. Fix .planning, commit, then re-run finish.\n');
       return false;
     }
@@ -192,8 +195,10 @@ function run(argv: string[]): number {
 
   // ── UI steps of a phase with screens (ui_gates), then the test audit (flow = strict) ──
   // After the sync: a phase whose UI review is already on the base branch is left alone. A batch has no phase folder.
+  let unverified: string | undefined;
   if (KIND === 'phase') {
     const g = finishGates(MAIN, BRANCH, DEST);
+    unverified = g.unverified;
     if (g.stderr !== '') err(g.stderr);
     if (!g.ok) {
       err(`  Nothing was merged. The ${KIND} worktree is kept.\n`);
@@ -289,6 +294,7 @@ function run(argv: string[]): number {
     if (left !== '' && leftLines.some((l) => !l.startsWith('?? '))) {
       err(`⚠ ${DEST} has changes made while the finish ran — kept it and '${BRANCH}':\n`);
       toStderr('git', ['-C', DEST, 'status', '--short']);
+      if (unverified !== undefined) err(`⚠ phase ${unverified} merged but not marked complete — /gsd-verify-work ${unverified}\n`);
       err('  The phase IS merged and pushed. Once you have looked at them:\n');
       err(`    git worktree remove --force "${DEST}" && git branch -D ${BRANCH}\n`);
       return 0;
@@ -313,5 +319,6 @@ function run(argv: string[]): number {
   if (rc !== 0) return rc;
 
   out(`✅ '${BRANCH}' merged into '${BASE}', pushed, and cleaned up.\n`);
+  if (unverified !== undefined) err(`⚠ phase ${unverified} merged but not marked complete — /gsd-verify-work ${unverified}\n`);
   return 0;
 }

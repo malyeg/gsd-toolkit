@@ -56,6 +56,7 @@ const baseEnv = (s: Side, extra: Record<string, string> = {}): NodeJS.ProcessEnv
   return {
     ...env,
     HOME: s.home,
+    XDG_CONFIG_HOME: path.join(s.home, '.config'),
     GIT_CONFIG_GLOBAL: '/dev/null',
     GIT_CONFIG_NOSYSTEM: '1',
     GIT_AUTHOR_NAME: 't',

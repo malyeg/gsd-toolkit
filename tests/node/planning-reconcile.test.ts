@@ -11,7 +11,7 @@
 //   2026-08-02/      the earlier corruption, which also carries a table row /gsd-fast appended past EOF.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { chmodSync, cpSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { chmodSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
 import { planningApply, planningHook, planningStatus } from '../../src/common.ts';
@@ -361,7 +361,7 @@ test('no driver registered — plain union, repaired afterwards', () => {
 // ── 7. the real gsdt-finish path ──────────────────────────────────────────────
 // The guarantee the whole change exists for: a normal finish must never leave .planning
 // self-contradictory on the base branch.
-test('gsdt-finish leaves the base branch coherent', () => {
+function finishScenario(): { repo: string; wt: string } {
   const WT = tmp('wt');
   const repo = path.join(WT, 'repo');
   const wt = path.join(WT, 'wt', 'phase-1-alpha');
@@ -386,6 +386,11 @@ test('gsdt-finish leaves the base branch coherent', () => {
   state(repo, 'executing', '2', '1', '2026-03-02T00:00:00.000Z');
   git(repo, 'commit', '-qam', 'parallel session finished phase 2');
 
+  return { repo, wt };
+}
+
+test('gsdt-finish leaves the base branch coherent', () => {
+  const { repo, wt } = finishScenario();
   const fin = g('wt-finish', ['1'], { cwd: wt });
   assert.equal(fin.status, 0, `gsdt-wt-finish succeeds: ${fin.out}`);
   assert.equal(count(fin.out, /reconciling .planning after the phase merge/), 1, 'it reports reconciling .planning');
@@ -399,6 +404,25 @@ test('gsdt-finish leaves the base branch coherent', () => {
   assert.equal(count(S, /^Resume file:/), 2, "develop's history is intact");
   assert.equal(g('planning-repair', ['--check'], { cwd: repo }).status, 0, 'develop passes --check after the finish');
   assert.equal(lines(git(repo, 'status', '--porcelain', '--', '.planning').stdout).length, 0, 'the repair left no uncommitted changes');
+});
+
+test('gsdt-finish runs the repair from the package when gsdt-planning-repair is not on PATH', { skip: WIN }, () => {
+  const { repo, wt } = finishScenario();
+  // the merge driver stays reachable; only the repair command is missing
+  const stub = path.join(tmp('nopath'), 'bin');
+  write(path.join(stub, 'gsdt-planning-merge'), `#!/bin/sh\nexec bash "${PKG}/bin/gsdt-planning-merge" "$@"\n`);
+  chmodSync(path.join(stub, 'gsdt-planning-merge'), 0o755);
+  // a PATH without any folder holding gsdt-planning-repair (the install dropped off PATH after a Node switch)
+  const noRepair = (process.env.PATH ?? process.env.Path ?? '')
+    .split(path.delimiter)
+    .filter((d) => d !== '' && !['', '.cmd', '.exe'].some((x) => existsSync(path.join(d, `gsdt-planning-repair${x}`))))
+    .join(path.delimiter);
+  const fin = g('wt-finish', ['1'], { cwd: wt, env: { PATH: `${stub}${path.delimiter}${noRepair}` } });
+  assert.equal(fin.status, 0, `gsdt-wt-finish succeeds: ${fin.out}`);
+  assert.doesNotMatch(fin.out, /skipping the \.planning reconcile/, 'the repair is not skipped');
+  assert.equal(count(fin.out, /reconciling .planning after the phase merge/), 1, 'it reports reconciling .planning');
+  assert.equal(count(STATE(repo), /  completed_phases: 2/), 1, "develop's counters were recomputed by the package's repair");
+  assert.equal(g('planning-repair', ['--check'], { cwd: repo }).status, 0, 'develop passes --check after the finish');
 });
 
 // ── 8. content the reconciler must never touch ───────────────────────────────

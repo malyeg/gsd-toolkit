@@ -12,42 +12,42 @@ err=""
 wrong phase 8 
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 8. Switch to the phase-8-* worktree.\n"
 @@@ 4 @@@
 wrong phase 8 --all --json
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 8. Switch to the phase-8-* worktree.\n"
 @@@ 5 @@@
 wrong phase 7.1 
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 7.1. Switch to the phase-7.1-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 7.1. Switch to the phase-7.1-* worktree.\n"
 @@@ 6 @@@
 wrong phase 7.1 --all --json
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 7.1. Switch to the phase-7.1-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 7.1. Switch to the phase-7.1-* worktree.\n"
 @@@ 7 @@@
 on the base branch 
 rc=2
 out=""
-err="BLOCKED: /gsd-flow is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+err="BLOCKED: /gsdt-flow is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
 @@@ 8 @@@
 on the base branch --all --json
 rc=2
 out=""
-err="BLOCKED: /gsd-flow is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+err="BLOCKED: /gsdt-flow is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
 @@@ 9 @@@
 on a non-phase branch 
 rc=2
 out=""
-err="BLOCKED: /gsd-flow targets phase 7 but 'other-branch' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+err="BLOCKED: /gsdt-flow targets phase 7 but 'other-branch' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
 @@@ 10 @@@
 on a non-phase branch --all --json
 rc=2
 out=""
-err="BLOCKED: /gsd-flow targets phase 7 but 'other-branch' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+err="BLOCKED: /gsdt-flow targets phase 7 but 'other-branch' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
 @@@ 11 @@@
 skip guard on base 
 rc=0
