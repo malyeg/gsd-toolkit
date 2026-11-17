@@ -15,9 +15,9 @@
 //    sorts by the locale's collation (same order for the usual 07-01-PLAN.md names).
 import { readdirSync, readFileSync, realpathSync } from 'node:fs';
 import { ticketExtract, trackerWhich } from '../ticket.ts';
-import { chomp, confGet, findMain, git, GsdExit, isDir, isFile, lf, migrateRefuse, reviewsProblem, validationProblem, workflowFlag } from '../common.ts';
+import { chomp, confGet, findMain, git, GsdExit, isDir, isFile, lf, migrateRefuse, phaseDir, reviewsProblem, validationProblem, workflowFlag } from '../common.ts';
 import { guardArgv } from '../guard.ts';
-import { relUnder } from '../spawn.ts';
+import { normalizePath, relUnder } from '../spawn.ts';
 import { GSD_GEMINI_GONE, providerGone, providerKnown, providerReviewFlag } from '../provider.ts';
 import { uiCheckState, uiDesignState, uiExempt, uiGate, uiGates, uiLayoutState } from '../ui.ts';
 
@@ -227,7 +227,13 @@ function flowNextRun(argv: string[], env: NodeJS.ProcessEnv, cwd: string, so: st
         N = a;
     }
   }
-  if (REPO === '') REPO = bashPwd(env, cwd);
+  if (REPO === '') {
+    REPO = bashPwd(env, cwd);
+    // from a subfolder of a worktree the phase folders are at the top level, not under cwd
+    const top = git(REPO, ['rev-parse', '--show-toplevel']);
+    const t = top.status === 0 ? chomp(top.stdout) : '';
+    if (t !== '') REPO = normalizePath(t);
+  }
   migrateRefuse(findMain(REPO));
   const RP = confGet(REPO, 'review_provider') || 'codex';
   if (providerGone(RP)) fail(64, `review_provider = gemini: ${GSD_GEMINI_GONE}; set review_provider to claude, codex, or custom in .gsd.conf`);
@@ -243,18 +249,17 @@ function flowNextRun(argv: string[], env: NodeJS.ProcessEnv, cwd: string, so: st
   }
   // grep -qE is line-based: any line that is a number passes
   if (!N.split('\n').some((l) => /^[0-9]+(\.[0-9]+)?$/.test(l))) fail(64, `invalid phase number: ${N}`);
-  const P = N.includes('.') ? N : pad2(N);
+  let P = N.includes('.') ? N : pad2(N);
   const g = guardArgv(['--command', 'gsdt-flow', '--phase', N, '--repo', REPO], { env, cwd });
   so.push(g.stdout);
   se.push(g.stderr);
   if (g.rc !== 0) throw new Stop(g.rc);
   let pd = '';
-  const phases = `${REPO}/.planning/phases`;
-  for (const name of names(phases)) {
-    if (name.startsWith(`${P}-`) && isDir(`${phases}/${name}`)) {
-      pd = `${phases}/${name}`;
-      break;
-    }
+  // the same lookup as the guard: dirs come padded (02.1-) or not (2.1-)
+  const found = phaseDir(REPO, `phase-${N}-x`);
+  if (found !== null) {
+    pd = found.pd;
+    P = found.p;
   }
   if (pd === '') fail(1, `no .planning/phases/${P}-* directory in ${REPO}`);
 

@@ -391,13 +391,15 @@ Merge made by the 'ort' strategy.
  f.txt | 1 +
  1 file changed, 1 insertion(+)
  create mode 100644 f.txt
+▶ gsdt-planning-repair is not on PATH — running it from the toolkit package
+▶ reconciling .planning after the phase merge…
+✔ .planning/ is consistent
 ▶ pushing 'main'…
 ▶ removing worktree + branch…
 Deleted branch phase-1-catalog (was 81e8b2d).
 ✅ 'phase-1-catalog' merged into 'main', pushed, and cleaned up.
 
 --- stderr
-⚠ gsdt-planning-repair not on PATH — skipping the .planning reconcile (re-run install.sh)
 
 --- files left behind
 ── log

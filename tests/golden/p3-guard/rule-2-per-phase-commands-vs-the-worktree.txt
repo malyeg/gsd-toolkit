@@ -727,7 +727,7 @@ err=""
 gsd-flow in phase-7 for 8
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 8. Switch to the phase-8-* worktree.\n"
 @@@ 147 @@@
 gsd-flow in phase-7 no N
 rc=0
@@ -737,22 +737,22 @@ err=""
 gsd-flow on base
 rc=2
 out=""
-err="BLOCKED: /gsd-flow is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
+err="BLOCKED: /gsdt-flow is feature work — run it in the phase worktree, not on develop.\nCreate/open it with: gsdt-start -p 7  (then open a session in phase-7-*). See .gsd/INSTRUCTIONS.md.\n"
 @@@ 149 @@@
 gsd-flow on other
 rc=2
 out=""
-err="BLOCKED: /gsd-flow targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+err="BLOCKED: /gsdt-flow targets phase 7 but 'feature/x' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
 @@@ 150 @@@
 gsd-flow on bare
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-8-x', but /gsd-flow targets phase 7. Switch to the phase-7-* worktree.\n"
+err="BLOCKED: you're in 'phase-8-x', but /gsdt-flow targets phase 7. Switch to the phase-7-* worktree.\n"
 @@@ 151 @@@
 gsd-flow global in phase-7 for 8
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 8. Switch to the phase-8-* worktree.\n"
 @@@ 152 @@@
 gsd-flow global bare
 rc=0

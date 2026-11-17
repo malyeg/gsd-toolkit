@@ -42,22 +42,22 @@ err=""
 phase 8.0 on 08- 
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-8-thing', but /gsd-flow targets phase 8.0. Switch to the phase-8.0-* worktree.\n"
+err="BLOCKED: you're in 'phase-8-thing', but /gsdt-flow targets phase 8.0. Switch to the phase-8.0-* worktree.\n"
 @@@ 10 @@@
 phase 8.0 on 08- --all --json
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-8-thing', but /gsd-flow targets phase 8.0. Switch to the phase-8.0-* worktree.\n"
+err="BLOCKED: you're in 'phase-8-thing', but /gsdt-flow targets phase 8.0. Switch to the phase-8.0-* worktree.\n"
 @@@ 11 @@@
 phase 2.1 on 02.1- 
-rc=1
-out=""
-err="no .planning/phases/2.1-* directory in <TMP>/r\n"
+rc=0
+out="step=plan\nrun=/gsd-plan-phase 2.1 --research\n"
+err=""
 @@@ 12 @@@
 phase 2.1 on 02.1- --all --json
-rc=1
-out=""
-err="no .planning/phases/2.1-* directory in <TMP>/r\n"
+rc=0
+out="{\"phase\":\"2.1\",\"step\":\"plan\",\"run\":\"/gsd-plan-phase 2.1 --research\",\"then\":\"\",\"stop\":\"\",\"note\":\"\"}\n{\"phase\":\"2.1\",\"step\":\"review\",\"run\":\"/gsd-review --phase 2.1 --codex\",\"then\":\"/gsd-plan-phase 2.1 --reviews\",\"stop\":\"show the user the independent findings before the replan; verify each against the plans, never accept on trust\",\"note\":\"independent reviewer: codex; external gsd-review capability required for automatic delegation. If unavailable, hand off the plans to a separate reviewer session and record 02.1-REVIEWS.md; never skip the gate. On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete 02.1-REVIEWS.md if one was written, then run this step again.\"}\n{\"phase\":\"2.1\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 2.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"2.1\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 2.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"2.1\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 2.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 02.1-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"2.1\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 2.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"2.1\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
 @@@ 13 @@@
 phase 02.1 on 02.1- 
 rc=0
@@ -72,12 +72,12 @@ err=""
 phase 2 on 02.1- 
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-2.1-fix', but /gsd-flow targets phase 2. Switch to the phase-2-* worktree.\n"
+err="BLOCKED: you're in 'phase-2.1-fix', but /gsdt-flow targets phase 2. Switch to the phase-2-* worktree.\n"
 @@@ 16 @@@
 phase 2 on 02.1- --all --json
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-2.1-fix', but /gsd-flow targets phase 2. Switch to the phase-2-* worktree.\n"
+err="BLOCKED: you're in 'phase-2.1-fix', but /gsdt-flow targets phase 2. Switch to the phase-2-* worktree.\n"
 @@@ 17 @@@
 phase 7.1 on 7.1- 
 rc=0
@@ -90,24 +90,24 @@ out="{\"phase\":\"7.1\",\"step\":\"plan\",\"run\":\"/gsd-plan-phase 7.1 --resear
 err=""
 @@@ 19 @@@
 phase 07.1 on 7.1- 
-rc=1
-out=""
-err="no .planning/phases/07.1-* directory in <TMP>/r\n"
+rc=0
+out="step=plan\nrun=/gsd-plan-phase 07.1 --research\n"
+err=""
 @@@ 20 @@@
 phase 07.1 on 7.1- --all --json
-rc=1
-out=""
-err="no .planning/phases/07.1-* directory in <TMP>/r\n"
+rc=0
+out="{\"phase\":\"07.1\",\"step\":\"plan\",\"run\":\"/gsd-plan-phase 07.1 --research\",\"then\":\"\",\"stop\":\"\",\"note\":\"\"}\n{\"phase\":\"07.1\",\"step\":\"review\",\"run\":\"/gsd-review --phase 07.1 --codex\",\"then\":\"/gsd-plan-phase 07.1 --reviews\",\"stop\":\"show the user the independent findings before the replan; verify each against the plans, never accept on trust\",\"note\":\"independent reviewer: codex; external gsd-review capability required for automatic delegation. If unavailable, hand off the plans to a separate reviewer session and record 7.1-REVIEWS.md; never skip the gate. On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete 7.1-REVIEWS.md if one was written, then run this step again.\"}\n{\"phase\":\"07.1\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 07.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"07.1\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 07.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"07.1\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 07.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 7.1-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"07.1\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 07.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"07.1\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
 @@@ 21 @@@
 unpadded dir 7-x (pad lookup fails) 
-rc=1
-out=""
-err="no .planning/phases/07-* directory in <TMP>/r\n"
+rc=0
+out="step=plan\nrun=/gsd-plan-phase 7 --research\n"
+err=""
 @@@ 22 @@@
 unpadded dir 7-x (pad lookup fails) --all --json
-rc=1
-out=""
-err="no .planning/phases/07-* directory in <TMP>/r\n"
+rc=0
+out="{\"phase\":\"7\",\"step\":\"plan\",\"run\":\"/gsd-plan-phase 7 --research\",\"then\":\"\",\"stop\":\"\",\"note\":\"\"}\n{\"phase\":\"7\",\"step\":\"review\",\"run\":\"/gsd-review --phase 7 --codex\",\"then\":\"/gsd-plan-phase 7 --reviews\",\"stop\":\"show the user the independent findings before the replan; verify each against the plans, never accept on trust\",\"note\":\"independent reviewer: codex; external gsd-review capability required for automatic delegation. If unavailable, hand off the plans to a separate reviewer session and record 7-REVIEWS.md; never skip the gate. On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete 7-REVIEWS.md if one was written, then run this step again.\"}\n{\"phase\":\"7\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"7\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"7\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 7-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"7\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 7\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"7\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
 @@@ 23 @@@
 several 07-* dirs 
 rc=0
@@ -162,12 +162,12 @@ err="no .planning/phases/7.1-* directory in <TMP>/r\n"
 branch phase-12.5.3-x
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-12.5.3-x', but /gsd-flow targets phase 12.5. Switch to the phase-12.5-* worktree.\n"
+err="BLOCKED: you're in 'phase-12.5.3-x', but /gsdt-flow targets phase 12.5. Switch to the phase-12.5-* worktree.\n"
 @@@ 34 @@@
 branch phase-12.5.3-x --all
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-12.5.3-x', but /gsd-flow targets phase 12.5. Switch to the phase-12.5-* worktree.\n"
+err="BLOCKED: you're in 'phase-12.5.3-x', but /gsdt-flow targets phase 12.5. Switch to the phase-12.5-* worktree.\n"
 @@@ 35 @@@
 branch phase-foo
 rc=64
@@ -277,7 +277,7 @@ err="unknown option: --\n"
 argv ["7","8"]
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 8. Switch to the phase-8-* worktree.\n"
 @@@ 57 @@@
 argv ["","7"]
 rc=0
@@ -317,17 +317,17 @@ err=""
 argv ["99"]
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 99. Switch to the phase-99-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 99. Switch to the phase-99-* worktree.\n"
 @@@ 65 @@@
 argv ["9"]
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 9. Switch to the phase-9-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 9. Switch to the phase-9-* worktree.\n"
 @@@ 66 @@@
 argv ["99999999999999999999"]
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 99999999999999999999. Switch to the phase-99999999999999999999-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 99999999999999999999. Switch to the phase-99999999999999999999-* worktree.\n"
 @@@ 67 @@@
 missing repo value (rc only)
 rc=1
@@ -335,7 +335,7 @@ rc=1
 --repo takes the next arg
 rc=2
 out=""
-err="BLOCKED: /gsd-flow targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+err="BLOCKED: /gsdt-flow targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
 @@@ 69 @@@
 --repo empty falls back to PWD
 rc=0
@@ -353,14 +353,14 @@ out="step=discuss\nrun=/gsd-discuss-phase 7\nstop=discuss asks the user the open
 err=""
 @@@ 72 @@@
 pwd subdir
-rc=1
-out=""
-err="no .planning/phases/07-* directory in <TMP>/r/.planning/phases/07-thing\n"
+rc=0
+out="step=discuss\nrun=/gsd-discuss-phase 7\nstop=discuss asks the user the open questions\nnote=run it live — never auto-answer\n--\nstep=ui-decision\nstop=does phase 7 have screens? if the user already said (discuss, ticket, this session), use that; otherwise ask once. Then re-run with --ui or --no-ui\nnote=UI is agreed BEFORE planning; plan-phase would otherwise auto-generate an un-agreed UI-SPEC\n--\nstep=plan\nrun=/gsd-plan-phase 7 --research\n--\nstep=review\nrun=/gsd-review --phase 7 --codex\nthen=/gsd-plan-phase 7 --reviews\nstop=show the user the independent findings before the replan; verify each against the plans, never accept on trust\nnote=independent reviewer: codex; external gsd-review capability required for automatic delegation. If unavailable, hand off the plans to a separate reviewer session and record 07-REVIEWS.md; never skip the gate. On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete 07-REVIEWS.md if one was written, then run this step again.\n--\nstep=verify-work\nrun=/gsd-verify-work 7\nnote=agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\n--\nstep=code-review\nrun=/gsd-code-review 7\nnote=execute-phase normally produces this; missing means it errored\n--\nstep=validate\nrun=/gsd-validate-phase 7\nnote=no 07-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\n--\nstep=secure\nrun=/gsd-secure-phase 7\nnote=last code gate — after every --fix has landed\n--\nstep=done\nrun=gsdt-finish\nstop=gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\n"
+err=""
 @@@ 73 @@@
 not a git repo
 rc=2
 out=""
-err="BLOCKED: /gsd-flow targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
+err="BLOCKED: /gsdt-flow targets phase 7 but 'unknown' isn't a phase-7-* worktree. See .gsd/INSTRUCTIONS.md.\n"
 @@@ 74 @@@
 not a git repo, no number
 rc=64

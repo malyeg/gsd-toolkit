@@ -230,14 +230,14 @@ out="{\"phase\":\"02.1\",\"step\":\"ticket\",\"run\":\"gsdt-tracker snapshot dot
 err=""
 @@@ 47 @@@
 ticket phase 2.1 
-rc=1
-out=""
-err="no .planning/phases/2.1-* directory in <TMP>/r\n"
+rc=0
+out="step=ticket\nrun=gsdt-tracker snapshot dot21 --out .planning/phases/02.1-x/02.1-TICKET.md\nthen=commit .planning/phases/02.1-x/02.1-TICKET.md\nnote=saves clickup ticket dot21 (description + comments) for discuss and planning\n"
+err=""
 @@@ 48 @@@
 ticket phase 2.1 --all --json
-rc=1
-out=""
-err="no .planning/phases/2.1-* directory in <TMP>/r\n"
+rc=0
+out="{\"phase\":\"2.1\",\"step\":\"ticket\",\"run\":\"gsdt-tracker snapshot dot21 --out .planning/phases/02.1-x/02.1-TICKET.md\",\"then\":\"commit .planning/phases/02.1-x/02.1-TICKET.md\",\"stop\":\"\",\"note\":\"saves clickup ticket dot21 (description + comments) for discuss and planning\"}\n{\"phase\":\"2.1\",\"step\":\"discuss\",\"run\":\"/gsd-discuss-phase 2.1\",\"then\":\"update the clickup ticket to the agreed scope\",\"stop\":\"discuss asks the user the open questions\",\"note\":\"run it live — never auto-answer\"}\n{\"phase\":\"2.1\",\"step\":\"ui-decision\",\"run\":\"\",\"then\":\"\",\"stop\":\"does phase 2.1 have screens? if the user already said (discuss, ticket, this session), use that; otherwise ask once. Then re-run with --ui or --no-ui\",\"note\":\"UI is agreed BEFORE planning; plan-phase would otherwise auto-generate an un-agreed UI-SPEC\"}\n{\"phase\":\"2.1\",\"step\":\"plan\",\"run\":\"/gsd-plan-phase 2.1 --research\",\"then\":\"\",\"stop\":\"\",\"note\":\"\"}\n{\"phase\":\"2.1\",\"step\":\"review\",\"run\":\"/gsd-review --phase 2.1 --codex\",\"then\":\"/gsd-plan-phase 2.1 --reviews\",\"stop\":\"show the user the independent findings before the replan; verify each against the plans, never accept on trust\",\"note\":\"independent reviewer: codex; external gsd-review capability required for automatic delegation. If unavailable, hand off the plans to a separate reviewer session and record 02.1-REVIEWS.md; never skip the gate. On a Codex usage limit: run gsdt-codex-wait --wait-only as a background job (it waits for the reset Codex gave, without calling Codex), delete 02.1-REVIEWS.md if one was written, then run this step again.\"}\n{\"phase\":\"2.1\",\"step\":\"verify-work\",\"run\":\"/gsd-verify-work 2.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"agent-driven UAT walk (Playwright/screenshots), recorded as agent-verified. Use headless Playwright (no window) — never the user's own browser (Claude in Chrome, the browser pane, open <url>)\"}\n{\"phase\":\"2.1\",\"step\":\"code-review\",\"run\":\"/gsd-code-review 2.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"execute-phase normally produces this; missing means it errored\"}\n{\"phase\":\"2.1\",\"step\":\"validate\",\"run\":\"/gsd-validate-phase 2.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"no 02.1-VALIDATION.md: find requirements without a test and write the missing tests (implementation files stay read-only). A gap the user leaves to a person is recorded as manual-only\"}\n{\"phase\":\"2.1\",\"step\":\"secure\",\"run\":\"/gsd-secure-phase 2.1\",\"then\":\"\",\"stop\":\"\",\"note\":\"last code gate — after every --fix has landed\"}\n{\"phase\":\"2.1\",\"step\":\"done\",\"run\":\"gsdt-finish\",\"then\":\"\",\"stop\":\"gsdt-finish deletes the worktree the session is standing in — it must be the LAST action\",\"note\":\"\"}\n"
+err=""
 @@@ 49 @@@
 tracker conf custom 
 rc=0

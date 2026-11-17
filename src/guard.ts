@@ -187,6 +187,7 @@ export function guard(opts: GuardOpts): GuardResult {
   if (cmd.startsWith('gsd:')) cmd = `gsd-${cmd.slice(4)}`; // namespaced form of a GSD skill
   if (cmd.includes(':gsd-')) cmd = cmd.slice(cmd.indexOf(':') + 1); // a plugin's form: gsd-core:gsd-plan-phase
   if (cmd === 'gsdt-flow' || cmd === 'gsdw-flow') cmd = 'gsd-flow'; // this toolkit's flow skill (gsdw-: before 0.8.0)
+  const shown = cmd === 'gsd-flow' ? 'gsdt-flow' : cmd; // user-visible name: the skill is /gsdt-flow, there is no /gsd-flow
   if (!cmd.startsWith('gsd-')) return done(0); // not a GSD command → allow
 
   // The phase is the first word that is only a number: a number inside a path
@@ -230,8 +231,8 @@ export function guard(opts: GuardOpts): GuardResult {
   // Rule 0 — the plan is started by gsdt-init, never by the bare skill
   if ((cmd === 'gsd-new-project' || cmd === 'gsd-ingest-docs') && !hasConf) {
     return block(
-      `BLOCKED: /${cmd} needs the gsd-toolkit setup first — this repo has no .gsd.conf.`,
-      `Run gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /${cmd}. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)`,
+      `BLOCKED: /${shown} needs the gsd-toolkit setup first — this repo has no .gsd.conf.`,
+      `Run gsdt-init in a terminal in this repo instead: it installs the toolkit's files, then opens a session that runs /${shown}. (Or GSD_SKIP_GUARD=1 if the user asked to skip it.)`,
     );
   }
   if (GLOBAL && !hasConf) return done(0);
@@ -239,7 +240,7 @@ export function guard(opts: GuardOpts): GuardResult {
   // Rule 0b — GSD skills that clash with one-phase-per-worktree (set-up repos)
   if (hasConf) {
     const clash = (why: string, instead: string): GuardResult =>
-      block(`BLOCKED: /${cmd} does not work with gsd-toolkit — ${why}.`, `Instead: ${instead}   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)`);
+      block(`BLOCKED: /${shown} does not work with gsd-toolkit — ${why}.`, `Instead: ${instead}   (or GSD_SKIP_GUARD=1 if the user asked for it anyway)`);
     const sp = ` ${args} `;
     const addClaim = (): GuardResult =>
       clash('its claim is not pushed, so two sessions can take the same number, and it leaves out the ROADMAP rows', 'gsdt-start -n "<desc>"');
@@ -273,7 +274,7 @@ export function guard(opts: GuardOpts): GuardResult {
 
   if (branch === BASE) {
     return block(
-      `BLOCKED: /${cmd} is feature work — run it in the phase worktree, not on ${BASE}.`,
+      `BLOCKED: /${shown} is feature work — run it in the phase worktree, not on ${BASE}.`,
       `Create/open it with: gsdt-start -p ${N || '<N>'}  (then open a session in phase-${N || '<N>'}-*). See .gsd/INSTRUCTIONS.md.`,
     );
   }
@@ -281,12 +282,12 @@ export function guard(opts: GuardOpts): GuardResult {
   const bn = PHASE_BRANCH.exec(branch)?.[1] ?? '';
   if (N === '') {
     N = bn;
-    if (N === '') return block(`BLOCKED: /${cmd} requires a phase number and matching phase worktree.`);
+    if (N === '') return block(`BLOCKED: /${shown} requires a phase number and matching phase worktree.`);
   }
   if (branch.startsWith('phase-')) {
-    if (bn === '' || pnorm(bn) !== pnorm(N)) return block(`BLOCKED: you're in '${branch}', but /${cmd} targets phase ${N}. Switch to the phase-${N}-* worktree.`);
+    if (bn === '' || pnorm(bn) !== pnorm(N)) return block(`BLOCKED: you're in '${branch}', but /${shown} targets phase ${N}. Switch to the phase-${N}-* worktree.`);
   } else {
-    return block(`BLOCKED: /${cmd} targets phase ${N} but '${branch}' isn't a phase-${N}-* worktree. See .gsd/INSTRUCTIONS.md.`);
+    return block(`BLOCKED: /${shown} targets phase ${N} but '${branch}' isn't a phase-${N}-* worktree. See .gsd/INSTRUCTIONS.md.`);
   }
 
   // Rule 3 — execute-phase needs deps installed (only for repos with an install step)
@@ -324,10 +325,10 @@ export function guard(opts: GuardOpts): GuardResult {
   }
   const need = (suffix: string, step: string, run: string): GuardResult | null => {
     if (pdir !== '' && isFile(`${pdir}/${P}-${suffix}`)) return null;
-    return block(`BLOCKED (flow = strict): /${cmd} ${N} needs ${P}-${suffix} — ${step} has not been done.`, `Run: ${run}   (or GSD_SKIP_GUARD=1 if the user asked to skip it)`);
+    return block(`BLOCKED (flow = strict): /${shown} ${N} needs ${P}-${suffix} — ${step} has not been done.`, `Run: ${run}   (or GSD_SKIP_GUARD=1 if the user asked to skip it)`);
   };
   const uiBlock = (what: string, fix: string): GuardResult =>
-    block(`BLOCKED (ui_gates = strict): /${cmd} ${N} needs ${what}.`, `Run: ${fix}   (or GSD_SKIP_GUARD=1 if the user asked to skip it)`);
+    block(`BLOCKED (ui_gates = strict): /${shown} ${N} needs ${what}.`, `Run: ${fix}   (or GSD_SKIP_GUARD=1 if the user asked to skip it)`);
   if (UI_STRICT) {
     if (cmd === 'gsd-ui-phase') {
       if (uiDesignState(dir) !== 'ok') return uiBlock('a filled .planning/design/DESIGN.md (the design system)', 'gsdt-ui design, then fill it with the user');
@@ -361,7 +362,7 @@ export function guard(opts: GuardOpts): GuardResult {
       const why = reviewsProblem(`${pdir}/${P}-REVIEWS.md`, rp || 'codex');
       if (why !== null) {
         return block(
-          `BLOCKED (flow = strict): /${cmd} ${N} needs a usable ${P}-REVIEWS.md — ${why}.`,
+          `BLOCKED (flow = strict): /${shown} ${N} needs a usable ${P}-REVIEWS.md — ${why}.`,
           `Open it first: a rerun costs a full review. If the reviewer really failed, delete it and run: /gsd-review --phase ${N}  then  /gsd-plan-phase ${N} --reviews   (Codex usage limit: gsdt-codex-wait --wait-only first, as a background job; or GSD_SKIP_GUARD=1 if the user asked to skip it)`,
         );
       }
@@ -371,7 +372,7 @@ export function guard(opts: GuardOpts): GuardResult {
       if ((r = need('REVIEW.md', 'the code review', `/gsd-code-review ${N}`))) return r;
       if (isFile(`${pdir}/${P}-UI-SPEC.md`) && (r = need('UI-REVIEW.md', 'ui-review (this phase has screens)', `/gsd-ui-review ${N}`))) return r;
       const why = validationProblem(pdir, P, dir);
-      if (why !== null) return block(`BLOCKED (flow = strict): /${cmd} ${N} needs the test audit — ${why}.`, `Run: /gsd-validate-phase ${N}   (or GSD_SKIP_GUARD=1 if the user asked to skip it)`);
+      if (why !== null) return block(`BLOCKED (flow = strict): /${shown} ${N} needs the test audit — ${why}.`, `Run: /gsd-validate-phase ${N}   (or GSD_SKIP_GUARD=1 if the user asked to skip it)`);
       break;
     }
   }

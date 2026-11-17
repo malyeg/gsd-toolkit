@@ -27,12 +27,12 @@ err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Sw
 nojq  gsdt-flow
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 8. Switch to the phase-8-* worktree.\n"
 @@@ 7 @@@
 nojq  gsdw-flow
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 8. Switch to the phase-8-* worktree.\n"
 @@@ 8 @@@
 nojq  non-gsd
 rc=0
@@ -116,12 +116,12 @@ err="BLOCKED: you're in 'phase-7-thing', but /gsd-plan-phase targets phase 8. Sw
 nojq --global gsdt-flow
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 8. Switch to the phase-8-* worktree.\n"
 @@@ 28 @@@
 nojq --global gsdw-flow
 rc=2
 out=""
-err="BLOCKED: you're in 'phase-7-thing', but /gsd-flow targets phase 8. Switch to the phase-8-* worktree.\n"
+err="BLOCKED: you're in 'phase-7-thing', but /gsdt-flow targets phase 8. Switch to the phase-8-* worktree.\n"
 @@@ 29 @@@
 nojq --global non-gsd
 rc=0
