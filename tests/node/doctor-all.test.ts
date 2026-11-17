@@ -80,7 +80,7 @@ describe('doctor --all', () => {
     assert.equal(r.status, 1, o);
     assert.match(o, /✔ good\s+ok\s+/);
     assert.match(o, /✖ bad\s+\d+ findings?: T0\d\d/);
-    assert.match(o, new RegExp(`${GONE.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} no longer exists`));
+    assert.match(o, new RegExp(`${GONE.replace(/\\/g, '/').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} no longer exists`));
     assert.match(o, /2 repos, 1 with findings — run gsdt-doctor in a repo for details/);
     assert.equal(readFileSync(REG, 'utf8'), before, 'the registry is untouched');
     assert.equal(statSync(REG).mtimeMs, mtime);
