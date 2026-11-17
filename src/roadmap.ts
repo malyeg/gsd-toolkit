@@ -237,6 +237,23 @@ export function roadmapRows(file: string, phase?: string): RowsResult {
  * and then gsdt-list, T040 and STATE.md all read it as not done.
  * `text` is ROADMAP.md, `phaseDirs` the names in .planning/phases, `plansOf` lists one folder's files.
  */
+/** every plan of a phase folder has a SUMMARY (and there is at least one plan); `files` = the folder's file names */
+export function allPlansRan(files: string[]): boolean {
+  const plans = files.filter((f) => /-PLAN\.md$/i.test(f)).length;
+  const summaries = files.filter((f) => /-SUMMARY\.md$/i.test(f)).length;
+  return plans > 0 && summaries >= plans;
+}
+
+/** the ROADMAP checklist row of phase `n` is there and unticked (`- [ ] **Phase N`) */
+export function rowUnticked(text: string, n: string): boolean {
+  const norm = (k: string): string => k.replace(/^0+(?=\d)/, '');
+  for (const line of text.split('\n')) {
+    const m = /^- \[ \] \*\*Phase (\d+(?:\.\d+)?)(?![\d.])/.exec(line);
+    if (m && norm(m[1] as string) === norm(n)) return true;
+  }
+  return false;
+}
+
 export function unmarkedDone(text: string, phaseDirs: string[], plansOf: (dir: string) => string[], branches: string[]): string[] {
   const norm = (k: string): string => k.replace(/^0+(?=\d)/, '');
   const dirOf = new Map<string, string>();
@@ -257,9 +274,7 @@ export function unmarkedDone(text: string, phaseDirs: string[], plansOf: (dir: s
     const dir = dirOf.get(n);
     if (dir === undefined || open.has(n) || out.includes(m[1] as string)) continue;
     const files = plansOf(dir);
-    const plans = files.filter((f) => /-PLAN\.md$/i.test(f)).length;
-    const summaries = files.filter((f) => /-SUMMARY\.md$/i.test(f)).length;
-    if (plans > 0 && summaries >= plans) out.push(m[1] as string);
+    if (allPlansRan(files)) out.push(m[1] as string);
   }
   return out;
 }

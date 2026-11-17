@@ -195,8 +195,10 @@ function run(argv: string[]): number {
 
   // ── UI steps of a phase with screens (ui_gates), then the test audit (flow = strict) ──
   // After the sync: a phase whose UI review is already on the base branch is left alone. A batch has no phase folder.
+  let unverified: string | undefined;
   if (KIND === 'phase') {
     const g = finishGates(MAIN, BRANCH, DEST);
+    unverified = g.unverified;
     if (g.stderr !== '') err(g.stderr);
     if (!g.ok) {
       err(`  Nothing was merged. The ${KIND} worktree is kept.\n`);
@@ -292,6 +294,7 @@ function run(argv: string[]): number {
     if (left !== '' && leftLines.some((l) => !l.startsWith('?? '))) {
       err(`⚠ ${DEST} has changes made while the finish ran — kept it and '${BRANCH}':\n`);
       toStderr('git', ['-C', DEST, 'status', '--short']);
+      if (unverified !== undefined) err(`⚠ phase ${unverified} merged but not marked complete — /gsd-verify-work ${unverified}\n`);
       err('  The phase IS merged and pushed. Once you have looked at them:\n');
       err(`    git worktree remove --force "${DEST}" && git branch -D ${BRANCH}\n`);
       return 0;
@@ -316,5 +319,6 @@ function run(argv: string[]): number {
   if (rc !== 0) return rc;
 
   out(`✅ '${BRANCH}' merged into '${BASE}', pushed, and cleaned up.\n`);
+  if (unverified !== undefined) err(`⚠ phase ${unverified} merged but not marked complete — /gsd-verify-work ${unverified}\n`);
   return 0;
 }

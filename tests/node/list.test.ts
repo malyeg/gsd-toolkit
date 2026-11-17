@@ -14,6 +14,7 @@ write(
   path.join(R, '.planning', 'ROADMAP.md'),
   [
     '# Roadmap',
+    '- [x] **Phase 8: verified work**',
     '### Phase 1: nothing yet',
     '### Phase 2: spec only',
     '### Phase 3: discussed',
@@ -21,6 +22,7 @@ write(
     '### Phase 5: half executed',
     '### Phase 6: finished work',
     '### Phase 7: in flight in its worktree with a very long description that must wrap across several lines',
+    '### Phase 8: verified work',
     '### Phase 10: two digit',
     '### Phase 10.1: decimal hotfix',
     '',
@@ -35,6 +37,8 @@ for (const f of [
   '05-h/05-01-SUMMARY.md',
   '06-f/06-01-PLAN.md',
   '06-f/06-01-SUMMARY.md',
+  '08-v/08-01-PLAN.md',
+  '08-v/08-01-SUMMARY.md',
   '10-t/10-CONTEXT.md',
   '10.1-h/10.1-01-PLAN.md',
 ]) {
@@ -74,7 +78,9 @@ test('PLANS and STAGE come from the phase\'s artifact files', () => {
   assert.equal(cell(OUT, '5', 3), '1/2', '1 of 2 summaries → 1/2');
   assert.equal(cell(OUT, '5', 4), 'execute', '1 of 2 summaries → execute');
   assert.equal(cell(OUT, '6', 3), '✔', 'all summaries → ✔');
-  assert.equal(cell(OUT, '6', 4), 'done', 'all summaries → done');
+  assert.equal(cell(OUT, '6', 4), 'verify', 'all summaries, row not ticked → verify');
+  assert.equal(cell(OUT, '8', 3), '✔', 'all summaries → ✔');
+  assert.equal(cell(OUT, '8', 4), 'done', 'all summaries, row ticked → done');
   assert.equal(cell(OUT, '10', 4), 'discuss', '10 is not confused with 1');
   assert.equal(cell(OUT, '10.1', 3), '0/1', 'decimal phase 10.1 → its own dir');
 });
@@ -86,7 +92,7 @@ test('WORKTREE and in-flight state', () => {
 });
 
 test('layout', () => {
-  assert.equal(count(OUT, /^│/), 10, '--compact: one line per phase');
+  assert.equal(count(OUT, /^│/), 11, '--compact: one line per phase');
   const wide = gsdt('list', ['--repo', R], { env: { COLUMNS: '70' } }).out;
   // Phase 7's PHASE cell: its row plus the continuation rows below it, joined.
   let on = false;
@@ -103,7 +109,7 @@ test('layout', () => {
     'in flight in its worktree with a very long description that must wrap across several lines',
     'default wraps long titles without truncating',
   );
-  assert.ok(count(wide, /^│/) > 10, 'wrapped title spans several lines');
+  assert.ok(count(wide, /^│/) > 11, 'wrapped title spans several lines');
   const bare = gsdt('list', ['--repo', R], { input: '' });
   assert.ok(bare.out.length > 0, 'renders without a terminal or COLUMNS');
   const noRoadmap = gsdt('list', ['--repo', WORK]);

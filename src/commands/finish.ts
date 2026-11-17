@@ -261,8 +261,10 @@ function run(argv: string[]): number {
     if (git(MAIN, ['show-ref', '--verify', '--quiet', `refs/heads/${BR}-pr`]).status === 0) HEAD_BR = `${BR}-pr`;
     // The same UI gate as the merge path (the PR is how this phase reaches the base).
     const PR_WT = worktreeOf(MAIN, BR);
+    let unverified: string | undefined;
     if (KIND !== 'batch') {
       const g = finishGates(MAIN, BR, PR_WT);
+      unverified = g.unverified;
       if (g.stderr !== '') err(g.stderr);
       if (!g.ok) die('no PR was opened');
     }
@@ -291,6 +293,7 @@ function run(argv: string[]): number {
     }
     out('\n');
     out(`Worktree kept. After the PR merges:  gsdt-finish ${BR}\n`);
+    if (unverified !== undefined) err(`⚠ phase ${unverified} is not marked complete — /gsd-verify-work ${unverified} before merging\n`);
     return 0;
   }
 
