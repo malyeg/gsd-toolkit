@@ -18,6 +18,7 @@
     "gsdt-migrate": "dist/bin/gsdt-migrate.js",
     "gsdt-planning-merge": "dist/bin/gsdt-planning-merge.js",
     "gsdt-planning-repair": "dist/bin/gsdt-planning-repair.js",
+    "gsdt-repos": "dist/bin/gsdt-repos.js",
     "gsdt-rules": "dist/bin/gsdt-rules.js",
     "gsdt-setup": "dist/bin/gsdt-setup.js",
     "gsdt-start": "dist/bin/gsdt-start.js",

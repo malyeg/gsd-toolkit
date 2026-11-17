@@ -10,6 +10,10 @@ the user agrees. It follows `gsdt-doctor --json`; it adds no rules of its own.
 Start it through the active provider's skill mechanism (Claude:
 `/gsdt-doctor`; Codex: `$gsdt-doctor`).
 
+To see every GSD repo at once (one line each, finding codes only), run
+`gsdt-doctor --all` (or `gsdt-doctor --all ~/projects` to scan a folder). It is
+read-only and has no `--fix`; then work through one repo at a time as below.
+
 ## 1. Read
 
 ```

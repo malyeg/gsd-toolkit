@@ -92,6 +92,9 @@ Nothing to commit (git shows no changed files).
 --- stderr
 
 @@@ 2 @@@
+### home/.config/gsd/repos
+<W>/repo
+
 ### repo/.claude/settings.json
 {
   "hooks": {
