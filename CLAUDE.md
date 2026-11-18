@@ -38,7 +38,7 @@ Test files (a new one needs no list: the globs find it; keep this table current)
 | Folder | Covers |
 |---|---|
 | `tests/node/` | black-box suites, ported from the old bash ones: `planning-reconcile` (merge driver, repair, `gsdt-wt-finish`), `worktree-guard`, `flow-next`, `list`, `doctor`, `doctor-all` (`--all`, `gsdt-repos`, the registry), `providers` (adapters, bootstrap, rules blocks, user hooks), `codex-wait`, `tracker`, `commands` (start/finish/derive-port/init/lint), `review-fixes`, `review-round2`, `ui` (UI gates, stub runner), `ui-browser` (real browser), `batch`, `migrate`, `install` (install.sh + the 0.10.x bridge, real v0.10.0), `update`, `npm` (pack + install -g), `e2e` (real gsd-core). Helpers: `g1-helpers`, `g2-helpers`, `g3-helpers`, `g4-env`, `g4-static-server`, `ui-fixture`, `g5-helpers`. |
-| `tests/ts/` | per-module tests of `src/` against saved goldens (`tests/golden/`, `tests/ts/golden.ts`): planning, roadmap, flow-next, guard, ui, context, doctor, list, start, wt-new, finish, wt-finish, setup, update, tracker, ticket, batch-report, codex-wait, CRLF, Windows units, tty prompts |
+| `tests/ts/` | per-module tests of `src/` against saved goldens (`tests/golden/`, `tests/ts/golden.ts`): planning, roadmap, flow-next, guard, ui, context, doctor, list, start, wt-new, finish, wt-finish, setup, update, tracker, ticket, batch-report, codex-wait, CRLF, Windows units, tty prompts, notify + session name (`p13-notify`) |
 | `tests/os/` | the cross-platform black-box suite: the real npm package driven through its commands |
 | `tests/fixtures/` | static inputs (ROADMAP samples, UI pages, `batch-gen.py` transcript generator) |
 

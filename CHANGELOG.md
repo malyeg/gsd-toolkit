@@ -7,7 +7,7 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## Unreleased
+## 0.12.0
 
 - **A launched Claude session now has a name and Remote Control.** `gsdt-start`, `gsdt-init` and `gsdt-batch` run `claude --name <prefix>-<N>-<slug> --remote-control <name>`, so there is no `/rename` and no `/rc` to type. The prefix is `session_prefix` in `.gsd.conf`, else the repo folder's name. `session_name = off` or `remote_control = off` turns each off.
 - **New: `gsdt-notify`.** A desktop notification when a Claude session in a set-up repo waits for you (a question, a permission prompt, a minute idle). `gsdt-setup` adds it as a user hook; `GSD_NOTIFY=off` turns it off. macOS and Linux.
