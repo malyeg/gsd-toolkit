@@ -78,7 +78,7 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | Provider-neutral guard API: `--command --args --phase --repo` | `gsdt-worktree-guard` |
 | Rule 0b (set-up repos): `/gsd-autonomous`, `/gsd-manager`, `/gsd-workspace`, `/gsd-workstreams`, `/gsd-phase` add / `--insert` / `--remove` are blocked, naming the toolkit command to use; `/gsd-phase --edit` passes | `gsdt-worktree-guard` |
 | Rule 1: `/gsd-phase` only on the base branch | `gsdt-worktree-guard` |
-| Rule 2: per-phase commands only inside the matching `phase-<N>-*` worktree (nested agent worktrees inherit identity) | `gsdt-worktree-guard` |
+| Rule 2: per-phase commands only inside the matching `phase-<N>-*` worktree (nested agent worktrees inherit identity); one exception: `/gsd-verify-work <N>` runs on the base branch when phase N is merged (no branch), every plan ran and its row is not ticked (doctor T027) | `gsdt-worktree-guard` |
 | Rule 3: `/gsd-execute-phase` blocked while the install is `running` / `fail` | `gsdt-worktree-guard` |
 | Rule 4 (`flow = strict`): plan needs CONTEXT, execute needs REVIEWS, secure needs REVIEW (+ UI-REVIEW when a UI-SPEC exists) and the test audit (`<P>-VALIDATION.md` compliant or audited); `--prd` / `--gaps-only` exemptions | `gsdt-worktree-guard` |
 | Rule 5 (`ui_gates = strict`): ui-phase needs a filled DESIGN.md + a LAYOUT with a chosen sketch and pages; ui-review needs a passed, current UI check, a complete look file and the user's approval (a phase whose UI review is already on the base branch is exempt) | `gsdt-worktree-guard`, `src/ui.ts` (`uiGate`) |

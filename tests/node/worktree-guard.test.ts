@@ -391,3 +391,20 @@ test('BLOCKED texts name /gsdt-flow, the skill that exists, not /gsd-flow', () =
     assert.doesNotMatch(lastErr, /\/gsd-flow/, `${skill}: never /gsd-flow: ${lastErr}`);
   }
 });
+
+test('/gsd-verify-work on the base branch only for a merged phase that was never marked complete (doctor T027)', () => {
+  mkrepo('', 'phase-7-thing', '07-thing');
+  write(path.join(PDIR, '07-01-PLAN.md'), 'x\n');
+  write(path.join(PDIR, '07-01-SUMMARY.md'), 'x\n');
+  write(path.join(REPO, '.planning', 'ROADMAP.md'), '# Roadmap\n\n- [ ] **Phase 7: Thing**\n- [ ] **Phase 8: Next**\n');
+  git(REPO, 'checkout', '-q', 'develop');
+  blocked('phase 7 still has its branch: verify it in the worktree', 'gsd-verify-work', '7');
+  git(REPO, 'branch', '-q', '-D', 'phase-7-thing');
+  allowed('merged, every plan ran, row not ticked → allowed on the base', 'gsd-verify-work', '7');
+  allowed('…zero-padded too', 'gsd-verify-work', '07');
+  blocked('phase 8 (no plans ran) is still feature work', 'gsd-verify-work', '8');
+  blocked('other feature work on phase 7 stays blocked', 'gsd-plan-phase', '7');
+  gis('--global: typed /gsd-verify-work 7 → allowed', gg(JSON.stringify({ hook_event_name: 'UserPromptExpansion', expansion_type: 'slash_command', command_name: 'gsd-verify-work', command_args: '7', cwd: REPO, prompt: '/gsd-verify-work 7' })), 0);
+  write(path.join(REPO, '.planning', 'ROADMAP.md'), '# Roadmap\n\n- [x] **Phase 7: Thing**\n');
+  blocked('once ticked, back to the rule', 'gsd-verify-work', '7');
+});

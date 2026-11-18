@@ -10,6 +10,7 @@ import { readFileSync, readdirSync, realpathSync } from 'node:fs';
 import { WIN } from './spawn.ts';
 import path from 'node:path';
 import { chomp, confGet, findMain, git, installCmd, isDir, isFile, reviewsProblem, toolkitRepo, validationProblem } from './common.ts';
+import { unmarkedDone } from './roadmap.ts';
 import { uiDesignState, uiExempt, uiGate, uiGates, uiLayoutState, uiStepCmd } from './ui.ts';
 
 export type GuardResult = { rc: number; stdout: string; stderr: string };
@@ -111,6 +112,34 @@ function readPayload(input: string): Payload {
   if (typeof cmd !== 'string' || typeof args !== 'string') return { ok: false };
   const cwd = truthy(p.cwd) && typeof p.cwd === 'string' ? p.cwd : '';
   return { ok: true, cmd: chomp(cmd), args: chomp(args), cwd: chomp(cwd) };
+}
+
+/** the phases doctor T027 reports: merged (no phase branch), every plan ran, ROADMAP row not ticked */
+function mergedUnverified(dir: string, env: NodeJS.ProcessEnv): string[] {
+  const pdir = `${dir}/.planning/phases`;
+  let dirs: string[] = [];
+  try {
+    dirs = readdirSync(pdir).filter((d) => !d.startsWith('.') && isDir(`${pdir}/${d}`));
+  } catch {
+    return [];
+  }
+  let text = '';
+  try {
+    text = readFileSync(`${dir}/.planning/ROADMAP.md`, 'utf8');
+  } catch {
+    return [];
+  }
+  const refs = git(dir, ['for-each-ref', '--format=%(refname:short)', 'refs/heads/'], { env });
+  if (refs.status !== 0) return [];
+  const branches = refs.stdout.split('\n').filter((l) => l !== '');
+  const plansOf = (d: string): string[] => {
+    try {
+      return readdirSync(`${pdir}/${d}`);
+    } catch {
+      return [];
+    }
+  };
+  return unmarkedDone(text.replace(/\r\n/g, '\n'), dirs, plansOf, branches);
 }
 
 function branchOf(dir: string, env: NodeJS.ProcessEnv): string {
@@ -271,6 +300,10 @@ export function guard(opts: GuardOpts): GuardResult {
   // Per-phase ("feature work") commands
   const FEATURE = ' gsd-flow gsd-review gsd-discuss-phase gsd-plan-phase gsd-execute-phase gsd-ui-phase gsd-mvp-phase gsd-spec-phase gsd-ai-integration-phase gsd-verify-work gsd-secure-phase gsd-validate-phase gsd-code-review gsd-add-tests gsd-extract-learnings gsd-ui-review gsd-eval-review ';
   if (!FEATURE.includes(` ${cmd} `)) return done(0); // progress, help, map-codebase, resume-work, … allowed anywhere
+
+  // /gsd-verify-work for a phase already merged (worktree and branch gone, every plan ran, row not ticked:
+  // doctor T027) runs on the base branch — that is where its tick has to land
+  if (branch === BASE && cmd === 'gsd-verify-work' && N !== '' && mergedUnverified(dir, env).some((n) => pnorm(n) === pnorm(N))) return done(0);
 
   if (branch === BASE) {
     return block(
