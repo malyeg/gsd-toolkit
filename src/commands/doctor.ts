@@ -274,6 +274,8 @@ class Doctor {
   notesJson: string[] = [];
   updatesJson: string[] = [];
   jsonItems: string[] = [];
+  warnItems: string[] = [];
+  warnCount = 0;
   pmAbs = '';
   basereFix: string[] = [];
   base = '';
@@ -329,6 +331,12 @@ class Doctor {
     }
     out(`  \x1b[31m✖\x1b[0m ${msg} \x1b[2m→ ${fix} [${code}]\x1b[0m\n`);
     if (!this.fixes.includes(fix)) this.fixes.push(fix);
+  }
+  /** a warning: shown in yellow with its fix, in --json "warnings"; not a finding (exit status unchanged) */
+  warn(msg: string, fix: string, code: string): void {
+    this.warnCount++;
+    if (this.o.json) this.warnItems.push(`{"code":"${code}","message":"${jstr(msg)}","fix":"${jstr(fix)}"}`);
+    else out(`  \x1b[33m⚠\x1b[0m ${msg} \x1b[2m→ ${fix} [${code}]\x1b[0m\n`);
   }
   section(t: string): void {
     if (this.o.verbose) out(`\n\x1b[1m${t}\x1b[0m\n`);
@@ -924,10 +932,18 @@ class Doctor {
               return [];
             }
           };
-          for (const n of unmarkedDone(readFileText(ROADMAP) ?? '', dirs, plansOf, branches)) {
-            fail(
-              `Phase ${n} is merged and every plan ran, but its ROADMAP checklist row is not ticked — never marked complete`,
-              `/gsd-verify-work ${n} once its open checks are done (gsd-core ticks it only when verification passed), or tick it by hand`,
+          // one line for all of them: a reminder to verify, not a broken setup
+          const undone = unmarkedDone(readFileText(ROADMAP) ?? '', dirs, plansOf, branches);
+          if (undone.length === 1) {
+            this.warn(
+              `Phase ${undone[0]} is merged and every plan ran, but its ROADMAP checklist row is not ticked — never marked complete`,
+              `/gsd-verify-work ${undone[0]} once its open checks are done (gsd-core ticks it only when verification passed), or tick it by hand`,
+              'T027',
+            );
+          } else if (undone.length > 1) {
+            this.warn(
+              `Phases ${undone.join(', ')} are merged and every plan ran, but their ROADMAP checklist rows are not ticked — never marked complete`,
+              `/gsd-verify-work <N> for each, once its open checks are done (gsd-core ticks it only when verification passed), or tick them by hand`,
               'T027',
             );
           }
@@ -1145,7 +1161,7 @@ class Doctor {
       s += `"gsd_repo":${IS_GSD_REPO ? 'true' : 'false'},`;
       s += `"context":{"agents":[${ctxAgentsJson}],"big_files":[${ctxFilesJson}]},`;
       s += `"safe":[${this.safeList.map((a) => `"${a}"`).join(',')}],`;
-      s += `"repo":"${jstr(MAIN)}","configured":[${configuredJson}],"provider":{"name":"${jstr(DOCTOR_PROVIDER)}","command":"${jstr(DOCTOR_COMMAND)}","available":${PROVIDER_AVAILABLE},"instruction_file":"${jstr(instructionFile)}","instruction_integrated":${instructionIntegrated},"skill_installed":${skillInstalled},"command_guard":${commandGuard},"native_hook":"${jstr(nativeHook)}"},"count":${this.findings},"findings":[${this.jsonItems.join(',')}],"updates":[${this.updatesJson.join(',')}],"notes":[${this.notesJson.join(',')}]}\n`;
+      s += `"repo":"${jstr(MAIN)}","configured":[${configuredJson}],"provider":{"name":"${jstr(DOCTOR_PROVIDER)}","command":"${jstr(DOCTOR_COMMAND)}","available":${PROVIDER_AVAILABLE},"instruction_file":"${jstr(instructionFile)}","instruction_integrated":${instructionIntegrated},"skill_installed":${skillInstalled},"command_guard":${commandGuard},"native_hook":"${jstr(nativeHook)}"},"count":${this.findings},"findings":[${this.jsonItems.join(',')}],"warnings":[${this.warnItems.join(',')}],"updates":[${this.updatesJson.join(',')}],"notes":[${this.notesJson.join(',')}]}\n`;
       out(s);
       return this.findings === 0 ? 0 : 1;
     }
@@ -1191,7 +1207,8 @@ class Doctor {
       out('\n');
     }
     if (this.findings === 0) {
-      out('\x1b[32m✔ no findings\x1b[0m\n');
+      const nw = this.warnCount;
+      out(`\x1b[32m✔ no findings\x1b[0m${nw > 0 ? ` (${nw} warning${nw === 1 ? '' : 's'} above)` : ''}\n`);
       if (!o.fix && this.safeList.length > 0) {
         out('(gsdt-doctor --fix can tidy the notes above)\n');
       }

@@ -148,13 +148,21 @@ test('T027: a merged phase whose plans all ran but whose checklist row is not ti
   git(repo, 'add', '-A');
   git(repo, 'commit', '-qm', 'phases');
   git(repo, 'branch', 'phase-2-two'); // phase 2 still in flight: not reported
-  const t = plain(run([]).out);
-  assert.match(t, /✖ Phase 1 is merged and every plan ran, but its ROADMAP checklist row is not ticked[^\n]*\/gsd-verify-work 1[^\n]*\[T027\]/);
+  const r = run([]);
+  const t = plain(r.out);
+  // a warning, not a finding: it does not change the exit status
+  assert.match(t, /⚠ Phase 1 is merged and every plan ran, but its ROADMAP checklist row is not ticked[^\n]*\/gsd-verify-work 1[^\n]*\[T027\]/);
   assert.doesNotMatch(t, /Phase 2 is merged/);
-  const j = JSON.parse(run(['--json']).out) as { findings?: { code: string }[] };
-  assert.match(JSON.stringify(j), /T027/);
+  const j = JSON.parse(run(['--json']).out) as { findings: { code: string }[]; warnings: { code: string }[] };
+  assert.deepEqual(j.warnings.map((w) => w.code), ['T027']);
+  assert.ok(!j.findings.some((f) => f.code === 'T027'));
   // gsdt-finish reads doctor's bookkeeping lines with this filter (src/commands/finish.ts)
   assert.ok(t.split('\n').some((l) => !/^ {2}• /.test(l) && /checklist row|Progress table|tick/.test(l) && /T027/.test(l)));
-  writeFileSync(path.join(repo, '.planning/ROADMAP.md'), '# Roadmap\n\n- [x] **Phase 1: One**\n- [ ] **Phase 2: Two**\n\n### Phase 1: One\n\n### Phase 2: Two\n');
+  // several: one line naming them all
+  git(repo, 'branch', '-D', 'phase-2-two');
+  const both = plain(run([]).out);
+  assert.equal(both.split('\n').filter((l) => /T027/.test(l)).length, 1, both);
+  assert.match(both, /⚠ Phases 1, 2 are merged and every plan ran, but their ROADMAP checklist rows are not ticked/);
+  writeFileSync(path.join(repo, '.planning/ROADMAP.md'), '# Roadmap\n\n- [x] **Phase 1: One**\n- [x] **Phase 2: Two**\n\n### Phase 1: One\n\n### Phase 2: Two\n');
   assert.doesNotMatch(plain(run([]).out), /T027/);
 });

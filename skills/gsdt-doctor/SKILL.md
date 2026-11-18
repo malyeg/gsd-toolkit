@@ -23,6 +23,8 @@ Bash: gsdt-doctor --json
 From the JSON use:
 
 - `findings` [{code, message, fix}] — real problems (exit status 1).
+- `warnings` [{code, message, fix}] — worth doing, not broken (e.g. T027:
+  phases merged but never verified). Exit status stays 0.
 - `context.agents` [{name, skills, skill_tokens, agents, agent_tokens, …}] —
   what gsd-core adds to every session. Ignore `hideable`: see step 3.
 - `context.big_files` [{path, kib, tokens, fix}] — GSD files too big to keep
@@ -31,7 +33,7 @@ From the JSON use:
 - `updates` — newer gsd-toolkit / gsd-core (the user's call).
 - `notes` — everything else, as text.
 
-Show the user a short list: findings first, then context, then updates. Plain
+Show the user a short list: findings first, then warnings, then context, then updates. Plain
 words, one line each. Then go through the steps below in order. Skip a step
 with nothing in it.
 

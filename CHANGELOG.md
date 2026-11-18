@@ -7,6 +7,10 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## 0.11.5
+
+- **Unticked phases (T027) are now one warning line, not one finding per phase.** `gsdt-doctor` shows `⚠ Phases 16, 17, … are merged and every plan ran, but their ROADMAP checklist rows are not ticked`, and its exit status stays 0. `--json` lists it under a new `warnings` key. `gsdt-repos` marks such a repo ⚠ (`1 warning: T027`) and counts it apart from repos with findings.
+
 ## 0.11.4
 
 - **`gsdt-doctor`: the size note for a big `STATE.md`, `REQUIREMENTS.md` or `PROJECT.md` no longer says it keeps ROADMAP.md short.** It now says /gsd-complete-milestone keeps this file short.

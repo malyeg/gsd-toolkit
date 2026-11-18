@@ -197,4 +197,18 @@ describe('gsdt-repos', () => {
     assert.match(np.out + np.stderr, /no \.gsd\.conf with GSD settings \(only tracker keys\)/);
     assert.equal(guard('gsd-autonomous').status, 0);
   });
+
+  it('a repo with only warnings (T027): ⚠, counted apart, exit 0', () => {
+    write(path.join(GOOD, '.planning', 'phases', '01-one', '01-01-PLAN.md'), 'x\n');
+    write(path.join(GOOD, '.planning', 'phases', '01-one', '01-01-SUMMARY.md'), 'x\n');
+    writeFileSync(REG, `${GOOD}\n`);
+    const r = gsdt('repos', [], { env: env() });
+    const o = strip(r.out);
+    assert.equal(r.status, 0, o);
+    assert.match(o, /⚠ good\s+1 warning: T027/);
+    assert.match(o, /1 repo, 0 with findings, 1 with warnings only/);
+    const j = JSON.parse(gsdt('repos', ['--json'], { env: env() }).stdout) as { findings: string[]; warnings: string[] }[];
+    assert.deepEqual(j[0]?.warnings, ['T027']);
+    assert.deepEqual(j[0]?.findings, []);
+  });
 });
