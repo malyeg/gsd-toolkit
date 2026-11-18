@@ -327,11 +327,11 @@ test('gsdt-batch — the launcher', () => {
   is('not a repo → 64', GB(['--repo', path.join(WORK, 'nope'), '--print', 'x']).status, 64);
   r = GB(['--repo', L, '--print', '- fix a\n- fix b', '--validate']);
   is('claude: a fresh Sonnet session in the batch worktree, flags before the list', lf(r.stdout).replace(/\n+$/, ''),
-    `cd ${shellQuote(fwd(path.join(LW(), `batch-${D}-fix-a`)))} && claude --model sonnet $'/gsdt-batch --validate\\n- fix a\\n- fix b'`);
+    `cd ${shellQuote(fwd(path.join(LW(), `batch-${D}-fix-a`)))} && claude --model sonnet --name launch-batch-${D}-fix-a --remote-control launch-batch-${D}-fix-a $'/gsdt-batch --validate\\n- fix a\\n- fix b'`);
   has('--print says which worktree it would make', r.stderr, new RegExp(`would make worktree .*batch-${D}-fix-a \\(branch 'batch-${D}-fix-a' off main\\)`));
   is('--print makes nothing', gitOut(ENV, L, ['branch', '--list', 'batch-*']).split('\n').filter((x) => x !== '').length, 0);
   r = GB(['--print', '--model', 'opus', '--file', 'a.md'], { cwd: L });
-  has('claude: --model wins', r.out, /claude --model opus \/gsdt-batch.*--file.*a\.md/);
+  has('claude: --model wins', r.out, /claude --model opus --name launch-batch-\S+ --remote-control launch-batch-\S+ \/gsdt-batch.*--file.*a\.md/);
   has('--file: the name of the file is the slug', r.out, `batch-${D}-a `);
   has('--file not committed: read from the main checkout, by absolute path', r.out, new RegExp(`file.*${fwd(LP()).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[/\\\\]a\\.md`));
   r = GB(['--print', '--file', 'brief.md'], { cwd: L });

@@ -37,7 +37,7 @@ Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
   • codex: add the Playwright MCP server (npx @playwright/mcp@latest) to the codex config
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -319,7 +319,7 @@ Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
   • codex: add the Playwright MCP server (npx @playwright/mcp@latest) to the codex config
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -602,7 +602,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -864,7 +864,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -1122,7 +1122,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -1732,7 +1732,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -2065,7 +2065,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -2323,7 +2323,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -2586,7 +2586,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -2856,7 +2856,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -3130,7 +3130,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -3390,7 +3390,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -3654,7 +3654,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -3917,7 +3917,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 
@@ -4180,7 +4180,7 @@ Next: gsdt-init --no-launch (preserves claude), or gsdt-start -n "<desc>"
 Optional, for better screens (the UI gates work without them):
   • claude: /plugin marketplace add anthropics/claude-code  then  /plugin install frontend-design@claude-code-plugins;  claude mcp add playwright npx @playwright/mcp@latest
 • no ticket tracker set — to link phases to tickets: gsdt-init --tracker clickup|custom
-Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-new-project
+Next:  cd <T>/shop && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-planning --remote-control shop-planning /gsd-new-project
 Then per feature:  gsdt-start -n "<description>"  →  work  →  gsdt-finish
 TDD mode (tests first) turns on at the first gsdt-start; turn it off with /gsd-settings.
 

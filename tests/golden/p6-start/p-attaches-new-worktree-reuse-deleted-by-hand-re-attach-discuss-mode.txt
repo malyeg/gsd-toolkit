@@ -11,7 +11,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 Preparing worktree (new branch 'phase-1-catalog')
@@ -102,7 +102,7 @@ rc=0
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 
@@ -196,7 +196,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-2-second-thing   (phase 2)
 
-Next:  cd <T>/shop-worktrees/phase-2-second-thing && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-discuss-phase\ 2
+Next:  cd <T>/shop-worktrees/phase-2-second-thing && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-2-second-thing --remote-control shop-2-second-thing /gsd-discuss-phase\ 2
 
 --- stderr
 Preparing worktree (new branch 'phase-2-second-thing')
@@ -315,7 +315,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-3.1-decimal   (phase 3.1)
 
-Next:  cd <T>/shop-worktrees/phase-3.1-decimal && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 3.1
+Next:  cd <T>/shop-worktrees/phase-3.1-decimal && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-3.1-decimal --remote-control shop-3.1-decimal /gsdt-flow\ 3.1
 
 --- stderr
 Preparing worktree (new branch 'phase-3.1-decimal')
@@ -454,7 +454,7 @@ rc=0
 
 ✅ worktree ready: <T>/shop-worktrees/phase-2-second-thing   (phase 2)
 
-Next:  cd <T>/shop-worktrees/phase-2-second-thing && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 2
+Next:  cd <T>/shop-worktrees/phase-2-second-thing && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-2-second-thing --remote-control shop-2-second-thing /gsdt-flow\ 2
 
 --- stderr
 
@@ -596,7 +596,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 Preparing worktree (new branch 'phase-1-catalog')
@@ -675,7 +675,7 @@ rc=0
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 
@@ -758,7 +758,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 Preparing worktree (checking out 'phase-1-catalog')
@@ -841,7 +841,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 Preparing worktree (checking out 'phase-1-catalog')
@@ -973,7 +973,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsd-discuss-phase\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsd-discuss-phase\ 1
 
 --- stderr
 Preparing worktree (new branch 'phase-1-catalog')
@@ -1052,7 +1052,7 @@ rc=0
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 
@@ -1134,7 +1134,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 Preparing worktree (new branch 'phase-1-catalog')
@@ -1220,7 +1220,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 Preparing worktree (new branch 'phase-1-catalog')
@@ -1299,7 +1299,7 @@ rc=0
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 
@@ -1377,7 +1377,7 @@ rc=0
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 

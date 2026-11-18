@@ -77,7 +77,7 @@ skipped
 }
 
 ── agent.log
-argv: [--model] [sonnet] [/gsdt-batch - fix a
+argv: [--model] [sonnet] [--name] [shop-batch-<DATE>-fix-a] [--remote-control] [shop-batch-<DATE>-fix-a] [/gsdt-batch - fix a
 - fix b]
 cwd: <T>/shop-worktrees/batch-<DATE>-fix-a
 
@@ -184,7 +184,7 @@ skipped
 }
 
 ── agent.log
-argv: [/gsdt-batch - fix a]
+argv: [--name] [shop-batch-<DATE>-fix-a-2] [--remote-control] [shop-batch-<DATE>-fix-a-2] [/gsdt-batch - fix a]
 cwd: <T>/shop-worktrees/batch-<DATE>-fix-a-2
 
 ── merge driver
@@ -312,7 +312,7 @@ skipped
 }
 
 ── agent.log
-argv: [--model] [opus] [/gsdt-batch --file <T>/shop-worktrees/batch-<DATE>-brief/brief.md]
+argv: [--model] [opus] [--name] [shop-batch-<DATE>-brief] [--remote-control] [shop-batch-<DATE>-brief] [/gsdt-batch --file <T>/shop-worktrees/batch-<DATE>-brief/brief.md]
 cwd: <T>/shop-worktrees/batch-<DATE>-brief
 
 ── merge driver
@@ -462,7 +462,7 @@ skipped
 }
 
 ── agent.log
-argv: [--model] [sonnet] [/gsdt-batch x]
+argv: [--model] [sonnet] [--name] [shop-batch-<DATE>-twice] [--remote-control] [shop-batch-<DATE>-twice] [/gsdt-batch x]
 cwd: <T>/shop-worktrees/batch-<DATE>-twice
 
 ── merge driver
@@ -607,7 +607,7 @@ skipped
 }
 
 ── agent.log
-argv: [--model] [sonnet] [/gsdt-batch x]
+argv: [--model] [sonnet] [--name] [shop-batch-<DATE>-twice] [--remote-control] [shop-batch-<DATE>-twice] [/gsdt-batch x]
 cwd: <T>/shop-worktrees/batch-<DATE>-twice
 
 ── merge driver
@@ -1200,7 +1200,7 @@ step 9 (gsdt-batch --print x)
 rc=0
 --- stdout
 gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x-4 (branch 'batch-<DATE>-x-4' off main)
-cd <T>/shop-worktrees/batch-<DATE>-x-4 && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-x-4 && claude --model sonnet --name shop-batch-<DATE>-x-4 --remote-control shop-batch-<DATE>-x-4 /gsdt-batch\ x
 
 --- stderr
 
@@ -1649,7 +1649,7 @@ cwd: <T>/shop-worktrees/batch-<DATE>-x
 step 1 (gsdt-batch --name in x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-in && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-in && claude --model sonnet --name shop-batch-<DATE>-in --remote-control shop-batch-<DATE>-in /gsdt-batch\ x
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-in   (branch 'batch-<DATE>-in' off main)
@@ -1793,7 +1793,7 @@ skipped
 }
 
 ── agent.log
-argv: [--model] [sonnet] [/gsdt-batch - here]
+argv: [--model] [sonnet] [--name] [shop-batch-<DATE>-in] [--remote-control] [shop-batch-<DATE>-in] [/gsdt-batch - here]
 cwd: <T>/shop-worktrees/batch-<DATE>-in
 
 ── merge driver

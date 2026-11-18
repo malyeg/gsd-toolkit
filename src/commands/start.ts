@@ -38,6 +38,7 @@ import {
 import { guardArgv } from '../guard.ts';
 import {
   compactResolve,
+  sessionResolve,
   compactSettings,
   modelResolve,
   providerArgv,
@@ -49,6 +50,7 @@ import {
   staleHooksNotice,
   startModeResolve,
 } from '../provider.ts';
+import type { Session } from '../provider.ts';
 import { roadmapRows } from '../roadmap.ts';
 import { err, inherit, inheritSelf, out, runSession } from '../stdio.ts';
 import { updateNotice } from '../version.ts';
@@ -781,7 +783,9 @@ function run(argv: string[]): number | Promise<number> {
   // ── open the session ───────────────────────────────────────────────────────
   // The adapter builds an argv array; no shell template expansion is used.
   const PROMPT = providerPrompt(PROVIDER, START_MODE, N);
-  const av = providerArgv(PROVIDER, AGENT_COMMAND, PROMPT, MODEL, COMPACT);
+  const sn = sessionResolve(MAIN, path.basename(DEST));
+  if (!sn.ok) stopOn(sn);
+  const av = providerArgv(PROVIDER, AGENT_COMMAND, PROMPT, MODEL, COMPACT, (sn as { ok: true; value: Session }).value);
   if (!av.ok) stopOn(av);
   const ARGV = (av as { ok: true; value: string[] }).value;
   const NEXT = providerRender(DEST, ...ARGV);

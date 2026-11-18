@@ -16,6 +16,7 @@
     "gsdt-init": "dist/bin/gsdt-init.js",
     "gsdt-list": "dist/bin/gsdt-list.js",
     "gsdt-migrate": "dist/bin/gsdt-migrate.js",
+    "gsdt-notify": "dist/bin/gsdt-notify.js",
     "gsdt-planning-merge": "dist/bin/gsdt-planning-merge.js",
     "gsdt-planning-repair": "dist/bin/gsdt-planning-repair.js",
     "gsdt-repos": "dist/bin/gsdt-repos.js",

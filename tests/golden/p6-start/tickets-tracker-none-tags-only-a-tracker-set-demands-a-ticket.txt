@@ -63,7 +63,7 @@ HEAD is now at <sha> docs(gsd): claim phase 2 — new work tk-PROJ-42
 ✅ worktree ready: <T>/shop-worktrees/phase-2-new-work-tk-proj-42   (phase 2)
 • tracker = none — phase tagged tk-PROJ-42 only (set tracker = clickup|custom in .gsd.conf to update the ticket)
 
-Next:  cd <T>/shop-worktrees/phase-2-new-work-tk-proj-42 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 2
+Next:  cd <T>/shop-worktrees/phase-2-new-work-tk-proj-42 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-2-new-work --remote-control shop-2-new-work /gsdt-flow\ 2
 
 --- stderr
 Preparing worktree (new branch 'phase-2-new-work-tk-proj-42')
@@ -153,7 +153,7 @@ HEAD is now at <sha> docs(gsd): claim phase 3 — tagged tk-ZZ-9
 
 ✅ worktree ready: <T>/shop-worktrees/phase-3-tagged-tk-zz-9   (phase 3)
 
-Next:  cd <T>/shop-worktrees/phase-3-tagged-tk-zz-9 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 3
+Next:  cd <T>/shop-worktrees/phase-3-tagged-tk-zz-9 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-3-tagged --remote-control shop-3-tagged /gsdt-flow\ 3
 
 --- stderr
 Preparing worktree (new branch 'phase-3-tagged-tk-zz-9')
@@ -272,7 +272,7 @@ HEAD is now at <sha> docs(gsd): claim phase 4 — more tk-abc123
 ✅ worktree ready: <T>/shop-worktrees/phase-4-more-tk-abc123   (phase 4)
 • tracker = none — phase tagged tk-abc123 only (set tracker = clickup|custom in .gsd.conf to update the ticket)
 
-Next:  cd <T>/shop-worktrees/phase-4-more-tk-abc123 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 4
+Next:  cd <T>/shop-worktrees/phase-4-more-tk-abc123 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-4-more --remote-control shop-4-more /gsdt-flow\ 4
 
 --- stderr
 Preparing worktree (new branch 'phase-4-more-tk-abc123')
@@ -419,7 +419,7 @@ HEAD is now at <sha> docs(gsd): claim phase 5 — with slug tk-T-7
 ✅ worktree ready: <T>/shop-worktrees/phase-5-my-slug-tk-T-7   (phase 5)
 • tracker = none — phase tagged tk-T-7 only (set tracker = clickup|custom in .gsd.conf to update the ticket)
 
-Next:  cd <T>/shop-worktrees/phase-5-my-slug-tk-T-7 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 5
+Next:  cd <T>/shop-worktrees/phase-5-my-slug-tk-T-7 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-5-my-slug --remote-control shop-5-my-slug /gsdt-flow\ 5
 
 --- stderr
 Preparing worktree (new branch 'phase-5-my-slug-tk-T-7')
@@ -590,7 +590,7 @@ HEAD is now at <sha> docs(gsd): claim phase 5 — with slug tk-T-7
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog-tk-abc-1   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog-tk-abc-1 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog-tk-abc-1 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 Preparing worktree (new branch 'phase-1-catalog-tk-abc-1')
@@ -836,7 +836,7 @@ HEAD is now at <sha> docs(gsd): claim phase 2 — chore
 
 ✅ worktree ready: <T>/shop-worktrees/phase-2-chore   (phase 2)
 
-Next:  cd <T>/shop-worktrees/phase-2-chore && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 2
+Next:  cd <T>/shop-worktrees/phase-2-chore && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-2-chore --remote-control shop-2-chore /gsdt-flow\ 2
 
 --- stderr
 Preparing worktree (new branch 'phase-2-chore')
@@ -924,7 +924,7 @@ HEAD is now at <sha> docs(gsd): claim phase 2 — chore
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 • phase 1 has no ticket (no tk-<id> in its ROADMAP title) — clickup is not updated
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 Preparing worktree (new branch 'phase-1-catalog')

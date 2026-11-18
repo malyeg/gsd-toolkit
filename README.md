@@ -129,6 +129,7 @@ Python, Perl and `jq` are not used at runtime. `curl` is optional, as listed.
 | `gsdt-planning-repair` | Fixes `ROADMAP.md` / `STATE.md` after a bad merge. `--check` for CI. |
 | `gsdt-bootstrap-repo` | Writes the repo files (config, shims, instruction blocks). Called by `gsdt-init`; safe to re-run. |
 | `gsdt-rules` | Prints the workflow rules of the installed release, which agents load at the start of a session. |
+| `gsdt-notify` | Shows a desktop notification when a Claude session in a set-up repo waits for you (a user hook `gsdt-setup` adds; `GSD_NOTIFY=off` turns it off). |
 | `gsdt-codex-wait` | Waits out a Codex usage limit, then runs the command again. |
 | `gsdt-setup` | Machine setup after `npm i -g`: skills and the Claude user hooks for each agent, and gsd-core where it is missing. Safe to re-run. |
 | `gsdt-migrate` | Moves a repo set up before 0.10.0 to the `gsdt-*` names. Dry run by default; `--apply` changes (and offers to commit), `--check` for CI. |
@@ -246,10 +247,11 @@ gsdt-setup --agent claude --agent codex     # skills for more than one agent
 | `--no-core` | Do not install gsd-core. |
 | `--no-user-hook` | Leave out the two Claude user-level hooks (below), and remove ours. |
 
-For Claude, `gsdt-setup` adds two user-level hooks. One refuses
+For Claude, `gsdt-setup` adds three user-level hooks. One refuses
 `/gsd-new-project` and `/gsd-ingest-docs` in a repo that `gsdt-init` has not
-set up. The other loads the workflow rules (`gsdt-rules`) when a session
-starts in a set-up repo.
+set up. One loads the workflow rules (`gsdt-rules`) when a session
+starts in a set-up repo. One shows a desktop notification when a session in a
+set-up repo waits for you (`gsdt-notify`; `GSD_NOTIFY=off` turns it off).
 
 ### Updates
 

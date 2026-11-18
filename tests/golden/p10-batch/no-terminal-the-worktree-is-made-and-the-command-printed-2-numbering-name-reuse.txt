@@ -2,7 +2,7 @@
 step 1 (gsdt-batch - fix a)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-fix-a && claude --model sonnet /gsdt-batch\ -\ fix\ a
+cd <T>/shop-worktrees/batch-<DATE>-fix-a && claude --model sonnet --name shop-batch-<DATE>-fix-a --remote-control shop-batch-<DATE>-fix-a /gsdt-batch\ -\ fix\ a
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-fix-a   (branch 'batch-<DATE>-fix-a' off main)
@@ -80,7 +80,7 @@ skipped
 step 2 (gsdt-batch - fix a)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-fix-a-2 && claude --model sonnet /gsdt-batch\ -\ fix\ a
+cd <T>/shop-worktrees/batch-<DATE>-fix-a-2 && claude --model sonnet --name shop-batch-<DATE>-fix-a-2 --remote-control shop-batch-<DATE>-fix-a-2 /gsdt-batch\ -\ fix\ a
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-fix-a-2   (branch 'batch-<DATE>-fix-a-2' off main)
@@ -179,7 +179,7 @@ skipped
 step 3 (gsdt-batch - fix a)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-fix-a-3 && claude --model sonnet /gsdt-batch\ -\ fix\ a
+cd <T>/shop-worktrees/batch-<DATE>-fix-a-3 && claude --model sonnet --name shop-batch-<DATE>-fix-a-3 --remote-control shop-batch-<DATE>-fix-a-3 /gsdt-batch\ -\ fix\ a
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-fix-a-3   (branch 'batch-<DATE>-fix-a-3' off main)
@@ -299,7 +299,7 @@ skipped
 step 4 (gsdt-batch --print - fix a)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-fix-a-4 && claude --model sonnet /gsdt-batch\ -\ fix\ a
+cd <T>/shop-worktrees/batch-<DATE>-fix-a-4 && claude --model sonnet --name shop-batch-<DATE>-fix-a-4 --remote-control shop-batch-<DATE>-fix-a-4 /gsdt-batch\ -\ fix\ a
 
 --- stderr
 gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-fix-a-4 (branch 'batch-<DATE>-fix-a-4' off main)
@@ -412,7 +412,7 @@ skipped
 step 5 (gsdt-batch --name mine - x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-mine && claude --model sonnet /gsdt-batch\ -\ x
+cd <T>/shop-worktrees/batch-<DATE>-mine && claude --model sonnet --name shop-batch-<DATE>-mine --remote-control shop-batch-<DATE>-mine /gsdt-batch\ -\ x
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-mine   (branch 'batch-<DATE>-mine' off main)
@@ -553,7 +553,7 @@ skipped
 step 6 (gsdt-batch --name mine - x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-mine && claude --model sonnet /gsdt-batch\ -\ x
+cd <T>/shop-worktrees/batch-<DATE>-mine && claude --model sonnet --name shop-batch-<DATE>-mine --remote-control shop-batch-<DATE>-mine /gsdt-batch\ -\ x
 
 --- stderr
 • branch 'batch-<DATE>-mine' already has a worktree — reusing it.
@@ -689,7 +689,7 @@ skipped
 step 7 (gsdt-batch --print --name mine - x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-mine && claude --model sonnet /gsdt-batch\ -\ x
+cd <T>/shop-worktrees/batch-<DATE>-mine && claude --model sonnet --name shop-batch-<DATE>-mine --remote-control shop-batch-<DATE>-mine /gsdt-batch\ -\ x
 
 --- stderr
 gsdt-batch: would use worktree <T>/shop-worktrees/batch-<DATE>-mine
@@ -960,7 +960,7 @@ skipped
 step 9 (gsdt-batch --name batch-mine z)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-mine && claude --model sonnet /gsdt-batch\ z
+cd <T>/shop-worktrees/batch-<DATE>-mine && claude --model sonnet --name shop-batch-<DATE>-mine --remote-control shop-batch-<DATE>-mine /gsdt-batch\ z
 
 --- stderr
 • branch 'batch-<DATE>-mine' already has a worktree — reusing it.
@@ -1413,7 +1413,7 @@ skipped
 step 12 (gsdt-batch --bogus-flag real item)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-real-item && claude --model sonnet /gsdt-batch\ --bogus-flag\ real\ item
+cd <T>/shop-worktrees/batch-<DATE>-real-item && claude --model sonnet --name shop-batch-<DATE>-real-item --remote-control shop-batch-<DATE>-real-item /gsdt-batch\ --bogus-flag\ real\ item
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-real-item   (branch 'batch-<DATE>-real-item' off main)
@@ -1771,7 +1771,7 @@ skipped
 step 1 (gsdt-batch --name gone x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-gone && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-gone && claude --model sonnet --name shop-batch-<DATE>-gone --remote-control shop-batch-<DATE>-gone /gsdt-batch\ x
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-gone   (branch 'batch-<DATE>-gone' off main)
@@ -1849,7 +1849,7 @@ skipped
 step 2 (gsdt-batch --name gone x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-gone && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-gone && claude --model sonnet --name shop-batch-<DATE>-gone --remote-control shop-batch-<DATE>-gone /gsdt-batch\ x
 
 --- stderr
 • the worktree for 'batch-<DATE>-gone' is gone from disk (<T>/shop-worktrees/batch-<DATE>-gone) — re-creating it.
@@ -1928,7 +1928,7 @@ skipped
 step 3 (gsdt-batch --name gone --print x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-gone && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-gone && claude --model sonnet --name shop-batch-<DATE>-gone --remote-control shop-batch-<DATE>-gone /gsdt-batch\ x
 
 --- stderr
 gsdt-batch: would use worktree <T>/shop-worktrees/batch-<DATE>-gone
@@ -1999,7 +1999,7 @@ skipped
 step 1 (gsdt-batch --print - orphan)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-orphan-2 && claude --model sonnet /gsdt-batch\ -\ orphan
+cd <T>/shop-worktrees/batch-<DATE>-orphan-2 && claude --model sonnet --name shop-batch-<DATE>-orphan-2 --remote-control shop-batch-<DATE>-orphan-2 /gsdt-batch\ -\ orphan
 
 --- stderr
 gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-orphan-2 (branch 'batch-<DATE>-orphan-2' off main)
@@ -2047,7 +2047,7 @@ init
 step 2 (gsdt-batch --print --name orphan x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-orphan && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-orphan && claude --model sonnet --name shop-batch-<DATE>-orphan --remote-control shop-batch-<DATE>-orphan /gsdt-batch\ x
 
 --- stderr
 gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-orphan (branch 'batch-<DATE>-orphan' off main)
@@ -2095,7 +2095,7 @@ init
 step 3 (gsdt-batch --name orphan x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-orphan && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-orphan && claude --model sonnet --name shop-batch-<DATE>-orphan --remote-control shop-batch-<DATE>-orphan /gsdt-batch\ x
 
 --- stderr
 ▶ re-attaching worktree for existing branch 'batch-<DATE>-orphan': <T>/shop-worktrees/batch-<DATE>-orphan
@@ -2173,7 +2173,7 @@ skipped
 step 4 (gsdt-batch orphan)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-orphan-2 && claude --model sonnet /gsdt-batch\ orphan
+cd <T>/shop-worktrees/batch-<DATE>-orphan-2 && claude --model sonnet --name shop-batch-<DATE>-orphan-2 --remote-control shop-batch-<DATE>-orphan-2 /gsdt-batch\ orphan
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-orphan-2   (branch 'batch-<DATE>-orphan-2' off main)

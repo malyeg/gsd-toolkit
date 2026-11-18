@@ -11,9 +11,10 @@ const [major] = process.versions.node.split('.').map(Number);
 const [name, ...args] = process.argv.slice(2);
 // The guard's only escape hatch, before anything can fail.
 if (name === 'worktree-guard' && process.env.GSD_SKIP_GUARD === '1') process.exit(0);
-// `gsdt-rules --hook` runs as a Claude SessionStart hook: whatever goes wrong it
-// must say nothing and exit 0 (the bash version could not fail either).
-const quiet = name === 'rules' && args.includes('--hook');
+// `gsdt-rules --hook` runs as a Claude SessionStart hook, `gsdt-notify --hook` as a
+// Notification hook: whatever goes wrong they must say nothing and exit 0 (the
+// bash version could not fail either).
+const quiet = (name === 'rules' || name === 'notify') && args.includes('--hook');
 // `gsdt-worktree-guard` runs as a hook: a crash must never let a call through
 // with exit 1 (that is not a block). It blocks (2), or with --global lets it
 // through, like the bash guard did with a payload it could not read.

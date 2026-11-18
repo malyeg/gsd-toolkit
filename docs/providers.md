@@ -112,6 +112,9 @@ on `gsdt-start` do not rewrite the set. Refer to `gsdt-init --help` for setup fl
 | `claude_model`, `codex_model` | Optional model ID; `default` omits the flag |
 | `review_provider` | Independent reviewer: `claude`, `codex` (default), or `custom` |
 | `start_mode` | `flow` (default) or `discuss` |
+| `session_name` | `on` (default) or `off`. On: a launched Claude session is named `<prefix>-<N>-<slug>` (`claude --name`; `phase-` and the ticket tag dropped, cut to 48 characters; `gsdt-init`: `<prefix>-planning`; a batch: `<prefix>-batch-…`). Env `GSD_SESSION_NAME` wins. Codex and custom: nothing |
+| `session_prefix` | The start of that name; default: the repo folder's name |
+| `remote_control` | `on` (default) or `off`. On: the named Claude session opens with Remote Control under the same name (`--remote-control <name>`); where Remote Control is not available Claude warns and opens the session anyway. Env `GSD_REMOTE_CONTROL` wins. Needs `session_name = on` |
 | `compact_at` | Tokens at which a launched session compacts: 100000–1000000, default `300000`; `default` keeps the CLI's own. Claude gets `env CLAUDE_CODE_AUTO_COMPACT_WINDOW=<n>`, and `gsdt-start` saves it in the worktree's `.claude/settings.local.json` `env` (a plain `claude` there gets it too; an exported window or `default` removes it); Codex `-c model_auto_compact_token_limit=<n>`, custom nothing |
 | `base` | Base branch; detect develop, main, then current branch |
 | `wtdir` | Sibling worktree directory; default `<repo>-worktrees` |

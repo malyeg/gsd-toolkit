@@ -126,6 +126,8 @@ rc=1
 -> <W>/pkg/bin/gsdt-list
 ### ibin/gsdt-migrate
 -> <W>/pkg/bin/gsdt-migrate
+### ibin/gsdt-notify
+-> <W>/pkg/bin/gsdt-notify
 ### ibin/gsdt-planning-merge
 -> <W>/pkg/bin/gsdt-planning-merge
 ### ibin/gsdt-planning-repair

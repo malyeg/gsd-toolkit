@@ -2,7 +2,7 @@
 step 1 (gsdt-batch --name inside - one)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-inside && claude --model sonnet /gsdt-batch\ -\ one
+cd <T>/shop-worktrees/batch-<DATE>-inside && claude --model sonnet --name shop-batch-<DATE>-inside --remote-control shop-batch-<DATE>-inside /gsdt-batch\ -\ one
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-inside   (branch 'batch-<DATE>-inside' off main)
@@ -81,7 +81,7 @@ skipped
 step 2 (gsdt-batch --print - two)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-inside && claude --model sonnet /gsdt-batch\ -\ two
+cd <T>/shop-worktrees/batch-<DATE>-inside && claude --model sonnet --name shop-batch-<DATE>-inside --remote-control shop-batch-<DATE>-inside /gsdt-batch\ -\ two
 
 --- stderr
 gsdt-batch: would use worktree <T>/shop-worktrees/batch-<DATE>-inside
@@ -153,7 +153,7 @@ skipped
 step 3 (gsdt-batch --file brief.md)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-inside && claude --model sonnet /gsdt-batch\ --file\ <T>/shop-worktrees/batch-<DATE>-inside/brief.md
+cd <T>/shop-worktrees/batch-<DATE>-inside && claude --model sonnet --name shop-batch-<DATE>-inside --remote-control shop-batch-<DATE>-inside /gsdt-batch\ --file\ <T>/shop-worktrees/batch-<DATE>-inside/brief.md
 
 --- stderr
 
@@ -224,7 +224,7 @@ skipped
 step 4 (gsdt-batch --print --file brief.md x --model opus)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-inside && claude --model opus /gsdt-batch\ --file\ <T>/shop-worktrees/batch-<DATE>-inside/brief.md\ x
+cd <T>/shop-worktrees/batch-<DATE>-inside && claude --model opus --name shop-batch-<DATE>-inside --remote-control shop-batch-<DATE>-inside /gsdt-batch\ --file\ <T>/shop-worktrees/batch-<DATE>-inside/brief.md\ x
 
 --- stderr
 gsdt-batch: would use worktree <T>/shop-worktrees/batch-<DATE>-inside
@@ -296,7 +296,7 @@ skipped
 step 5 (gsdt-batch --print --name ignored x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-inside && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-inside && claude --model sonnet --name shop-batch-<DATE>-inside --remote-control shop-batch-<DATE>-inside /gsdt-batch\ x
 
 --- stderr
 gsdt-batch: would use worktree <T>/shop-worktrees/batch-<DATE>-inside
@@ -441,7 +441,7 @@ skipped
 step 7 (gsdt-batch --print --repo <T>/shop x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet --name shop-batch-<DATE>-x --remote-control shop-batch-<DATE>-x /gsdt-batch\ x
 
 --- stderr
 gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
@@ -513,7 +513,7 @@ skipped
 step 8 (gsdt-batch --print --repo <T>/shop-worktrees/batch-<DATE>-inside x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet --name shop-batch-<DATE>-x --remote-control shop-batch-<DATE>-x /gsdt-batch\ x
 
 --- stderr
 gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
@@ -585,7 +585,7 @@ skipped
 step 9 (gsdt-batch --repo <T>/shop-worktrees/batch-<DATE>-inside x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet --name shop-batch-<DATE>-x --remote-control shop-batch-<DATE>-x /gsdt-batch\ x
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-x   (branch 'batch-<DATE>-x' off main)
@@ -686,7 +686,7 @@ skipped
 step 1 (gsdt-batch --print - from a phase)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-from-a-phase && claude --model sonnet /gsdt-batch\ -\ from\ a\ phase
+cd <T>/shop-worktrees/batch-<DATE>-from-a-phase && claude --model sonnet --name shop-batch-<DATE>-from-a-phase --remote-control shop-batch-<DATE>-from-a-phase /gsdt-batch\ -\ from\ a\ phase
 
 --- stderr
 gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-from-a-phase (branch 'batch-<DATE>-from-a-phase' off main)
@@ -749,7 +749,7 @@ init
 step 2 (gsdt-batch - from a phase)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-from-a-phase && claude --model sonnet /gsdt-batch\ -\ from\ a\ phase
+cd <T>/shop-worktrees/batch-<DATE>-from-a-phase && claude --model sonnet --name shop-batch-<DATE>-from-a-phase --remote-control shop-batch-<DATE>-from-a-phase /gsdt-batch\ -\ from\ a\ phase
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-from-a-phase   (branch 'batch-<DATE>-from-a-phase' off main)
@@ -843,7 +843,7 @@ skipped
 step 3 (gsdt-batch --print - from feature)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-from-feature && claude --model sonnet /gsdt-batch\ -\ from\ feature
+cd <T>/shop-worktrees/batch-<DATE>-from-feature && claude --model sonnet --name shop-batch-<DATE>-from-feature --remote-control shop-batch-<DATE>-from-feature /gsdt-batch\ -\ from\ feature
 
 --- stderr
 gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-from-feature (branch 'batch-<DATE>-from-feature' off main)
@@ -930,7 +930,7 @@ skipped
 step 4 (gsdt-batch --print - from a subdir)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-from-a-subdir && claude --model sonnet /gsdt-batch\ -\ from\ a\ subdir
+cd <T>/shop-worktrees/batch-<DATE>-from-a-subdir && claude --model sonnet --name shop-batch-<DATE>-from-a-subdir --remote-control shop-batch-<DATE>-from-a-subdir /gsdt-batch\ -\ from\ a\ subdir
 
 --- stderr
 gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-from-a-subdir (branch 'batch-<DATE>-from-a-subdir' off main)
@@ -1017,7 +1017,7 @@ skipped
 step 1 (gsdt-batch --print - x)
 rc=0
 --- stdout
-cd <T>/custom-wts/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ -\ x
+cd <T>/custom-wts/batch-<DATE>-x && claude --model sonnet --name shop-batch-<DATE>-x --remote-control shop-batch-<DATE>-x /gsdt-batch\ -\ x
 
 --- stderr
 gsdt-batch: would make worktree <T>/custom-wts/batch-<DATE>-x (branch 'batch-<DATE>-x' off main)
@@ -1064,7 +1064,7 @@ init
 step 2 (gsdt-batch - x)
 rc=0
 --- stdout
-cd <T>/custom-wts/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ -\ x
+cd <T>/custom-wts/batch-<DATE>-x && claude --model sonnet --name shop-batch-<DATE>-x --remote-control shop-batch-<DATE>-x /gsdt-batch\ -\ x
 
 --- stderr
 ▶ creating worktree: <T>/custom-wts/batch-<DATE>-x   (branch 'batch-<DATE>-x' off main)

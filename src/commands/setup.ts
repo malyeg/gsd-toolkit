@@ -45,9 +45,10 @@ Usage:
 What it does:
   - copies the toolkit's skills into each agent's skill dir (Claude: ~/.claude/skills,
     Codex: ~/.agents/skills), marked as the toolkit's so a later run replaces them in place
-  - Claude: registers two user-level hooks in ~/.claude/settings.json: the guard
-    (refuses /gsd-new-project and /gsd-ingest-docs before gsdt-init) and the
-    SessionStart hook that loads gsdt-rules in a set-up repo
+  - Claude: registers three user-level hooks in ~/.claude/settings.json: the guard
+    (refuses /gsd-new-project and /gsd-ingest-docs before gsdt-init), the
+    SessionStart hook that loads gsdt-rules in a set-up repo, and gsdt-notify (a
+    desktop notification when a session in a set-up repo waits for you)
   - installs gsd-core (npx) for each agent that has none
   - npm install: moves a 0.10.x release install off ~/.local/bin (its gsd*-links, its runtime);
     from a git checkout it leaves that install alone and says so
@@ -232,12 +233,14 @@ export function userHook(provider: string, mode: 'on' | 'off', binDir: string): 
   binDir = shellPath(binDir);
   const guard = `${binDir}/gsdt-worktree-guard`;
   const rules = `${binDir}/gsdt-rules`;
+  const notifier = `${binDir}/gsdt-notify`;
   if (guard.includes("'")) {
     out(`• ${provider} user hook skipped: the bin path holds a quote\n`);
     return;
   }
   const cmd = `[ ! -x '${guard}' ] || exec '${guard}' --global`;
   const rulesCmd = `[ ! -x '${rules}' ] || exec '${rules}' --hook`;
+  const notifyCmd = `[ ! -x '${notifier}' ] || exec '${notifier}' --hook`;
   mkdirSync(path.dirname(settings), { recursive: true });
 
   let text: string | null = null;
@@ -273,12 +276,15 @@ export function userHook(provider: string, mode: 'on' | 'off', binDir: string): 
     ['PreToolUse', 'Skill', cmd],
     ['UserPromptExpansion', 'gsd.*', cmd],
     ['SessionStart', null, rulesCmd],
+    // a session that waits for the user says so on the desktop (set-up repos only)
+    ['Notification', null, notifyCmd],
+    ['PreToolUse', 'AskUserQuestion', notifyCmd],
   ];
   const ours = (h: JVal): boolean => {
     const c = h instanceof Map ? h.get('command') : undefined;
     const s = typeof c === 'string' ? c : '';
     // gsd-worktree-guard / gsd-rules: the names before 0.10.0, replaced too
-    return (/gsdt?-worktree-guard/.test(s) && s.includes('--global')) || (/gsdt?-rules/.test(s) && s.includes('--hook'));
+    return (/gsdt?-worktree-guard/.test(s) && s.includes('--global')) || (/gsdt?-rules/.test(s) && s.includes('--hook')) || (/gsdt-notify/.test(s) && s.includes('--hook'));
   };
   for (const event of wanted.map((w) => w[0]).filter((e) => hooks.has(e))) {
     const groups = hooks.get(event) as JVal;
@@ -328,6 +334,7 @@ export function userHook(provider: string, mode: 'on' | 'off', binDir: string): 
   if (mode === 'on') {
     out(`✔ ${provider} user hook: /gsd-new-project only after gsdt-init → ${settings}\n`);
     out(`✔ ${provider} user hook: sessions in a set-up repo load gsdt-rules → ${settings}\n`);
+    out(`✔ ${provider} user hook: a session waiting for you in a set-up repo shows a notification (gsdt-notify) → ${settings}\n`);
   } else if (next !== text) {
     out(`✂ ${provider} user hook removed from ${settings}\n`);
   }

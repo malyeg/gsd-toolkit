@@ -567,6 +567,36 @@ export function compactSettings(repo: string, wt: string, tokens = ''): string {
   return rc === 0 ? '' : `• could not update ${f} (not a JSON object?) — compact point not saved there\n`;
 }
 
+// ── the session's name ──────────────────────────────────────────────────────
+
+/** what a launched Claude session is called, and whether it opens with Remote Control */
+export type Session = { name: string; remote: boolean };
+
+const SESSION_NAME_MAX = 48;
+
+/**
+ * repo (main checkout), what the session is for (a worktree folder name such as
+ * `phase-19.2-open-approvals-tk-869abc`, or a word such as `planning`) → the
+ * session's name: `<prefix>-19.2-open-approvals`. The prefix is `session_prefix`
+ * (.gsd.conf), else the repo folder's name; the ticket tag and `phase-` are
+ * dropped, the rest cut to a length a terminal tab still shows. `session_name =
+ * off` (or GSD_SESSION_NAME=off) → no name at all, so no Remote Control either;
+ * `remote_control = off` (or GSD_REMOTE_CONTROL=off) → the name only. Where Remote
+ * Control is not available Claude warns and opens the session anyway.
+ */
+export function sessionResolve(repo: string, what: string): Result<Session> {
+  const nameMode = process.env.GSD_SESSION_NAME || confGet(repo, 'session_name') || 'on';
+  const remoteMode = process.env.GSD_REMOTE_CONTROL || confGet(repo, 'remote_control') || 'on';
+  if (nameMode !== 'on' && nameMode !== 'off') return fail(`invalid session_name '${nameMode}' (expected on or off)`);
+  if (remoteMode !== 'on' && remoteMode !== 'off') return fail(`invalid remote_control '${remoteMode}' (expected on or off)`);
+  if (nameMode === 'off') return { ok: true, value: { name: '', remote: false } };
+  const clean = (s: string): string => s.replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '');
+  const prefix = clean(confGet(repo, 'session_prefix') || path.basename(repo));
+  const rest = clean(what.replace(/^phase-/, '').replace(/-tk-[A-Za-z0-9-]+$/, ''));
+  const name = [prefix, rest].filter((s) => s !== '').join('-').slice(0, SESSION_NAME_MAX).replace(/[-.]+$/, '');
+  return { ok: true, value: { name, remote: name !== '' && remoteMode === 'on' } };
+}
+
 // ── prompts, argv, rendering ────────────────────────────────────────────────
 
 /** gsd_provider_prompt — provider, kind (discuss|flow|batch|new|ingest), phase-or-text ('' for an unknown kind) */
@@ -612,16 +642,21 @@ export function providerPrompt(p: string, kind: string, n = ''): string {
  * gsd_provider_argv — provider, executable, prompt, optional model, optional
  * compact_at tokens → GSD_LAUNCH_ARGV
  */
-export function providerArgv(p: string, c: string, prompt: string, model = '', compact = ''): Result<string[]> {
+export function providerArgv(p: string, c: string, prompt: string, model = '', compact = '', session: Session = { name: '', remote: false }): Result<string[]> {
   const bad = modelValidate(p, model);
   if (bad) return bad;
   let argv = [c];
+  // Claude only: the session's name (prompt box, /resume, terminal title) and Remote Control under the same name.
+  // `--remote-control` takes an OPTIONAL value, so it is always given one: a bare flag would eat the prompt.
+  const named = p === 'claude' && session.name !== '';
   // Claude reads the compact point only from its environment; a value the user already exported wins.
   if (compact !== '' && p === 'claude' && !process.env.CLAUDE_CODE_AUTO_COMPACT_WINDOW) {
     argv = ['env', `CLAUDE_CODE_AUTO_COMPACT_WINDOW=${compact}`, c];
   }
   if (compact !== '' && p === 'codex') argv.push('-c', `model_auto_compact_token_limit=${compact}`);
   if ((p === 'claude' || p === 'codex') && model !== '' && model !== 'default') argv.push('--model', model);
+  if (named) argv.push('--name', session.name);
+  if (named && session.remote) argv.push('--remote-control', session.name);
   argv.push(prompt);
   return { ok: true, value: argv };
 }

@@ -16,6 +16,15 @@
             "command": "[ ! -x '<TMP>/bin/gsdt-worktree-guard' ] || exec '<TMP>/bin/gsdt-worktree-guard' --global"
           }
         ]
+      },
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '<TMP>/bin/gsdt-notify' ] || exec '<TMP>/bin/gsdt-notify' --hook"
+          }
+        ]
       }
     ],
     "UserPromptExpansion": [
@@ -38,6 +47,16 @@
           }
         ]
       }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -x '<TMP>/bin/gsdt-notify' ] || exec '<TMP>/bin/gsdt-notify' --hook"
+          }
+        ]
+      }
     ]
   }
 }
@@ -45,3 +64,4 @@
 --
 ✔ claude user hook: /gsd-new-project only after gsdt-init → <H>/.claude/settings.json
 ✔ claude user hook: sessions in a set-up repo load gsdt-rules → <H>/.claude/settings.json
+✔ claude user hook: a session waiting for you in a set-up repo shows a notification (gsdt-notify) → <H>/.claude/settings.json

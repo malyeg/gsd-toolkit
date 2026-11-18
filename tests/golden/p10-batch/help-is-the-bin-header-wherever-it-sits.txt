@@ -372,7 +372,7 @@ init
 step 6 (gsdt-batch -- --help)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-batch && claude --model sonnet /gsdt-batch\ --help
+cd <T>/shop-worktrees/batch-<DATE>-batch && claude --model sonnet --name shop-batch-<DATE>-batch --remote-control shop-batch-<DATE>-batch /gsdt-batch\ --help
 
 --- stderr
 ▶ creating worktree: <T>/shop-worktrees/batch-<DATE>-batch   (branch 'batch-<DATE>-batch' off main)

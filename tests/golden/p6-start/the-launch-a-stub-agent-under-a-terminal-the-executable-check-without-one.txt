@@ -80,7 +80,7 @@ skipped
 }
 
 ── agent.log
-argv: [/gsdt-flow 1]
+argv: [--name] [shop-1-catalog] [--remote-control] [shop-1-catalog] [/gsdt-flow 1]
 cwd: <T>/shop-worktrees/phase-1-catalog
 lock: free
 
@@ -100,7 +100,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 
@@ -179,7 +179,7 @@ rc=127
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
 ✖ provider executable 'claude' not found — launch cancelled.
-Next (after installing it or changing agent_command):  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next (after installing it or changing agent_command):  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 
@@ -257,7 +257,7 @@ rc=0
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 
@@ -335,7 +335,7 @@ rc=127
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next (after installing it or changing agent_command):  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 1
+Next (after installing it or changing agent_command):  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 ✖ provider executable 'claude' not found — launch cancelled.
@@ -585,7 +585,7 @@ HEAD is now at <sha> init
 
 ✅ worktree ready: <T>/shop-worktrees/phase-1-catalog   (phase 1)
 
-Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 <T>/stub/agent /gsdt-flow\ 1
+Next:  cd <T>/shop-worktrees/phase-1-catalog && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 <T>/stub/agent --name shop-1-catalog --remote-control shop-1-catalog /gsdt-flow\ 1
 
 --- stderr
 Preparing worktree (new branch 'phase-1-catalog')

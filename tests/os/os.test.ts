@@ -18,8 +18,8 @@ before(() => installPackage());
 after(() => cleanup());
 
 describe('the installed package', () => {
-  it('ships 23 commands, each a shim in the prefix', () => {
-    assert.equal(COMMANDS.length, 23);
+  it('ships 24 commands, each a shim in the prefix', () => {
+    assert.equal(COMMANDS.length, 24);
     for (const c of COMMANDS) assert.ok(existsSync(path.join(BIN, WIN ? `${c}.cmd` : c)), c);
   });
   for (const c of COMMANDS) {

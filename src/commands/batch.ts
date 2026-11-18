@@ -9,7 +9,7 @@ import { realpathSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import path from 'node:path';
 import { base, chomp, commandOnPath, findMain, git, gsdPkg, isDir, isFile, wtdir } from '../common.ts';
-import { GSD_GEMINI_GONE, modelResolve, modelValidate, providerArgv, providerGone, providerPrompt, providerRender, providerResolve } from '../provider.ts';
+import { GSD_GEMINI_GONE, modelResolve, modelValidate, providerArgv, providerGone, providerPrompt, providerRender, providerResolve, sessionResolve } from '../provider.ts';
 import { err, out, runSession } from '../stdio.ts';
 
 // The header comment of bin/gsdt-batch before the port = the --help text.
@@ -263,7 +263,12 @@ function run(argv: string[]): number | Promise<number> {
   let ARGS = FLAGS;
   if (LIST !== '') ARGS = ARGS !== '' ? `${ARGS}\n${LIST}` : LIST;
   const PROMPT = providerPrompt(P, 'batch', ARGS);
-  const av = providerArgv(P, AGENT, PROMPT, MODEL, '');
+  const sn = sessionResolve(MAIN, path.basename(DEST));
+  if (!sn.ok) {
+    if (sn.message !== '') err(`${sn.message}\n`);
+    return 64;
+  }
+  const av = providerArgv(P, AGENT, PROMPT, MODEL, '', sn.value);
   if (!av.ok) {
     if (av.message !== '') err(`${av.message}\n`);
     return 64;

@@ -14,7 +14,7 @@ HEAD is now at <sha> docs(gsd): insert phase 01.1 (after 1) — hotfix reset ema
 
 ✅ worktree ready: <T>/shop-worktrees/phase-01.1-hotfix-reset-email   (phase 01.1)
 
-Next:  cd <T>/shop-worktrees/phase-01.1-hotfix-reset-email && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 01.1
+Next:  cd <T>/shop-worktrees/phase-01.1-hotfix-reset-email && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-01.1-hotfix-reset-email --remote-control shop-01.1-hotfix-reset-email /gsdt-flow\ 01.1
 
 --- stderr
 Preparing worktree (new branch 'phase-01.1-hotfix-reset-email')
@@ -105,7 +105,7 @@ rc=0
 
 ✅ worktree ready: <T>/shop-worktrees/phase-01.1-hotfix-reset-email   (phase 01.1)
 
-Next:  cd <T>/shop-worktrees/phase-01.1-hotfix-reset-email && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 01.1
+Next:  cd <T>/shop-worktrees/phase-01.1-hotfix-reset-email && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-01.1-hotfix-reset-email --remote-control shop-01.1-hotfix-reset-email /gsdt-flow\ 01.1
 
 --- stderr
 
@@ -199,7 +199,7 @@ rc=0
 
 ✅ worktree ready: <T>/shop-worktrees/phase-01.1-hotfix-reset-email   (phase 01.1)
 
-Next:  cd <T>/shop-worktrees/phase-01.1-hotfix-reset-email && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 01.1
+Next:  cd <T>/shop-worktrees/phase-01.1-hotfix-reset-email && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-01.1-hotfix-reset-email --remote-control shop-01.1-hotfix-reset-email /gsdt-flow\ 01.1
 
 --- stderr
 
@@ -297,7 +297,7 @@ rc=0
 
 ✅ worktree ready: <T>/shop-worktrees/phase-01.1-hotfix-reset-email   (phase 01.1)
 
-Next:  cd <T>/shop-worktrees/phase-01.1-hotfix-reset-email && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 01.1
+Next:  cd <T>/shop-worktrees/phase-01.1-hotfix-reset-email && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-01.1-hotfix-reset-email --remote-control shop-01.1-hotfix-reset-email /gsdt-flow\ 01.1
 
 --- stderr
 
@@ -402,7 +402,7 @@ HEAD is now at <sha> docs(gsd): insert phase 01.1 (after 1) — x
 
 ✅ worktree ready: <T>/shop-worktrees/phase-01.1-x   (phase 01.1)
 
-Next:  cd <T>/shop-worktrees/phase-01.1-x && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 01.1
+Next:  cd <T>/shop-worktrees/phase-01.1-x && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-01.1-x --remote-control shop-01.1-x /gsdt-flow\ 01.1
 
 --- stderr
 Preparing worktree (new branch 'phase-01.1-x')
@@ -492,7 +492,7 @@ HEAD is now at <sha> docs(gsd): insert phase 01.1 (after 1) — x
 
 ✅ worktree ready: <T>/shop-worktrees/phase-01.1-x   (phase 01.1)
 
-Next:  cd <T>/shop-worktrees/phase-01.1-x && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 01.1
+Next:  cd <T>/shop-worktrees/phase-01.1-x && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-01.1-x --remote-control shop-01.1-x /gsdt-flow\ 01.1
 
 --- stderr
 Preparing worktree (new branch 'phase-01.1-x')

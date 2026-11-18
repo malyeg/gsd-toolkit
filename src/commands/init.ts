@@ -11,6 +11,7 @@ import path from 'node:path';
 import { chomp, commandOnPath, confGet, findMain, git, isExec, lf, migrateRefuse, planningHook, readStdinLine } from '../common.ts';
 import {
   compactResolve,
+  sessionResolve,
   GSD_GEMINI_GONE,
   modelResolve,
   providerArgv,
@@ -23,6 +24,7 @@ import {
   providerUiTip,
   providerValidate,
 } from '../provider.ts';
+import type { Session } from '../provider.ts';
 import { err, out, runSession } from '../stdio.ts';
 import { uiGates } from '../ui.ts';
 import { updateNotice } from '../version.ts';
@@ -437,7 +439,9 @@ function run(argv: string[]): number | Promise<number> {
   if (!cr.ok) stopOn(cr);
   const COMPACT = (cr as { ok: true; value: string }).value;
   const CMD = providerPrompt(PROVIDER, MODE);
-  const av = providerArgv(PROVIDER, AGENT_COMMAND, CMD, MODEL, COMPACT);
+  const sn = sessionResolve(DEST, 'planning');
+  if (!sn.ok) stopOn(sn);
+  const av = providerArgv(PROVIDER, AGENT_COMMAND, CMD, MODEL, COMPACT, (sn as { ok: true; value: Session }).value);
   if (!av.ok) stopOn(av);
   const ARGV = (av as { ok: true; value: string[] }).value;
   const NEXT = providerRender(DEST, ...ARGV);

@@ -277,7 +277,7 @@ init
 step 1 (gsdt-batch --print x)
 rc=0
 --- stdout
-cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet /gsdt-batch\ x
+cd <T>/shop-worktrees/batch-<DATE>-x && claude --model sonnet --name shop-batch-<DATE>-x --remote-control shop-batch-<DATE>-x /gsdt-batch\ x
 
 --- stderr
 gsdt-batch: would make worktree <T>/shop-worktrees/batch-<DATE>-x (branch 'batch-<DATE>-x' off side)

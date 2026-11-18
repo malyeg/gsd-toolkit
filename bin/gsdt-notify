@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+# gsdt-notify — a desktop notification when a session waits for you.
+#
+# Usage:
+#   gsdt-notify "<text>" [--title "<title>"]   show one now
+#   gsdt-notify --hook       for the Claude hooks (Notification, and PreToolUse
+#                            on AskUserQuestion): reads the hook's JSON on
+#                            stdin, prints nothing, always exits 0.
+#   -h, --help               show this help
+#
+# Launcher: the command is src/commands/notify.ts (TypeScript, run by Node >= 24
+# through src/launch.mjs), which holds the --help text. --hook never fails:
+# without a usable node it does nothing and exits 0.
+SELF="$0"
+while [ -L "$SELF" ]; do
+  tgt=$(readlink "$SELF")
+  case "$tgt" in /*) SELF="$tgt" ;; *) SELF="$(dirname "$SELF")/$tgt" ;; esac
+done
+if ! command -v node >/dev/null 2>&1; then
+  case " $* " in *" --hook "*) exit 0 ;; esac
+  echo "gsdt-notify: needs Node.js >= 24 (node not found on PATH)" >&2
+  exit 1
+fi
+exec node "$(cd "$(dirname "$SELF")/.." && pwd)/src/launch.mjs" notify "$@"

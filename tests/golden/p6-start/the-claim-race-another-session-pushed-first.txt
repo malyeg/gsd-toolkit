@@ -17,7 +17,7 @@ HEAD is now at <sha> docs(gsd): claim phase 3 — shopping cart
 
 ✅ worktree ready: <T>/shop-worktrees/phase-3-shopping-cart   (phase 3)
 
-Next:  cd <T>/shop-worktrees/phase-3-shopping-cart && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 3
+Next:  cd <T>/shop-worktrees/phase-3-shopping-cart && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-3-shopping-cart --remote-control shop-3-shopping-cart /gsdt-flow\ 3
 
 --- stderr
 Preparing worktree (new branch 'phase-3-shopping-cart')
@@ -122,7 +122,7 @@ HEAD is now at <sha> docs(gsd): claim phase 2 — shopping cart
 
 ✅ worktree ready: <T>/shop-worktrees/phase-2-shopping-cart   (phase 2)
 
-Next:  cd <T>/shop-worktrees/phase-2-shopping-cart && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 2
+Next:  cd <T>/shop-worktrees/phase-2-shopping-cart && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-2-shopping-cart --remote-control shop-2-shopping-cart /gsdt-flow\ 2
 
 --- stderr
 Preparing worktree (new branch 'phase-2-shopping-cart')
@@ -225,7 +225,7 @@ HEAD is now at <sha> docs(gsd): insert phase 01.1 (after 1) — urgent
 
 ✅ worktree ready: <T>/shop-worktrees/phase-01.1-urgent   (phase 01.1)
 
-Next:  cd <T>/shop-worktrees/phase-01.1-urgent && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude /gsdt-flow\ 01.1
+Next:  cd <T>/shop-worktrees/phase-01.1-urgent && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-01.1-urgent --remote-control shop-01.1-urgent /gsdt-flow\ 01.1
 
 --- stderr
 Preparing worktree (new branch 'phase-01.1-urgent')

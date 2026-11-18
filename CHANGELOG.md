@@ -7,6 +7,12 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## Unreleased
+
+- **A launched Claude session now has a name and Remote Control.** `gsdt-start`, `gsdt-init` and `gsdt-batch` run `claude --name <prefix>-<N>-<slug> --remote-control <name>`, so there is no `/rename` and no `/rc` to type. The prefix is `session_prefix` in `.gsd.conf`, else the repo folder's name. `session_name = off` or `remote_control = off` turns each off.
+- **New: `gsdt-notify`.** A desktop notification when a Claude session in a set-up repo waits for you (a question, a permission prompt, a minute idle). `gsdt-setup` adds it as a user hook; `GSD_NOTIFY=off` turns it off. macOS and Linux.
+- `gsdt-doctor` no longer reports `compact_at` as an unknown `.gsd.conf` key (T017).
+
 ## 0.11.6
 
 - **`/gsd-verify-work <N>` now runs in the main checkout for a phase that is already merged.** That is what `gsdt-doctor` (T027) tells you to run, but the guard blocked it as feature work. It is allowed only when phase N has no branch left, every plan ran and its ROADMAP row is not ticked; every other phase command stays blocked on the base branch.
