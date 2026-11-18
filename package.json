@@ -1,6 +1,6 @@
 {
   "name": "gsd-toolkit",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "description": "Worktree-per-phase, provider-neutral commands around GSD (gsd-core).",
   "license": "MIT",
   "type": "module",
