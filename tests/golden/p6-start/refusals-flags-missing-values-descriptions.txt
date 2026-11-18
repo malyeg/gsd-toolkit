@@ -615,6 +615,7 @@ default and works even when the selected CLI is unavailable.
 
 USAGE
   gsdt-start -n "<phase description>" [options]  claim a NEW phase
+  gsdt-start --ticket <id|url> [options]         claim a NEW phase named after the ticket
   gsdt-start --insert <N> "<desc>" [options]     claim a FRACTIONAL phase after N
   gsdt-start -p <N> [options]                    attach to an EXISTING phase
 
@@ -644,6 +645,10 @@ OPTIONS
                   tagged. A tag already in the description (… tk-<id>) is
                   picked up the same way. --cu <id> is the old name.
                   With a tracker set, a new claim (-n, --insert) needs one.
+                  Alone (no description, no -p): a NEW phase whose description
+                  is the ticket's title, read from the tracker before anything
+                  is claimed (with --insert <N>: a decimal phase). -n "<desc>"
+                  beside it names the phase yourself.
   --no-ticket     claim without a ticket although a tracker is set
                   (a chore no ticket covers)
   --slug <slug>   worktree/branch slug → phase-<N>-<slug>

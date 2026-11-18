@@ -100,6 +100,18 @@ nothing. This is the safe way to answer "what is left on phase N".
   unchanged blocked command or use `GSD_SKIP_GUARD=1` unless the user asks.
 - Never auto-answer discuss questions. This is the one thing that makes this
   skill different from `/gsd-autonomous`.
+- Every time you stop for the user — a discuss question, review findings, an
+  approval, a `stop=` line — ask so it can be answered in one word. One
+  question at a time, in plain words: what changes for the product or its
+  users, not which file or function. At most three options, your
+  recommendation first with a one-line reason, and what each choice changes.
+  Example: "Should a failed upload retry once? I recommend yes: a short
+  outage then does not make someone start over. No = they see an error and
+  upload again." Say so plainly when a choice is costly or cannot be undone;
+  never make it sound routine. Put everything needed to answer in the
+  question itself, not in text printed before it. Review findings: a short
+  list in plain words (what is wrong, what you would do), then the one
+  question. If the user does not understand, ask again shorter.
 - Any browser work (UAT, screenshots, checking a page) runs in a browser of
   its own: headless Playwright, which opens no window. Never use the user's
   browser — Claude in Chrome, the in-app browser pane, or `open <url>` — it

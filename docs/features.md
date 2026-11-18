@@ -30,6 +30,7 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | Duplicate-description guard (case-insensitive) | `gsdt-start` |
 | Claim bookkeeping: checklist + Progress rows and STATE.md counters land in the claim commit | `gsdt-start`, `src/roadmap.ts` |
 | TDD by default: the claim commit sets `workflow.tdd_mode: true` in `.planning/config.json` when the key is unset (a project's own `false` is kept), so plans list their test cases for the plan review | `gsdt-start` |
+| Start from the ticket alone: `gsdt-start --ticket <id|url>` (no `-n`) names the new phase after the ticket's title, read through `gsdt-tracker snapshot` before anything is claimed; a ticket that cannot be read, or no tracker set, claims nothing and names the fix; `--insert <N> --ticket …` works the same | `gsdt-start`, `src/ticket.ts` (`ticketTitle`) |
 | Ticket link (`--ticket <id|url>`, old `--cu`): `tk-<id>` at the end of title/slug, duplicate-ticket guard, ticket → "in progress" when a tracker is set. With a tracker set a new claim needs a ticket (`--no-ticket` to skip); `gsdt-init` asks for the tracker (`--tracker`) | `gsdt-start`, `gsdt-tracker` |
 | Opens the session in the worktree by default (in a terminal); `--no-launch` prints the command instead, as does a run with no terminal | `gsdt-start` |
 | `--flow` / `--no-flow` / `start_mode`: resume the full flow (default), or open discuss-phase only | `gsdt-start`, `src/provider.ts` |
@@ -100,6 +101,7 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | Configurable cross-AI reviewer (`review_provider`, default `codex`) | `gsdt-flow-next`, `src/provider.ts` |
 | A `REVIEWS.md` whose configured reviewer failed (empty section, Codex usage limit) passes neither the review step nor the guard's execute rule | `gsdt-flow-next`, `gsdt-worktree-guard`, `src/common.ts` (`reviewsProblem`; gsd-core reviewer-instance headings such as `## Codex Review (fast)` count) |
 | Wait out a Codex usage limit: wrap a command (re-run after the reset) or `--wait-only`; reset time from Codex's message or session log, `--interval` fallback, `--max-wait` cap (exit 75, never a pass); never calls Codex; keeps a Mac awake | `gsdt-codex-wait`, `src/codex-wait.ts` |
+| How to ask the user, in the rules every session loads and in the flow skill: one question at a time in plain words, at most three options, the recommended one first with its reason, what each choice changes, a costly or irreversible choice said plainly, everything inside the question | `gsdt-rules` (`RULES_ASKING` in `src/rules-text.ts`), `skills/gsdt-flow` |
 | Agent-facing driver skill with human stop points (discuss, design system + sketch, screens, review, UI approval) | `skills/gsdt-flow` |
 | Doctor report of merged phases that skipped a mandatory step (T040: flow steps with `flow = strict`, `ui-check` / `ui-approve` with `ui_gates = strict`; `flow_since` cutoff, `flow_skip` single phases shown as a note) | `gsdt-doctor` |
 

@@ -13,7 +13,7 @@ import { selfArgv, spawnSyncX as spawnSync } from '../spawn.ts';
 import { existsSync, readFileSync, readdirSync, rmdirSync, appendFileSync, writeFileSync } from 'node:fs';
 import { isatty } from 'node:tty';
 import path from 'node:path';
-import { ticketExtract, ticketNorm, ticketTagged, trackerWhich } from '../ticket.ts';
+import { ticketExtract, ticketNorm, ticketTagged, ticketTitle, trackerWhich } from '../ticket.ts';
 import {
   acquireLock,
   base,
@@ -69,6 +69,7 @@ default and works even when the selected CLI is unavailable.
 
 USAGE
   gsdt-start -n "<phase description>" [options]  claim a NEW phase
+  gsdt-start --ticket <id|url> [options]         claim a NEW phase named after the ticket
   gsdt-start --insert <N> "<desc>" [options]     claim a FRACTIONAL phase after N
   gsdt-start -p <N> [options]                    attach to an EXISTING phase
 
@@ -98,6 +99,10 @@ OPTIONS
                   tagged. A tag already in the description (… tk-<id>) is
                   picked up the same way. --cu <id> is the old name.
                   With a tracker set, a new claim (-n, --insert) needs one.
+                  Alone (no description, no -p): a NEW phase whose description
+                  is the ticket's title, read from the tracker before anything
+                  is claimed (with --insert <N>: a decimal phase). -n "<desc>"
+                  beside it names the phase yourself.
   --no-ticket     claim without a ticket although a tracker is set
                   (a chore no ticket covers)
   --slug <slug>   worktree/branch slug → phase-<N>-<slug>
@@ -379,7 +384,10 @@ function run(argv: string[]): number | Promise<number> {
   if (ATTACH !== '' && NEW) {
     die('-n/--new and -p/--phase are mutually exclusive (-n claims a NEW phase; -p attaches to an existing one)');
   }
-  if (DESC === '' && ATTACH === '') {
+  // A ticket alone names the work: the phase description is read from the ticket's title below.
+  const FROM_TICKET = DESC === '' && ATTACH === '' && TICKET !== '';
+  if (FROM_TICKET && INSERT === '') NEW = true;
+  if (DESC === '' && ATTACH === '' && !FROM_TICKET) {
     if (INSERT !== '') die('--insert needs a phase description (e.g. gsdt-start --insert 11 "hotfix …")');
     if (NEW) die('-n/--new needs a phase description (e.g. gsdt-start -n "customer terms rework")');
     err(HELP);
@@ -450,6 +458,19 @@ function run(argv: string[]): number | Promise<number> {
     const t = ticketNorm(TICKET, normAs);
     TICKET = t === null ? '' : chomp(t);
     if (t === null) die(`--ticket doesn't look like a ticket id (letters/digits, '-' between): ${TICKET}`); // bash assigned first: a failed norm leaves it empty
+    if (FROM_TICKET) {
+      // Read before anything is claimed: a ticket that cannot be read leaves the repo untouched.
+      if (TRACKER === 'none') die(`--ticket alone reads the phase description from the ticket, but no tracker is set here — add -n "<description>"`);
+      DESC = ticketTitle(MAIN, TICKET);
+      if (DESC === '') {
+        die(
+          `could not read the title of ticket ${TICKET} from ${TRACKER} — nothing was claimed.`,
+          '  Check the connection:      gsdt-tracker check',
+          `  Or name the phase yourself: gsdt-start -n "<description>" --ticket ${TICKET}`,
+        );
+      }
+      out(`▶ phase description from ticket ${TICKET}: ${DESC}\n`);
+    }
     if (DESC !== '' && !ticketTagged(DESC, TICKET)) DESC = `${DESC} tk-${TICKET}`;
     if (SLUG !== '' && !ticketTagged(SLUG, TICKET)) SLUG = `${SLUG}-tk-${TICKET}`;
   }

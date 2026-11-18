@@ -49,6 +49,7 @@ decide:
 |---|---|
 | already a phase in the roadmap | `gsdt-start -p <N>` (attach) |
 | genuinely new | `gsdt-start -n "<description>"` |
+| genuinely new, and the user gave its ticket (an id or a URL) in a repo with a tracker | `gsdt-start --ticket <id-or-url>` — the phase is named after the ticket's title; no `-n` needed |
 | a hotfix under an existing phase | `gsdt-start --insert <N> "<description>"` |
 
 `gsdt-start "<description>"` with no flag is **refused** — deliberately. A bare

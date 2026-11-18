@@ -39,6 +39,26 @@ export function trackerWhich(repo: string, env: NodeJS.ProcessEnv = process.env)
   return t === '' || from === 'default' ? 'none' : t;
 }
 
+/**
+ * A ticket's title, read through `gsdt-tracker snapshot <id>` (its first `# ` line, for every
+ * tracker), on one line; '' when the tracker cannot say (no token, no such ticket, tracker none).
+ */
+export function ticketTitle(repo: string, id: string, env: NodeJS.ProcessEnv = process.env): string {
+  let text: string;
+  try {
+    text = execFileSync(...selfArgv('tracker', ['--repo', repo, 'snapshot', id], PKG), {
+      env: { ...env, GSD_PKG: PKG },
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+      maxBuffer: 64 * 1024 * 1024,
+    });
+  } catch {
+    return '';
+  }
+  const head = text.split(/\r?\n/).find((l) => l.startsWith('# '));
+  return head === undefined ? '' : head.slice(2).replace(/\s+/g, ' ').trim();
+}
+
 /** gsd_ticket_norm — the bare id, or null when it is not one (bash: nonzero). A multi-line value is returned whole. */
 export function ticketNorm(id0: string, as = ''): string | null {
   let id = id0;

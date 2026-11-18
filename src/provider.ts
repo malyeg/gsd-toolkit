@@ -10,6 +10,7 @@ import {
   CANONICAL_SUFFIX,
   ENTRY_HOW_DEFAULT,
   ENTRY_TEMPLATE,
+  RULES_ASKING,
   RULES_BASE,
   RULES_SCREENS,
 } from './rules-text.ts';
@@ -332,7 +333,7 @@ export function providerInstructionIntegrated(repo: string, provider: string): b
 
 /** gsd_rules_text — ui 'on'|'off' (off leaves out the screens paragraph); ends with a newline */
 export function rulesText(ui = 'on'): string {
-  return `${RULES_BASE}${ui === 'off' ? '' : RULES_SCREENS}\n`;
+  return `${RULES_BASE}${ui === 'off' ? '' : RULES_SCREENS}${RULES_ASKING}\n`;
 }
 
 /** gsd_repo_values — providers, default provider, base, worktree dir, [ui_gates, flow]; ends with a newline */

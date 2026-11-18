@@ -237,6 +237,27 @@ test('tickets: tracker none tags only; a tracker set demands a ticket', () => {
   scenario({ conf: 'install = none\ntracker = bogus\n' }, null, [start(['-n', 'x', NL], {})]);
 });
 
+test('--ticket alone: the phase is named after the ticket, read before anything is claimed', () => {
+  const tracker = (s: Side): void => {
+    write(
+      sub(s, 'scripts/tracker.sh'),
+      `#!/bin/sh\ncase "$1" in\n  snapshot) [ "$2" = GONE-1 ] && exit 1; printf '# Fix the   cart total\\n\\nTicket body\\n# not the title\\n' ;;\n  *) exit 0 ;;\nesac\n`,
+      0o755,
+    );
+    commitAll(s.R, 'tracker script');
+    git(s.R, 'push', '-q');
+  };
+  scenario({ conf: 'install = none\ntracker = custom\ntracker_command = scripts/tracker.sh\n' }, tracker, [
+    start(['--ticket', 'https://example.com/browse/PROJ-42', NL], { rc: 0, out: /phase description from ticket PROJ-42: Fix the cart total\n[\s\S]*phase-\d+-fix-the-cart-total-tk-PROJ-42/i }),
+    start(['--ticket', 'PROJ-42', NL], { rc: 1, err: /already tracks ticket PROJ-42/ }),
+    start(['--ticket', 'GONE-1', NL], { rc: 1, err: /could not read the title of ticket GONE-1 from custom — nothing was claimed/ }),
+    start(['--insert', '1', '--ticket', 'PROJ-43', NL], { rc: 0, out: /phase description from ticket PROJ-43/ }),
+    start(['-n', 'my own words', '--ticket', 'PROJ-44', NL], { rc: 0, not: /phase description from ticket/ }),
+  ]);
+  // no tracker to read from: say so, claim nothing
+  scenario({}, null, [start(['--ticket', 'ABC-9', NL], { rc: 1, err: /no tracker is set here — add -n/ })]);
+});
+
 test('provider and model resolution; the session command that is printed', () => {
   scenario({}, null, [
     start(['-p', '1', NL, '--provider', 'codex'], { rc: 0, out: /codex/ }),

@@ -11,6 +11,8 @@ becomes its release notes.
 
 - **A launched Claude session now has a name and Remote Control.** `gsdt-start`, `gsdt-init` and `gsdt-batch` run `claude --name <prefix>-<N>-<slug> --remote-control <name>`, so there is no `/rename` and no `/rc` to type. The prefix is `session_prefix` in `.gsd.conf`, else the repo folder's name. `session_name = off` or `remote_control = off` turns each off.
 - **New: `gsdt-notify`.** A desktop notification when a Claude session in a set-up repo waits for you (a question, a permission prompt, a minute idle). `gsdt-setup` adds it as a user hook; `GSD_NOTIFY=off` turns it off. macOS and Linux.
+- **Start a phase from its ticket alone.** `gsdt-start --ticket <id or URL>` names the new phase after the ticket's title, so there is no `-n "description"` to write. The title is read before anything is claimed. `-n` beside it still names the phase yourself.
+- **Shorter questions.** The rules every session loads (`gsdt-rules`) and the flow skill now say how to ask you: one question at a time in plain words, at most three options, the recommended one first, and what each choice changes.
 - `gsdt-doctor` no longer reports `compact_at` as an unknown `.gsd.conf` key (T017).
 
 ## 0.11.6

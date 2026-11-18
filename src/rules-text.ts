@@ -43,6 +43,17 @@ skip a step without asking. \`gsdt-flow-next\` asks for each step (\`ui_gates\` 
 \`.gsd.conf\`).
 `;
 
+export const RULES_ASKING = `
+Asking the user (a decision, an approval, a discuss question): one question
+at a time, in plain words — say what changes for the product or its users,
+not which file or function. At most three options, the one you recommend
+first with a one-line reason, and for each what choosing it changes. Say so
+plainly when a choice is costly or cannot be undone: never make it sound
+routine. Put everything needed to answer in the question itself, not in text
+printed before it. If the user does not understand, ask again shorter, with
+an example.
+`;
+
 export const CANONICAL_PREFIX = `<!-- gsd-toolkit:canonical:start -->
 # GSD worktree workflow
 

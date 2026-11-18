@@ -71,6 +71,7 @@ gsdt-init
 
 # 3. Work on a phase
 gsdt-start -p 1          # an existing phase; or: gsdt-start -n "description" for new work
+                         # (with a tracker: gsdt-start --ticket <id or URL> names it after the ticket)
 # ... the agent session runs the phase flow in the worktree ...
 gsdt-finish              # test, merge, push, remove the worktree
 

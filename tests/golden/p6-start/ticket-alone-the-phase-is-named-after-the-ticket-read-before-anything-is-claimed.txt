@@ -1,0 +1,587 @@
+@@@ 1 @@@
+step 1 (gsdt-start --ticket https://example.com/browse/PROJ-42 --no-launch)
+rc=0
+--- stdout
+▶ phase description from ticket PROJ-42: Fix the cart total
+▶ syncing 'main' with origin (picking up other sessions' claims)…
+▶ claiming phase: Fix the cart total tk-PROJ-42
+✔ phase 2 claimed (committed on main)
+✔ claim pushed to origin/main
+▶ creating worktree: <T>/shop-worktrees/phase-2-fix-the-cart-total-tk-proj-42   (branch 'phase-2-fix-the-cart-total-tk-proj-42' off main)
+HEAD is now at <sha> docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-2-fix-the-cart-total-tk-proj-42/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-2-fix-the-cart-total-tk-proj-42   (phase 2)
+
+Next:  cd <T>/shop-worktrees/phase-2-fix-the-cart-total-tk-proj-42 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-2-fix-the-cart-total --remote-control shop-2-fix-the-cart-total /gsdt-flow\ 2
+
+--- stderr
+Preparing worktree (new branch 'phase-2-fix-the-cart-total-tk-proj-42')
+
+--- files left behind
+── log
+docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+tracker script
+init
+
+── branches
+main
+phase-2-fix-the-cart-total-tk-proj-42
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-2-fix-the-cart-total-tk-proj-42
+branch refs/heads/phase-2-fix-the-cart-total-tk-proj-42
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+### Phase 2: Fix the cart total tk-PROJ-42
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+tracker script
+init
+
+── wt phase-2-fix-the-cart-total-tk-proj-42
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+scripts/
+scripts/tracker.sh
+── wt phase-2-fix-the-cart-total-tk-proj-42/.gsd-install.status
+skipped
+
+── wt phase-2-fix-the-cart-total-tk-proj-42/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 2 @@@
+step 2 (gsdt-start --ticket PROJ-42 --no-launch)
+rc=1
+--- stdout
+▶ phase description from ticket PROJ-42: Fix the cart total
+▶ syncing 'main' with origin (picking up other sessions' claims)…
+
+--- stderr
+✖ phase 2 already tracks ticket PROJ-42 — attach to it instead: gsdt-start -p 2
+  (to add a hotfix under it anyway: gsdt-start --insert 2 "<desc>")
+
+--- files left behind
+── log
+docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+tracker script
+init
+
+── branches
+main
+phase-2-fix-the-cart-total-tk-proj-42
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-2-fix-the-cart-total-tk-proj-42
+branch refs/heads/phase-2-fix-the-cart-total-tk-proj-42
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+### Phase 2: Fix the cart total tk-PROJ-42
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+tracker script
+init
+
+── wt phase-2-fix-the-cart-total-tk-proj-42
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+scripts/
+scripts/tracker.sh
+── wt phase-2-fix-the-cart-total-tk-proj-42/.gsd-install.status
+skipped
+
+── wt phase-2-fix-the-cart-total-tk-proj-42/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 3 @@@
+step 3 (gsdt-start --ticket GONE-1 --no-launch)
+rc=1
+--- stdout
+
+--- stderr
+✖ could not read the title of ticket GONE-1 from custom — nothing was claimed.
+✖   Check the connection:      gsdt-tracker check
+✖   Or name the phase yourself: gsdt-start -n "<description>" --ticket GONE-1
+
+--- files left behind
+── log
+docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+tracker script
+init
+
+── branches
+main
+phase-2-fix-the-cart-total-tk-proj-42
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-2-fix-the-cart-total-tk-proj-42
+branch refs/heads/phase-2-fix-the-cart-total-tk-proj-42
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+### Phase 2: Fix the cart total tk-PROJ-42
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+tracker script
+init
+
+── wt phase-2-fix-the-cart-total-tk-proj-42
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+scripts/
+scripts/tracker.sh
+── wt phase-2-fix-the-cart-total-tk-proj-42/.gsd-install.status
+skipped
+
+── wt phase-2-fix-the-cart-total-tk-proj-42/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 4 @@@
+step 4 (gsdt-start --insert 1 --ticket PROJ-43 --no-launch)
+rc=0
+--- stdout
+▶ phase description from ticket PROJ-43: Fix the cart total
+▶ syncing 'main' with origin (picking up other sessions' claims)…
+▶ inserting phase after 1: Fix the cart total tk-PROJ-43
+✔ phase 01.1 inserted after phase 1 (committed on main)
+✔ claim pushed to origin/main
+▶ creating worktree: <T>/shop-worktrees/phase-01.1-Fix-the-cart-total-tk-PROJ-43   (branch 'phase-01.1-Fix-the-cart-total-tk-PROJ-43' off main)
+HEAD is now at <sha> docs(gsd): insert phase 01.1 (after 1) — Fix the cart total tk-PROJ-43
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-01.1-Fix-the-cart-total-tk-PROJ-43/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-01.1-Fix-the-cart-total-tk-PROJ-43   (phase 01.1)
+
+Next:  cd <T>/shop-worktrees/phase-01.1-Fix-the-cart-total-tk-PROJ-43 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-01.1-Fix-the-cart-total --remote-control shop-01.1-Fix-the-cart-total /gsdt-flow\ 01.1
+
+--- stderr
+Preparing worktree (new branch 'phase-01.1-Fix-the-cart-total-tk-PROJ-43')
+
+--- files left behind
+── log
+docs(gsd): insert phase 01.1 (after 1) — Fix the cart total tk-PROJ-43
+docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+tracker script
+init
+
+── branches
+main
+phase-01.1-Fix-the-cart-total-tk-PROJ-43
+phase-2-fix-the-cart-total-tk-proj-42
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-01.1-Fix-the-cart-total-tk-PROJ-43
+branch refs/heads/phase-01.1-Fix-the-cart-total-tk-PROJ-43
+
+worktree <T>/shop-worktrees/phase-2-fix-the-cart-total-tk-proj-42
+branch refs/heads/phase-2-fix-the-cart-total-tk-proj-42
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+### Phase 2: Fix the cart total tk-PROJ-42
+
+### Phase 01.1: Fix the cart total tk-PROJ-43 (INSERTED)
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+docs(gsd): insert phase 01.1 (after 1) — Fix the cart total tk-PROJ-43
+docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+tracker script
+init
+
+── wt phase-01.1-Fix-the-cart-total-tk-PROJ-43
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+scripts/
+scripts/tracker.sh
+── wt phase-01.1-Fix-the-cart-total-tk-PROJ-43/.gsd-install.status
+skipped
+
+── wt phase-01.1-Fix-the-cart-total-tk-PROJ-43/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── wt phase-2-fix-the-cart-total-tk-proj-42
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+scripts/
+scripts/tracker.sh
+── wt phase-2-fix-the-cart-total-tk-proj-42/.gsd-install.status
+skipped
+
+── wt phase-2-fix-the-cart-total-tk-proj-42/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 5 @@@
+step 5 (gsdt-start -n my own words --ticket PROJ-44 --no-launch)
+rc=0
+--- stdout
+▶ syncing 'main' with origin (picking up other sessions' claims)…
+▶ claiming phase: my own words tk-PROJ-44
+✔ phase 3 claimed (committed on main)
+✔ claim pushed to origin/main
+▶ creating worktree: <T>/shop-worktrees/phase-3-my-own-words-tk-proj-44   (branch 'phase-3-my-own-words-tk-proj-44' off main)
+HEAD is now at <sha> docs(gsd): claim phase 3 — my own words tk-PROJ-44
+▶ copying gitignored local config…
+✔ <T>/shop-worktrees/phase-3-my-own-words-tk-proj-44/.claude/settings.local.json: worktree.baseRef = "head" (plans in a wave can run in parallel)
+▶ skipped dependency install
+
+✅ worktree ready: <T>/shop-worktrees/phase-3-my-own-words-tk-proj-44   (phase 3)
+
+Next:  cd <T>/shop-worktrees/phase-3-my-own-words-tk-proj-44 && env CLAUDE_CODE_AUTO_COMPACT_WINDOW=300000 claude --name shop-3-my-own-words --remote-control shop-3-my-own-words /gsdt-flow\ 3
+
+--- stderr
+Preparing worktree (new branch 'phase-3-my-own-words-tk-proj-44')
+
+--- files left behind
+── log
+docs(gsd): claim phase 3 — my own words tk-PROJ-44
+docs(gsd): insert phase 01.1 (after 1) — Fix the cart total tk-PROJ-43
+docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+tracker script
+init
+
+── branches
+main
+phase-01.1-Fix-the-cart-total-tk-PROJ-43
+phase-2-fix-the-cart-total-tk-proj-42
+phase-3-my-own-words-tk-proj-44
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+worktree <T>/shop-worktrees/phase-01.1-Fix-the-cart-total-tk-PROJ-43
+branch refs/heads/phase-01.1-Fix-the-cart-total-tk-PROJ-43
+
+worktree <T>/shop-worktrees/phase-2-fix-the-cart-total-tk-proj-42
+branch refs/heads/phase-2-fix-the-cart-total-tk-proj-42
+
+worktree <T>/shop-worktrees/phase-3-my-own-words-tk-proj-44
+branch refs/heads/phase-3-my-own-words-tk-proj-44
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+### Phase 2: Fix the cart total tk-PROJ-42
+
+### Phase 01.1: Fix the cart total tk-PROJ-43 (INSERTED)
+
+### Phase 3: my own words tk-PROJ-44
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+.gsd-install.status
+.gsd-install.log
+.claude/settings.local.json
+
+── lock
+none
+── origin
+docs(gsd): claim phase 3 — my own words tk-PROJ-44
+docs(gsd): insert phase 01.1 (after 1) — Fix the cart total tk-PROJ-43
+docs(gsd): claim phase 2 — Fix the cart total tk-PROJ-42
+tracker script
+init
+
+── wt phase-01.1-Fix-the-cart-total-tk-PROJ-43
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+scripts/
+scripts/tracker.sh
+── wt phase-01.1-Fix-the-cart-total-tk-PROJ-43/.gsd-install.status
+skipped
+
+── wt phase-01.1-Fix-the-cart-total-tk-PROJ-43/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── wt phase-2-fix-the-cart-total-tk-proj-42
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+scripts/
+scripts/tracker.sh
+── wt phase-2-fix-the-cart-total-tk-proj-42/.gsd-install.status
+skipped
+
+── wt phase-2-fix-the-cart-total-tk-proj-42/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── wt phase-3-my-own-words-tk-proj-44
+.claude/
+.claude/settings.local.json
+.gsd-install.status
+.gsd.conf
+.planning/
+.planning/ROADMAP.md
+scripts/
+scripts/tracker.sh
+── wt phase-3-my-own-words-tk-proj-44/.gsd-install.status
+skipped
+
+── wt phase-3-my-own-words-tk-proj-44/.claude/settings.local.json
+{
+  "worktree": {
+    "baseRef": "head"
+  },
+  "env": {
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "300000"
+  }
+}
+
+── merge driver
+
+@@@ 6 @@@
+step 1 (gsdt-start --ticket ABC-9 --no-launch)
+rc=1
+--- stdout
+
+--- stderr
+✖ --ticket alone reads the phase description from the ticket, but no tracker is set here — add -n "<description>"
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
