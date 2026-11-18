@@ -1017,7 +1017,7 @@ class Doctor {
     };
     if (IS_GSD_REPO) {
       for (const f of ['ROADMAP.md', 'REQUIREMENTS.md', 'STATE.md', 'PROJECT.md']) {
-        bigFile(`.planning/${f}`, 'GSD reads it at nearly every step; once the milestone has shipped, /gsd-complete-milestone archives it and keeps ROADMAP.md short');
+        bigFile(`.planning/${f}`, 'GSD reads it at nearly every step; once the milestone has shipped, /gsd-complete-milestone archives the milestone and keeps this file short');
       }
     }
     const provSet = `,${RAW_PROVIDERS || DOCTOR_PROVIDER},`;
