@@ -29,7 +29,7 @@ rc=0
 run [--json --repo {W}/pkg]
 rc=0
 --- stdout
-{"session_model":"","gsd_repo":false,"context":{"agents":[],"big_files":[]},"safe":[],"repo":"<W>/pkg","configured":["claude"],"provider":{"name":"claude","command":"claude","available":false,"instruction_file":"CLAUDE.md","instruction_integrated":false,"skill_installed":false,"command_guard":true,"native_hook":"absent"},"count":0,"findings":[],"updates":[],"notes":["toolkit runs from a git checkout (<W>/pkg), not a release — install the release: <W>/pkg/install.sh --reuse-install-config","this is the gsd-toolkit toolkit itself, not a GSD project — setup checks skipped","claude: for CLAUDE.md, memory, MCP servers and plugins, run /doctor and /skill-doctor in a Claude session; /context shows the real numbers"]}
+{"session_model":"","gsd_repo":false,"context":{"agents":[],"big_files":[]},"safe":[],"repo":"<W>/pkg","configured":["claude"],"provider":{"name":"claude","command":"claude","available":false,"instruction_file":"CLAUDE.md","instruction_integrated":false,"skill_installed":false,"command_guard":true,"native_hook":"absent"},"count":0,"findings":[],"warnings":[],"updates":[],"notes":["toolkit runs from a git checkout (<W>/pkg), not a release — install the release: <W>/pkg/install.sh --reuse-install-config","this is the gsd-toolkit toolkit itself, not a GSD project — setup checks skipped","claude: for CLAUDE.md, memory, MCP servers and plugins, run /doctor and /skill-doctor in a Claude session; /context shows the real numbers"]}
 --- stderr
 
 @@@ 3 @@@

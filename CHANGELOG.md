@@ -11,8 +11,6 @@ becomes its release notes.
 
 - **`/gsd-verify-work <N>` now runs in the main checkout for a phase that is already merged.** That is what `gsdt-doctor` (T027) tells you to run, but the guard blocked it as feature work. It is allowed only when phase N has no branch left, every plan ran and its ROADMAP row is not ticked; every other phase command stays blocked on the base branch.
 
-## 0.11.5
-
 - **Unticked phases (T027) are now one warning line, not one finding per phase.** `gsdt-doctor` shows `⚠ Phases 16, 17, … are merged and every plan ran, but their ROADMAP checklist rows are not ticked`, and its exit status stays 0. `--json` lists it under a new `warnings` key. `gsdt-repos` marks such a repo ⚠ (`1 warning: T027`) and counts it apart from repos with findings.
 
 ## 0.11.4
