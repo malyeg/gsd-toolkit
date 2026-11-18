@@ -71,6 +71,7 @@ import {
   staleHooks,
 } from '../provider.ts';
 import { doctorAll } from '../doctor-all.ts';
+import { localFiles, missingIn } from '../local-files.ts';
 import { roadmapAudit, unmarkedDone } from '../roadmap.ts';
 import {
   coreUpdateHow,
@@ -1076,6 +1077,26 @@ class Doctor {
       else if (st === 'running') tip(`dependency install still running in ${path.basename(wt)}`);
     }
 
+    // T035 — a phase or batch worktree lacks local files (env, …) the main checkout has: migrations and tests fail there
+    if (IS_GSD_REPO) {
+      // the scan walks the ignored files (seconds in a big repo): only when there is a worktree to compare
+      let wantCache: string[] | null = null;
+      // .claude/settings.local.json and .mcp.json are not what migrations or tests read (T034 covers the first)
+      const wantList = (): string[] => (wantCache ??= localFiles(MAIN).copy.filter((f) => f !== '.claude/settings.local.json' && f !== '.mcp.json'));
+      let wt = '';
+      for (const line of wtLines) {
+        if (line.startsWith('worktree ')) wt = line.slice(9);
+        if (!line.startsWith('branch ') || wt === '' || wt === MAIN || !isDir(wt)) continue;
+        const br = line.replace(/^branch refs\/heads\//, '');
+        const pm = /^phase-([0-9]+(?:\.[0-9]+)?)-/.exec(br);
+        if (pm === null && !br.startsWith('batch-')) continue;
+        const miss = missingIn(wt, wantList());
+        if (miss.length === 0) continue;
+        const fix = pm !== null ? `gsdt-start -p ${pm[1]} --no-launch (copies only what is missing, never overwrites)` : `gsdt-wt-new --batch ${br} (copies only what is missing)`;
+        this.warn(`${br} lacks local files the main checkout has: ${miss.join(', ')} — migrations and tests there may fail`, fix, 'T035');
+      }
+    }
+
     // T034 — worktree.baseRef = "head".
     if (IS_GSD_REPO) {
       const bad: string[] = [];
@@ -1235,7 +1256,7 @@ class Doctor {
     const known = new Set([
       ...'base wtdir install test premerge flow flow_since flow_skip providers provider agent_command review_provider start_mode compact_at session_name session_prefix remote_control'.split(' '),
       ...'tracker tracker_command tracker_profile tracker_status_start tracker_status_finish'.split(' '),
-      ...'ui_gates ui_url ui_min_font'.split(' '),
+      ...'ui_gates ui_url ui_min_font copy_files'.split(' '),
       ...'claude_command codex_command gemini_command custom_command claude_model codex_model gemini_model custom_model'.split(' '),
     ]);
     const trim = (s: string): string => s.replace(new RegExp(`^${SP}+`), '').replace(new RegExp(`${SP}+$`), '');

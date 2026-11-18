@@ -129,6 +129,7 @@ on `gsdt-start` do not rewrite the set. Refer to `gsdt-init --help` for setup fl
 | `tracker_profile` | This project's tracker login: ClickUp reads `~/.config/gsd/clickup-<name>.env`; custom gets `GSD_TRACKER_PROFILE` |
 | `tracker_status_start`, `tracker_status_finish` | Ticket status set by `gsdt-start` / `gsdt-finish` |
 | `ui_gates` | UI quality gates: `warn` (default), `strict` (the guard and `gsdt-finish` enforce), `off` |
+| `copy_files` | Gitignored files `gsdt-start` copies into a new worktree besides the default ones: a comma list of paths/globs (`config/*.yml, apps/api/.env.staging`; copied as named, even a production env). `none` = no env files. Default: `.env` and `.env.<x>` where every part is `local`, `dev`, `develop`, `development`, `e2e` or `test` (any folder, not `node_modules`); prod, staging and other names are left out and listed |
 | `ui_min_font` | Smallest text size `gsdt-ui check` accepts, in px: 8–32, default `12` |
 | `ui_url` | App address for `gsdt-ui check` / `shots`; default `http://localhost:{port}`; `{port}` / `{port:<base>}` = the phase's derived port. A phase's `url:` in `<P>-LAYOUT.md` wins (projects with several apps) |
 

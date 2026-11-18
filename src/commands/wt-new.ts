@@ -3,7 +3,7 @@
 // tests/fixtures/p6-old-bins/). Output, exit codes and the files it writes are the
 // same; the background install is a detached child, as the subshell was.
 import { SH, spawnX as spawn } from '../spawn.ts';
-import { appendFileSync, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import {
   acquireLock,
@@ -20,6 +20,7 @@ import {
   phaseBranch,
   wtdir,
 } from '../common.ts';
+import { copyLocalFiles } from '../local-files.ts';
 import { err, inherit, out } from '../stdio.ts';
 
 const HELP = `gsdt-wt-new — create the worktree for a GSD phase in ONE step.
@@ -229,6 +230,8 @@ function run(argv: string[]): number {
     }
     if (WT !== '') {
       out(`• branch '${NAME}' already has a worktree — reusing it.\n`);
+      // a worktree made before an env file existed (or before 0.11.7 copied env files) gets what it lacks
+      for (const l of copyLocalFiles(MAIN, WT)) out(`${l}\n`);
       // A worktree made before the toolkit set it (or by hand) lacks it.
       const line = baserefEnsure(WT);
       if (line !== '') out(`${line}\n`);
@@ -252,20 +255,8 @@ function run(argv: string[]): number {
 
   out('▶ copying gitignored local config…\n');
   // .claude/settings.local.json carries the user's permission allowlist; without it every worktree re-prompts for
-  // everything. Only gitignored files are copied. `git ls-files --others --ignored` collapses an ignored directory
-  // to one 'path/' entry: skip anything that is not a regular file.
-  const ls = git(MAIN, ['ls-files', '--others', '--ignored', '--exclude-standard', '--', ':(glob)**/.env.local', '.env.local', '.mcp.json', '.claude/settings.local.json']);
-  for (const rel of ls.stdout.split('\n')) {
-    if (rel === '') continue;
-    if (!isFile(`${MAIN}/${rel}`)) continue;
-    try {
-      mkdirSync(`${DEST}/${path.dirname(rel)}`, { recursive: true });
-      copyFileSync(`${MAIN}/${rel}`, `${DEST}/${rel}`);
-      out(`  copied ${rel}\n`);
-    } catch {
-      // `cp … && echo`: a failed copy is skipped silently
-    }
-  }
+  // everything. The env files migrations and tests need (local/dev/test/e2e only, never prod): src/local-files.ts.
+  for (const l of copyLocalFiles(MAIN, DEST)) out(`${l}\n`);
 
   // The status/log files and the local settings must never read as uncommitted work. Bootstrap ignores them in
   // .gitignore; the repo-local exclude list covers a repo whose .gitignore lost the lines.
