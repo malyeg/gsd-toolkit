@@ -7,7 +7,7 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## Unreleased
+## 0.12.2
 
 - **Decisions and deferred work no longer get lost.** A batch that leaves an item for later ("own phase", "not this round") or an owner call now files it before it lands: a phase-sized item becomes a ROADMAP backlog phase (`/gsd-capture --backlog`, 999.x), a small one a todo, the owner calls one todo, each with the decided rule copied word for word. The rules every session loads (`gsdt-rules`) now say: a decision goes in `PROJECT.md` "Key Decisions", deferred work in `/gsd-capture`, never only in chat or in notes outside the repo.
 - `gsdt-list` and `gsdt-doctor` show how many todos wait in `.planning/todos/pending` (and how many open checkboxes they hold), so they stop hiding.
