@@ -47,6 +47,13 @@ routine. Put everything needed to answer in the question itself, not in text
 printed before it. If the user does not understand, ask again shorter, with
 an example.
 
+Write it down in the repo, never only in chat or in notes outside the repo.
+A decision the user makes: a row in `.planning/PROJECT.md` "Key Decisions",
+in the user's own words. Work left for later: `/gsd-capture` (a todo); work
+the size of a phase: `/gsd-capture --backlog` (a ROADMAP 999.x phase;
+`/gsd-review-backlog` promotes it). Copy the decided rule into it, not a
+summary. A note that says "own phase" or "later" with neither is lost work.
+
 
 @@@ 2 @@@
 # rulesText off
@@ -84,6 +91,13 @@ plainly when a choice is costly or cannot be undone: never make it sound
 routine. Put everything needed to answer in the question itself, not in text
 printed before it. If the user does not understand, ask again shorter, with
 an example.
+
+Write it down in the repo, never only in chat or in notes outside the repo.
+A decision the user makes: a row in `.planning/PROJECT.md` "Key Decisions",
+in the user's own words. Work left for later: `/gsd-capture` (a todo); work
+the size of a phase: `/gsd-capture --backlog` (a ROADMAP 999.x phase;
+`/gsd-review-backlog` promotes it). Copy the decided rule into it, not a
+summary. A note that says "own phase" or "later" with neither is lost work.
 
 
 @@@ 3 @@@
@@ -135,6 +149,13 @@ routine. Put everything needed to answer in the question itself, not in text
 printed before it. If the user does not understand, ask again shorter, with
 an example.
 
+Write it down in the repo, never only in chat or in notes outside the repo.
+A decision the user makes: a row in `.planning/PROJECT.md` "Key Decisions",
+in the user's own words. Work left for later: `/gsd-capture` (a todo); work
+the size of a phase: `/gsd-capture --backlog` (a ROADMAP 999.x phase;
+`/gsd-review-backlog` promotes it). Copy the decided rule into it, not a
+summary. A note that says "own phase" or "later" with neither is lost work.
+
 
 @@@ 4 @@@
 # rulesText x
@@ -184,6 +205,13 @@ plainly when a choice is costly or cannot be undone: never make it sound
 routine. Put everything needed to answer in the question itself, not in text
 printed before it. If the user does not understand, ask again shorter, with
 an example.
+
+Write it down in the repo, never only in chat or in notes outside the repo.
+A decision the user makes: a row in `.planning/PROJECT.md` "Key Decisions",
+in the user's own words. Work left for later: `/gsd-capture` (a todo); work
+the size of a phase: `/gsd-capture --backlog` (a ROADMAP 999.x phase;
+`/gsd-review-backlog` promotes it). Copy the decided rule into it, not a
+summary. A note that says "own phase" or "later" with neither is lost work.
 
 
 @@@ 5 @@@

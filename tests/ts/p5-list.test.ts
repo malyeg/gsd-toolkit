@@ -10,6 +10,7 @@ import path from 'node:path';
 import { golden, goldenSkip, test } from './golden.ts';
 import { PKG, repo, sh, tmp, write, LOCALE_ENV, subst } from './helpers.ts';
 import { renderList } from '../../src/commands/list.ts';
+import { pendingTodos } from '../../src/common.ts';
 
 const NEW_BIN = path.join(PKG, 'bin', 'gsdt-list');
 
@@ -274,6 +275,26 @@ test('a phase ticked [x] in the checklist with no plan files is done', () => {
   assert.equal(stage('2'), '—');
   assert.equal(stage('3'), '—');
   assert.equal(stage('1.1'), '—', 'Phase 1 ticked does not tick 1.1');
+});
+
+test('todos waiting in .planning/todos/pending: counted and shown under the table', () => {
+  const R = tmp();
+  const pend = path.join(R, '.planning', 'todos', 'pending');
+  mkdirSync(pend, { recursive: true });
+  assert.deepEqual(pendingTodos(R), { files: 0, boxes: 0 });
+  assert.deepEqual(pendingTodos(path.join(R, 'none')), { files: 0, boxes: 0 }, 'no folder: nothing');
+  writeFileSync(path.join(pend, 'a.md'), '# A\n- [ ] one\n- [x] done\n  - [ ] nested\n* [ ] star\n');
+  writeFileSync(path.join(pend, 'b.md'), 'no checkboxes, still a todo\n');
+  writeFileSync(path.join(pend, 'notes.txt'), '- [ ] not a todo file\n');
+  mkdirSync(path.join(pend, 'dir.md'));
+  const t = pendingTodos(R);
+  assert.deepEqual(t, { files: 2, boxes: 3 });
+  const base = { roadmap: '/r', text: '### Phase 1: One', wt: new Map(), branches: [], batches: [], phasesRoot: '/nonexistent', termcols: 100, full: false };
+  assert.ok(!renderList(base).includes('todos waiting'), 'no todos: no line');
+  assert.ok(!renderList({ ...base, todos: { files: 0, boxes: 0 } }).includes('todos waiting'));
+  assert.match(renderList({ ...base, todos: t }), /\n {2}todos waiting: 2 in \.planning\/todos\/pending \(3 open checkboxes\) — \/gsd-capture --list;\n {2}a phase-sized one → \/gsd-capture --backlog, then \/gsd-review-backlog\n$/);
+  assert.match(renderList({ ...base, todos: { files: 1, boxes: 1 } }), /todos waiting: 1 in \.planning\/todos\/pending \(1 open checkbox\) —/);
+  assert.match(renderList({ ...base, todos: { files: 1, boxes: 0 } }), /todos waiting: 1 in \.planning\/todos\/pending — /);
 });
 
 test('symlinked launcher still finds the package', () => {

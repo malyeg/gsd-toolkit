@@ -9,7 +9,7 @@
 // mojibake; `bytes()` keeps that (never reached by ASCII names).
 import { WIN, spawnSyncX as spawnSync } from '../spawn.ts';
 import { readFileSync, readdirSync } from 'node:fs';
-import { git, isDir, isFile, lf } from '../common.ts';
+import { git, isDir, isFile, lf, pendingTodos } from '../common.ts';
 import { staleHooksNotice } from '../provider.ts';
 import { updateNotice } from '../version.ts';
 
@@ -43,6 +43,7 @@ COLUMNS
 
   Under the table: the batch-* branches of gsdt-batch runs not landed yet
   (● = worktree attached). Land one with gsdt-finish <branch>.
+  Then how many gsd-core todos wait in .planning/todos/pending, if any.
 
 RELATED
   gsdt-start -n "<desc>"     claim a NEW phase and open its session
@@ -185,6 +186,8 @@ export type ListInput = {
   wt: Map<string, string>; // branch → worktree path
   branches: string[];
   batches: string[];
+  /** gsd-core todos waiting in .planning/todos/pending (none: no line) */
+  todos?: { files: number; boxes: number };
   phasesRoot: string;
   termcols: number;
   full: boolean;
@@ -292,6 +295,11 @@ export function renderList(inp: ListInput): string {
     out += '\n  batches (gsdt-batch; land with gsdt-finish <branch>):\n';
     for (const b of inp.batches) out += `    ${inp.wt.has(b) ? '● ' : '  '}${show(b)}\n`;
   }
+  const t = inp.todos;
+  if (t && t.files > 0) {
+    const boxes = t.boxes > 0 ? ` (${t.boxes} open checkbox${t.boxes === 1 ? '' : 'es'})` : '';
+    out += `\n  todos waiting: ${t.files} in .planning/todos/pending${boxes} — /gsd-capture --list;\n  a phase-sized one → /gsd-capture --backlog, then /gsd-review-backlog\n`;
+  }
   return out;
 }
 
@@ -378,6 +386,7 @@ export function main(argv: string[]): number {
         wt,
         branches,
         batches,
+        todos: pendingTodos(main),
         phasesRoot: `${main}/.planning/phases`,
         termcols: cols === '' || cols === '0' ? 120 : num(cols), // Perl: `$ENV{TERMCOLS} || 120` (the string's truthiness)
         full,

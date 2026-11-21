@@ -90,6 +90,10 @@ rules:
   - **build** — real, to be fixed, in the brief's order;
   - **recommend** — items the brief says to recommend, not build (owner
     calls, decisions): one-line recommendation each, never built;
+  - **later** — real, but not built in this batch: too big (it needs its
+    own phase) or the brief says "not this round". Mark each `phase` or
+    `small`, and copy the rule the user decided for it, word for word, with
+    the file and line it came from;
   - **dropped** — not real (already works, can't reproduce, duplicate):
     one-line reason each.
   If the brief asks for a check the helper cannot do (no browser to open a
@@ -102,7 +106,7 @@ rules:
 - Write the enriched file (step 4) with the REAL items only.
 - Return ONLY the lists, one line per item:
   `<n>. tiny|real — <first words of the item> — <reason, ≤ 6 words>`,
-  then (a brief) `recommend:` and `dropped:` lines, then the files it wrote
+  then (a brief) `recommend:`, `later:` and `dropped:` lines, then the files it wrote
   and the checks it skipped. No file contents, no search output.
 
 ## 3. Tiny or real
@@ -135,11 +139,12 @@ runs every bullet in it. One line per item, the user's original words FIRST
 ## 5. Show the list, wait for the OK
 
 Show the helper's lists: real items first, then tiny ones, then (a brief)
-the recommendations, the dropped items with their reasons, and any check it
-skipped. Items run side by side, so the brief's order holds only where one
-item depends on another; say so when the brief asked for an order. Ask the
-user to OK it; they can move items between tiny, real, recommend and dropped
-(update the file to match). Do not start anything before the OK.
+the recommendations, the later items, the dropped items with their reasons,
+and any check it skipped. Items run side by side, so the brief's order holds
+only where one item depends on another; say so when the brief asked for an
+order. Ask the user to OK it; they can move items between tiny, real,
+recommend, later and dropped (update the file to match). Do not start
+anything before the OK.
 
 ## 6. Before anything runs
 
@@ -178,7 +183,25 @@ run `gsd-quick` for it instead.
 gsd-fast edits `.planning/STATE.md` after its commit: leave that change for
 the next commit; it is not dirt.
 
-## 9. Report
+## 9. File what was not built
+
+A note in the brief or in chat is lost work: nothing shows it again. Before
+the report, put every item that was not built where GSD shows it:
+
+- a **later** item marked `phase` → the provider's `gsd-capture` skill with
+  `--backlog` (a ROADMAP 999.x phase; `/gsd-review-backlog` promotes it);
+- a **later** item marked `small` → `gsd-capture` (a todo);
+- the **recommend** items → ONE todo, "Owner calls from batch <slug>", one
+  checkbox per call with its recommendation.
+
+The text of each: the item's id and title, the rule the user decided, word
+for word (never a summary: a summary can turn the rule around), the file
+and line it came from, and what it blocks. A decision the user made during
+this batch → a row in `.planning/PROJECT.md` "Key Decisions", in their
+words. Commit what is left uncommitted: `git commit -m "docs(batch): file
+leftovers <slug>"`. Dropped items are not filed.
+
+## 10. Report
 
 Print this line exactly, on a line of its own (the counts are of THIS
 batch, items BUILT only: not the recommended or dropped ones). It marks the end of the batch for the report, and turns the
@@ -197,8 +220,10 @@ Bash: gsdt-batch-report
 Show its per-item table and a one-line summary: items done, items failed or
 left for review (with gsd-quick-batch's resume command when it gave one).
 For a brief, repeat the recommendations last: they are the user's calls.
+Then say where each later and recommend item was filed (backlog phase
+number, todo file).
 
-## 10. Landing — the user's step
+## 11. Landing — the user's step
 
 Never merge, push or finish the batch yourself. Print the command that
 lands it (tests → merge → push → remove the worktree), with this

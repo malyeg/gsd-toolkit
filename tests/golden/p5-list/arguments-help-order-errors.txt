@@ -32,6 +32,7 @@ COLUMNS
 
   Under the table: the batch-* branches of gsdt-batch runs not landed yet
   (● = worktree attached). Land one with gsdt-finish <branch>.
+  Then how many gsd-core todos wait in .planning/todos/pending, if any.
 
 RELATED
   gsdt-start -n "<desc>"     claim a NEW phase and open its session
@@ -73,6 +74,7 @@ COLUMNS
 
   Under the table: the batch-* branches of gsdt-batch runs not landed yet
   (● = worktree attached). Land one with gsdt-finish <branch>.
+  Then how many gsd-core todos wait in .planning/todos/pending, if any.
 
 RELATED
   gsdt-start -n "<desc>"     claim a NEW phase and open its session
@@ -114,6 +116,7 @@ COLUMNS
 
   Under the table: the batch-* branches of gsdt-batch runs not landed yet
   (● = worktree attached). Land one with gsdt-finish <branch>.
+  Then how many gsd-core todos wait in .planning/todos/pending, if any.
 
 RELATED
   gsdt-start -n "<desc>"     claim a NEW phase and open its session
@@ -162,6 +165,7 @@ COLUMNS
 
   Under the table: the batch-* branches of gsdt-batch runs not landed yet
   (● = worktree attached). Land one with gsdt-finish <branch>.
+  Then how many gsd-core todos wait in .planning/todos/pending, if any.
 
 RELATED
   gsdt-start -n "<desc>"     claim a NEW phase and open its session
@@ -203,6 +207,7 @@ COLUMNS
 
   Under the table: the batch-* branches of gsdt-batch runs not landed yet
   (● = worktree attached). Land one with gsdt-finish <branch>.
+  Then how many gsd-core todos wait in .planning/todos/pending, if any.
 
 RELATED
   gsdt-start -n "<desc>"     claim a NEW phase and open its session
@@ -307,6 +312,7 @@ COLUMNS
 
   Under the table: the batch-* branches of gsdt-batch runs not landed yet
   (● = worktree attached). Land one with gsdt-finish <branch>.
+  Then how many gsd-core todos wait in .planning/todos/pending, if any.
 
 RELATED
   gsdt-start -n "<desc>"     claim a NEW phase and open its session

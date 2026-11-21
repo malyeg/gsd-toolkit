@@ -33,6 +33,7 @@ import {
   isFile,
   toolkitRepo,
   lf,
+  pendingTodos,
   planningStatus,
   run,
   skillDiffers,
@@ -858,6 +859,13 @@ class Doctor {
           default:
             tip('.planning has no ROADMAP.md — nothing to check');
         }
+      }
+
+      // Todos waiting in .planning/todos/pending: notes no one reads again are lost work.
+      const todos = pendingTodos(MAIN);
+      if (todos.files > 0) {
+        const boxes = todos.boxes > 0 ? `, ${todos.boxes} open checkbox${todos.boxes === 1 ? '' : 'es'}` : '';
+        note(`${todos.files} todo${todos.files === 1 ? '' : 's'} waiting in .planning/todos/pending${boxes} — review them (/gsd-capture --list); a phase-sized one → /gsd-capture --backlog, then /gsd-review-backlog`);
       }
 
       // Phase-checkbox bookkeeping — scoped to the checkout you are standing in.

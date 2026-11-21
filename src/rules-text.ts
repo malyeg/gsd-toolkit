@@ -54,6 +54,15 @@ printed before it. If the user does not understand, ask again shorter, with
 an example.
 `;
 
+export const RULES_RECORDING = `
+Write it down in the repo, never only in chat or in notes outside the repo.
+A decision the user makes: a row in \`.planning/PROJECT.md\` "Key Decisions",
+in the user's own words. Work left for later: \`/gsd-capture\` (a todo); work
+the size of a phase: \`/gsd-capture --backlog\` (a ROADMAP 999.x phase;
+\`/gsd-review-backlog\` promotes it). Copy the decided rule into it, not a
+summary. A note that says "own phase" or "later" with neither is lost work.
+`;
+
 export const CANONICAL_PREFIX = `<!-- gsd-toolkit:canonical:start -->
 # GSD worktree workflow
 

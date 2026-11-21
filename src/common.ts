@@ -121,6 +121,33 @@ export function isExec(p: string): boolean {
   }
 }
 
+/**
+ * gsd-core's todos (`/gsd-capture`) waiting in `<root>/.planning/todos/pending/`:
+ * how many files, and how many open `- [ ]` checkboxes they hold. A note no
+ * one reads again is lost work, so gsdt-list and gsdt-doctor show the count.
+ */
+export function pendingTodos(root: string): { files: number; boxes: number } {
+  const dir = `${root}/.planning/todos/pending`;
+  let names: string[];
+  try {
+    names = readdirSync(dir);
+  } catch {
+    return { files: 0, boxes: 0 };
+  }
+  let files = 0;
+  let boxes = 0;
+  for (const f of names) {
+    if (!f.endsWith('.md') || !isFile(`${dir}/${f}`)) continue;
+    files++;
+    try {
+      boxes += (readFileSync(`${dir}/${f}`, 'utf8').match(/^\s*[-*] \[ \]/gm) ?? []).length;
+    } catch {
+      // unreadable: counted as a file only
+    }
+  }
+  return { files, boxes };
+}
+
 /** CRLF → LF (Git for Windows checks repo text out with CRLF; every reader of repo text sees LF). */
 export const lf = (t: string): string => (t.includes('\r\n') ? t.replace(/\r\n/g, '\n') : t);
 /** The line ending a file mostly uses: CRLF only when it has more CRLF lines than bare LF lines. */

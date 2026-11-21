@@ -166,3 +166,16 @@ test('T027: a merged phase whose plans all ran but whose checklist row is not ti
   writeFileSync(path.join(repo, '.planning/ROADMAP.md'), '# Roadmap\n\n- [x] **Phase 1: One**\n- [x] **Phase 2: Two**\n\n### Phase 1: One\n\n### Phase 2: Two\n');
   assert.doesNotMatch(plain(run([]).out), /T027/);
 });
+
+test('todos waiting in .planning/todos/pending: a note by default and in --json notes; none without todos', () => {
+  const { repo, run } = world();
+  assert.doesNotMatch(plain(run([]).out), /todos? waiting/);
+  const pend = path.join(repo, '.planning/todos/pending');
+  mkdirSync(pend, { recursive: true });
+  writeFileSync(path.join(pend, 'fix8-owner-extras.md'), '# Round 8\n- [ ] F27 own phase\n- [x] F16 done\n- [ ] F28 gap\n');
+  writeFileSync(path.join(pend, 'other.md'), 'one more\n');
+  const msg = '2 todos waiting in .planning/todos/pending, 2 open checkboxes — review them (/gsd-capture --list); a phase-sized one → /gsd-capture --backlog, then /gsd-review-backlog';
+  assert.ok(plain(run([]).out).includes(`  • ${msg}\n`));
+  const j = JSON.parse(run(['--json']).out) as { notes: string[]; findings?: unknown[] };
+  assert.ok(j.notes.includes(msg));
+});
