@@ -136,15 +136,21 @@ runs every bullet in it. One line per item, the user's original words FIRST
   data. Hints are a starting point; the planner still checks callers and
   tests.
 
-## 5. Show the list, wait for the OK
+## 5. Show the list, then go on
 
 Show the helper's lists: real items first, then tiny ones, then (a brief)
 the recommendations, the later items, the dropped items with their reasons,
 and any check it skipped. Items run side by side, so the brief's order holds
 only where one item depends on another; say so when the brief asked for an
-order. Ask the user to OK it; they can move items between tiny, real,
-recommend, later and dropped (update the file to match). Do not start
-anything before the OK.
+order.
+
+Then go on to step 6 at once: do not ask for an OK. The user can stop the
+session if the list is wrong.
+
+Only when the user's input has the flag `--confirm`: ask the user to OK the
+list first; they can move items between tiny, real, recommend, later and
+dropped (update the file to match). Do not start anything before the OK.
+`--confirm` is this skill's own flag: never pass it on to `gsd-quick-batch`.
 
 ## 6. Before anything runs
 

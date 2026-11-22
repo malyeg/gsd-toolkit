@@ -29,6 +29,8 @@ Usage (from anywhere inside the repo):
     gsdt-batch "Read plan/FIX-BRIEF-7.md. Validate every item, fix only the
     real ones, recommend the owner calls."
   Everything that is not an option below goes to the skill unchanged.
+  The skill shows the sorted list and goes on without asking; add
+  --confirm to make it wait for your OK first.
 
 Options:
   --provider <p>      claude (default: the repo's provider), codex or custom

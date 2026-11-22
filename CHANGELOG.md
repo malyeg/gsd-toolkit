@@ -7,6 +7,10 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## Unreleased
+
+- **`gsdt-batch` no longer waits for your OK on the sorted list.** It shows the list and goes on. Stop the session if the list is wrong. Want the old pause? Add `--confirm`: `gsdt-batch --confirm "…"`.
+
 ## 0.12.3
 
 - **`gsdt-batch --advisor <model>`** (Claude only, experimental). The batch session still runs on Sonnet, but it can ask a stronger model for advice at hard spots: `gsdt-batch --advisor opus "…"` starts `claude --model sonnet --advisor opus`. Off unless you pass it. The advisor must rank at or above the session's model; a bad name stops before anything is made. Codex and custom refuse it.
