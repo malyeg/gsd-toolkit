@@ -7,6 +7,10 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
+## 0.12.3
+
+- **`gsdt-batch --advisor <model>`** (Claude only, experimental). The batch session still runs on Sonnet, but it can ask a stronger model for advice at hard spots: `gsdt-batch --advisor opus "…"` starts `claude --model sonnet --advisor opus`. Off unless you pass it. The advisor must rank at or above the session's model; a bad name stops before anything is made. Codex and custom refuse it.
+
 ## 0.12.2
 
 - **Decisions and deferred work no longer get lost.** A batch that leaves an item for later ("own phase", "not this round") or an owner call now files it before it lands: a phase-sized item becomes a ROADMAP backlog phase (`/gsd-capture --backlog`, 999.x), a small one a todo, the owner calls one todo, each with the decided rule copied word for word. The rules every session loads (`gsdt-rules`) now say: a decision goes in `PROJECT.md` "Key Decisions", deferred work in `/gsd-capture`, never only in chat or in notes outside the repo.
