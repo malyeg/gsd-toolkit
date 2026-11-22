@@ -323,7 +323,53 @@ init
 ── merge driver
 
 @@@ 8 @@@
-step 8 (gsdt-batch --repo)
+step 8 (gsdt-batch --advisor)
+rc=64
+--- stdout
+
+--- stderr
+gsdt-batch: --advisor needs a model
+
+--- files left behind
+── log
+init
+
+── branches
+main
+
+── worktrees
+worktree <T>/shop
+branch refs/heads/main
+
+
+── status
+
+── .planning/ROADMAP.md
+# Roadmap
+
+### Phase 1: catalog
+
+── .planning/STATE.md
+(none)
+── .planning/config.json
+(none)
+── .git/info/exclude
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+── lock
+none
+── origin
+init
+
+── merge driver
+
+@@@ 9 @@@
+step 9 (gsdt-batch --repo)
 rc=64
 --- stdout
 
@@ -368,8 +414,8 @@ init
 
 ── merge driver
 
-@@@ 9 @@@
-step 9 (gsdt-batch x --model)
+@@@ 10 @@@
+step 10 (gsdt-batch x --model)
 rc=64
 --- stdout
 
@@ -414,8 +460,8 @@ init
 
 ── merge driver
 
-@@@ 10 @@@
-step 10 (gsdt-batch --)
+@@@ 11 @@@
+step 11 (gsdt-batch --)
 rc=64
 --- stdout
 
@@ -461,8 +507,8 @@ init
 
 ── merge driver
 
-@@@ 11 @@@
-step 11 (gsdt-batch --print --file )
+@@@ 12 @@@
+step 12 (gsdt-batch --print --file )
 rc=64
 --- stdout
 

@@ -644,9 +644,13 @@ export function providerPrompt(p: string, kind: string, n = ''): string {
  * gsd_provider_argv — provider, executable, prompt, optional model, optional
  * compact_at tokens → GSD_LAUNCH_ARGV
  */
-export function providerArgv(p: string, c: string, prompt: string, model = '', compact = '', session: Session = { name: '', remote: false }): Result<string[]> {
+export function providerArgv(p: string, c: string, prompt: string, model = '', compact = '', session: Session = { name: '', remote: false }, advisor = ''): Result<string[]> {
   const bad = modelValidate(p, model);
   if (bad) return bad;
+  // Claude only (experimental there): a stronger model the session may ask for advice. Same shape rules as a model.
+  if (advisor !== '' && p !== 'claude') return fail('--advisor is Claude-only');
+  const badAdvisor = modelValidate(p, advisor);
+  if (badAdvisor) return fail(badAdvisor.message.replace(/^model /, 'advisor '));
   let argv = [c];
   // Claude only: the session's name (prompt box, /resume, terminal title) and Remote Control under the same name.
   // `--remote-control` takes an OPTIONAL value, so it is always given one: a bare flag would eat the prompt.
@@ -657,6 +661,7 @@ export function providerArgv(p: string, c: string, prompt: string, model = '', c
   }
   if (compact !== '' && p === 'codex') argv.push('-c', `model_auto_compact_token_limit=${compact}`);
   if ((p === 'claude' || p === 'codex') && model !== '' && model !== 'default') argv.push('--model', model);
+  if (p === 'claude' && advisor !== '' && advisor !== 'default') argv.push('--advisor', advisor);
   if (named) argv.push('--name', session.name);
   if (named && session.remote) argv.push('--remote-control', session.name);
   argv.push(prompt);

@@ -24,6 +24,9 @@ Options:
   --agent-command <c> the provider's executable
   --model <m>         the session's model (Claude default: sonnet; others:
                       their configured model). `default` = the CLI's own
+  --advisor <m>       Claude only, experimental: a stronger model the session
+                      asks for advice at hard spots (`claude --advisor <m>`),
+                      e.g. --advisor opus. It must rank at or above --model
   --name <slug>       the batch's name (default: the first words of the
                       list or brief, or the --file name)
   --repo <path>       the repo (default: the main checkout of the cwd)
@@ -105,6 +108,9 @@ Options:
   --agent-command <c> the provider's executable
   --model <m>         the session's model (Claude default: sonnet; others:
                       their configured model). `default` = the CLI's own
+  --advisor <m>       Claude only, experimental: a stronger model the session
+                      asks for advice at hard spots (`claude --advisor <m>`),
+                      e.g. --advisor opus. It must rank at or above --model
   --name <slug>       the batch's name (default: the first words of the
                       list or brief, or the --file name)
   --repo <path>       the repo (default: the main checkout of the cwd)
@@ -186,6 +192,9 @@ Options:
   --agent-command <c> the provider's executable
   --model <m>         the session's model (Claude default: sonnet; others:
                       their configured model). `default` = the CLI's own
+  --advisor <m>       Claude only, experimental: a stronger model the session
+                      asks for advice at hard spots (`claude --advisor <m>`),
+                      e.g. --advisor opus. It must rank at or above --model
   --name <slug>       the batch's name (default: the first words of the
                       list or brief, or the --file name)
   --repo <path>       the repo (default: the main checkout of the cwd)
@@ -267,6 +276,9 @@ Options:
   --agent-command <c> the provider's executable
   --model <m>         the session's model (Claude default: sonnet; others:
                       their configured model). `default` = the CLI's own
+  --advisor <m>       Claude only, experimental: a stronger model the session
+                      asks for advice at hard spots (`claude --advisor <m>`),
+                      e.g. --advisor opus. It must rank at or above --model
   --name <slug>       the batch's name (default: the first words of the
                       list or brief, or the --file name)
   --repo <path>       the repo (default: the main checkout of the cwd)

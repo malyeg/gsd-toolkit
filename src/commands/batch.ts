@@ -35,6 +35,9 @@ Options:
   --agent-command <c> the provider's executable
   --model <m>         the session's model (Claude default: sonnet; others:
                       their configured model). \`default\` = the CLI's own
+  --advisor <m>       Claude only, experimental: a stronger model the session
+                      asks for advice at hard spots (\`claude --advisor <m>\`),
+                      e.g. --advisor opus. It must rank at or above --model
   --name <slug>       the batch's name (default: the first words of the
                       list or brief, or the --file name)
   --repo <path>       the repo (default: the main checkout of the cwd)
@@ -94,6 +97,7 @@ function run(argv: string[]): number | Promise<number> {
   let COMMAND = '';
   let MODEL = '';
   let MODEL_SET = false;
+  let ADVISOR = '';
   let REPO = '';
   let PRINT = false;
   let NAME = '';
@@ -126,6 +130,10 @@ function run(argv: string[]): number | Promise<number> {
         if (left < 2) die('--model needs a model');
         MODEL = argv[++i] as string;
         MODEL_SET = true;
+        break;
+      case '--advisor':
+        if (left < 2) die('--advisor needs a model');
+        ADVISOR = argv[++i] as string;
         break;
       case '--repo':
         if (left < 2) die('--repo needs a path');
@@ -268,7 +276,7 @@ function run(argv: string[]): number | Promise<number> {
     if (sn.message !== '') err(`${sn.message}\n`);
     return 64;
   }
-  const av = providerArgv(P, AGENT, PROMPT, MODEL, '', sn.value);
+  const av = providerArgv(P, AGENT, PROMPT, MODEL, '', sn.value, ADVISOR);
   if (!av.ok) {
     if (av.message !== '') err(`${av.message}\n`);
     return 64;
@@ -295,7 +303,7 @@ function run(argv: string[]): number | Promise<number> {
     return 0;
   }
   if (commandOnPath(AGENT) === null) die(`${AGENT} not found on PATH`, 69);
-  out(`▶ opening a ${P} batch session${MODEL !== '' ? ` on ${MODEL}` : ''} in ${DEST}…\n`);
+  out(`▶ opening a ${P} batch session${MODEL !== '' ? ` on ${MODEL}` : ''}${ADVISOR !== '' ? ` (advisor: ${ADVISOR})` : ''} in ${DEST}…\n`);
   out(`  land it afterwards: gsdt-finish ${BR}\n`);
   if (!isDir(DEST)) die(`cannot enter ${DEST}`, 1);
   return runSession(ARGV[0] as string, ARGV.slice(1), DEST);
