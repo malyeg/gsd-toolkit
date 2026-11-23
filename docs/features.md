@@ -22,6 +22,7 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 
 | Feature | Where |
 |---|---|
+| Before a phase: an idea, a rough requirement or a thin ticket (words, a ticket id or URL) is talked through and sorted (drop, later, small job, one phase, several); only after the user's yes a ticket is created or completed (text someone else wrote is never removed) and the `gsdt-start` line printed. Claims nothing, writes nothing to the repo | `skills/gsdt-idea` |
 | Claim a new phase in one step: claim → push → worktree → session (`-n "desc"`; a bare description is refused) | `gsdt-start` |
 | Attach to an existing phase, reusing its worktree (`-p N`, idempotent) | `gsdt-start` |
 | Claim a decimal hotfix phase (`--insert N`) | `gsdt-start` |
@@ -103,6 +104,7 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | Wait out a Codex usage limit: wrap a command (re-run after the reset) or `--wait-only`; reset time from Codex's message or session log, `--interval` fallback, `--max-wait` cap (exit 75, never a pass); never calls Codex; keeps a Mac awake | `gsdt-codex-wait`, `src/codex-wait.ts` |
 | How to ask the user, in the rules every session loads and in the flow skill: one question at a time in plain words, at most three options, the recommended one first with its reason, what each choice changes, a costly or irreversible choice said plainly, everything inside the question | `gsdt-rules` (`RULES_ASKING` in `src/rules-text.ts`), `skills/gsdt-flow` |
 | Agent-facing driver skill with human stop points (discuss, design system + sketch, screens, review, UI approval) | `skills/gsdt-flow` |
+| Discuss starts from the saved ticket (`<P>-TICKET.md`): its scope is carried in and not asked again | `skills/gsdt-flow` |
 | Doctor report of merged phases that skipped a mandatory step (T040: flow steps with `flow = strict`, `ui-check` / `ui-approve` with `ui_gates = strict`; `flow_since` cutoff, `flow_skip` single phases shown as a note) | `gsdt-doctor` |
 
 ## 6b. UI quality gates ([ui-quality-plan.md](ui-quality-plan.md))
@@ -181,6 +183,7 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | Standalone: `gsdt-tracker` works in any folder and uses no GSD code; GSD runs it as a command | `bin/gsdt-tracker`, `src/tracker/` |
 | Id parsing: bare, `tk-<id>`, `#<id>`, URL; tags read back from title, then branch | `src/ticket.ts`, `src/tracker/ids.ts` |
 | Status names from `tracker_status_start` / `_finish` (env `GSD_TRACKER_STATUS_*` wins) | `gsdt-tracker` |
+| A default place for new tickets: `tracker_list` / `git config gsdt-tracker.list` / `GSD_TRACKER_LIST`, printed by `gsdt-tracker config` as `list=` (the `gsdt-idea` skill reads it) | `gsdt-tracker` |
 | ClickUp: status matched per list, subtask cascade, idempotent, markdown snapshot; token from `CLICKUP_API_TOKEN`, else `~/.config/gsd/clickup-<profile>.env` with `tracker_profile`, else `~/.config/gsd/clickup.env`; `gsdt-tracker login` (any folder) saves a token — or reuses the saved one — and sets `git config gsdt-tracker.profile` in one step | `src/tracker/clickup.ts` |
 | Custom: `tracker_command` gets `start` / `finish` / `comment` / `status` / `snapshot` / `check` + `<id> [text]` | `src/tracker/custom.ts` |
 | Snapshot `--out` writes only on success (the file marks the flow step done) | `gsdt-tracker` |
