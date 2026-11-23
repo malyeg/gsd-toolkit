@@ -57,7 +57,7 @@ import {
 } from '../common.ts';
 import { err, inherit, out } from '../stdio.ts';
 import { grepq, worktreeOf } from './wt-new.ts';
-import { existsSync } from 'node:fs';
+import { existsSync, rmSync } from 'node:fs';
 
 /** bash `exit N` after the output so far */
 class Stop extends Error {
@@ -310,7 +310,24 @@ function run(argv: string[]): number {
       /* the removal then reports what it cannot do */
     }
     const rc = inherit('git', ['-C', MAIN, 'worktree', 'remove', '--force', DEST]);
-    if (rc !== 0) return rc;
+    if (rc !== 0) {
+      // Seen live: "failed to delete '<dest>': Directory not empty" — something still running from the worktree (a dev
+      // server, a watcher, a test daemon) wrote new files while git deleted it. The work is merged and pushed and the tree
+      // was clean: delete the folder ourselves (rmSync retries ENOTEMPTY/EBUSY), then let git forget it, then the branch.
+      if (!isDir(DEST) || normalizePath(path.resolve(DEST)) === normalizePath(path.resolve(MAIN))) return rc;
+      out('• git could not delete the worktree folder — deleting it again…\n');
+      try {
+        rmSync(DEST, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
+      } catch (e) {
+        err(`✗ could not delete ${DEST}: ${(e as Error).message}\n`);
+      }
+      inherit('git', ['-C', MAIN, 'worktree', 'prune']);
+      if (isDir(DEST) || worktreeOf(MAIN, BRANCH) !== '') {
+        err(`✗ ${DEST} is still there — is something still running in it? The phase IS merged and pushed. Stop it, then:\n`);
+        err(`    rm -rf "${DEST}" && git -C "${MAIN}" worktree prune && git -C "${MAIN}" branch -d ${BRANCH}\n`);
+        return rc;
+      }
+    }
   } else {
     out('• worktree already removed — cleaning up the branch only\n');
     inherit('git', ['-C', MAIN, 'worktree', 'prune']);

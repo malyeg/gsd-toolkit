@@ -2,6 +2,7 @@
 // stdout, stderr, exit code and the files/commits/branches/worktrees left behind are compared with
 // the saved goldens in tests/golden/p7-wt-finish/. Regenerate with UPDATE_GOLDEN=1 and review the diff.
 // Run: node --test tests/ts/p7-wt-finish.test.ts
+import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -250,6 +251,34 @@ test('cleanup: files the tests left go, other changes keep the worktree (exit 0)
   scenario({ conf: 'install = none\ntest = [ -f .git ] && { echo more >> f.txt; echo n > new.txt; }; true\n' }, P, [wf(['1'], { rc: 0, err: /\?\? new\.txt/ })]);
   // gitignored files are not "left"
   scenario({ conf: 'install = none\ntest = echo i > ignored.log\n' }, both(T, (s) => void phase(s, '1', 'catalog', { 'f.txt': 'x\n', '.gitignore': '*.log\n' })), [wf(['1'], { rc: 0 })]);
+});
+
+// Seen live: `git worktree remove --force` → "Directory not empty" (a dev server kept writing into the worktree), and the
+// finish stopped with the folder and the branch left. A stub git fails that call once, the way git does: the folder and
+// the registration stay, plus a file written "late". The finish deletes the folder itself, prunes, deletes the branch.
+test('cleanup: git cannot delete the worktree folder — the finish deletes it and the branch', { skip: process.platform === 'win32' && 'a PATH stub named git is not run on Windows' }, () => {
+  const realGit = execFileSync('sh', ['-c', 'command -v git'], { encoding: 'utf8' }).trim();
+  const stubGit = (s: Side): void =>
+    write(
+      path.join(s.stub, 'git'),
+      `#!/bin/sh
+for a in "$@"; do last="$a"; done
+case " $* " in
+  *" worktree remove "*)
+    if [ ! -e "${s.root}/rm-failed" ]; then
+      : > "${s.root}/rm-failed"
+      echo late > "$last/late.log"
+      echo "error: failed to delete '$last': Directory not empty" >&2
+      exit 255
+    fi ;;
+esac
+exec "${realGit}" "$@"
+`,
+      0o755,
+    );
+  scenario({}, both(P, stubGit), [
+    wf(['1'], { rc: 0, out: /• git could not delete the worktree folder — deleting it again…\n[^]*merged into 'main', pushed, and cleaned up/, err: /Directory not empty/ }),
+  ]);
 });
 
 test('worktree already removed: only the branch is cleaned up', () => {
