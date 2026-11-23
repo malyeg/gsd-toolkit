@@ -431,6 +431,21 @@ describe('gsdt-tracker — settings: env > git config > .gsd.conf > default', ()
     logHas('custom: command and status from git config', /^start\|start PROJ-5 go\|status=Building$/);
     gitOk(CUSTOM, ['config', '--remove-section', 'gsdt-tracker']);
   });
+  it('the create list: unset, .gsd.conf, git config beats it, GSD_TRACKER_LIST beats both', () => {
+    const cfg = (env?: Record<string, string>): string => tk(CUSTOM, ['config'], env ? { env } : {}).stdout;
+    write(path.join(CUSTOM, '.gsd.conf'), 'tracker = custom\n');
+    has('unset: list= is printed empty', cfg(), /^list=$/);
+    has('…with no source', cfg(), /^list_from=$/);
+    write(path.join(CUSTOM, '.gsd.conf'), 'tracker = custom\ntracker_list = 111\n');
+    has('.gsd.conf tracker_list', cfg(), /^list=111$/);
+    has('…from gsd.conf', cfg(), /^list_from=gsd\.conf$/);
+    gitOk(CUSTOM, ['config', 'gsdt-tracker.list', '222']);
+    has('git config beats .gsd.conf', cfg(), /^list=222$/);
+    has('…from git', cfg(), /^list_from=git$/);
+    has('GSD_TRACKER_LIST beats git config', cfg({ GSD_TRACKER_LIST: '333' }), /^list=333$/);
+    gitOk(CUSTOM, ['config', '--remove-section', 'gsdt-tracker']);
+    write(path.join(CUSTOM, '.gsd.conf'), 'tracker = custom\n');
+  });
 });
 
 describe('gsdt-tracker login — in a GSD repo: the profile goes in git config', () => {

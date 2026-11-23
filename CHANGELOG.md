@@ -9,6 +9,10 @@ becomes its release notes.
 
 ## Unreleased
 
+- **New skill `gsdt-idea`: the step before `gsdt-start`.** Give it an idea in plain words, a ticket id or a ticket URL: `/gsdt-idea <…>` (Codex: `$gsdt-idea`). It checks whether a phase or ticket already covers it, asks the few questions that are still open, and proposes one outcome: drop it, keep it for later, a small job, one phase, or several. Only after your yes it creates the ticket (or completes a thin one, never removing text someone else wrote) and prints the `gsdt-start` line for you to run. It claims no phase and writes nothing to the repo. Run `gsdt-update` (or `gsdt-setup`) to get the skill.
+- **The phase flow now reads the saved ticket before discuss.** `<P>-TICKET.md` was saved but nothing told discuss to open it.
+- **`gsdt-tracker`: a default place for new tickets.** `tracker_list` in `.gsd.conf`, `git config gsdt-tracker.list <id>` or `GSD_TRACKER_LIST`; `gsdt-tracker config` prints it as `list=`.
+
 - **`gsdt-batch` no longer waits for your OK on the sorted list.** It shows the list and goes on. Stop the session if the list is wrong. Want the old pause? Add `--confirm`: `gsdt-batch --confirm "…"`.
 
 ## 0.12.3

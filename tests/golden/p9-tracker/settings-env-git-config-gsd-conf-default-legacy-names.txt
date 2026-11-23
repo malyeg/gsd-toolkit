@@ -12,6 +12,8 @@ token_file=<ROOT>/home/.config/gsd/clickup-legacyprof.env
 token=missing
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -37,6 +39,8 @@ command=
 command_from=
 status_start=S1
 status_finish=F1
+list=
+list_from=
 
 --- stderr
 
@@ -54,6 +58,8 @@ token_file=<ROOT>/home/.config/gsd/clickup-legacyprof.env
 token=missing
 status_start=LS
 status_finish=LF
+list=
+list_from=
 
 --- stderr
 
@@ -71,6 +77,8 @@ token_file=/some/where.env
 token=missing
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -88,6 +96,8 @@ token_file=<ROOT>/home/.config/gsd/clickup-legacyprof.env
 token=env
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -103,6 +113,8 @@ profile_from=env
 profile_ok=no
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -128,6 +140,8 @@ command=<ROOT>/gsd/scripts/x.sh
 command_from=git
 status_start=GitStart
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -153,6 +167,8 @@ command=<ROOT>/gsd/scripts/x.sh
 command_from=git
 status_start=S1
 status_finish=F1
+list=
+list_from=
 
 --- stderr
 
@@ -170,6 +186,8 @@ command=<ROOT>/gsd/scripts/x.sh
 command_from=git
 status_start=LS
 status_finish=LF
+list=
+list_from=
 
 --- stderr
 
@@ -187,6 +205,8 @@ token_file=/some/where.env
 token=missing
 status_start=GitStart
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -204,6 +224,8 @@ token_file=<ROOT>/home/.config/gsd/clickup-gitprof.env
 token=env
 status_start=GitStart
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -219,6 +241,8 @@ profile_from=env
 profile_ok=no
 status_start=GitStart
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -244,6 +268,8 @@ command=<ROOT>/home/c.sh
 command_from=gsd.conf
 status_start=Conf Start
 status_finish=OldFin
+list=
+list_from=
 
 --- stderr
 
@@ -269,6 +295,8 @@ command=<ROOT>/home/c.sh
 command_from=gsd.conf
 status_start=S1
 status_finish=F1
+list=
+list_from=
 
 --- stderr
 
@@ -286,6 +314,8 @@ command=<ROOT>/home/c.sh
 command_from=gsd.conf
 status_start=LS
 status_finish=LF
+list=
+list_from=
 
 --- stderr
 
@@ -303,6 +333,8 @@ token_file=/some/where.env
 token=missing
 status_start=Conf Start
 status_finish=OldFin
+list=
+list_from=
 
 --- stderr
 
@@ -320,6 +352,8 @@ token_file=<ROOT>/home/.config/gsd/clickup-confprof.env
 token=env
 status_start=Conf Start
 status_finish=OldFin
+list=
+list_from=
 
 --- stderr
 
@@ -335,6 +369,8 @@ profile_from=env
 profile_ok=no
 status_start=Conf Start
 status_finish=OldFin
+list=
+list_from=
 
 --- stderr
 
@@ -357,6 +393,8 @@ profile=
 profile_from=
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -382,6 +420,8 @@ command=<ROOT>/cust/scripts/tracker.sh
 command_from=gsd.conf
 status_start=S1
 status_finish=F1
+list=
+list_from=
 
 --- stderr
 
@@ -396,6 +436,8 @@ profile=
 profile_from=
 status_start=LS
 status_finish=LF
+list=
+list_from=
 
 --- stderr
 
@@ -412,6 +454,8 @@ token_file=/some/where.env
 token=missing
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -428,6 +472,8 @@ token_file=<ROOT>/home/.config/gsd/clickup.env
 token=env
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -443,6 +489,8 @@ profile_from=env
 profile_ok=no
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -468,6 +516,8 @@ token_file=<ROOT>/home/.config/gsd/clickup-legacyprof.env
 token=missing
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -484,6 +534,8 @@ token_file=<ROOT>/home/.config/gsd/clickup.env
 token=missing
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -501,6 +553,8 @@ token_file=<ROOT>/home/.config/gsd/clickup-confprof.env
 token=missing
 status_start=Conf Start
 status_finish=OldFin
+list=
+list_from=
 
 --- stderr
 

@@ -52,6 +52,7 @@ worktree of the clone), then .gsd.conf (a GSD repo's team settings):
   command        -                            gsdt-tracker.command         tracker_command
   start status   GSD_TRACKER_STATUS_START     gsdt-tracker.statusStart     tracker_status_start
   finish status  GSD_TRACKER_STATUS_FINISH    gsdt-tracker.statusFinish    tracker_status_finish
+  create list    GSD_TRACKER_LIST             gsdt-tracker.list            tracker_list
 With none of them the tracker is none in a repo with a .gsd.conf, else clickup.
 (Legacy GSD_CLICKUP_STATUS_START / _FINISH still work.)
   none     start/finish/comment/status do nothing and succeed;

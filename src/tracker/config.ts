@@ -59,7 +59,7 @@ export function trkGitGet(repo: string, key: string): string {
   return '';
 }
 
-export type Setting = 'tracker' | 'profile' | 'command' | 'status_start' | 'status_finish';
+export type Setting = 'tracker' | 'profile' | 'command' | 'status_start' | 'status_finish' | 'list';
 
 /** trk_get: the value and where it came from (env, git, gsd.conf, default, or '' when unset). */
 export function trkGet(repo: string, setting: Setting): { val: string; from: string } {
@@ -91,6 +91,12 @@ export function trkGet(repo: string, setting: Setting): { val: string; from: str
       envv = e.GSD_TRACKER_STATUS_FINISH || e.GSD_CLICKUP_STATUS_FINISH || '';
       gitk = 'statusFinish';
       confk = 'tracker_status_finish';
+      break;
+    case 'list':
+      // where `create` puts a new ticket (ClickUp: a list id); read by the gsdt-idea skill
+      envv = e.GSD_TRACKER_LIST ?? '';
+      gitk = 'list';
+      confk = 'tracker_list';
       break;
   }
   let val = envv;
@@ -174,5 +180,7 @@ export function trkPrintConfig(repo: string): string[] {
     o.push(`command=${trkCommand(repo)}`, `command_from=${trkGet(repo, 'command').from}`);
   }
   o.push(`status_start=${trkGet(repo, 'status_start').val}`, `status_finish=${trkGet(repo, 'status_finish').val}`);
+  const l = trkGet(repo, 'list');
+  o.push(`list=${l.val}`, `list_from=${l.from}`);
   return o;
 }

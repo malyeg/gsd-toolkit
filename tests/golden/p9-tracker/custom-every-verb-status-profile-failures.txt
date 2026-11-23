@@ -170,6 +170,8 @@ command=<ROOT>/cust/scripts/tracker.sh
 command_from=gsd.conf
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
@@ -187,6 +189,8 @@ command=<ROOT>/cust/scripts/tracker.sh
 command_from=gsd.conf
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 

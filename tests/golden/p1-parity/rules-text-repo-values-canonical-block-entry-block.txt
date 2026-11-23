@@ -26,6 +26,10 @@ For several quick tasks or a fix brief, tell the user to run
 it makes a `batch-*` worktree and a fresh, cheaper session there. Never
 `/gsd-quick-batch`. `/gsdt-batch` only works inside a `batch-*` worktree.
 
+An idea, a rough requirement, or a ticket that is only a title is not ready
+for `gsdt-start`: run the `gsdt-idea` skill on it first. It talks it
+through, claims nothing, and ends with the ticket and the command to start.
+
 Screens: every screen uses the design system in `.planning/design/DESIGN.md`
 (tokens, components, page templates) — don't invent new styles. In a new
 project with screens, make the first phase "Design system". Each phase with
@@ -83,6 +87,10 @@ For several quick tasks or a fix brief, tell the user to run
 it makes a `batch-*` worktree and a fresh, cheaper session there. Never
 `/gsd-quick-batch`. `/gsdt-batch` only works inside a `batch-*` worktree.
 
+An idea, a rough requirement, or a ticket that is only a title is not ready
+for `gsdt-start`: run the `gsdt-idea` skill on it first. It talks it
+through, claims nothing, and ends with the ticket and the command to start.
+
 Asking the user (a decision, an approval, a discuss question): one question
 at a time, in plain words — say what changes for the product or its users,
 not which file or function. At most three options, the one you recommend
@@ -127,6 +135,10 @@ For several quick tasks or a fix brief, tell the user to run
 `gsdt-batch '<task list or brief>'` in a terminal (the script, not the skill):
 it makes a `batch-*` worktree and a fresh, cheaper session there. Never
 `/gsd-quick-batch`. `/gsdt-batch` only works inside a `batch-*` worktree.
+
+An idea, a rough requirement, or a ticket that is only a title is not ready
+for `gsdt-start`: run the `gsdt-idea` skill on it first. It talks it
+through, claims nothing, and ends with the ticket and the command to start.
 
 Screens: every screen uses the design system in `.planning/design/DESIGN.md`
 (tokens, components, page templates) — don't invent new styles. In a new
@@ -184,6 +196,10 @@ For several quick tasks or a fix brief, tell the user to run
 `gsdt-batch '<task list or brief>'` in a terminal (the script, not the skill):
 it makes a `batch-*` worktree and a fresh, cheaper session there. Never
 `/gsd-quick-batch`. `/gsdt-batch` only works inside a `batch-*` worktree.
+
+An idea, a rough requirement, or a ticket that is only a title is not ready
+for `gsdt-start`: run the `gsdt-idea` skill on it first. It talks it
+through, claims nothing, and ends with the ticket and the command to start.
 
 Screens: every screen uses the design system in `.planning/design/DESIGN.md`
 (tokens, components, page templates) — don't invent new styles. In a new

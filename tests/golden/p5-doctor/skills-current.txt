@@ -90,11 +90,13 @@ base = develop
 ### Phase 2: Two
 
 ### skills/gsdt-batch/SKILL.md
-<10307 chars sha1 fb5e38e0780a90ff5c1286c20df1c4f72ea760fb>
+<10550 chars sha1 547732ff4f0d6cd765da72d172e7dac4b8c8eb85>
 ### skills/gsdt-doctor/SKILL.md
 <4676 chars sha1 dd6e347f746ece1f75cd904ab8de6181224744b9>
 ### skills/gsdt-flow/SKILL.md
-<10073 chars sha1 8099386485cffb64d6e4dfb79d0d235b9bf5bf7d>
+<10359 chars sha1 7e775b8387c082c335cd774efc8f04e291ef44db>
+### skills/gsdt-idea/SKILL.md
+<6556 chars sha1 e88c99e653baf34005b0020e275c62fef6428501>
 ### skills/gsdt-tracker/SKILL.md
 <3543 chars sha1 e883b68a30185e8faaaa1110a52f1fb11bcf5e91>
 ### skills/gsdt-worktrees/SKILL.md

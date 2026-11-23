@@ -27,6 +27,10 @@ For several quick tasks or a fix brief, tell the user to run
 \`gsdt-batch '<task list or brief>'\` in a terminal (the script, not the skill):
 it makes a \`batch-*\` worktree and a fresh, cheaper session there. Never
 \`/gsd-quick-batch\`. \`/gsdt-batch\` only works inside a \`batch-*\` worktree.
+
+An idea, a rough requirement, or a ticket that is only a title is not ready
+for \`gsdt-start\`: run the \`gsdt-idea\` skill on it first. It talks it
+through, claims nothing, and ends with the ticket and the command to start.
 `;
 
 export const RULES_SCREENS = `

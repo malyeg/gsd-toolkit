@@ -240,6 +240,8 @@ token_file=<ROOT>/home/.config/gsd/clickup-noeol.env
 token=file
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 

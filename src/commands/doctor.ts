@@ -1263,7 +1263,7 @@ class Doctor {
     const text = readFileText(`${MAIN}/.gsd.conf`) ?? '';
     const known = new Set([
       ...'base wtdir install test premerge flow flow_since flow_skip providers provider agent_command review_provider start_mode compact_at session_name session_prefix remote_control'.split(' '),
-      ...'tracker tracker_command tracker_profile tracker_status_start tracker_status_finish'.split(' '),
+      ...'tracker tracker_command tracker_profile tracker_status_start tracker_status_finish tracker_list'.split(' '),
       ...'ui_gates ui_url ui_min_font copy_files'.split(' '),
       ...'claude_command codex_command gemini_command custom_command claude_model codex_model gemini_model custom_model'.split(' '),
     ]);

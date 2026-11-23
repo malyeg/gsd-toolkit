@@ -151,6 +151,7 @@ words instead of typing commands:
 | `gsdt-doctor` | Run `gsdt-doctor` and fix what it finds, asking first. |
 | `gsdt-tracker` | Read, update, create or search tickets. |
 | `gsdt-batch` | Run a batch of small tasks (started with `gsdt-batch`). |
+| `gsdt-idea` | Start from an idea, a rough requirement or a thin ticket: talk it through, then get the ticket and the `gsdt-start` line. Claims nothing until you run that line. |
 
 ## Providers
 

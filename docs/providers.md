@@ -128,6 +128,7 @@ on `gsdt-start` do not rewrite the set. Refer to `gsdt-init --help` for setup fl
 | `tracker_command` | Executable for `tracker = custom` (see `docs/trackers.md`) |
 | `tracker_profile` | This project's tracker login: ClickUp reads `~/.config/gsd/clickup-<name>.env`; custom gets `GSD_TRACKER_PROFILE` |
 | `tracker_status_start`, `tracker_status_finish` | Ticket status set by `gsdt-start` / `gsdt-finish` |
+| `tracker_list` | Where a new ticket is created (ClickUp: a list id). The `gsdt-idea` skill reads it from `gsdt-tracker config` (`list=`); `git config gsdt-tracker.list <id>` sets it for one clone |
 | `ui_gates` | UI quality gates: `warn` (default), `strict` (the guard and `gsdt-finish` enforce), `off` |
 | `copy_files` | Gitignored files `gsdt-start` copies into a new worktree besides the default ones: a comma list of paths/globs (`config/*.yml, apps/api/.env.staging`; copied as named, even a production env). `none` = no env files. Default: `.env` and `.env.<x>` where every part is `local`, `dev`, `develop`, `development`, `e2e` or `test` (any folder, not `node_modules`); prod, staging and other names are left out and listed |
 | `ui_min_font` | Smallest text size `gsdt-ui check` accepts, in px: 8–32, default `12` |

@@ -61,6 +61,7 @@ runs it as a command. Each setting, first match wins:
 | custom script | – | `gsdt-tracker.command` | `tracker_command` |
 | start status | `GSD_TRACKER_STATUS_START` | `gsdt-tracker.statusStart` | `tracker_status_start` |
 | finish status | `GSD_TRACKER_STATUS_FINISH` | `gsdt-tracker.statusFinish` | `tracker_status_finish` |
+| where `create` puts a new ticket | `GSD_TRACKER_LIST` | `gsdt-tracker.list` | `tracker_list` |
 
 git config lives in `.git/config`: never committed, shared by every worktree of
 the clone. With nothing set, the tracker is `none` in a repo with a
@@ -78,6 +79,7 @@ tracker_command = scripts/tracker.sh     # custom only; relative to the repo roo
 tracker_status_start = In Progress       # optional
 tracker_status_finish = In QA            # optional
 tracker_profile = acme                   # optional; gsdt-tracker login sets git config instead (below)
+tracker_list = 901234567                 # optional; where the gsdt-idea skill creates tickets (ClickUp: a list id)
 ```
 
 With a tracker set:

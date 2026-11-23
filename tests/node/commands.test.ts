@@ -771,3 +771,29 @@ describe('lint — gsd-* is gsd-core\'s prefix (0.10.0)', () => {
     is('no rule or instruction block names an old command', hits.join('\n'), '');
   });
 });
+
+describe('the gsdt-idea skill — the step before gsdt-start', () => {
+  const SK = path.join(PKG, 'skills/gsdt-idea/SKILL.md');
+  const FLOW = path.join(PKG, 'skills/gsdt-flow/SKILL.md');
+  it('says what it never does, and hands over a command', () => {
+    ok('skills/gsdt-idea/SKILL.md exists', existsSync(SK));
+    const sk = read(SK);
+    has('its name', sk, /^name: gsdt-idea$/);
+    has('it takes words, a ticket id or a ticket URL', sk, 'Takes plain words, a ticket id or a ticket URL');
+    has('it never claims: gsdt-start is printed, not run', sk, 'Never run `gsdt-start`');
+    has('…and says so again at the hand-over', sk, 'Print the command; do not run it.');
+    has('it writes nothing to the repo', sk, '**It writes nothing to the repo.**');
+    has('it does not run gsd-explore (that one commits in the checkout)', sk, 'Do not run `gsd-explore`');
+    has('no ticket without a yes to the exact text', sk, 'without a yes to the exact text');
+    has('a failed ticket lookup never becomes "create one"', sk, 'A failed lookup is never a reason');
+    has('it never invents product intent', sk, '**Never invent product intent.**');
+    has("it never removes another person's ticket text", sk, 'Never remove or');
+    has('the default list comes from gsdt-tracker config', sk, '`gsdt-tracker config` prints `list=`');
+    has('the hand-over uses the full flow (start_mode = discuss would skip the ticket step)', sk, '`gsdt-start --flow --ticket <id>`');
+    hasnt('provider-neutral: no literal Skill() calls', sk, 'Skill(');
+  });
+  it('the flow reads the saved ticket before discuss; the rules name the skill', () => {
+    has('flow skill: discuss starts from <P>-TICKET.md', read(FLOW), 'First read `<P>-TICKET.md`');
+    has('the toolkit rules (gsdt-rules) send an idea to the skill', rulesText('off'), 'run the `gsdt-idea` skill on it first');
+  });
+});

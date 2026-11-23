@@ -19,6 +19,8 @@ command=<ROOT>/home/mytrk.sh
 command_from=git
 status_start=
 status_finish=
+list=
+list_from=
 
 --- stderr
 
