@@ -7,7 +7,7 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## Unreleased
+## 0.13.0
 
 - **New skill `gsdt-idea`: the step before `gsdt-start`.** Give it an idea in plain words, a ticket id or a ticket URL: `/gsdt-idea <…>` (Codex: `$gsdt-idea`). It checks whether a phase or ticket already covers it, asks the few questions that are still open, and proposes one outcome: drop it, keep it for later, a small job, one phase, or several. Only after your yes it creates the ticket (or completes a thin one, never removing text someone else wrote) and prints the `gsdt-start` line for you to run. It claims no phase and writes nothing to the repo. Run `gsdt-update` (or `gsdt-setup`) to get the skill.
 - **The phase flow now reads the saved ticket before discuss.** `<P>-TICKET.md` was saved but nothing told discuss to open it.
