@@ -46,6 +46,14 @@ while [ -L "$SELF" ]; do
 done
 GSD_PKG="$(cd "$(dirname "$SELF")/.." && pwd)"
 
+# Keep our side as it was before the union (best-effort): the reconcile needs
+# all three sides to tell which one changed a single-value line.
+OURS=""
+if OURS_DIR=$(mktemp -d "${TMPDIR:-/tmp}/gsdt-merge-XXXXXX" 2>/dev/null); then
+  trap 'rm -rf "${OURS_DIR}"' EXIT
+  if cp "$A" "${OURS_DIR}/ours" 2>/dev/null; then OURS="${OURS_DIR}/ours"; fi
+fi
+
 # Union first, in bash: same result git's built-in union driver produces,
 # written to %A. Whatever happens to node after this, the union is in place.
 git merge-file -q --union "$A" "$O" "$B" || true
@@ -58,6 +66,7 @@ if ! command -v node >/dev/null 2>&1 \
 fi
 
 node "$GSD_PKG/src/launch.mjs" planning reconcile "$A" ${P:+--path "$P"} \
+  ${OURS:+--base "$O" --ours "${OURS}" --theirs "$B"} \
   || echo "⚠ gsdt-planning-merge: reconcile failed on ${P:-$A} — plain union result kept; run gsdt-planning-repair." >&2
 
 exit 0

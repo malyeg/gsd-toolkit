@@ -499,11 +499,45 @@ function maxBy<T>(seq: T[], cmp: (a: T, b: T) => number): T {
 }
 const cmpBig = (a: bigint, b: bigint): number => (a === b ? 0 : a < b ? -1 : 1);
 
+/** One frontmatter value per key path, for one side of a merge. */
+export type Sides = { base: Map<string, string>; ours: Map<string, string>; theirs: Map<string, string> };
+
+/** The frontmatter of one file as key path → its last value (unquoted). */
+export function frontmatterValues(lines: string[]): Map<string, string> {
+  const out = new Map<string, string>();
+  const bounds = splitFrontmatter(lines);
+  if (!bounds) return out;
+  const [order, values] = parseFrontmatter(lines.slice(bounds[0], bounds[1]));
+  for (const path of order) {
+    const seen = values.get(path) as string[];
+    out.set(path, unquote(seen[seen.length - 1] as string));
+  }
+  return out;
+}
+
+/**
+ * The 3-way answer git would give for one key: when only one side changed it
+ * from the common ancestor, that side's value. null when both changed it (or a
+ * side is missing), so the caller falls back to its own rule.
+ */
+function threeWay(path: string, seen: string[], sides: Sides): string | null {
+  const b = sides.base.get(path);
+  const o = sides.ours.get(path);
+  const t = sides.theirs.get(path);
+  if (b === undefined || o === undefined || t === undefined) return null;
+  let want: string | null = null;
+  if (o === b && t !== b) want = t;
+  else if (t === b && o !== b) want = o;
+  if (want === null) return null;
+  return seen.find((v) => unquote(v) === want) ?? null;
+}
+
 /** resolve_frontmatter */
 export function resolveFrontmatter(
   order: string[],
   values: Map<string, string[]>,
   truth: Truth | null = null,
+  sides: Sides | null = null,
 ): [Map<string, string>, Problem[]] {
   const resolved = new Map<string, string>();
   const problems: Problem[] = [];
@@ -544,7 +578,11 @@ export function resolveFrontmatter(
       CORRUPT,
       `STATE.md: conflicting '${path}' in frontmatter (${seen.length} values: ${seen.map(unquote).join(', ')})`,
     ]);
-    if (path === 'last_updated') resolved.set(path, maxBy(seen, (a, b) => cmpStr(unquote(a), unquote(b))));
+    // Only one side changed it: keep that change (a phase branch that never
+    // touched `milestone:` must not undo a milestone closed on the base branch).
+    const changed = sides ? threeWay(path, seen, sides) : null;
+    if (changed !== null) resolved.set(path, changed);
+    else if (path === 'last_updated') resolved.set(path, maxBy(seen, (a, b) => cmpStr(unquote(a), unquote(b))));
     else if (path.startsWith('progress.')) resolved.set(path, maxBy(seen, (a, b) => cmpBig(asInt(a), asInt(b))));
     else resolved.set(path, seen[seen.length - 1] as string);
   }
@@ -702,13 +740,17 @@ export function detectOrphanRows(lines: string[]): Problem[] {
 }
 
 /** reconcile_state */
-export function reconcileState(lines: string[], truth: Truth | null = null): [string[], Problem[]] {
+export function reconcileState(
+  lines: string[],
+  truth: Truth | null = null,
+  sides: Sides | null = null,
+): [string[], Problem[]] {
   const bounds = splitFrontmatter(lines);
   const problems: Problem[] = [];
   if (bounds) {
     const [start, end] = bounds;
     const [order, values] = parseFrontmatter(lines.slice(start, end));
-    const [resolved, fm] = resolveFrontmatter(order, values, truth);
+    const [resolved, fm] = resolveFrontmatter(order, values, truth, sides);
     problems.push(...fm);
     lines = [...lines.slice(0, start), ...emitFrontmatter(lines.slice(start, end), resolved), ...lines.slice(end)];
   }
@@ -808,20 +850,42 @@ export function kindOf(file: string, hint?: string | null): 'roadmap' | 'state' 
 const sameLines = (a: string[], b: string[]): boolean => a.length === b.length && a.every((x, i) => x === b[i]);
 
 /** process */
-export function processFile(file: string, kind: 'roadmap' | 'state', truth: Truth | null = null): [string[], Problem[]] {
+export function processFile(
+  file: string,
+  kind: 'roadmap' | 'state',
+  truth: Truth | null = null,
+  sides: Sides | null = null,
+): [string[], Problem[]] {
   const lines = readLines(file);
-  return kind === 'roadmap' ? reconcileRoadmap(lines) : reconcileState(lines, truth);
+  return kind === 'roadmap' ? reconcileRoadmap(lines) : reconcileState(lines, truth, sides);
 }
 
 export type Out = { out: string; err: string; rc: number };
 
+/** The three merge inputs (git's %O, %A before the union, %B), as file paths. */
+export type SideFiles = { base: string; ours: string; theirs: string };
+
+/** Read the merge inputs' frontmatter; null when any one cannot be read. */
+function readSides(files: SideFiles | null | undefined): Sides | null {
+  if (!files) return null;
+  try {
+    return {
+      base: frontmatterValues(readLines(pyPath(files.base))),
+      ours: frontmatterValues(readLines(pyPath(files.ours))),
+      theirs: frontmatterValues(readLines(pyPath(files.theirs))),
+    };
+  } catch {
+    return null;
+  }
+}
+
 /** cmd_reconcile: one file, in place, structural only. */
-export function reconcileFile(file: string, hint?: string | null): Out {
+export function reconcileFile(file: string, hint?: string | null, sideFiles?: SideFiles | null): Out {
   const f = pyPath(file);
   const kind = kindOf(f, hint);
   if (kind === null) return { out: '', err: '', rc: 0 };
   const before = readLines(f);
-  const [after, problems] = processFile(f, kind);
+  const [after, problems] = processFile(f, kind, null, kind === 'state' ? readSides(sideFiles) : null);
   if (!sameLines(after, before)) writeBack(f, after.join(''));
   let err = '';
   for (const [level, message] of problems) if (level === CORRUPT) err += `  reconciled — ${message}\n`;

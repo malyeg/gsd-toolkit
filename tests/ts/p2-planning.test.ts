@@ -406,7 +406,15 @@ test('engine CLI: argv, usage, --help and errors', () => {
 
 test('parseArgs / main are importable and do no work at import time', () => {
   assert.deepEqual(parseArgs(['repair', '--check', 'd']), { cmd: 'repair', planning: 'd', check: true });
-  assert.deepEqual(parseArgs(['reconcile', 'f', '--path', 'p']), { cmd: 'reconcile', file: 'f', path: 'p' });
+  assert.deepEqual(parseArgs(['reconcile', 'f', '--path', 'p']), { cmd: 'reconcile', file: 'f', path: 'p', sides: null });
+  assert.deepEqual(parseArgs(['reconcile', 'f', '--base', 'o', '--ours', 'a', '--theirs', 'b']), {
+    cmd: 'reconcile',
+    file: 'f',
+    path: null,
+    sides: { base: 'o', ours: 'a', theirs: 'b' },
+  });
+  // One side alone says nothing about who changed a line.
+  assert.equal((parseArgs(['reconcile', 'f', '--base', 'o']) as { sides: unknown }).sides, null);
   assert.equal(typeof planningMain, 'function');
 });
 

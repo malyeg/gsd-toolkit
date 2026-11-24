@@ -5,6 +5,9 @@
 // written to %A; then the structural reconcile. Whatever goes wrong after the
 // union, the union stays and the exit is 0 (git reads nonzero as a conflict).
 import { spawnSync } from 'node:child_process';
+import { copyFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { main as planning } from './planning.ts';
 
 export function main(argv: string[]): number {
@@ -17,12 +20,31 @@ export function main(argv: string[]): number {
   }
   const [O, A, B] = argv as [string, string, string];
   const P = argv[3] ?? '';
+  // Keep our side as it was before the union: the reconcile needs all three
+  // sides to tell which one changed a single-value line. Best-effort only.
+  let tmp: string | null = null;
+  let ours: string | null = null;
+  try {
+    tmp = mkdtempSync(join(tmpdir(), 'gsdt-merge-'));
+    ours = join(tmp, 'ours');
+    copyFileSync(A, ours);
+  } catch {
+    ours = null;
+  }
   spawnSync('git', ['merge-file', '-q', '--union', A, O, B], { stdio: 'inherit' });
   let rc: number;
   try {
-    rc = Number(planning(['reconcile', A, ...(P !== '' ? ['--path', P] : [])]));
+    const sides = ours !== null ? ['--base', O, '--ours', ours, '--theirs', B] : [];
+    rc = Number(planning(['reconcile', A, ...(P !== '' ? ['--path', P] : []), ...sides]));
   } catch {
     rc = 1;
+  }
+  if (tmp !== null) {
+    try {
+      rmSync(tmp, { recursive: true, force: true });
+    } catch {
+      // a leftover temp dir is harmless
+    }
   }
   if (rc !== 0) {
     process.stderr.write(`⚠ gsdt-planning-merge: reconcile failed on ${P || A} — plain union result kept; run gsdt-planning-repair.\n`);

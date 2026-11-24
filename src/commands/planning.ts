@@ -1,6 +1,6 @@
 // planning — internal engine CLI, a drop-in for `python3 lib/gsd_planning.py`:
 //
-//   node src/launch.mjs planning reconcile FILE [--path P]
+//   node src/launch.mjs planning reconcile FILE [--path P] [--base O --ours A --theirs B]
 //   node src/launch.mjs planning repair DIR [--check]
 //
 // Same argv, usage text, error messages and exit codes as the Python's
@@ -8,10 +8,13 @@
 // differences: --help text is the one argparse prints at width 80 (it does not
 // follow $COLUMNS); a non-UTF-8 or unreadable file gives a one-line error and
 // exit 1 instead of a Python traceback.
-import { reconcileFile, repairDir } from '../planning.ts';
+import { reconcileFile, repairDir, type SideFiles } from '../planning.ts';
 
 const USAGE_TOP = 'usage: gsd_planning [-h] {reconcile,repair} ...\n';
-const USAGE_RECONCILE = 'usage: gsd_planning reconcile [-h] [--path PATH] file\n';
+const USAGE_RECONCILE =
+  'usage: gsd_planning reconcile [-h] [--path PATH] [--base BASE] [--ours OURS]\n' +
+  '                               [--theirs THEIRS]\n' +
+  '                               file\n';
 const USAGE_REPAIR = 'usage: gsd_planning repair [-h] [--check] planning\n';
 
 export const HELP_TOP = `${USAGE_TOP}
@@ -57,8 +60,11 @@ positional arguments:
   file
 
 options:
-  -h, --help   show this help message and exit
-  --path PATH  the file's repo-relative path (git's %P)
+  -h, --help       show this help message and exit
+  --path PATH      the file's repo-relative path (git's %P)
+  --base BASE      the merge's common ancestor (git's %O)
+  --ours OURS      our side as it was before the union (a copy of git's %A)
+  --theirs THEIRS  their side (git's %B)
 `;
 export const HELP_REPAIR = `${USAGE_REPAIR}
 positional arguments:
@@ -253,7 +259,13 @@ const RECONCILE: ParserSpec = {
   prog: 'gsd_planning reconcile',
   usage: USAGE_RECONCILE,
   help: HELP_RECONCILE,
-  opts: [HELP_OPT, { names: ['--path'], dest: 'path', value: true }],
+  opts: [
+    HELP_OPT,
+    { names: ['--path'], dest: 'path', value: true },
+    { names: ['--base'], dest: 'base', value: true },
+    { names: ['--ours'], dest: 'ours', value: true },
+    { names: ['--theirs'], dest: 'theirs', value: true },
+  ],
   positional: 'file',
 };
 const REPAIR: ParserSpec = {
@@ -267,7 +279,7 @@ const TOP: ParserSpec = { prog: 'gsd_planning', usage: USAGE_TOP, help: HELP_TOP
 const CHOICES = ['reconcile', 'repair'];
 
 export type Parsed =
-  | { cmd: 'reconcile'; file: string; path: string | null }
+  | { cmd: 'reconcile'; file: string; path: string | null; sides: SideFiles | null }
   | { cmd: 'repair'; planning: string; check: boolean };
 
 /** parser.parse_args(argv) */
@@ -311,7 +323,13 @@ export function parseArgs(argv: string[]): Parsed {
   const all = [...topExtras, ...extras];
   if (all.length) throw new ArgError(USAGE_TOP, TOP.prog, `unrecognized arguments: ${all.join(' ')}`);
   if (cmd === 'reconcile') {
-    return { cmd, file: values.get('file') as string, path: (values.get('path') as string | undefined) ?? null };
+    const get = (k: string): string | undefined => values.get(k) as string | undefined;
+    const base = get('base');
+    const ours = get('ours');
+    const theirs = get('theirs');
+    // All three or none: one side alone says nothing about who changed a line.
+    const sides = base && ours && theirs ? { base, ours, theirs } : null;
+    return { cmd, file: get('file') as string, path: get('path') ?? null, sides };
   }
   return { cmd: 'repair', planning: values.get('planning') as string, check: values.get('check') === true };
 }
@@ -332,7 +350,8 @@ export function main(argv: string[]): number {
     throw e;
   }
   try {
-    const r = args.cmd === 'reconcile' ? reconcileFile(args.file, args.path) : repairDir(args.planning, args.check);
+    const r =
+      args.cmd === 'reconcile' ? reconcileFile(args.file, args.path, args.sides) : repairDir(args.planning, args.check);
     process.stdout.write(r.out);
     process.stderr.write(r.err);
     return r.rc;

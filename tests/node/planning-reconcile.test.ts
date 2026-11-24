@@ -338,6 +338,56 @@ test('end-to-end: git merge through the gsd-planning driver', () => {
   assert.equal(engine('repair', '--check', path.join(E2E, '.planning')).status, 0, 'the merged tree passes --check');
 });
 
+// ── 5b. a line only one side changed keeps that change ───────────────────────
+// A milestone closed on the base branch (`milestone: v1.1`) while a phase branch, made before
+// that, still says v1.0. The phase branch's other frontmatter edits land in the same hunk, so
+// union keeps both milestone lines; the reconcile must keep the side that changed it (git's
+// 3-way answer), not the incoming one, or the next `phase.add` is refused. Both driver entries:
+// the bash launcher and the npm one (`planning-merge`).
+const MS_STATE = (milestone: string, status: string, stopped: string, ts: string): string => `---
+milestone: ${milestone}
+status: ${status}
+stopped_at: ${stopped}
+last_updated: "${ts}"
+---
+
+# Project State
+`;
+const milestoneDrivers: [string, string][] = [
+  ['npm entry', `"${fwd(process.execPath)}" "${fwd(LAUNCH)}" planning-merge %O %A %B %P`],
+  ...(WIN ? [] : ([['bash launcher', `'${PKG}/bin/gsdt-planning-merge' %O %A %B %P`]] as [string, string][])),
+];
+for (const [label, cmd] of milestoneDrivers) {
+  test(`merge keeps the side that changed a single-value line (${label})`, () => {
+    const repo = tmp('milestone');
+    gitInit(repo);
+    git(repo, 'config', 'merge.gsd-planning.driver', cmd);
+    write(path.join(repo, '.gitattributes'), ATTRS);
+    const file = path.join(repo, '.planning', 'STATE.md');
+    write(file, MS_STATE('v1.0', 'executing', 'Phase 58 complete', '2026-11-23T00:00:00.000Z'));
+    git(repo, 'add', '-A');
+    git(repo, 'commit', '-qm', 'base');
+    const BASE = chomp(git(repo, 'branch', '--show-current').stdout);
+
+    git(repo, 'checkout', '-qb', 'phase-59');
+    write(file, MS_STATE('v1.0', 'verifying', 'Phase 59 complete', '2026-11-25T00:00:00.000Z'));
+    git(repo, 'commit', '-qam', 'phase 59');
+
+    git(repo, 'checkout', '-q', BASE);
+    write(file, MS_STATE('v1.1', 'Awaiting next milestone', 'Milestone v1.0 closed', '2026-11-24T00:00:00.000Z'));
+    git(repo, 'commit', '-qam', 'close v1.0');
+
+    const m = git(repo, 'merge', '-q', '--no-ff', 'phase-59', '-m', 'Merge phase-59');
+    assert.equal(m.status, 0, `the merge completes without conflicts: ${m.out}`);
+    const S = STATE(repo);
+    assert.equal(count(S, /^milestone: v1\.1$/), 1, `the base branch's milestone survives:\n${S}`);
+    assert.equal(count(S, /^milestone:/), 1, "one 'milestone:' line");
+    // Both sides changed these: the old rules still apply (incoming / newest).
+    assert.equal(count(S, /^status: verifying$/), 1, 'a line both sides changed keeps the incoming value');
+    assert.equal(count(S, /^last_updated: "2026-11-25T00:00:00.000Z"$/), 1, 'last_updated keeps the newest');
+  });
+}
+
 // ── 6. the same merge WITHOUT the driver — repair still fixes it ─────────────
 // The driver lives in git config, which is not versioned, so a clone that never ran
 // gsdt-bootstrap-repo still gets plain union. gsdt-finish's post-merge repair has to be able to

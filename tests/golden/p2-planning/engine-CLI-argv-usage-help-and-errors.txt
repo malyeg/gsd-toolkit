@@ -57,11 +57,11 @@ err="usage: gsd_planning repair [-h] [--check] planning\ngsd_planning repair: er
 argv ["reconcile"]
 rc=2
 out=""
-err="usage: gsd_planning reconcile [-h] [--path PATH] file\ngsd_planning reconcile: error: the following arguments are required: file\n"
+err="usage: gsd_planning reconcile [-h] [--path PATH] [--base BASE] [--ours OURS]\n                               [--theirs THEIRS]\n                               file\ngsd_planning reconcile: error: the following arguments are required: file\n"
 @@@ 13 @@@
 argv ["reconcile","-h"]
 rc=0
-out="usage: gsd_planning reconcile [-h] [--path PATH] file\n\npositional arguments:\n  file\n\noptions:\n  -h, --help   show this help message and exit\n  --path PATH  the file's repo-relative path (git's %P)\n"
+out="usage: gsd_planning reconcile [-h] [--path PATH] [--base BASE] [--ours OURS]\n                               [--theirs THEIRS]\n                               file\n\npositional arguments:\n  file\n\noptions:\n  -h, --help       show this help message and exit\n  --path PATH      the file's repo-relative path (git's %P)\n  --base BASE      the merge's common ancestor (git's %O)\n  --ours OURS      our side as it was before the union (a copy of git's %A)\n  --theirs THEIRS  their side (git's %B)\n"
 err=""
 @@@ 14 @@@
 argv ["repair","--help"]
@@ -77,22 +77,22 @@ err=""
 argv ["reconcile","f","--path"]
 rc=2
 out=""
-err="usage: gsd_planning reconcile [-h] [--path PATH] file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
+err="usage: gsd_planning reconcile [-h] [--path PATH] [--base BASE] [--ours OURS]\n                               [--theirs THEIRS]\n                               file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
 @@@ 17 @@@
 argv ["reconcile","--path"]
 rc=2
 out=""
-err="usage: gsd_planning reconcile [-h] [--path PATH] file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
+err="usage: gsd_planning reconcile [-h] [--path PATH] [--base BASE] [--ours OURS]\n                               [--theirs THEIRS]\n                               file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
 @@@ 18 @@@
 argv ["reconcile","--path","-x","f"]
 rc=2
 out=""
-err="usage: gsd_planning reconcile [-h] [--path PATH] file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
+err="usage: gsd_planning reconcile [-h] [--path PATH] [--base BASE] [--ours OURS]\n                               [--theirs THEIRS]\n                               file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
 @@@ 19 @@@
 argv ["reconcile","--path","--","f"]
 rc=2
 out=""
-err="usage: gsd_planning reconcile [-h] [--path PATH] file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
+err="usage: gsd_planning reconcile [-h] [--path PATH] [--base BASE] [--ours OURS]\n                               [--theirs THEIRS]\n                               file\ngsd_planning reconcile: error: argument --path: expected one argument\n"
 @@@ 20 @@@
 argv ["reconcile","--path","-1","f"]
 rc=0
