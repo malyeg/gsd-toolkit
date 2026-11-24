@@ -132,6 +132,8 @@ on `gsdt-start` do not rewrite the set. Refer to `gsdt-init --help` for setup fl
 | `ui_gates` | UI quality gates: `warn` (default), `strict` (the guard and `gsdt-finish` enforce), `off` |
 | `copy_files` | Gitignored files `gsdt-start` copies into a new worktree besides the default ones: a comma list of paths/globs (`config/*.yml, apps/api/.env.staging`; copied as named, even a production env). `none` = no env files. Default: `.env` and `.env.<x>` where every part is `local`, `dev`, `develop`, `development`, `e2e` or `test` (any folder, not `node_modules`); prod, staging and other names are left out and listed |
 | `ui_min_font` | Smallest text size `gsdt-ui check` accepts, in px: 8–32, default `12` |
+| `planning_size` | What to do when `.planning/ROADMAP.md`, `STATE.md`, `REQUIREMENTS.md` or `PROJECT.md` is over `planning_max_kib` (GSD reads them at nearly every step): `warn` (default: a warning in `gsdt-start` and `gsdt-flow-next`, doctor T028) / `strict` (`gsdt-start` refuses a NEW phase; `-p` still attaches; doctor T028 is a finding) / `off` |
+| `planning_max_kib` | The limit for `planning_size`, in KiB. Default `64` (about 16k tokens per file) |
 | `ui_url` | App address for `gsdt-ui check` / `shots`; default `http://localhost:{port}`; `{port}` / `{port:<base>}` = the phase's derived port. A phase's `url:` in `<P>-LAYOUT.md` wins (projects with several apps) |
 
 `gsdt-doctor` reports any other key as a likely typo (T017).

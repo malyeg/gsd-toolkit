@@ -240,6 +240,29 @@ describe('T009 by skills + the context section (lib/context.sh)', () => {
   });
   it('…fixed by /gsd-complete-milestone', () => has('gsd-complete-milestone'));
   it('…a note, never a finding', () => hasnt(/"message":"[^"]*KiB/));
+  it('over planning_max_kib: a T028 warning, not a finding', () => {
+    conf(R, 'base = develop\nplanning_max_kib = 32\n');
+    json(R);
+    has(/"warnings":\[[^\]]*"code":"T028","message":"planning files over 32 KiB: \.planning\/ROADMAP\.md/);
+    has('"big_files":[{"path":".planning/ROADMAP.md"');
+  });
+  it('…planning_size = strict: a T028 finding', () => {
+    conf(R, 'base = develop\nplanning_max_kib = 32\nplanning_size = strict\n');
+    json(R);
+    has(/"code":"T028","message":"[^"]*planning_size = strict: gsdt-start refuses a new phase/);
+  });
+  it('…planning_size = off: no T028', () => {
+    conf(R, 'base = develop\nplanning_max_kib = 32\nplanning_size = off\n');
+    json(R);
+    hasnt('"T028"');
+  });
+  it('bad planning_size / planning_max_kib → T018', () => {
+    conf(R, 'base = develop\nplanning_size = loud\nplanning_max_kib = big\n');
+    json(R);
+    has("planning_size = 'loud' is not a value");
+    has("planning_max_kib = 'big' is not a size in KiB");
+    conf(R, 'base = develop\n');
+  });
   it('no gsd-core skills: no context entry', () => {
     gitOk(R, ['checkout', '-q', '--', '.planning/ROADMAP.md']);
     rmSync(SKILLS, { recursive: true, force: true });

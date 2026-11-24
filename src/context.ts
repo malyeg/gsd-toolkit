@@ -8,13 +8,68 @@
 // characters / 4. Reads files only; node runs only to read gsd-core's own
 // skill-group list (clusters.cjs), never anything that changes state.
 import { spawnSyncX as spawnSync } from './spawn.ts';
-import { readdirSync, readFileSync } from 'node:fs';
-import { commandOnPath, isDir, isFile } from './common.ts';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { commandOnPath, confGet, isDir, isFile } from './common.ts';
 import { providerSkillRoot } from './provider.ts';
 import { uiGates } from './ui.ts';
 
 /** GSD_CONTEXT_BIG_KIB — a GSD planning file, or AGENTS.md, over this is noted */
 export const CONTEXT_BIG_KIB = 32;
+
+/** planning_max_kib default: a planning file over this is a warning (or, strict, stops gsdt-start) */
+export const PLANNING_MAX_KIB = 64;
+
+/** The planning files GSD reads at nearly every step. */
+export const PLANNING_READ_FILES = ['ROADMAP.md', 'REQUIREMENTS.md', 'STATE.md', 'PROJECT.md'] as const;
+
+export type PlanningSize = {
+  mode: 'warn' | 'strict' | 'off';
+  /** the limit in KiB (`planning_max_kib`, else PLANNING_MAX_KIB) */
+  limit: number;
+  /** files over the limit, biggest first */
+  big: { rel: string; bytes: number }[];
+};
+
+/** `planning_size` and `planning_max_kib` from .gsd.conf, and the planning files over the limit. */
+export function planningSize(main: string): PlanningSize {
+  const m = confGet(main, 'planning_size');
+  const mode = m === 'strict' || m === 'off' ? m : 'warn';
+  const raw = confGet(main, 'planning_max_kib');
+  const limit = /^[0-9]+$/.test(raw) && Number.parseInt(raw, 10) > 0 ? Number.parseInt(raw, 10) : PLANNING_MAX_KIB;
+  const big: { rel: string; bytes: number }[] = [];
+  if (mode !== 'off') {
+    for (const f of PLANNING_READ_FILES) {
+      const rel = `.planning/${f}`;
+      let bytes = 0;
+      try {
+        bytes = statSync(`${main}/${rel}`).size;
+      } catch {
+        continue;
+      }
+      if (bytes > limit * 1024) big.push({ rel, bytes });
+    }
+    big.sort((a, b) => b.bytes - a.bytes);
+  }
+  return { mode, limit, big };
+}
+
+/** "~32.6k tokens" from a byte count (characters / 4) */
+function approxTokens(bytes: number): string {
+  const t = bytes / 4;
+  return t >= 1000 ? `~${(t / 1000).toFixed(1)}k tokens` : `~${Math.floor(t)} tokens`;
+}
+
+/** The lines gsdt-start and gsdt-flow-next print when planning files are over the limit ([] when none). */
+export function planningSizeNotice(s: PlanningSize): string[] {
+  if (s.big.length === 0) return [];
+  const total = s.big.reduce((n, f) => n + f.bytes, 0);
+  const files = s.big.map((f) => `${f.rel} ${Math.floor(f.bytes / 1024)} KiB`).join(', ');
+  return [
+    `⚠ planning files over ${s.limit} KiB: ${files} (${approxTokens(total)}) — GSD reads them at nearly every step, so every session pays for them.`,
+    '  Archive what has shipped: /gsd-complete-milestone (a milestone can end at any phase: put a "## vX.Y <name>" heading above its first phase in ROADMAP.md).',
+    `  .gsd.conf: planning_max_kib = <KiB> moves the limit; planning_size = strict makes gsdt-start refuse a new phase, off silences this.`,
+  ];
+}
 
 /** gsd_core_required_skills — names without gsd-: what the flow and gsdt-init run */
 export function coreRequiredSkills(repo: string): string[] {

@@ -8,6 +8,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { test } from './golden.ts';
 import {
+  ROADMAP_PLAIN,
   ROADMAP_RICH,
   cleanPath,
   commitAll,
@@ -304,6 +305,23 @@ test('stale hooks and update notice stay on stderr', () => {
   scenario({}, (s) => {
     write(path.join(s.home, '.claude/settings.json'), JSON.stringify({ hooks: { PreToolUse: [{ matcher: 'Skill', hooks: [{ type: 'command', command: '/gone/away/gsdt-worktree-guard --global' }] }] } }));
   }, [start(['-p', '1', NL], { rc: 0, env: { GSD_UPDATE_NOTICE: 'always' }, err: /GSD hook\(s\) in .* run a file that is gone/ })]);
+});
+
+test('planning files over planning_max_kib: a warning; strict refuses a new phase, off is silent', () => {
+  // just over 1 KiB, so the limit can be the smallest one (planning_max_kib = 1)
+  const big = `${ROADMAP_PLAIN}\n${'- a line GSD reads at every step\n'.repeat(34)}`;
+  const conf = (extra: string): string => `install = none\ntest = none\nplanning_max_kib = 1\n${extra}`;
+  scenario({ roadmap: big, conf: conf('') }, null, [
+    start(['-p', '1', NL], { rc: 0, err: /⚠ planning files over 1 KiB: \.planning\/ROADMAP\.md 1 KiB/ }),
+  ]);
+  scenario({ roadmap: big, conf: conf('planning_size = strict\n') }, null, [
+    start(['-n', 'cart', NL], { rc: 1, err: /Nothing was claimed \(planning_size = strict\)/ }),
+    // attaching to an existing phase only warns
+    start(['-p', '1', NL], { rc: 0, err: /planning files over 1 KiB/ }),
+  ]);
+  scenario({ roadmap: big, conf: conf('planning_size = off\n') }, null, [start(['-p', '1', NL], { rc: 0, not: /planning files over/ })]);
+  // under the limit: nothing
+  scenario({}, null, [start(['-p', '1', NL], { rc: 0, not: /planning files over/ })]);
 });
 
 test('the lock: a stale one is reclaimed', () => {

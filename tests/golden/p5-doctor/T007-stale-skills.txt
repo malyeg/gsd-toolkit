@@ -95,7 +95,7 @@ base = develop
 ### skills/gsdt-doctor/SKILL.md
 <4676 chars sha1 dd6e347f746ece1f75cd904ab8de6181224744b9>
 ### skills/gsdt-flow/SKILL.md
-<10368 chars sha1 a4b14b03cf0c38be18b22cb6bdce99e557e066db>
+<10514 chars sha1 b2b9e28e7555833cb834c0fd7d5530cab507d5f6>
 ### skills/gsdt-idea/SKILL.md
 <6556 chars sha1 e88c99e653baf34005b0020e275c62fef6428501>
 ### skills/gsdt-tracker/SKILL.md

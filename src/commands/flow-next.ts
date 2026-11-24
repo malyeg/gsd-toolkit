@@ -16,6 +16,7 @@
 import { readdirSync, readFileSync, realpathSync } from 'node:fs';
 import { ticketExtract, trackerWhich } from '../ticket.ts';
 import { chomp, confGet, findMain, git, GsdExit, isDir, isFile, lf, migrateRefuse, phaseDir, reviewsProblem, validationProblem, workflowFlag } from '../common.ts';
+import { planningSize, planningSizeNotice } from '../context.ts';
 import { guardArgv } from '../guard.ts';
 import { normalizePath, relUnder } from '../spawn.ts';
 import { GSD_GEMINI_GONE, providerGone, providerKnown, providerReviewFlag } from '../provider.ts';
@@ -254,6 +255,9 @@ function flowNextRun(argv: string[], env: NodeJS.ProcessEnv, cwd: string, so: st
   so.push(g.stdout);
   se.push(g.stderr);
   if (g.rc !== 0) throw new Stop(g.rc);
+  // Planning files over planning_max_kib: a warning only (stopping a phase half-way helps nobody;
+  // planning_size = strict stops gsdt-start, before a new phase is claimed).
+  for (const l of planningSizeNotice(planningSize(REPO))) se.push(`${l}\n`);
   let pd = '';
   // the same lookup as the guard: dirs come padded (02.1-) or not (2.1-)
   const found = phaseDir(REPO, `phase-${N}-x`);

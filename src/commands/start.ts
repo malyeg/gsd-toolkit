@@ -35,6 +35,7 @@ import {
   releaseLock,
   workflowFlag,
 } from '../common.ts';
+import { planningSize, planningSizeNotice } from '../context.ts';
 import { guardArgv } from '../guard.ts';
 import {
   compactResolve,
@@ -423,6 +424,14 @@ function run(argv: string[]): number | Promise<number> {
   addRepo(MAIN);
   const ROADMAP =`${MAIN}/.planning/ROADMAP.md`;
   if (!isFile(ROADMAP)) die(`${MAIN} has no .planning/ROADMAP.md — initialize GSD first (/gsd-new-project)`);
+  // Planning files over planning_max_kib: every GSD step reads them. strict refuses a NEW
+  // phase (nothing is claimed yet); attaching to an existing phase only warns.
+  const SIZE = planningSize(MAIN);
+  const sizeLines = planningSizeNotice(SIZE);
+  if (sizeLines.length > 0 && SIZE.mode === 'strict' && ATTACH === '') {
+    die(...sizeLines.map((l, i) => (i === 0 ? l.replace(/^⚠ /, '') : l)), '  Nothing was claimed (planning_size = strict).');
+  }
+  for (const l of sizeLines) err(`${l}\n`);
   let GSD_RUN = '';
   if (ATTACH === '') {
     const c = cli();

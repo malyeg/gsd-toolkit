@@ -43,6 +43,8 @@ import {
 } from '../common.ts';
 import {
   CONTEXT_BIG_KIB,
+  PLANNING_READ_FILES,
+  planningSize,
   agentHome,
   coreGroupsFor,
   coreHideable,
@@ -1029,7 +1031,8 @@ class Doctor {
         .join(',');
       ctxAgentsJson += `${ctxAgentsJson !== '' ? ',' : ''}{"name":"${p}","skills":${nSk},"skill_tokens":${Math.floor(cSk / 4)},"agents":${nAg},"agent_tokens":${Math.floor(cAg / 4)},"hideable":[${hide}]}`;
     }
-    const bigFile = (rel: string, why: string): void => {
+    /** quiet: the file is already in a warning, so only the --json context entry */
+    const bigFile = (rel: string, why: string, quiet = false): void => {
       let b = 0;
       try {
         b = statSync(`${MAIN}/${rel}`).size;
@@ -1037,12 +1040,24 @@ class Doctor {
         return;
       }
       if (!(b > CONTEXT_BIG_KIB * 1024)) return;
-      note(`${rel} is ${Math.floor(b / 1024)} KiB (${tokensFmt(b)}) — ${why}`);
+      if (!quiet) note(`${rel} is ${Math.floor(b / 1024)} KiB (${tokensFmt(b)}) — ${why}`);
       ctxFilesJson += `${ctxFilesJson !== '' ? ',' : ''}{"path":"${jstr(rel)}","kib":${Math.floor(b / 1024)},"tokens":${Math.floor(b / 4)},"fix":"${jstr(why)}"}`;
     };
     if (IS_GSD_REPO) {
-      for (const f of ['ROADMAP.md', 'REQUIREMENTS.md', 'STATE.md', 'PROJECT.md']) {
-        bigFile(`.planning/${f}`, 'GSD reads it at nearly every step; once the milestone has shipped, /gsd-complete-milestone archives the milestone and keeps this file short');
+      // Over planning_max_kib: a warning (T028; a finding with planning_size = strict, which also
+      // makes gsdt-start refuse a new phase). Between CONTEXT_BIG_KIB and the limit: a note.
+      const SIZE = planningSize(MAIN);
+      const over = new Set(SIZE.big.map((f) => f.rel));
+      if (SIZE.big.length > 0) {
+        const files = SIZE.big.map((f) => `${f.rel} ${Math.floor(f.bytes / 1024)} KiB (${tokensFmt(f.bytes)})`).join(', ');
+        const msg = `planning files over ${SIZE.limit} KiB: ${files} — GSD reads them at nearly every step, so every session pays for them`;
+        const fix = '/gsd-complete-milestone archives what has shipped (a milestone can end at any phase: a "## vX.Y <name>" heading above its first phase in ROADMAP.md); planning_max_kib in .gsd.conf moves the limit';
+        if (SIZE.mode === 'strict') fail(`${msg} (planning_size = strict: gsdt-start refuses a new phase)`, fix, 'T028');
+        else this.warn(msg, fix, 'T028');
+      }
+      for (const f of PLANNING_READ_FILES) {
+        const rel = `.planning/${f}`;
+        bigFile(rel, 'GSD reads it at nearly every step; once the milestone has shipped, /gsd-complete-milestone archives the milestone and keeps this file short', over.has(rel));
       }
     }
     const provSet = `,${RAW_PROVIDERS || DOCTOR_PROVIDER},`;
@@ -1264,7 +1279,7 @@ class Doctor {
     const known = new Set([
       ...'base wtdir install test premerge flow flow_since flow_skip providers provider agent_command review_provider start_mode compact_at session_name session_prefix remote_control'.split(' '),
       ...'tracker tracker_command tracker_profile tracker_status_start tracker_status_finish tracker_list'.split(' '),
-      ...'ui_gates ui_url ui_min_font copy_files'.split(' '),
+      ...'ui_gates ui_url ui_min_font copy_files planning_size planning_max_kib'.split(' '),
       ...'claude_command codex_command gemini_command custom_command claude_model codex_model gemini_model custom_model'.split(' '),
     ]);
     const trim = (s: string): string => s.replace(new RegExp(`^${SP}+`), '').replace(new RegExp(`${SP}+$`), '');
@@ -1293,6 +1308,12 @@ class Doctor {
     if (!['', 'discuss', 'flow'].includes(v)) fail(`start_mode = '${v}' is not a value (use discuss or flow)`, 'edit .gsd.conf', 'T018');
     v = confGet(MAIN, 'ui_gates');
     if (!['', 'warn', 'strict', 'off'].includes(v)) fail(`ui_gates = '${v}' is not a value (use warn, strict or off)`, 'edit .gsd.conf', 'T018');
+    v = confGet(MAIN, 'planning_size');
+    if (!['', 'warn', 'strict', 'off'].includes(v)) fail(`planning_size = '${v}' is not a value (use warn, strict or off)`, 'edit .gsd.conf', 'T018');
+    v = confGet(MAIN, 'planning_max_kib');
+    if (v !== '' && !(/^[0-9]+$/.test(v) && Number.parseInt(v, 10) > 0)) {
+      fail(`planning_max_kib = '${v}' is not a size in KiB`, 'edit .gsd.conf (e.g. planning_max_kib = 64)', 'T018');
+    }
     v = confGet(MAIN, 'ui_min_font');
     if (v === '') return;
     if (/[^0-9]/.test(v)) {

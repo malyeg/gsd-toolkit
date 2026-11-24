@@ -124,5 +124,7 @@ nothing. This is the safe way to answer "what is left on phase N".
   folder. Keep going — never stop to suggest `/clear`, `/gsd-pause-work` or
   re-running this skill. After a compact, run `gsdt-flow-next <N>` and
   continue from the step it names.
+- `gsdt-flow-next` may print `⚠ planning files over …` on stderr. It is not a
+  stop either: tell the user once, in one line, and keep going.
 - One phase per session. For the next phase the user opens a new worktree
   session via `gsdt-start`.

@@ -307,6 +307,31 @@ test('UI gates (design system, layout, the checks of the rendered pages)', () =>
   assert.equal(ustep(), 'validate', 'UI-REVIEW.md on the base branch → no UI steps');
 });
 
+test('planning files over planning_max_kib: a warning on stderr, the step still comes', () => {
+  const R = tmp('size');
+  git(R, 'init', '-q', '-b', 'develop');
+  git(R, 'commit', '-q', '--allow-empty', '-m', 'init');
+  git(R, 'checkout', '-q', '-b', 'phase-3-big');
+  mkdirSync(path.join(R, '.planning', 'phases', '03-big'), { recursive: true });
+  write(path.join(R, '.planning', 'STATE.md'), `# State\n${'x'.repeat(2 * 1024)}\n`);
+  write(path.join(R, '.gsd.conf'), 'planning_max_kib = 1\n');
+  const run = (): Run => gsdt('flow-next', ['3', '--repo', R], { env: { GSD_TRACKER: undefined } });
+  let r = run();
+  assert.equal(r.status, 0, `exit ${r.status}: ${r.out}`);
+  assert.match(r.stdout, /^step=/m, 'prints a step');
+  assert.match(r.stderr, /⚠ planning files over 1 KiB: \.planning\/STATE\.md 2 KiB/, r.stderr);
+  assert.doesNotMatch(r.stdout, /planning files over/, 'the warning never goes to stdout (the skill parses it)');
+  // strict stops gsdt-start only: flow-next still gives the step
+  write(path.join(R, '.gsd.conf'), 'planning_max_kib = 1\nplanning_size = strict\n');
+  r = run();
+  assert.equal(r.status, 0, `exit ${r.status}: ${r.out}`);
+  assert.match(r.stderr, /planning files over/);
+  write(path.join(R, '.gsd.conf'), 'planning_max_kib = 1\nplanning_size = off\n');
+  assert.doesNotMatch(run().stderr, /planning files over/, 'off is silent');
+  write(path.join(R, '.gsd.conf'), '');
+  assert.doesNotMatch(run().stderr, /planning files over/, 'under the default limit: nothing');
+});
+
 test('from a subfolder of the worktree, and with a zero-padded decimal phase dir', () => {
   const R = tmp('sub');
   git(R, 'init', '-q', '-b', 'develop');
