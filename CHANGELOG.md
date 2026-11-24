@@ -7,7 +7,7 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## Unreleased
+## 0.13.2
 
 - **A warning when the planning files get too big.** GSD reads `.planning/ROADMAP.md`, `STATE.md`, `REQUIREMENTS.md` and `PROJECT.md` at nearly every step, so a big one costs tokens in every session. Over 64 KiB (about 16k tokens), `gsdt-start` and `gsdt-flow-next` now print a warning, and `gsdt-doctor` shows it as T028. The fix: archive what has shipped with `/gsd-complete-milestone`. A milestone can end at any phase: put a `## vX.Y <name>` heading above its first phase in ROADMAP.md. In `.gsd.conf`, `planning_max_kib = <KiB>` moves the limit, `planning_size = strict` makes `gsdt-start` refuse a new phase until the files are small again, and `planning_size = off` turns it off.
 - **Merging a phase no longer undoes a milestone you closed.** When the base branch said `milestone: v1.1` and an older phase branch still said `v1.0`, the merge kept `v1.0`, and the next `gsdt-start` was refused. The planning merge driver now keeps the side that changed a STATE.md line, as git would.
