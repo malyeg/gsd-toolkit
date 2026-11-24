@@ -171,9 +171,11 @@ the tests.
 The npm registry is not part of the release. `npm publish` can be added later
 (same `.tgz`); `install.sh` and `gsdt-update` do not need it.
 
-`tests.yml` runs the bash suites and the TypeScript suites on Ubuntu and
-macOS, and the cross-platform `tests/os/` suite (the real npm package, packed
-and installed into a temporary prefix) on Ubuntu, macOS and Windows.
+`tests.yml` runs the whole suite, the cross-platform `tests/os/` suite (the
+real npm package, packed and installed into a temporary prefix) included, on
+Ubuntu only. A release waits on that alone. Windows and macOS are tested by
+hand: `gh workflow run tests-windows.yml` and `gh workflow run tests-macos.yml`
+(same suite, one OS each).
 
 A failed run tags nothing. Fix it on `main`, then `gh workflow run release.yml`
 releases `main` at the same `VERSION`.

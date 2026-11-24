@@ -1,0 +1,12 @@
+name: tests-windows
+
+# The test suite on windows-latest. Started by hand only:
+# Actions → tests-windows → Run workflow, or `gh workflow run tests-windows.yml`.
+on:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+    with:
+      os: windows-latest

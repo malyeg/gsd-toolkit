@@ -45,8 +45,8 @@ there). `src/spawn.ts` finds commands on PATH with PATHEXT, runs `.cmd` through
 `cmd.exe` with every argument escaped, and anything extensionless or `.sh` as
 `sh <script>`. Paths from git (`C:/…`) and from Node are compared after
 `normalizePath`. Files are read with `\r\n` or `\n` and written with `\n`. The
-checkout lock reclaims a dead PID with `process.kill(pid, 0)`. CI runs
-`tests/os/` on `windows-latest`.
+checkout lock reclaims a dead PID with `process.kill(pid, 0)`. `tests-windows.yml`
+(started by hand) runs the suite, `tests/os/` included, on `windows-latest`.
 
 ## Provider interface
 

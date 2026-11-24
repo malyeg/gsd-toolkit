@@ -364,8 +364,8 @@ while a batch runs) is not installed yet; try it with
 `claude --plugin-dir <checkout>/mods/gsdt-batch-sonnet`.
 
 The test suites, lint commands and release steps are listed in
-[CLAUDE.md](CLAUDE.md#commands). CI runs all of them (`node:test`) on Linux and Windows, and on macOS
-for a release.
+[CLAUDE.md](CLAUDE.md#commands). CI runs all of them (`node:test`) on Linux. Windows and macOS runs are started
+by hand (Actions → `tests-windows` / `tests-macos`).
 
 ## License
 

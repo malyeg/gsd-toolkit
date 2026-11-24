@@ -4,12 +4,12 @@ on:
   push:
     branches: ['**']     # a push that changes VERSION also runs them through release.yml
   pull_request:
-  workflow_call:         # release.yml gates a release on this suite
+  workflow_call:         # release.yml gates a release on this suite; tests-windows.yml / tests-macos.yml pick another OS
     inputs:
-      macos:
-        description: 'also run on macOS (a release does)'
-        type: boolean
-        default: false
+      os:
+        description: 'the runner to test on (default ubuntu-latest)'
+        type: string
+        default: ubuntu-latest
 
 jobs:
   lint:
@@ -32,28 +32,15 @@ jobs:
         # Policy (intentional-pattern exclusions, with reasons): .shellcheckrc
         run: shellcheck -x bin/* install.sh lib/install.sh shims/scripts/*.sh shims/scripts/hooks/*.sh tools/*.sh
 
-  matrix:
-    # The OS list: Linux and Windows always, macOS too when the caller asks (release.yml).
-    runs-on: ubuntu-latest
-    outputs:
-      os: ${{ steps.os.outputs.os }}
-    steps:
-      - id: os
-        run: |
-          if [ "${{ inputs.macos }}" = true ]; then
-            echo 'os=["ubuntu-latest","windows-latest","macos-latest"]' >> "$GITHUB_OUTPUT"
-          else
-            echo 'os=["ubuntu-latest","windows-latest"]' >> "$GITHUB_OUTPUT"
-          fi
-
   test:
-    needs: matrix
+    # Ubuntu on every push, PR and release. Windows and macOS only by hand:
+    # Actions → tests-windows / tests-macos → Run workflow (macOS runners are
+    # often not free, and a release must not wait on them).
     strategy:
       fail-fast: false
       matrix:
-        os: ${{ fromJSON(needs.matrix.outputs.os) }}
         shard: [ts-a, ts-b, ts-c, ts-d, ts-e, node-a, node-b, os]   # the file groups are in tests/shards.json
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ inputs.os || 'ubuntu-latest' }}
     timeout-minutes: 40
     defaults:
       run:

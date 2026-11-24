@@ -40,9 +40,7 @@ jobs:
   tests:
     needs: check
     if: needs.check.outputs.version != ''
-    uses: ./.github/workflows/tests.yml
-    with:
-      macos: true      # a release is gated on Linux, Windows and macOS
+    uses: ./.github/workflows/tests.yml   # Ubuntu only; Windows/macOS are run by hand (tests-windows.yml, tests-macos.yml)
 
   release:
     needs: [check, tests]
