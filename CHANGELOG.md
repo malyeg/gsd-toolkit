@@ -7,7 +7,7 @@ optional). Up to 0.10.x each release is a GitHub release `vX.Y.Z` with `gsd-tool
 `SHA256SUMS`. Install or update: see the README. The section for a version
 becomes its release notes.
 
-## Unreleased
+## 0.13.3
 
 - **See old milestones in `gsdt-list`.** Once `/gsd-complete-milestone` archives a milestone, its phases leave the list. `gsdt-list --milestones` now lists the archived ones (version, name, phases, shipped date), and `gsdt-list --milestone v1.0` shows that milestone's phase table.
 
