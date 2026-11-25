@@ -27,10 +27,12 @@ OPTIONS
   --repo <path>   main checkout of the target repo
                   (default: derived from the current directory)
   --compact, -c   one line per phase, clipping each cell to fit (old default)
-  --milestones    list the archived milestones (/gsd-complete-milestone moved
-                  them to .planning/milestones/): version, name, phases, shipped
-  --milestone <v> the phase table of one archived milestone (v1.0 or 1.0),
-                  read from .planning/milestones/<v>-ROADMAP.md and <v>-phases/
+  --milestones    list the milestones: the archived ones (/gsd-complete-milestone
+                  moved them to .planning/milestones/), then the current one
+                  (STATE.md's milestone:) — version, name, phases, shipped
+  --milestone <v> the phase table of one milestone (v1.0 or 1.0): an archived
+                  one from .planning/milestones/<v>-ROADMAP.md and <v>-phases/;
+                  the current one is the usual table
   -h, --help      show this help
 
 COLUMNS
@@ -251,10 +253,30 @@ export function archivedMilestones(planning: string): Milestone[] {
     .map((v) => ({ version: v, roadmap: `${dir}/${v}-ROADMAP.md`, phasesRoot: `${dir}/${v}-phases` }));
 }
 
-/** `gsdt-list --milestones`: one line per archived milestone. Name and date come
- * from MILESTONES.md (`## v1.0 <name> (Shipped: <date>)`), when it has them. */
-export function renderMilestones(planning: string, ms: Milestone[], read: (f: string) => string | null): string {
-  if (ms.length === 0) return `no archived milestones in ${planning}/milestones (/gsd-complete-milestone makes them)\n`;
+export type Current = { version: string; name: string; phases: number };
+
+/** The milestone in progress: STATE.md's frontmatter `milestone:` (gsd-core
+ * writes it), named by ROADMAP's milestone bullet (`**v1.1 <name>**`) when that
+ * has a name. Its phases are the ROADMAP's `### Phase` headings: archived
+ * milestones have left it. None when STATE.md names no milestone. */
+export function currentMilestone(planning: string, read: (f: string) => string | null): Current | null {
+  const state = lf(read(`${planning}/STATE.md`) ?? '');
+  const fm = /^---\n([\s\S]*?)\n---(?:\n|$)/.exec(state)?.[1] ?? '';
+  const version = /^milestone:[ \t]*["']?([^"'\s]+)["']?[ \t]*$/m.exec(fm)?.[1];
+  if (version === undefined) return null;
+  const roadmap = lf(read(`${planning}/ROADMAP.md`) ?? '');
+  const bullet = new RegExp(`^\\s*[-*][^\\n]*?\\*\\*v?${escRe(version.replace(/^v/, ''))}(?:\\s+([^*\\n]+?))?\\s*\\*\\*`, 'm').exec(roadmap);
+  return { version, name: (bullet?.[1] ?? '').trim(), phases: phaseHeadings(roadmap).length };
+}
+
+/** `gsdt-list --milestones`: one line per archived milestone, then the current
+ * one. Name and date come from MILESTONES.md (`## v1.0 <name> (Shipped: <date>)`),
+ * when it has them. */
+export function renderMilestones(planning: string, ms: Milestone[], read: (f: string) => string | null, current: Current | null = null): string {
+  const sameV = (a: string, b: string): boolean => a.replace(/^v/, '') === b.replace(/^v/, '');
+  // closed and archived, but STATE.md not moved on yet: the archive row says it
+  const cur = current !== null && !ms.some((m) => sameV(m.version, current.version)) ? current : null;
+  if (ms.length === 0 && cur === null) return `no archived milestones in ${planning}/milestones (/gsd-complete-milestone makes them)\n`;
   const index = read(`${planning}/MILESTONES.md`) ?? '';
   const rows = ms.map((m) => {
     const head = new RegExp(`^## v?${escRe(m.version.replace(/^v/, ''))}(?:\\s+(.*?))?\\s*$`, 'm').exec(index);
@@ -269,11 +291,13 @@ export function renderMilestones(planning: string, ms: Milestone[], read: (f: st
     const phases = text === null ? '?' : String(phaseHeadings(lf(text), m.version).length);
     return [m.version, name || '—', phases, shipped || '—'];
   });
+  if (cur !== null) rows.push([cur.version, cur.name || '—', String(cur.phases), 'current']);
   const head = ['MILESTONE', 'NAME', 'PHASES', 'SHIPPED'];
   const w = head.map((h, i) => Math.max(len(h), ...rows.map((r) => len(r[i] as string))));
   const line = (r: string[]): string => `  ${padR(r[0] as string, w[0] as number)}  ${padR(r[1] as string, w[1] as number)}  ${padL(r[2] as string, w[2] as number)}  ${r[3]}\n`;
   let out = line(head);
   for (const r of rows) out += line(r);
+  if (ms.length === 0) out += `  (none archived yet: /gsd-complete-milestone archives a shipped one)\n`;
   out += '\n  one milestone\'s phases: gsdt-list --milestone <version> · current: gsdt-list\n';
   return out;
 }
@@ -452,7 +476,7 @@ export function main(argv: string[]): number {
     };
     if (listMilestones) {
       if (!isDir(planning)) die(`${planning} not found — is GSD initialized here?`);
-      process.stdout.write(renderMilestones(planning, archivedMilestones(planning), readOrNull));
+      process.stdout.write(renderMilestones(planning, archivedMilestones(planning), readOrNull, currentMilestone(planning, readOrNull)));
       return 0;
     }
     let ms: Milestone | undefined;
@@ -460,7 +484,9 @@ export function main(argv: string[]): number {
       const all = archivedMilestones(planning);
       const want = milestone.replace(/^v/, '');
       ms = all.find((m) => m.version.replace(/^v/, '') === want);
-      if (!ms) die(`no archived milestone ${milestone} in ${planning}/milestones (${all.length > 0 ? `there: ${all.map((m) => m.version).join(', ')}` : 'none archived yet'})`);
+      // the milestone in progress is the ROADMAP itself: the usual table
+      const cur = ms ? null : currentMilestone(planning, readOrNull);
+      if (!ms && !(cur !== null && cur.version.replace(/^v/, '') === want)) die(`no archived milestone ${milestone} in ${planning}/milestones (${all.length > 0 ? `there: ${all.map((m) => m.version).join(', ')}` : 'none archived yet'})`);
     }
     const roadmap = ms ? ms.roadmap : `${planning}/ROADMAP.md`;
     if (!isFile(roadmap)) die(`${roadmap} not found — is GSD initialized here?`);

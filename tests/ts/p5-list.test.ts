@@ -357,3 +357,33 @@ test('archived milestones: --milestones lists them, --milestone <v> shows one', 
   assert.match(n.out, /^no archived milestones in .*\/\.planning\/milestones/);
   assert.match(go(NEW_BIN, ['--milestone', 'v1.0'], none, env).err, /none archived yet/);
 });
+
+test('the current milestone: last row of --milestones, --milestone <it> is the usual table', () => {
+  const R = repo(path.join(tmp(), 'ms-cur'));
+  const P = `${R}/.planning`;
+  write(`${P}/ROADMAP.md`, ['# Roadmap', '## Milestones', '- ✅ **v1.0 First** — Phases 1–2', '- 🚧 **v1.1 Second try** — Phases 3 and up', '<details>', '- [x] Phase 1: One (1/1 plans)', '</details>', '### Phase 3: Three', '### Phase 4: Four', ''].join('\n'));
+  write(`${P}/STATE.md`, '---\ngsd_state_version: "1.0"\nmilestone: "v1.1"\nmilestone_name: whatever\n---\n\nmilestone: v9 (body, not frontmatter)\n');
+  write(`${P}/milestones/v1.0-ROADMAP.md`, '### Phase 1: One\n### Phase 2: Two\n');
+  const env = baseEnv({ COLUMNS: '100' });
+  const rows = (o: string): string[][] => o.split('\n').filter((x) => /^ {2}v/.test(x)).map((x) => x.trim().split(/\s{2,}/));
+
+  const l = go(NEW_BIN, ['--milestones'], R, env);
+  assert.equal(l.rc, 0, l.err);
+  assert.deepEqual(rows(l.out), [['v1.0', '—', '2', '—'], ['v1.1', 'Second try', '2', 'current']]);
+  const t = go(NEW_BIN, ['--milestone', '1.1', '--compact'], R, env);
+  assert.equal(t.rc, 0, t.err);
+  assert.match(t.out, /│ +3 │ Three/);
+  assert.match(t.out, /new phase:/, 'the usual table, not an archived one');
+
+  // closed and archived but STATE.md not moved on: no second v1.0 row
+  write(`${P}/STATE.md`, '---\nmilestone: v1.0\n---\n');
+  assert.deepEqual(rows(go(NEW_BIN, ['--milestones'], R, env).out), [['v1.0', '—', '2', '—']]);
+
+  // nothing archived yet: the current row and a note
+  const N = repo(path.join(tmp(), 'ms-cur-none'));
+  write(`${N}/.planning/ROADMAP.md`, '### Phase 1: A\n');
+  write(`${N}/.planning/STATE.md`, '---\nmilestone: v1.0\n---\n');
+  const n = go(NEW_BIN, ['--milestones'], N, env);
+  assert.deepEqual(rows(n.out), [['v1.0', '—', '1', 'current']]);
+  assert.match(n.out, /\(none archived yet: \/gsd-complete-milestone archives a shipped one\)/);
+});

@@ -176,10 +176,12 @@ OPTIONS
   --repo <path>   main checkout of the target repo
                   (default: derived from the current directory)
   --compact, -c   one line per phase, clipping each cell to fit (old default)
-  --milestones    list the archived milestones (/gsd-complete-milestone moved
-                  them to .planning/milestones/): version, name, phases, shipped
-  --milestone <v> the phase table of one archived milestone (v1.0 or 1.0),
-                  read from .planning/milestones/<v>-ROADMAP.md and <v>-phases/
+  --milestones    list the milestones: the archived ones (/gsd-complete-milestone
+                  moved them to .planning/milestones/), then the current one
+                  (STATE.md's milestone:) — version, name, phases, shipped
+  --milestone <v> the phase table of one milestone (v1.0 or 1.0): an archived
+                  one from .planning/milestones/<v>-ROADMAP.md and <v>-phases/;
+                  the current one is the usual table
   -h, --help      show this help
 
 COLUMNS
