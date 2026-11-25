@@ -100,4 +100,4 @@ base = develop
 ### skills/gsdt-tracker/SKILL.md
 <3543 chars sha1 e883b68a30185e8faaaa1110a52f1fb11bcf5e91>
 ### skills/gsdt-worktrees/SKILL.md
-<10016 chars sha1 51616f450a408aef3fc470bf49b57ef352fb3801>
+<10114 chars sha1 7c3860a021dd545a77107d50f9cea060e5d77f23>
