@@ -84,7 +84,7 @@ user says no ticket covers the work.
 
 | Command | Use |
 |---|---|
-| `gsdt-list [--compact]` | Read-only table of every phase: number, description, plan progress, lifecycle stage, worktree state. **Run this before starting anything.** |
+| `gsdt-list [--compact]` | Read-only table of every phase: number, description, plan progress, lifecycle stage, worktree state. **Run this before starting anything.** `--milestones` lists archived milestones; `--milestone <v>` shows an archived milestone's phases. |
 | `gsdt-start` | `-n "<desc>"` new · `-p <N>` attach · `--insert <N> "<desc>"` decimal hotfix · `--ticket <id>` tracker ticket (tags `tk-<id>`; required for a new claim when a tracker is set) · `--no-ticket` · `--slug` · `--repo <path>` · `--provider <name>` · `--agent-command <path>` · `--model <id>` · `--flow` / `--no-flow` · `--launch` / `--no-launch` (opens the session by default in a terminal; from an agent's shell, with no terminal, it only prints) · `--no-push` |
 | `gsdt-finish [<N>]` | Land the phase. No argument = infer from the current worktree branch. Runs the repo's pre-merge check or its test suite first. `--pr` opens a GitHub PR instead of merging (worktree stays; re-run after it lands). |
 | `gsdt-doctor` | Read-only health check: toolkit install, shims, `.planning` merge safety, planning-file coherence, worktree hygiene. Each finding names the command that fixes it, with a code; `--json` for scripts; `--fix` runs only the mechanical, undoable fixes, after asking. Also notes what GSD adds to the context. To fix findings with the user (incl. a too-big context), use the `gsdt-doctor` skill. |

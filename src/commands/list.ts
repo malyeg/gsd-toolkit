@@ -17,6 +17,8 @@ const HELP = `gsdt-list — list GSD phases: number, description, plan progress,
 
 USAGE
   gsdt-list [--repo <path>] [--compact]
+  gsdt-list --milestones [--repo <path>]
+  gsdt-list --milestone <version> [--repo <path>] [--compact]
 
   By default long PHASE/WORKTREE cells wrap across lines to fit the screen
   (nothing truncated). Use --compact for the one-line-per-phase view.
@@ -25,6 +27,10 @@ OPTIONS
   --repo <path>   main checkout of the target repo
                   (default: derived from the current directory)
   --compact, -c   one line per phase, clipping each cell to fit (old default)
+  --milestones    list the archived milestones (/gsd-complete-milestone moved
+                  them to .planning/milestones/): version, name, phases, shipped
+  --milestone <v> the phase table of one archived milestone (v1.0 or 1.0),
+                  read from .planning/milestones/<v>-ROADMAP.md and <v>-phases/
   -h, --help      show this help
 
 COLUMNS
@@ -191,18 +197,91 @@ export type ListInput = {
   phasesRoot: string;
   termcols: number;
   full: boolean;
+  /** an archived milestone's version (v1.0): only its phases, and its own footer */
+  milestone?: string;
   /** how a branch/path is shown (Perl's byte strings) */
   show?: (s: string) => string;
 };
 
+const escRe = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** The `### Phase N: title` headings of a ROADMAP. With a milestone version,
+ * an archived ROADMAP that has `## v<version>` sections (gsd-core copies the
+ * whole ROADMAP, later milestones too) gives only the phases under them. */
+export function phaseHeadings(text: string, milestone?: string): { n: string; title: string }[] {
+  const lines = text.split('\n');
+  const sec = milestone === undefined ? null : new RegExp(`^## v?${escRe(milestone.replace(/^v/, ''))}(?:\\s|$)`);
+  const scoped = sec !== null && lines.some((l) => sec.test(l));
+  const out: { n: string; title: string }[] = [];
+  let inSec = !scoped;
+  for (const line of lines) {
+    if (scoped && line.startsWith('## ')) inSec = (sec as RegExp).test(line);
+    const m = /^### Phase ([0-9]+(?:\.[0-9]+)?):\s*([^\n]+?)\s*$/.exec(line);
+    if (m && inSec) out.push({ n: m[1] as string, title: m[2] as string });
+  }
+  return out;
+}
+
+export type Milestone = { version: string; roadmap: string; phasesRoot: string };
+
+/** `v1.10` after `v1.9`: numbers compared part by part, base 10. */
+const cmpVersion = (a: string, b: string): number => {
+  const pa = a.replace(/^v/, '').split(/[^0-9]+/).map((x) => parseInt(x, 10) || 0);
+  const pb = b.replace(/^v/, '').split(/[^0-9]+/).map((x) => parseInt(x, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] ?? 0) - (pb[i] ?? 0);
+    if (d !== 0) return d;
+  }
+  return a < b ? -1 : a > b ? 1 : 0;
+};
+
+/** The milestones /gsd-complete-milestone archived: `.planning/milestones/<v>-ROADMAP.md`, oldest first. */
+export function archivedMilestones(planning: string): Milestone[] {
+  const dir = `${planning}/milestones`;
+  let names: string[] = [];
+  try {
+    names = readdirSync(dir);
+  } catch {
+    return [];
+  }
+  return names
+    .map((f) => /^(v?[0-9][^/]*?)-ROADMAP\.md$/.exec(f)?.[1])
+    .filter((v): v is string => v !== undefined && isFile(`${dir}/${v}-ROADMAP.md`))
+    .sort(cmpVersion)
+    .map((v) => ({ version: v, roadmap: `${dir}/${v}-ROADMAP.md`, phasesRoot: `${dir}/${v}-phases` }));
+}
+
+/** `gsdt-list --milestones`: one line per archived milestone. Name and date come
+ * from MILESTONES.md (`## v1.0 <name> (Shipped: <date>)`), when it has them. */
+export function renderMilestones(planning: string, ms: Milestone[], read: (f: string) => string | null): string {
+  if (ms.length === 0) return `no archived milestones in ${planning}/milestones (/gsd-complete-milestone makes them)\n`;
+  const index = read(`${planning}/MILESTONES.md`) ?? '';
+  const rows = ms.map((m) => {
+    const head = new RegExp(`^## v?${escRe(m.version.replace(/^v/, ''))}(?:\\s+(.*?))?\\s*$`, 'm').exec(index);
+    let name = (head?.[1] ?? '').trim();
+    let shipped = '';
+    const d = /\(\s*shipped:?\s*([^)]*?)\s*\)\s*$/i.exec(name);
+    if (d) {
+      shipped = d[1] as string;
+      name = name.slice(0, d.index).trim();
+    }
+    const text = read(m.roadmap);
+    const phases = text === null ? '?' : String(phaseHeadings(lf(text), m.version).length);
+    return [m.version, name || '—', phases, shipped || '—'];
+  });
+  const head = ['MILESTONE', 'NAME', 'PHASES', 'SHIPPED'];
+  const w = head.map((h, i) => Math.max(len(h), ...rows.map((r) => len(r[i] as string))));
+  const line = (r: string[]): string => `  ${padR(r[0] as string, w[0] as number)}  ${padR(r[1] as string, w[1] as number)}  ${padL(r[2] as string, w[2] as number)}  ${r[3]}\n`;
+  let out = line(head);
+  for (const r of rows) out += line(r);
+  out += '\n  one milestone\'s phases: gsdt-list --milestone <version> · current: gsdt-list\n';
+  return out;
+}
+
 /** The table and the lines under it, as the Perl printed them. */
 export function renderList(inp: ListInput): string {
   const show = inp.show ?? ((s: string): string => s);
-  const phases: Phase[] = [];
-  for (const line of inp.text.split('\n')) {
-    const m = /^### Phase ([0-9]+(?:\.[0-9]+)?):\s*([^\n]+?)\s*$/.exec(line);
-    if (m) phases.push({ n: m[1] as string, title: m[2] as string, plans: '', stage: '', wt: '', wtmark: '' });
-  }
+  const phases: Phase[] = phaseHeadings(inp.text, inp.milestone).map((h) => ({ ...h, plans: '', stage: '', wt: '', wtmark: '' }));
   if (phases.length === 0) return `no phases found in ${show(inp.roadmap)}\n`;
   // phases ticked "- [x] **Phase N" in the checklist: one done outside GSD has no plan files to count
   const ticked = new Set<string>();
@@ -290,6 +369,10 @@ export function renderList(inp: ListInput): string {
     if (i < phases.length - 1) out += rule('├', '┼', '┤', '┈');
   });
   out += rule('└', '┴', '┘');
+  if (inp.milestone !== undefined) {
+    out += `  milestone ${inp.milestone} (archived) · all milestones: gsdt-list --milestones · current: gsdt-list\n`;
+    return out;
+  }
   out += '  new phase: gsdt-start -n "<desc>" · attach: gsdt-start -p <N> · ● worktree attached\n';
   if (inp.batches.length > 0) {
     out += '\n  batches (gsdt-batch; land with gsdt-finish <branch>):\n';
@@ -316,6 +399,8 @@ export function main(argv: string[]): number {
   try {
     let repo = '';
     let full = true; // wrap-to-screen is the default; --compact opts out
+    let listMilestones = false;
+    let milestone: string | undefined;
     for (let i = 0; i < argv.length; ) {
       const a = argv[i] as string;
       if (a === '-h' || a === '--help') {
@@ -329,11 +414,19 @@ export function main(argv: string[]): number {
       } else if (a === '-c' || a === '--compact') {
         full = false;
         i++;
+      } else if (a === '--milestones') {
+        listMilestones = true;
+        i++;
+      } else if (a === '--milestone') {
+        if (argv.length - i < 2 || (argv[i + 1] as string) === '') die('--milestone needs a version (e.g. v1.0; see gsdt-list --milestones)');
+        milestone = argv[i + 1] as string;
+        i += 2;
       } else if (a === '--full') {
         full = true; // accepted for back-compat (now the default)
         i++;
       } else die(`unknown argument: ${a} (see gsdt-list --help)`);
     }
+    if (listMilestones && milestone !== undefined) die('use --milestones or --milestone <version>, not both');
 
     updateNotice();
     for (const l of staleHooksNotice()) err(`${l}\n`);
@@ -349,14 +442,35 @@ export function main(argv: string[]): number {
       const w = git('.', ['worktree', 'list', '--porcelain']);
       main = (w.stdout.split('\n').find((l) => l.startsWith('worktree ')) ?? '').slice(9);
     }
-    const roadmap = `${main}/.planning/ROADMAP.md`;
+    const planning = `${main}/.planning`;
+    const readOrNull = (f: string): string | null => {
+      try {
+        return readFileSync(f, 'utf8');
+      } catch {
+        return null;
+      }
+    };
+    if (listMilestones) {
+      if (!isDir(planning)) die(`${planning} not found — is GSD initialized here?`);
+      process.stdout.write(renderMilestones(planning, archivedMilestones(planning), readOrNull));
+      return 0;
+    }
+    let ms: Milestone | undefined;
+    if (milestone !== undefined) {
+      const all = archivedMilestones(planning);
+      const want = milestone.replace(/^v/, '');
+      ms = all.find((m) => m.version.replace(/^v/, '') === want);
+      if (!ms) die(`no archived milestone ${milestone} in ${planning}/milestones (${all.length > 0 ? `there: ${all.map((m) => m.version).join(', ')}` : 'none archived yet'})`);
+    }
+    const roadmap = ms ? ms.roadmap : `${planning}/ROADMAP.md`;
     if (!isFile(roadmap)) die(`${roadmap} not found — is GSD initialized here?`);
 
     // phase-* branches and which of them are attached as worktrees
     const refs = (pat: string): string[] => lineList(git(main, ['for-each-ref', '--format=%(refname:short)', pat]).stdout);
-    const branches = refs('refs/heads/phase-*');
+    // an archived milestone's phases have landed: no branches, no batches
+    const branches = ms ? [] : refs('refs/heads/phase-*');
     // gsdt-batch runs: batch-* branches, listed under the table
-    const batches = refs('refs/heads/batch-*');
+    const batches = ms ? [] : refs('refs/heads/batch-*');
     const wt = new Map<string, string>();
     let cur = '';
     for (const l of git(main, ['worktree', 'list', '--porcelain']).stdout.split('\n')) {
@@ -386,11 +500,12 @@ export function main(argv: string[]): number {
         wt,
         branches,
         batches,
-        todos: pendingTodos(main),
-        phasesRoot: `${main}/.planning/phases`,
+        todos: ms ? undefined : pendingTodos(main),
+        phasesRoot: ms ? ms.phasesRoot : `${planning}/phases`,
         termcols: cols === '' || cols === '0' ? 120 : num(cols), // Perl: `$ENV{TERMCOLS} || 120` (the string's truthiness)
         full,
         show: bytes,
+        ...(ms ? { milestone: ms.version } : {}),
       }),
     );
     return 0;

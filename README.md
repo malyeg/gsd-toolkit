@@ -114,7 +114,7 @@ Python, Perl and `jq` are not used at runtime. `curl` is optional, as listed.
 |---|---|
 | `gsdt-init` | Sets up a repo from zero, then opens the session that writes the plan (`/gsd-new-project`, or `/gsd-ingest-docs` when docs exist). |
 | `gsdt-start` | Claims a phase and opens a session in its worktree. `-n "desc"` for a new phase, `-p <N>` for an existing one, `--insert <N>` for a hotfix, `--ticket <id>` to link a ticket, `--provider <name>` to pick the agent. |
-| `gsdt-list` | Shows every phase: number, plans done, stage, worktree. Read-only. |
+| `gsdt-list` | Shows every phase: number, plans done, stage, worktree. Read-only. `--milestones` lists the archived milestones; `--milestone v1.0` shows one's phases. |
 | `gsdt-finish` | Tests, merges into the base branch, pushes, then removes the worktree and branch. `--pr` opens a GitHub PR instead. |
 | `gsdt-doctor` | Checks the repo's setup and names the fix for each finding. Prints findings, newer versions and notes that need action, plus one line counting the checks that passed; `--verbose` lists them all. `--json` for CI; `--fix` runs the safe fixes (incl. `git worktree prune` for stale worktree records) after asking. |
 | `gsdt-update` | Installs the latest toolkit from npm and the latest gsd-core. `--check` only compares. |

@@ -309,3 +309,51 @@ test('symlinked launcher still finds the package', () => {
   assert.equal(viaLink.rc, 0);
   writeFileSync(path.join(bin, 'x'), '');
 });
+
+test('archived milestones: --milestones lists them, --milestone <v> shows one', () => {
+  const R = repo(path.join(tmp(), 'ms'));
+  const M = `${R}/.planning/milestones`;
+  write(`${R}/.planning/ROADMAP.md`, '# Roadmap\n\n### Phase 12: Now\n');
+  // gsd-core copies the whole ROADMAP into the archive: v1.1 and the backlog must stay out
+  write(`${M}/v1.0-ROADMAP.md`, ['# Roadmap', '- [x] **Phase 1: One**', '## Phases', '## v1.0', '### Phase 1: One', '### Phase 01.1: Hotfix', '## v1.1', '### Phase 3: Later', '## Backlog', '### Phase 999.1: Some day', ''].join('\n'));
+  write(`${M}/v1.0-phases/01-one/01-01-PLAN.md`, 'x');
+  write(`${M}/v1.0-phases/01-one/01-01-SUMMARY.md`, 'x');
+  write(`${M}/v1.10-ROADMAP.md`, '### Phase 20: No sections\n### Phase 21: Both kept\n');
+  write(`${M}/v1.9-ROADMAP.md`, '### Phase 9: Nine\n');
+  write(`${R}/.planning/MILESTONES.md`, '# Milestones\n\n## v1.10 Ten (Shipped: 2026-12-01)\n\n## v1.0 First release (Shipped: 2026-11-25)\n');
+  git(R, 'branch', 'phase-1-one'); // a branch left from v1.0 is not an archived phase's worktree
+  const env = baseEnv({ COLUMNS: '100' });
+
+  const l = go(NEW_BIN, ['--milestones'], R, env);
+  assert.equal(l.rc, 0, l.err);
+  const rows = l.out.split('\n').filter((x) => /^ {2}v/.test(x)).map((x) => x.trim().split(/\s{2,}/));
+  assert.deepEqual(rows, [
+    ['v1.0', 'First release', '2', '2026-11-25'],
+    ['v1.9', '—', '1', '—'],
+    ['v1.10', 'Ten', '2', '2026-12-01'],
+  ], 'oldest first, v1.10 after v1.9; name and date from MILESTONES.md');
+
+  for (const v of ['v1.0', '1.0']) {
+    const o = go(NEW_BIN, ['--milestone', v, '--compact'], R, env);
+    assert.equal(o.rc, 0, o.err);
+    const ns = o.out.split('\n').map((x) => /^│ +([0-9.]+) │/.exec(x)?.[1]).filter(Boolean);
+    assert.deepEqual(ns, ['1', '01.1'], `${v}: only the phases under ## v1.0`);
+    assert.match(o.out, /│ +1 │ One +│ +✔ │ done +│ — +│/, 'plans read from <v>-phases/, no worktree');
+    assert.match(o.out, /milestone v1\.0 \(archived\)/);
+    assert.doesNotMatch(o.out, /new phase:/);
+  }
+  assert.match(go(NEW_BIN, ['--milestone', 'v1.0'], R, env).out, /│ +1 │ One/, 'wrapped view too');
+
+  const bad = go(NEW_BIN, ['--milestone', 'v2'], R, env);
+  assert.equal(bad.rc, 1);
+  assert.match(bad.err, /no archived milestone v2 .*\(there: v1\.0, v1\.9, v1\.10\)/);
+  assert.equal(go(NEW_BIN, ['--milestone'], R, env).rc, 1);
+  assert.match(go(NEW_BIN, ['--milestones', '--milestone', 'v1.0'], R, env).err, /not both/);
+
+  const none = repo(path.join(tmp(), 'ms-none'));
+  write(`${none}/.planning/ROADMAP.md`, '### Phase 1: A\n');
+  const n = go(NEW_BIN, ['--milestones'], none, env);
+  assert.equal(n.rc, 0);
+  assert.match(n.out, /^no archived milestones in .*\/\.planning\/milestones/);
+  assert.match(go(NEW_BIN, ['--milestone', 'v1.0'], none, env).err, /none archived yet/);
+});
