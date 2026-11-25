@@ -733,6 +733,12 @@ describe('Gemini: refused, and an older setup is cleaned up', () => {
     const r = exec('bash', [path.join(PKG, 'install.sh'), '--agent', 'gemini'], { env: E({ GSD_BIN_DIR: path.join(WORK, 'gone-bin') }) });
     assert.ok(r.status !== 0 && !existsSync(path.join(WORK, 'gone-bin')), r.out);
   });
+  it('review_provider = agy → the review step runs gsd-review --agy', () => {
+    writeFileSync(path.join(R, '.gsd.conf'), 'review_provider = agy\n');
+    const r = run('flow-next', ['7', '--repo', R]);
+    assert.ok(!r.out.includes('invalid review_provider'), r.out);
+    rmSync(path.join(R, '.gsd.conf'), { force: true });
+  });
   it('review_provider = gemini → refused with the reason', () => {
     writeFileSync(path.join(R, '.gsd.conf'), 'review_provider = gemini\n');
     const r = run('flow-next', ['7', '--repo', R]);

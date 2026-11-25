@@ -9,6 +9,7 @@ becomes its release notes.
 
 ## Unreleased
 
+- **Gemini can review your plans.** Set `review_provider = agy` in `.gsd.conf`. The plan review step in `gsdt-flow-next` then runs `/gsd-review --phase <N> --agy`: gsd-core's Antigravity reviewer (the `agy` CLI, Gemini models), from a Claude or Codex session. The review gate reads its `## Antigravity Review` section. `agy` is a reviewer only; it is not a provider you can start a session with.
 - **`gsdt-list --milestones` shows the current milestone too.** It is the last row, marked `current`, with its phase count (from STATE.md's `milestone:`). `gsdt-list --milestone <current version>` shows the usual table.
 
 ## 0.13.3

@@ -99,7 +99,7 @@ Flags and config keys are complete as of 2026-09-25; `<cmd> --help` is authorita
 | Detects an unfolded review (`replan`) from commit times of REVIEWS vs PLAN | `gsdt-flow-next` |
 | `--all` preview, `--json`, `--ui` / `--no-ui` | `gsdt-flow-next` |
 | Guard check before every step it returns | `gsdt-flow-next` |
-| Configurable cross-AI reviewer (`review_provider`, default `codex`) | `gsdt-flow-next`, `src/provider.ts` |
+| Configurable cross-AI reviewer (`review_provider`: `claude`, `codex` (default), `agy` = Gemini, `custom`) | `gsdt-flow-next`, `src/provider.ts` |
 | A `REVIEWS.md` whose configured reviewer failed (empty section, Codex usage limit) passes neither the review step nor the guard's execute rule | `gsdt-flow-next`, `gsdt-worktree-guard`, `src/common.ts` (`reviewsProblem`; gsd-core reviewer-instance headings such as `## Codex Review (fast)` count) |
 | Wait out a Codex usage limit: wrap a command (re-run after the reset) or `--wait-only`; reset time from Codex's message or session log, `--interval` fallback, `--max-wait` cap (exit 75, never a pass); never calls Codex; keeps a Mac awake | `gsdt-codex-wait`, `src/codex-wait.ts` |
 | How to ask the user, in the rules every session loads and in the flow skill: one question at a time in plain words, at most three options, the recommended one first with its reason, what each choice changes, a costly or irreversible choice said plainly, everything inside the question | `gsdt-rules` (`RULES_ASKING` in `src/rules-text.ts`), `skills/gsdt-flow` |

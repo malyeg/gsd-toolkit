@@ -317,7 +317,8 @@ export function reviewsProblem(file: string, reviewProvider = ''): string | null
   if (!isFile(file)) return null;
   const text = readUtf8(file);
   if (text === null) return null;
-  const want = asciiLower(`${reviewProvider} review`);
+  // gsd-core names each section after its lane: `agy` writes `## Antigravity Review`
+  const want = asciiLower(`${reviewProvider === 'agy' ? 'antigravity' : reviewProvider} review`);
   let sec = '';
   let base_ = '';
   let lines = 0;

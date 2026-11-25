@@ -179,7 +179,7 @@ to auto-detection.
 
 ```ini
 providers = claude,codex      # installed agents; the first is the default
-review_provider = codex       # who does the cross-AI plan review
+review_provider = codex       # who does the cross-AI plan review: claude, codex, agy (Gemini) or custom
 flow = strict                 # enforce the phase step order
 tracker = clickup             # none (default), clickup or custom
 compact_at = 300000           # compact agent sessions at this many tokens (default)

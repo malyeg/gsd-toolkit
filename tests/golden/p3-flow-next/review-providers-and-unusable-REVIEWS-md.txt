@@ -182,59 +182,59 @@ err=""
 review [gemini] none 
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 38 @@@
 review [gemini] none --all --json
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 39 @@@
 review [gemini] empty 
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 40 @@@
 review [gemini] empty --all --json
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 41 @@@
 review [gemini] limit 
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 42 @@@
 review [gemini] limit --all --json
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 43 @@@
 review [gemini] long 
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 44 @@@
 review [gemini] long --all --json
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 45 @@@
 review [gemini] sections 
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 46 @@@
 review [gemini] sections --all --json
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 47 @@@
 review [gemini] real 
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"
 @@@ 48 @@@
 review [gemini] real --all --json
 rc=64
 out=""
-err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, or custom in .gsd.conf\n"
+err="review_provider = gemini: Gemini is no longer supported (gsd-core, the new GSD, dropped it); set review_provider to claude, codex, agy, or custom in .gsd.conf (agy = Gemini models)\n"

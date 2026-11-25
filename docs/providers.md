@@ -110,7 +110,7 @@ on `gsdt-start` do not rewrite the set. Refer to `gsdt-init --help` for setup fl
 | `providers` | Ordered comma-separated known identities, no empty/duplicate entries; first is default |
 | `claude_command`, `codex_command`, `custom_command` | Provider executable; custom requires one |
 | `claude_model`, `codex_model` | Optional model ID; `default` omits the flag |
-| `review_provider` | Independent reviewer: `claude`, `codex` (default), or `custom` |
+| `review_provider` | Independent reviewer: `claude`, `codex` (default), `agy` (gsd-core's Antigravity lane: Gemini models), or `custom`. `agy` is a reviewer only, not a session provider |
 | `start_mode` | `flow` (default) or `discuss` |
 | `session_name` | `on` (default) or `off`. On: a launched Claude session is named `<prefix>-<N>-<slug>` (`claude --name`; `phase-` and the ticket tag dropped, cut to 48 characters; `gsdt-init`: `<prefix>-planning`; a batch: `<prefix>-batch-…`). Env `GSD_SESSION_NAME` wins. Codex and custom: nothing |
 | `session_prefix` | The start of that name; default: the repo folder's name |
@@ -139,7 +139,7 @@ on `gsdt-start` do not rewrite the set. Refer to `gsdt-init --help` for setup fl
 `gsdt-doctor` reports any other key as a likely typo (T017).
 
 `review_provider` selects a request, not a built-in subprocess runner. The external
-`gsd-review` skill supports the three named flags; its installation and CLI access
+`gsd-review` skill supports the named flags (`--claude`, `--codex`, `--agy`); its installation and CLI access
 must be checked by the active agent. If absent, or for `custom`, use a separate
 reviewer session and record verified findings in `<P>-REVIEWS.md`. The toolkit
 does not invent `--custom`, silently skip review, or promise automatic delegation.

@@ -38,7 +38,7 @@ describe('flow-next: paths with spaces, the review provider', () => {
     has('invalid reviewer is rejected', r.out, 'invalid review_provider');
   });
 
-  for (const p of ['claude', 'codex', 'custom']) {
+  for (const p of ['claude', 'codex', 'agy', 'custom']) {
     it(`${p} reviewer retains independent review gate`, () => {
       rmSync(path.join(PD, '07-REVIEWS.md'), { force: true });
       write(path.join(R, '.gsd.conf'), `review_provider = ${p}\n`);

@@ -79,9 +79,16 @@ export function providerNativeHook(p: string): 'supported' | 'unsupported' {
   return p === 'claude' ? 'supported' : 'unsupported';
 }
 
+/** review_provider values: the providers, plus `agy` (gsd-core's Antigravity lane, Gemini models) — a reviewer only, never a session provider */
+export function reviewerKnown(p: string): boolean {
+  return providerKnown(p) || p === 'agy';
+}
+
+export const REVIEWER_CHOICES = 'claude, codex, agy, or custom';
+
 /** gsd_provider_review_flag — null (bash status 1) for a provider with none */
 export function providerReviewFlag(p: string): string | null {
-  return p === 'claude' || p === 'codex' ? `--${p}` : null;
+  return p === 'claude' || p === 'codex' || p === 'agy' ? `--${p}` : null;
 }
 
 /** gsd_provider_ui_tip — null when there is none */

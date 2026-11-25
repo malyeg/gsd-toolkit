@@ -117,6 +117,15 @@ test('reviewsProblem', () => {
   gold('# missing file\n1');
 });
 
+test('reviewsProblem: review_provider = agy reads the Antigravity section', () => {
+  const dir = tmp();
+  const bad = write(path.join(dir, 'bad-REVIEWS.md'), '## Codex Review\nfine review\n\n## Antigravity Review\nAntigravity review failed or returned empty output.\n');
+  assert.equal(C.reviewsProblem(bad, 'agy'), 'Antigravity Review — reviewer failed');
+  assert.equal(C.reviewsProblem(bad, 'codex'), null);
+  const ok = write(path.join(dir, 'ok-REVIEWS.md'), '## Antigravity Review\nreal findings\n\n## Consensus Summary\nok\n');
+  assert.equal(C.reviewsProblem(ok, 'agy'), null);
+});
+
 test('workflowFlag and validationProblem', () => {
   const co = tmp();
   const pd = path.join(co, '.planning', 'phases', '03-x');

@@ -19,7 +19,7 @@ import { chomp, confGet, findMain, git, GsdExit, isDir, isFile, lf, migrateRefus
 import { planningSize, planningSizeNotice } from '../context.ts';
 import { guardArgv } from '../guard.ts';
 import { normalizePath, relUnder } from '../spawn.ts';
-import { GSD_GEMINI_GONE, providerGone, providerKnown, providerReviewFlag } from '../provider.ts';
+import { GSD_GEMINI_GONE, REVIEWER_CHOICES, providerGone, providerReviewFlag, reviewerKnown } from '../provider.ts';
 import { uiCheckState, uiDesignState, uiExempt, uiGate, uiGates, uiLayoutState } from '../ui.ts';
 
 export const HELP = `
@@ -77,7 +77,8 @@ design-system, layout, ui-check, ui-look and ui-approve are the UI gates
 predates them skip the two pre-spec steps; a phase whose UI-REVIEW.md is
 already on the base branch skips the three checks of the rendered pages.
 
-review_provider = claude|codex|custom selects the independent reviewer.
+review_provider = claude|codex|agy|custom selects the independent reviewer
+(agy = Antigravity, Gemini models).
 The external gsd-review skill performs delegation, not this shell command.
 Missing capabilities require a separate review session, never a skipped gate.
 A REVIEWS.md whose reviewer failed (Codex usage limit) does not count; with
@@ -237,8 +238,8 @@ function flowNextRun(argv: string[], env: NodeJS.ProcessEnv, cwd: string, so: st
   }
   migrateRefuse(findMain(REPO));
   const RP = confGet(REPO, 'review_provider') || 'codex';
-  if (providerGone(RP)) fail(64, `review_provider = gemini: ${GSD_GEMINI_GONE}; set review_provider to claude, codex, or custom in .gsd.conf`);
-  if (!providerKnown(RP)) fail(64, `invalid review_provider '${RP}'; use claude, codex, or custom`);
+  if (providerGone(RP)) fail(64, `review_provider = gemini: ${GSD_GEMINI_GONE}; set review_provider to ${REVIEWER_CHOICES} in .gsd.conf (agy = Gemini models)`);
+  if (!reviewerKnown(RP)) fail(64, `invalid review_provider '${RP}'; use ${REVIEWER_CHOICES}`);
   if (N === '') {
     const r = git(REPO, ['rev-parse', '--abbrev-ref', 'HEAD']);
     const br = chomp(r.stdout);

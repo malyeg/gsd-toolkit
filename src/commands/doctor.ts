@@ -55,6 +55,7 @@ import {
 } from '../context.ts';
 import {
   GSD_GEMINI_GONE,
+  REVIEWER_CHOICES,
   canonicalBlock,
   commandGuardsActive,
   modelResolve,
@@ -71,6 +72,7 @@ import {
   providerSkillRoot,
   providerUiAddon,
   providerUserHookFile,
+  reviewerKnown,
   staleHooks,
 } from '../provider.ts';
 import { doctorAll } from '../doctor-all.ts';
@@ -558,9 +560,9 @@ class Doctor {
       section('repo setup');
       const reviewProvider = confGet(MAIN, 'review_provider');
       if (providerGone(reviewProvider)) {
-        fail(`review_provider = gemini: ${GSD_GEMINI_GONE}`, 'set review_provider to claude, codex, or custom in .gsd.conf', 'T060');
-      } else if (reviewProvider !== '' && !providerKnown(reviewProvider)) {
-        fail(`invalid review_provider '${reviewProvider}'`, 'set review_provider to claude, codex, or custom in .gsd.conf', 'T060');
+        fail(`review_provider = gemini: ${GSD_GEMINI_GONE}`, `set review_provider to ${REVIEWER_CHOICES} in .gsd.conf (agy = Gemini models)`, 'T060');
+      } else if (reviewProvider !== '' && !reviewerKnown(reviewProvider)) {
+        fail(`invalid review_provider '${reviewProvider}'`, `set review_provider to ${REVIEWER_CHOICES} in .gsd.conf`, 'T060');
       }
 
       // T061 — Gemini setup an older release wrote.
